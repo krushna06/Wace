@@ -1,0 +1,12 @@
+### Help command!
+intro1: "・**%{bot}** is an advanced music bot with rich features!"
+intro2: "・Developed by **n0step_**"
+intro3: "・Partnered with **[Academy Gaming](https://www.academy-hosting.com/aff.php?aff=10)**"
+prefix: "・**Bot Prefix:** %{prefix}"
+ver: "・**Bot Version:** `%{botver}`"
+djs: "・**Discord.js:** `%{djsver}`"
+lavalink: "・**Autofix:** `%{aver}`"
+help1: "・**To get started:** %{help}"
+help2: "・**To get more info:** %{botinfo}"
+wel: "👋 Welcome to %{bot}"
+codename: "・**Codename:** `%{codename}`"

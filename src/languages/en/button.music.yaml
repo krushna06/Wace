@@ -1,0 +1,28 @@
+queue_author: "💾 %{guild}"
+queue_description: "`📀` | Currently Playing:\n**%{track}** `[%{duration}]` • %{requester}\n\n`💤` | Rest of Queue:**%{list_song}**"
+queue_footer: "Page • %{page}/%{pages} | Songs • %{queue_lang} | Total Duration • %{total_duration}"
+# Pause
+pause_msg: "`⏸️` | Paused the **Player**!"
+resume_msg: "`▶️` | Resumed the **Player**!"
+# Skip
+skip_msg: "`⏭️` | Skipped the **Song**!"
+skip_notfound: "`⚠️` | No song was found to Skip to!"
+# Stop
+stop_msg: "`⏹️` | Stopped the **Player**!"
+# Volume
+volup_msg: "`🔊` | Changed Volume to **%{volume}%**"
+voldown_msg: "`🔉` | Changed Volume to **%{volume}%**"
+volume_invalid: "`⚠️` | Invalid Volume. Please use a number between **1** and **100**!"
+# Clear
+clear_msg: "`🗑️` | Queue has been **Cleared**!"
+# Loop
+loop_current: "`🔁` | Looping current **Song**!"
+loop_all: "`🔁` | Looping **Queue**!"
+unloop_all: "`❌` | Loop is now **Disabled**!"
+loop_invalid: "`⚠️` | Invalid Loop mode. Please use %{mode}!"
+loop_already: "`⚠️` | Loop mode is already **%{mode}**!"
+# Previous
+previous_msg: "`⏮️` | Skipped to Previous **Song**!"
+previous_notfound: "`⚠️` | No Previous song was found!"
+# Shuffle
+shuffle_msg: "🔀 Shuffled the Queue"
