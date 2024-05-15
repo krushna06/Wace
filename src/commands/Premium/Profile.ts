@@ -58,7 +58,7 @@ export default class implements Command {
       .setDescription(
         `${client.getString(handler.language, "command.premium", "profile_desc", {
           user: String(handler.user?.tag),
-          plan: "dreamvast@owner",
+          plan: "wace@owner",
           expires: "lifetime",
         })}`
       )
@@ -77,7 +77,7 @@ export default class implements Command {
       .setDescription(
         `${client.getString(handler.language, "command.premium", "profile_desc", {
           user: String(handler.user?.tag),
-          plan: "dreamvast@admin",
+          plan: "wace@admin",
           expires: "lifetime",
         })}`
       )
