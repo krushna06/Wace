@@ -26,7 +26,7 @@ export default class implements PlayerButton {
 
     switch (player.loop) {
       case "none":
-        await player.setLoop(WacelinkLoopMode.SONG);
+        player.setLoop(WacelinkLoopMode.SONG);
 
         setLoop247(WacelinkLoopMode.SONG);
 
@@ -56,7 +56,7 @@ export default class implements PlayerButton {
         break;
 
       case "queue":
-        await player.setLoop(WacelinkLoopMode.NONE);
+        player.setLoop(WacelinkLoopMode.NONE);
 
         setLoop247(WacelinkLoopMode.NONE);
 
