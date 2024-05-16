@@ -24,11 +24,11 @@ export async function getSearch(client: Manager, req: Fastify.FastifyRequest, re
     return;
   }
   const result = await client.wacelink.search(query, { requester: user, engine: source }).catch(() => ({
-    playlistName: "dreamvast@error@noNode",
+    playlistName: "wace@error@noNode",
     tracks: [],
     type: WacelinkSearchResultType.SEARCH,
   }));
-  if (result.tracks.length == 0 && result.playlistName == "dreamvast@error@noNode") {
+  if (result.tracks.length == 0 && result.playlistName == "wace@error@noNode") {
     res.code(404);
     res.send({ error: "No node avaliable!" });
     return;

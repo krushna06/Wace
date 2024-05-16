@@ -177,7 +177,7 @@ export default class {
       return message.reply({
         embeds: [
           new EmbedBuilder()
-            .setDescription(`${client.getString(language, "error", "no_perms", { perm: "dreamvast@admin" })}`)
+            .setDescription(`${client.getString(language, "error", "no_perms", { perm: "wace@admin" })}`)
             .setColor(client.color),
         ],
       });
