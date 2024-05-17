@@ -7,7 +7,7 @@ import { WacelinkPlayer, WacelinkPlayerState } from "../../wacelink/main.js";
 
 export default class {
   async execute(client: Manager, player: WacelinkPlayer, data: Record<string, any>) {
-    client.logger.error(import.meta.url, `Player get exception ${util.inspect(data)}`);
+    client.logger.error("PlayerException", `Player get exception ${util.inspect(data)}`);
     /////////// Update Music Setup //////////
     await client.UpdateMusic(player);
     /////////// Update Music Setup ///////////
@@ -30,6 +30,6 @@ export default class {
 
     const currentPlayer = client.wacelink.players.get(player.guildId) as WacelinkPlayer;
     if (!currentPlayer) return;
-    if (currentPlayer.state !== WacelinkPlayerState.DESTROYED) await player.destroy();
+    if (!currentPlayer.sudoDestroy) await player.destroy();
   }
 }

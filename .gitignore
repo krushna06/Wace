@@ -78,6 +78,7 @@ web_modules/
 .env.test.local
 .env.production.local
 .env.local
+app.yml
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
@@ -119,9 +120,6 @@ dist
 # TernJS port file
 .tern-port
 
-# Gitpod
-.gitpod.yml
-
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
 
@@ -143,5 +141,6 @@ wace.database.json
 draft/
 temp/
 pnpm-lock.yaml
+package-lock.json
 
 test.*************

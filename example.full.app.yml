@@ -1,15 +1,18 @@
 # Wace config file via .yml
-# Version 1.0.5
+# Version 1.0.6
 # You can use ${} to pass an enviroment varible from .env file
 # Eg:
 # something: ${DATA}
 
 bot:
-  TOKEN: ""
+  # You can add more than 1 token to clone the bot 
+  # Note that performance will be dreaded and you can't set each config for each cloned bot
+  # Config data of each bot will be the same
+  TOKEN: ["Bot Token 1"]
   EMBED_COLOR: "#2B2D31"
-  OWNER_ID: ""
-  ADMIN: [""]
-  LANGUAGE: "en" # You can set it to en
+  OWNER_ID: "Your User ID"
+  ADMIN: ["<your_trusted_admin_discord_id_here>"]
+  LANGUAGE: "en" # You can set it to en, vi...
   LIMIT_TRACK: 50 # The number of tracks you want to limit
   LIMIT_PLAYLIST: 20 # The number of playlist you want to limit
   SAFE_ICONS_MODE: false # If the new icon doesn't appear, try changing this to true
@@ -20,14 +23,14 @@ lavalink:
   SPOTIFY:
     # Your Spotify ID and Secret, you can get it from here: https://developer.spotify.com
     # If you don't have or don't want, you can disable it
-    enable: true
+    enable: false
     id: ""
     secret: ""
 
   # Default search suggestion for auto complete, leave it empty will use default
   AUTOCOMPLETE_SEARCH: ["yorushika", "yoasobi", "tuyu", "hinkik"]
 
-  NP_REALTIME: false # Enable this if you want to use realtime duration in nowplaying command
+  NP_REALTIME: false # Enable this if you want to use realtime duation in nowplaying command
 
   LEAVE_TIMEOUT: 60000 # The number of leave time you want
 
@@ -38,12 +41,12 @@ lavalink:
 
   # You can add more Lavalink servers!
   NODES:
-    - host: ""
+    - host: "IP"
       port: 2333 # Your host port here
-      name: "" #only a-z A-Z 0-9 and _
-      auth: ""
+      name: "Name" #only a-z A-Z 0-9 and _
+      auth: "Password"
       secure: false
-      # In rainlink, it support lavalink v3, lavalink v4 and nodelink v2 as driver
+      # In wacelink, it support lavalink v3, lavalink v4 and nodelink v2 as driver
       # If you put the wrong driver identify here or not put anything here,
       # it will fallback to lavalink v4 driver
       # Driver identify and support range:
@@ -77,7 +80,7 @@ features:
     enable: true
     commands:
       enable: true
-      prefix: "w!" # The prefix you want
+      prefix: "d!" # The prefix you want
 
   AUTOFIX_LAVALINK: # Fix the Lavalink server when the current is down
     enable: false
@@ -88,4 +91,4 @@ features:
     enable: false
     port: 3000
     whitelist: [] # Example: ["lavalink.dev"]
-    auth: ""
+    auth: "youshallnotpass"

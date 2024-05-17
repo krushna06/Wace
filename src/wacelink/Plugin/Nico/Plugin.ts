@@ -6,7 +6,10 @@ import { SourceWacelinkPlugin } from "../../main.js";
 import NicoResolver from "./NicoResolver.js";
 import search from "./NicoSearch.js";
 
-const REGEX = RegExp("https?://(?:www\\.|secure\\.|sp\\.)?nicovideo\\.jp/watch/(?<id>(?:[a-z]{2})?[0-9]+)");
+const REGEX = RegExp(
+  // https://github.com/ytdl-org/youtube-dl/blob/a8035827177d6b59aca03bd717acb6a9bdd75ada/youtube_dl/extractor/niconico.py#L162
+  "https?://(?:www\\.|secure\\.|sp\\.)?nicovideo\\.jp/watch/(?<id>(?:[a-z]{2})?[0-9]+)"
+);
 
 /** The wacelink nicovideo plugin options */
 export interface NicoOptions {

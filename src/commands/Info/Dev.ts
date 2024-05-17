@@ -8,7 +8,7 @@ export default class implements Command {
   public name = ["developer"];
   public description = "Shows the developer information of the Bot (Credit)";
   public category = "Info";
-  public accessableby = Accessableby.Voter;
+  public accessableby = [Accessableby.Member];
   public usage = "";
   public aliases = [];
   public lavalink = false;
@@ -20,7 +20,7 @@ export default class implements Command {
 
   public async execute(client: Manager, handler: CommandHandler) {
     await handler.deferReply();
-    const nostep = new EmbedBuilder()
+    const xeondex = new EmbedBuilder()
       .setTitle(`${client.getString(handler.language, "command.info", "dev_title")}`)
       .setDescription(`${client.getString(handler.language, "command.info", "dev_desc")}`)
       .setFooter({
@@ -39,9 +39,9 @@ export default class implements Command {
         new ButtonBuilder()
           .setLabel("Support Server")
           .setStyle(ButtonStyle.Link)
-          .setURL("https://discord.gg/pphu3r49U3")
+          .setURL("https://discord.gg/aNkaHUZyMS")
       );
 
-    await handler.editReply({ embeds: [nostep], components: [row1] });
+    await handler.editReply({ embeds: [xeondex], components: [row1] });
   }
 }

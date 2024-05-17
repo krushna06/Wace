@@ -46,11 +46,16 @@ export class ConfigDataService {
       throw new Error("Config file not contains lavalink config field, please check app.example.yml for example");
     if (!res.bot.OWNER_ID)
       throw new Error("Config file not contains OWNER_ID, please check app.example.yml for example");
-    if (!res.bot.TOKEN) throw new Error("Config file not contains TOKEN, please check app.example.yml for example");
+    if (!res.bot.TOKEN || res.bot.TOKEN.length == 0)
+      throw new Error("Config file not contains TOKEN, please check app.example.yml for example");
+    if (!Array.isArray(res.bot.TOKEN))
+      throw new Error("TOKEN field not in array, please check app.example.yml for example");
     if (!res.lavalink.NODES || res.lavalink.NODES.length == 0)
       throw new Error("Config file not contains NODES, please check app.example.yml for example");
   }
 
+  // Modded from:
+  // https://github.com/shipgirlproject/Shoukaku/blob/2677ecdf123ffef1c254c2113c5342b250ac4396/src/Utils.ts#L9-L23
   mergeDefault<T extends { [key: string]: any }>(def: T, given: T): Required<T> {
     if (!given) return def as Required<T>;
     const defaultKeys: (keyof T)[] = Object.keys(def);
@@ -81,7 +86,7 @@ export class ConfigDataService {
   get defaultConfig(): Config {
     return {
       bot: {
-        TOKEN: "",
+        TOKEN: [],
         OWNER_ID: "",
         EMBED_COLOR: "#2B2D31",
         LANGUAGE: "en",

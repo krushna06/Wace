@@ -589,11 +589,11 @@ export class Wacelink extends EventEmitter {
       retryTimeout: 3000,
       retryCount: 15,
       voiceConnectionTimeout: 15000,
-      defaultSearchEngine: "youtube",
+      defaultSearchEngine: "soundcloud",
       defaultVolume: 100,
       searchFallback: {
         enable: true,
-        engine: "spotify",
+        engine: "soundcloud",
       },
       resume: false,
       userAgent: `Discord/Bot/${metadata.name}/${metadata.version} (${metadata.github})`,
@@ -603,6 +603,8 @@ export class Wacelink extends EventEmitter {
     };
   }
 
+  // Modded from:
+  // https://github.com/shipgirlproject/Shoukaku/blob/2677ecdf123ffef1c254c2113c5342b250ac4396/src/Utils.ts#L9-L23
   protected mergeDefault<T extends { [key: string]: any }>(def: T, given: T): Required<T> {
     if (!given) return def as Required<T>;
     const defaultKeys: (keyof T)[] = Object.keys(def);

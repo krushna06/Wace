@@ -13,7 +13,7 @@ export class CheckLavalinkServer {
   async execute(isLogEnable: boolean) {
     if (isLogEnable)
       this.client.logger.lavalink(
-        import.meta.url,
+        CheckLavalinkServer.name,
         "Running check lavalink server from [https://lavalink.darrennathanael.com/] source"
       );
 
@@ -29,7 +29,7 @@ export class CheckLavalinkServer {
         "Client-Name": "wacelink/1.0.0 (https://github.com/krushna06/Wacelink)",
         "User-Agent": "wacelink/1.0.0 (https://github.com/krushna06/Wacelink)",
         Authorization: config.pass,
-        "User-Id": "853620650592567304",
+        "User-Id": "977148321682575410",
         "Resume-Key": "wacelink@1.0.0(https://github.com/krushna06/Wacelink)",
       };
 

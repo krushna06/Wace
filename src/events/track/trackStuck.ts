@@ -8,7 +8,7 @@ export default class {
   async execute(client: Manager, player: WacelinkPlayer, data: Record<string, any>) {
     if (!client.isDatabaseConnected)
       return client.logger.warn(
-        import.meta.url,
+        "DatabaseService",
         "The database is not yet connected so this event will temporarily not execute. Please try again later!"
       );
 
@@ -41,13 +41,13 @@ export default class {
       );
     }
 
-    client.logger.error(import.meta.url, `Track Stuck in ${guild!.name} / ${player.guildId}.`);
+    client.logger.error("TrackStuck", `Track Stuck in ${guild!.name} / ${player.guildId}.`);
 
     const data247 = await new AutoReconnectBuilderService(client, player).get(player.guildId);
     if (data247 !== null && data247 && data247.twentyfourseven && channel)
       new ClearMessageService(client, channel, player);
     const currentPlayer = client.wacelink.players.get(player.guildId) as WacelinkPlayer;
     if (!currentPlayer) return;
-    if (currentPlayer.state !== WacelinkPlayerState.DESTROYED) await player.destroy();
+    if (!currentPlayer.sudoDestroy) await player.destroy();
   }
 }

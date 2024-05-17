@@ -1,3 +1,11 @@
+// Copyright (c) <current_year>, The PerformanC Organization
+// This is the modded version of PWSL (typescript variant) for running on Wacelink
+// Source code get from PerformanC/Internals#PWSL
+// Special thanks to all members of PerformanC Organization
+// Link: https://github.com/PerformanC/internals/tree/fbc73f6368a6971835683f4b22bb4e3b15fa0b73
+// Github repo link: https://github.com/PerformanC/internals
+// PWSL's LICENSE: https://github.com/PerformanC/internals/blob/fbc73f6368a6971835683f4b22bb4e3b15fa0b73/LICENSE
+
 import https from "node:https";
 import http from "node:http";
 import crypto from "node:crypto";

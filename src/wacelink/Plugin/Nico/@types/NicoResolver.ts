@@ -1,3 +1,6 @@
+// Code from:
+// https://github.com/y-chan/niconico-dl.js
+
 export interface NiconicoAPIData {
   media: {
     delivery: {

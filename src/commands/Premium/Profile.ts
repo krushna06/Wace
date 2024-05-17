@@ -9,7 +9,7 @@ export default class implements Command {
   public name = ["pm", "profile"];
   public description = "View your premium profile!";
   public category = "Premium";
-  public accessableby = Accessableby.Premium;
+  public accessableby = [Accessableby.Premium];
   public usage = "";
   public aliases = [];
   public lavalink = false;
@@ -58,7 +58,7 @@ export default class implements Command {
       .setDescription(
         `${client.getString(handler.language, "command.premium", "profile_desc", {
           user: String(handler.user?.tag),
-          plan: "wace@owner",
+          plan: "wace@developer",
           expires: "lifetime",
         })}`
       )

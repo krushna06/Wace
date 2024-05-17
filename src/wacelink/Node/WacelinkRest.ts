@@ -1,3 +1,6 @@
+// Modded from: https://github.com/shipgirlproject/Shoukaku/blob/396aa531096eda327ade0f473f9807576e9ae9df/src/connectors/Connector.ts
+// Special thanks to shipgirlproject team!
+
 import { WacelinkNodeOptions } from "../Interface/Manager.js";
 import { Wacelink } from "../Wacelink.js";
 import { LavalinkLoadType } from "../Interface/Constants.js";
