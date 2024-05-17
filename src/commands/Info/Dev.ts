@@ -20,7 +20,7 @@ export default class implements Command {
 
   public async execute(client: Manager, handler: CommandHandler) {
     await handler.deferReply();
-    const xeondex = new EmbedBuilder()
+    const nostepdex = new EmbedBuilder()
       .setTitle(`${client.getString(handler.language, "command.info", "dev_title")}`)
       .setDescription(`${client.getString(handler.language, "command.info", "dev_desc")}`)
       .setFooter({
@@ -42,6 +42,6 @@ export default class implements Command {
           .setURL("https://discord.gg/aNkaHUZyMS")
       );
 
-    await handler.editReply({ embeds: [xeondex], components: [row1] });
+    await handler.editReply({ embeds: [nostepdex], components: [row1] });
   }
 }
