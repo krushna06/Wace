@@ -49,13 +49,20 @@ export class Nodelink2 extends AbstractDriver {
   constructor() {
     super();
     this.sessionId = null;
-    this.playerFunctions = new WacelinkDatabase<(player: WacelinkPlayer, ...args: any) => unknown>();
+    this.playerFunctions = new WacelinkDatabase<
+      (player: WacelinkPlayer, ...args: any) => unknown
+    >();
     this.functions = new WacelinkDatabase<(manager: Wacelink, ...args: any) => unknown>();
     this.playerFunctions.set("getLyric", this.getLyric);
   }
 
   public get isRegistered(): boolean {
-    return this.manager !== null && this.node !== null && this.wsUrl.length !== 0 && this.httpUrl.length !== 0;
+    return (
+      this.manager !== null &&
+      this.node !== null &&
+      this.wsUrl.length !== 0 &&
+      this.httpUrl.length !== 0
+    );
   }
 
   public initial(manager: Wacelink, node: WacelinkNode): void {
@@ -204,7 +211,10 @@ export class Nodelink2 extends AbstractDriver {
     return;
   }
 
-  public async getLyric(player: WacelinkPlayer, language: string): Promise<NodelinkGetLyricsInterface | undefined> {
+  public async getLyric(
+    player: WacelinkPlayer,
+    language: string
+  ): Promise<NodelinkGetLyricsInterface | undefined> {
     const options: WacelinkRequesterOptions = {
       path: "/loadlyrics",
       params: {

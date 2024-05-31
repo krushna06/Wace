@@ -155,8 +155,9 @@ export class WacelinkTrack {
       const author = [this.author, `${this.author} - Topic`];
       const officialTrack = rawTracks.find(
         (track) =>
-          author.some((name) => new RegExp(`^${this.escapeRegExp(name)}$`, "i").test(track.info.author)) ||
-          new RegExp(`^${this.escapeRegExp(this.title)}$`, "i").test(track.info.title)
+          author.some((name) =>
+            new RegExp(`^${this.escapeRegExp(name)}$`, "i").test(track.info.author)
+          ) || new RegExp(`^${this.escapeRegExp(this.title)}$`, "i").test(track.info.title)
       );
       if (officialTrack) return officialTrack;
     }
@@ -176,7 +177,10 @@ export class WacelinkTrack {
     return string.replace(/[/\-\\^$*+?.()|[\]{}]/g, "\\$&");
   }
 
-  protected async resolverEngine(manager: Wacelink, node: WacelinkNode): Promise<WacelinkSearchResult> {
+  protected async resolverEngine(
+    manager: Wacelink,
+    node: WacelinkNode
+  ): Promise<WacelinkSearchResult> {
     const defaultSearchEngine = manager.wacelinkOptions.options!.defaultSearchEngine;
     const engine = manager.searchEngines.get(this.source || defaultSearchEngine || "youtube");
     const searchQuery = [this.author, this.title].filter((x) => !!x).join(" - ");
@@ -196,10 +200,13 @@ export class WacelinkTrack {
     if (prase2.tracks.length !== 0) return prase2;
 
     if (manager.wacelinkOptions.options!.searchFallback?.enable && searchFallbackEngine) {
-      const prase3 = await manager.search(`directSearch=${searchFallbackEngine}search:${searchQuery}`, {
-        requester: this.requester,
-        nodeName: node.options.name,
-      });
+      const prase3 = await manager.search(
+        `directSearch=${searchFallbackEngine}search:${searchQuery}`,
+        {
+          requester: this.requester,
+          nodeName: node.options.name,
+        }
+      );
       if (prase3.tracks.length !== 0) return prase3;
     }
 

@@ -3,7 +3,10 @@ import { LavalinkEventsEnum } from "../Interface/LavalinkEvents.js";
 import { Wacelink } from "../Wacelink.js";
 
 export class WacelinkPlayerEvents {
-  protected readonly methods: Record<string, (manager: Wacelink, data: Record<string, any>) => void>;
+  protected readonly methods: Record<
+    string,
+    (manager: Wacelink, data: Record<string, any>) => void
+  >;
 
   constructor() {
     this.methods = {
@@ -60,14 +63,17 @@ export class WacelinkPlayerEvents {
       }
       if (["loadFailed", "cleanup"].includes(data.reason)) {
         if (player.queue.current) player.queue.previous.push(player.queue.current);
-        if (!player.queue.length && !player.sudoDestroy) return manager.emit(WacelinkEvents.QueueEmpty, player);
+        if (!player.queue.length && !player.sudoDestroy)
+          return manager.emit(WacelinkEvents.QueueEmpty, player);
         manager.emit(WacelinkEvents.QueueEmpty, player, player.queue.current);
         player.queue.current = null;
         return player.play();
       }
 
-      if (player.loop == WacelinkLoopMode.SONG && player.queue.current) player.queue.unshift(player.queue.current);
-      if (player.loop == WacelinkLoopMode.QUEUE && player.queue.current) player.queue.push(player.queue.current);
+      if (player.loop == WacelinkLoopMode.SONG && player.queue.current)
+        player.queue.unshift(player.queue.current);
+      if (player.loop == WacelinkLoopMode.QUEUE && player.queue.current)
+        player.queue.push(player.queue.current);
 
       if (player.queue.current) player.queue.previous.push(player.queue.current);
       const currentSong = player.queue.current;
@@ -114,7 +120,8 @@ export class WacelinkPlayerEvents {
       manager.emit(WacelinkEvents.PlayerWebsocketClosed, player, data);
       manager.emit(
         WacelinkEvents.Debug,
-        `[Wacelink] / [Player @ ${data.guildId}] / [Events] / [WebsocketClosed] | ` + JSON.stringify(data)
+        `[Wacelink] / [Player @ ${data.guildId}] / [Events] / [WebsocketClosed] | ` +
+          JSON.stringify(data)
       );
     }
     return;

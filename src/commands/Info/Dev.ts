@@ -21,17 +21,17 @@ export default class implements Command {
   public async execute(client: Manager, handler: CommandHandler) {
     await handler.deferReply();
     const nostepdex = new EmbedBuilder()
-      .setTitle(`${client.getString(handler.language, "command.info", "dev_title")}`)
-      .setDescription(`${client.getString(handler.language, "command.info", "dev_desc")}`)
+      .setTitle(`${client.i18n.get(handler.language, "command.info", "dev_title")}`)
+      .setDescription(`${client.i18n.get(handler.language, "command.info", "dev_desc")}`)
       .setFooter({
-        text: `${client.getString(handler.language, "command.info", "dev_foot")}`,
+        text: `${client.i18n.get(handler.language, "command.info", "dev_foot")}`,
       })
       .setColor(client.color);
 
     const row1 = new ActionRowBuilder<ButtonBuilder>()
       .addComponents(
         new ButtonBuilder()
-          .setLabel("Github (krushna06)")
+          .setLabel("Github (Krushna06)")
           .setStyle(ButtonStyle.Link)
           .setURL("https://github.com/krushna06")
       )
@@ -39,7 +39,7 @@ export default class implements Command {
         new ButtonBuilder()
           .setLabel("Support Server")
           .setStyle(ButtonStyle.Link)
-          .setURL("https://discord.gg/aNkaHUZyMS")
+          .setURL("https://discord.gg/ReA5JyJCR6")
       );
 
     await handler.editReply({ embeds: [nostepdex], components: [row1] });

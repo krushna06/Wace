@@ -1,16 +1,17 @@
 import { WacelinkPlugin as Plugin } from "../WacelinkPlugin.js";
 import { Wacelink } from "../../Wacelink.js";
 import { WacelinkEvents, WacelinkPluginType } from "../../Interface/Constants.js";
-import { RawData, WebSocket } from "ws";
 import { WacelinkNode } from "../../Node/WacelinkNode.js";
 import { metadata } from "../../metadata.js";
 import { VoiceChannelOptions } from "../../Interface/Player.js";
+import { WacelinkDatabase, WacelinkWebsocket } from "../../main.js";
 
 export class WacelinkPlugin extends Plugin {
   protected manager?: Wacelink;
   /** Whenever the plugin is enabled or not */
   public enabled: boolean = false;
-  protected runningWs: Map<string, WebSocket> = new Map<string, WebSocket>();
+  protected runningWs: WacelinkDatabase<WacelinkWebsocket> =
+    new WacelinkDatabase<WacelinkWebsocket>();
 
   constructor() {
     super();
@@ -30,9 +31,11 @@ export class WacelinkPlugin extends Plugin {
   public open(node: WacelinkNode, voiceOptions: VoiceChannelOptions): void {
     if (!this.enabled) throw new Error("This plugin is unloaded!");
     if (!node.options.driver?.includes("nodelink"))
-      throw new Error("This node not support voice receiver, please use Nodelink2 to use this feature!");
+      throw new Error(
+        "This node not support voice receiver, please use Nodelink2 to use this feature!"
+      );
     const wsUrl = `${node.options.secure ? "wss" : "ws"}://${node.options.host}:${node.options.port}`;
-    const ws = new WebSocket(wsUrl + "/connection/data", {
+    const ws = new WacelinkWebsocket(wsUrl + "/connection/data", {
       headers: {
         Authorization: node.options.auth,
         "User-Id": this.manager!.id,
@@ -46,13 +49,15 @@ export class WacelinkPlugin extends Plugin {
       this.debug("Connected to nodelink's voice receive server!");
       this.manager?.emit(WacelinkEvents.VoiceConnect, node);
     });
-    ws.on("message", (data: RawData) => this.wsMessageEvent(node, data));
+    ws.on("message", (data) => this.wsMessageEvent(node, data));
     ws.on("error", (err) => {
       this.debug("Errored at nodelink's voice receive server!");
       this.manager?.emit(WacelinkEvents.VoiceError, node, err);
     });
     ws.on("close", (code: number, reason: Buffer) => {
-      this.debug(`Disconnected to nodelink's voice receive server! Code: ${code} Reason: ${reason}`);
+      this.debug(
+        `Disconnected to nodelink's voice receive server! Code: ${code} Reason: ${reason}`
+      );
       this.manager?.emit(WacelinkEvents.VoiceDisconnect, node, code, reason);
       ws.removeAllListeners();
     });
@@ -69,12 +74,17 @@ export class WacelinkPlugin extends Plugin {
     return;
   }
 
-  protected wsMessageEvent(node: WacelinkNode, data: RawData) {
+  protected wsMessageEvent(node: WacelinkNode, data: Record<string, unknown>) {
     const wsData = JSON.parse(data.toString());
     this.debug(String(data));
     switch (wsData.type) {
       case "startSpeakingEvent": {
-        this.manager?.emit(WacelinkEvents.VoiceStartSpeaking, node, wsData.data.userId, wsData.data.guildId);
+        this.manager?.emit(
+          WacelinkEvents.VoiceStartSpeaking,
+          node,
+          wsData.data.userId,
+          wsData.data.guildId
+        );
         break;
       }
       case "endSpeakingEvent": {
@@ -104,6 +114,11 @@ export class WacelinkPlugin extends Plugin {
   }
 
   private debug(logs: string) {
-    this.manager ? this.manager.emit(WacelinkEvents.Debug, `[Wacelink] / [Plugin] / [Voice Receiver] | ${logs}`) : true;
+    this.manager
+      ? this.manager.emit(
+          WacelinkEvents.Debug,
+          `[Wacelink] / [Plugin] / [Voice Receiver] | ${logs}`
+        )
+      : true;
   }
 }

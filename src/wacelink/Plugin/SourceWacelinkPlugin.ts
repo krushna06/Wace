@@ -37,7 +37,10 @@ export class SourceWacelinkPlugin extends WacelinkPlugin {
    * @returns WacelinkSearchResult
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public async searchDirect(query: string, options?: WacelinkSearchOptions): Promise<WacelinkSearchResult> {
+  public async searchDirect(
+    query: string,
+    options?: WacelinkSearchOptions
+  ): Promise<WacelinkSearchResult> {
     throw new Error("Source plugin must implement sourceIdentify() and return as string");
   }
 }

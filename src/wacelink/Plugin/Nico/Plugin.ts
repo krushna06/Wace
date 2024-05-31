@@ -1,5 +1,9 @@
 import { WacelinkEvents, WacelinkPluginType } from "../../main.js";
-import { WacelinkSearchOptions, WacelinkSearchResult, WacelinkSearchResultType } from "../../main.js";
+import {
+  WacelinkSearchOptions,
+  WacelinkSearchResult,
+  WacelinkSearchResultType,
+} from "../../main.js";
 import { WacelinkTrack } from "../../main.js";
 import { Wacelink } from "../../main.js";
 import { SourceWacelinkPlugin } from "../../main.js";
@@ -22,7 +26,9 @@ export class WacelinkPlugin extends SourceWacelinkPlugin {
    * The options of the plugin.
    */
   public options: NicoOptions;
-  private _search: ((query: string, options?: WacelinkSearchOptions) => Promise<WacelinkSearchResult>) | undefined;
+  private _search:
+    | ((query: string, options?: WacelinkSearchOptions) => Promise<WacelinkSearchResult>)
+    | undefined;
   private wacelink: Wacelink | null;
 
   private readonly methods: Record<string, (id: string, requester: unknown) => Promise<Result>>;
@@ -88,7 +94,10 @@ export class WacelinkPlugin extends SourceWacelinkPlugin {
     return "wacelink-nico";
   }
 
-  private async search(query: string, options?: WacelinkSearchOptions): Promise<WacelinkSearchResult> {
+  private async search(
+    query: string,
+    options?: WacelinkSearchOptions
+  ): Promise<WacelinkSearchResult> {
     const res = await this._search!(query, options);
     if (!this.directSearchChecker(query)) return res;
     if (res.tracks.length == 0) return this.searchDirect(query, options);
@@ -101,7 +110,10 @@ export class WacelinkPlugin extends SourceWacelinkPlugin {
    * @param options search option like WacelinkSearchOptions
    * @returns WacelinkSearchResult
    */
-  public async searchDirect(query: string, options?: WacelinkSearchOptions | undefined): Promise<WacelinkSearchResult> {
+  public async searchDirect(
+    query: string,
+    options?: WacelinkSearchOptions | undefined
+  ): Promise<WacelinkSearchResult> {
     if (!this.wacelink || !this._search) throw new Error("wacelink-nico is not loaded yet.");
 
     if (!query) throw new Error("Query is required");
@@ -205,7 +217,9 @@ export class WacelinkPlugin extends SourceWacelinkPlugin {
   }
 
   private debug(logs: string) {
-    this.wacelink ? this.wacelink.emit(WacelinkEvents.Debug, `[Wacelink Nico Plugin]: ${logs}`) : true;
+    this.wacelink
+      ? this.wacelink.emit(WacelinkEvents.Debug, `[Wacelink Nico Plugin]: ${logs}`)
+      : true;
   }
 }
 

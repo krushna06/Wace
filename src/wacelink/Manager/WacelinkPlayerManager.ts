@@ -24,12 +24,14 @@ export class WacelinkPlayerManager extends WacelinkDatabase<WacelinkPlayer> {
    * @internal
    */
   async create(options: VoiceChannelOptions): Promise<WacelinkPlayer> {
-    if (this.get(options.guildId)) throw new Error("This guild already have an existing player");
+    const createdPlayer = this.get(options.guildId);
+    if (createdPlayer) return createdPlayer;
     const getCustomNode = this.manager.nodes.get(String(options.nodeName ? options.nodeName : ""));
     const node = getCustomNode ? getCustomNode : await this.manager.nodes.getLeastUsed();
     if (!node) throw new Error("Can't find any nodes to connect on");
     const customPlayer =
-      this.manager.wacelinkOptions.options!.structures && this.manager.wacelinkOptions.options!.structures.player;
+      this.manager.wacelinkOptions.options!.structures &&
+      this.manager.wacelinkOptions.options!.structures.player;
     let player = customPlayer
       ? new customPlayer(this.manager, options, node)
       : new WacelinkPlayer(this.manager, options, node);

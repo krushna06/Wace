@@ -1,12 +1,17 @@
 import { request } from "undici";
 import { WacelinkPluginType } from "../../Interface/Constants.js";
-import { WacelinkSearchOptions, WacelinkSearchResult, WacelinkSearchResultType } from "../../Interface/Manager.js";
+import {
+  WacelinkSearchOptions,
+  WacelinkSearchResult,
+  WacelinkSearchResultType,
+} from "../../Interface/Manager.js";
 import { WacelinkTrack } from "../../Player/WacelinkTrack.js";
 import { Wacelink } from "../../Wacelink.js";
 import { SourceWacelinkPlugin } from "../SourceWacelinkPlugin.js";
 import { RequestManager } from "./RequestManager.js";
 
-const REGEX = /(?:https:\/\/open\.spotify\.com\/|spotify:)(?:.+)?(track|playlist|album|artist)[\/:]([A-Za-z0-9]+)/;
+const REGEX =
+  /(?:https:\/\/open\.spotify\.com\/|spotify:)(?:.+)?(track|playlist|album|artist)[\/:]([A-Za-z0-9]+)/;
 const SHORT_REGEX = /(?:https:\/\/spotify\.link)\/([A-Za-z0-9]+)/;
 
 /** The wacelink spotify plugin options */
@@ -33,7 +38,9 @@ export class WacelinkPlugin extends SourceWacelinkPlugin {
    */
   public options: SpotifyOptions;
 
-  private _search: ((query: string, options?: WacelinkSearchOptions) => Promise<WacelinkSearchResult>) | null;
+  private _search:
+    | ((query: string, options?: WacelinkSearchOptions) => Promise<WacelinkSearchResult>)
+    | null;
   private wacelink: Wacelink | null;
 
   private readonly methods: Record<string, (id: string, requester: unknown) => Promise<Result>>;
@@ -106,7 +113,10 @@ export class WacelinkPlugin extends SourceWacelinkPlugin {
     return "wacelink-spotify";
   }
 
-  protected async search(query: string, options?: WacelinkSearchOptions): Promise<WacelinkSearchResult> {
+  protected async search(
+    query: string,
+    options?: WacelinkSearchOptions
+  ): Promise<WacelinkSearchResult> {
     const res = await this._search!(query, options);
     if (!this.directSearchChecker(query)) return res;
     if (res.tracks.length == 0) return this.searchDirect(query, options);
@@ -119,7 +129,10 @@ export class WacelinkPlugin extends SourceWacelinkPlugin {
    * @param options search option like WacelinkSearchOptions
    * @returns WacelinkSearchResult
    */
-  public async searchDirect(query: string, options?: WacelinkSearchOptions | undefined): Promise<WacelinkSearchResult> {
+  public async searchDirect(
+    query: string,
+    options?: WacelinkSearchOptions | undefined
+  ): Promise<WacelinkSearchResult> {
     if (!this.wacelink || !this._search) throw new Error("wacelink-spotify is not loaded yet.");
 
     if (!query) throw new Error("Query is required");
@@ -138,7 +151,8 @@ export class WacelinkPlugin extends SourceWacelinkPlugin {
         const _function = this.methods[type];
         const result: Result = await _function(id, options?.requester);
 
-        const loadType = type === "track" ? WacelinkSearchResultType.TRACK : WacelinkSearchResultType.PLAYLIST;
+        const loadType =
+          type === "track" ? WacelinkSearchResultType.TRACK : WacelinkSearchResultType.PLAYLIST;
         const playlistName = result.name ?? undefined;
 
         const tracks = result.tracks.filter(this.filterNullOrUndefined);
@@ -195,7 +209,10 @@ export class WacelinkPlugin extends SourceWacelinkPlugin {
       let next = album.tracks.next;
       let page = 1;
 
-      while (next && (!this.options.playlistPageLimit ? true : page < this.options.playlistPageLimit ?? 1)) {
+      while (
+        next &&
+        (!this.options.playlistPageLimit ? true : page < this.options.playlistPageLimit ?? 1)
+      ) {
         const nextTracks = await this.requestManager.makeRequest<PlaylistTracks>(next ?? "", true);
         page++;
         if (nextTracks.items.length) {
@@ -204,7 +221,9 @@ export class WacelinkPlugin extends SourceWacelinkPlugin {
             ...nextTracks.items
               .filter(this.filterNullOrUndefined)
               .filter((a) => a.track)
-              .map((track) => this.buildwacelinkTrack(track.track!, requester, album.images[0]?.url))
+              .map((track) =>
+                this.buildwacelinkTrack(track.track!, requester, album.images[0]?.url)
+              )
           );
         }
       }
@@ -238,7 +257,10 @@ export class WacelinkPlugin extends SourceWacelinkPlugin {
     if (playlist && tracks.length) {
       let next = playlist.tracks.next;
       let page = 1;
-      while (next && (!this.options.playlistPageLimit ? true : page < this.options.playlistPageLimit ?? 1)) {
+      while (
+        next &&
+        (!this.options.playlistPageLimit ? true : page < this.options.playlistPageLimit ?? 1)
+      ) {
         const nextTracks = await this.requestManager.makeRequest<PlaylistTracks>(next ?? "", true);
         page++;
         if (nextTracks.items.length) {
@@ -247,7 +269,9 @@ export class WacelinkPlugin extends SourceWacelinkPlugin {
             ...nextTracks.items
               .filter(this.filterNullOrUndefined)
               .filter((a) => a.track)
-              .map((track) => this.buildwacelinkTrack(track.track!, requester, playlist.images[0]?.url))
+              .map((track) =>
+                this.buildwacelinkTrack(track.track!, requester, playlist.images[0]?.url)
+              )
           );
         }
       }

@@ -8,7 +8,12 @@ export class ButtonLoop {
   interaction: ButtonInteraction;
   language: string;
   player: WacelinkPlayer;
-  constructor(client: Manager, interaction: ButtonInteraction, language: string, player: WacelinkPlayer) {
+  constructor(
+    client: Manager,
+    interaction: ButtonInteraction,
+    language: string,
+    player: WacelinkPlayer
+  ) {
     this.client = client;
     this.language = language;
     this.player = player;
@@ -23,12 +28,13 @@ export class ButtonLoop {
 
     switch (this.player.loop) {
       case "none":
-        await this.player.setLoop(WacelinkLoopMode.SONG);
+        this.player.setLoop(WacelinkLoopMode.SONG);
 
-        this.setLoop247(String(WacelinkLoopMode.SONG));
+        if (this.client.config.utilities.AUTO_RESUME)
+          this.setLoop247(String(WacelinkLoopMode.SONG));
 
         const looptrack = new EmbedBuilder()
-          .setDescription(`${this.client.getString(this.language, "button.music", "loop_current")}`)
+          .setDescription(`${this.client.i18n.get(this.language, "button.music", "loop_current")}`)
           .setColor(this.client.color);
         await this.interaction.reply({
           content: " ",
@@ -43,12 +49,13 @@ export class ButtonLoop {
         break;
 
       case "song":
-        await this.player.setLoop(WacelinkLoopMode.QUEUE);
+        this.player.setLoop(WacelinkLoopMode.QUEUE);
 
-        this.setLoop247(String(WacelinkLoopMode.QUEUE));
+        if (this.client.config.utilities.AUTO_RESUME)
+          this.setLoop247(String(WacelinkLoopMode.QUEUE));
 
         const loopall = new EmbedBuilder()
-          .setDescription(`${this.client.getString(this.language, "button.music", "loop_all")}`)
+          .setDescription(`${this.client.i18n.get(this.language, "button.music", "loop_all")}`)
           .setColor(this.client.color);
         await this.interaction.reply({
           content: " ",
@@ -63,12 +70,13 @@ export class ButtonLoop {
         break;
 
       case "queue":
-        await this.player.setLoop(WacelinkLoopMode.NONE);
+        this.player.setLoop(WacelinkLoopMode.NONE);
 
-        this.setLoop247(String(WacelinkLoopMode.NONE));
+        if (this.client.config.utilities.AUTO_RESUME)
+          this.setLoop247(String(WacelinkLoopMode.NONE));
 
         const unloopall = new EmbedBuilder()
-          .setDescription(`${this.client.getString(this.language, "button.music", "unloop_all")}`)
+          .setDescription(`${this.client.i18n.get(this.language, "button.music", "unloop_all")}`)
           .setColor(this.client.color);
         await this.interaction.reply({
           content: " ",
@@ -85,7 +93,9 @@ export class ButtonLoop {
   }
 
   async setLoop247(loop: string) {
-    const check = await new AutoReconnectBuilderService(this.client, this.player).execute(this.player.guildId);
+    const check = await new AutoReconnectBuilderService(this.client, this.player).execute(
+      this.player.guildId
+    );
     if (check) {
       await this.client.db.autoreconnect.set(`${this.player.guildId}.config.loop`, loop);
     }

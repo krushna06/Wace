@@ -23,7 +23,6 @@ const ignored = [
   "src",
   "scripts",
   "build.mjs",
-  "wace.database.json",
   "pnpm-lock.yaml",
   "tsconfig.json",
   ".github",

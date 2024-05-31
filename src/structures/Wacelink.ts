@@ -1,5 +1,11 @@
 import { Manager } from "../manager.js";
-import { Library, Plugin, Wacelink, WacelinkAdditionalOptions, WacelinkPlugin } from "../wacelink/main.js";
+import {
+  Library,
+  Plugin,
+  Wacelink,
+  WacelinkAdditionalOptions,
+  WacelinkPlugin,
+} from "../wacelink/main.js";
 
 export class WacelinkInit {
   client: Manager;
@@ -10,9 +16,11 @@ export class WacelinkInit {
   get init(): Wacelink {
     return new Wacelink({
       library: new Library.DiscordJS(this.client),
-      nodes: this.client.config.lavalink.NODES,
+      nodes: this.client.config.player.NODES,
       plugins: this.plugins,
-      options: this.client.config.features.AUTOFIX_LAVALINK.enable ? this.autofixConfig : this.defaultConfig,
+      options: this.client.config.utilities.AUTOFIX_LAVALINK.enable
+        ? this.autofixConfig
+        : this.defaultConfig,
     });
   }
 
@@ -22,6 +30,7 @@ export class WacelinkInit {
       resumeTimeout: 600,
       retryCount: Infinity,
       retryTimeout: 3000,
+      defaultSearchEngine: "youtube",
       searchFallback: {
         enable: true,
         engine: "youtube",
@@ -31,8 +40,9 @@ export class WacelinkInit {
 
   get autofixConfig(): WacelinkAdditionalOptions {
     return {
-      retryCount: this.client.config.features.AUTOFIX_LAVALINK.retryCount,
-      retryTimeout: this.client.config.features.AUTOFIX_LAVALINK.retryTimeout,
+      retryCount: this.client.config.utilities.AUTOFIX_LAVALINK.retryCount,
+      retryTimeout: this.client.config.utilities.AUTOFIX_LAVALINK.retryTimeout,
+      defaultSearchEngine: "youtube",
     };
   }
 
@@ -43,18 +53,18 @@ export class WacelinkInit {
       new Plugin.Apple({ countryCode: "us" }),
     ];
 
-    if (this.client.config.lavalink.AVOID_SUSPEND)
+    if (this.client.config.player.AVOID_SUSPEND)
       defaultPlugins.push(
         new Plugin.YoutubeConverter({
           sources: ["scsearch"],
         })
       );
 
-    if (this.client.config.lavalink.SPOTIFY.enable)
+    if (this.client.config.player.SPOTIFY.enable)
       defaultPlugins.push(
         new Plugin.Spotify({
-          clientId: this.client.config.lavalink.SPOTIFY.id,
-          clientSecret: this.client.config.lavalink.SPOTIFY.secret,
+          clientId: this.client.config.player.SPOTIFY.id,
+          clientSecret: this.client.config.player.SPOTIFY.secret,
           playlistPageLimit: 1,
           albumPageLimit: 1,
           searchLimit: 10,

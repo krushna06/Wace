@@ -1,17 +1,12 @@
 import { Manager } from "../../manager.js";
-import {
-  ButtonInteraction,
-  ComponentType,
-  TextChannel,
-  StringSelectMenuBuilder,
-  StringSelectMenuOptionBuilder,
-} from "discord.js";
+import { ComponentType, TextChannel } from "discord.js";
 import { EmbedBuilder } from "discord.js";
-import { FormatDuration } from "../../utilities/FormatDuration.js";
-import { filterSelect, playerRowOne, playerRowTwo } from "../../assets/PlayerControlButton.js";
+import { formatDuration } from "../../utilities/FormatDuration.js";
+import { filterSelect, playerRowOne, playerRowTwo } from "../../utilities/PlayerControlButton.js";
 import { AutoReconnectBuilderService } from "../../services/AutoReconnectBuilderService.js";
 import { SongNotiEnum } from "../../database/schema/SongNoti.js";
 import { WacelinkFilterMode, WacelinkPlayer, WacelinkTrack } from "../../wacelink/main.js";
+import { getTitle } from "../../utilities/GetTitle.js";
 
 export default class {
   async execute(client: Manager, player: WacelinkPlayer, track: WacelinkTrack) {
@@ -25,7 +20,8 @@ export default class {
     client.logger.info("TrackStart", `Track Started in @ ${guild!.name} / ${player.guildId}`);
 
     let SongNoti = await client.db.songNoti.get(`${player.guildId}`);
-    if (!SongNoti) SongNoti = await client.db.songNoti.set(`${player.guildId}`, SongNotiEnum.Enable);
+    if (!SongNoti)
+      SongNoti = await client.db.songNoti.set(`${player.guildId}`, SongNotiEnum.Enable);
 
     if (!player) return;
 
@@ -35,37 +31,40 @@ export default class {
 
     /////////// Update Music Setup ///////////
 
-    const channel = (await client.channels.fetch(player.textId).catch(() => undefined)) as TextChannel;
+    const channel = (await client.channels
+      .fetch(player.textId)
+      .catch(() => undefined)) as TextChannel;
     if (!channel) return;
 
     client.emit("trackStart", player);
 
-    const autoreconnect = new AutoReconnectBuilderService(client, player);
+    if (client.config.utilities.AUTO_RESUME) {
+      const autoreconnect = new AutoReconnectBuilderService(client, player);
+      const getData = await autoreconnect.get(player.guildId);
+      if (!getData) await autoreconnect.playerBuild(player.guildId);
+      else {
+        await client.db.autoreconnect.set(`${player.guildId}.current`, player.queue.current?.uri);
+        await client.db.autoreconnect.set(`${player.guildId}.config.loop`, player.loop);
 
-    if (await autoreconnect.get(player.guildId)) {
-      await client.db.autoreconnect.set(`${player.guildId}.current`, player.queue.current?.uri);
-      await client.db.autoreconnect.set(`${player.guildId}.config.loop`, player.loop);
-
-      function queueUri() {
-        const res = [];
-        for (let data of player.queue) {
-          res.push(data.uri);
+        function queueUri() {
+          const res = [];
+          for (let data of player.queue) {
+            res.push(data.uri);
+          }
+          return res.length !== 0 ? res : [];
         }
-        return res.length !== 0 ? res : [];
-      }
 
-      function previousUri() {
-        const res = [];
-        for (let data of player.queue.previous) {
-          res.push(data.uri);
+        function previousUri() {
+          const res = [];
+          for (let data of player.queue.previous) {
+            res.push(data.uri);
+          }
+          return res.length !== 0 ? res : [];
         }
-        return res.length !== 0 ? res : [];
-      }
 
-      await client.db.autoreconnect.set(`${player.guildId}.queue`, queueUri());
-      await client.db.autoreconnect.set(`${player.guildId}.previous`, previousUri());
-    } else {
-      await autoreconnect.playerBuild(player.guildId);
+        await client.db.autoreconnect.set(`${player.guildId}.queue`, queueUri());
+        await client.db.autoreconnect.set(`${player.guildId}.previous`, previousUri());
+      }
     }
 
     let data = await client.db.setup.get(`${channel.guild.id}`);
@@ -82,51 +81,48 @@ export default class {
 
     if (SongNoti == SongNotiEnum.Disable) return;
 
-    function getTitle(tracks: WacelinkTrack): string {
-      if (client.config.lavalink.AVOID_SUSPEND) return tracks.title;
-      else {
-        return `[${tracks.title}](${tracks.uri})`;
-      }
-    }
-
     const embeded = new EmbedBuilder()
       .setAuthor({
-        name: `${client.getString(language, "event.player", "track_title")}`,
-        iconURL: `${client.getString(language, "event.player", "track_icon")}`,
+        name: `${client.i18n.get(language, "event.player", "track_title")}`,
+        iconURL: `${client.i18n.get(language, "event.player", "track_icon")}`,
       })
-      .setDescription(`**${getTitle(track)}**`)
+      .setDescription(`**${getTitle(client, track)}**`)
       .addFields([
         {
-          name: `${client.getString(language, "event.player", "author_title")}`,
+          name: `${client.i18n.get(language, "event.player", "author_title")}`,
           value: `${song!.author}`,
           inline: true,
         },
         {
-          name: `${client.getString(language, "event.player", "duration_title")}`,
-          value: `${new FormatDuration().parse(song!.duration)}`,
+          name: `${client.i18n.get(language, "event.player", "duration_title")}`,
+          value: `${formatDuration(song!.duration)}`,
           inline: true,
         },
         {
-          name: `${client.getString(language, "event.player", "request_title")}`,
+          name: `${client.i18n.get(language, "event.player", "request_title")}`,
           value: `${song!.requester}`,
           inline: true,
         },
         {
-          name: `${client.getString(language, "event.player", "download_title")}`,
+          name: `${client.i18n.get(language, "event.player", "download_title")}`,
           value: `**[${song!.title} - 000tube.com](https://www.000tube.com/watch?v=${song?.identifier})**`,
           inline: false,
         },
       ])
       .setColor(client.color)
-      .setThumbnail(`https://img.youtube.com/vi/${track.identifier}/hqdefault.jpg`)
+      .setThumbnail(
+        track.artworkUrl ?? `https://img.youtube.com/vi/${track.identifier}/hqdefault.jpg`
+      )
       .setTimestamp();
 
-    const playing_channel = (await client.channels.fetch(player.textId).catch(() => undefined)) as TextChannel;
+    const playing_channel = (await client.channels
+      .fetch(player.textId)
+      .catch(() => undefined)) as TextChannel;
 
     const nplaying = playing_channel
       ? await playing_channel.send({
           embeds: [embeded],
-          components: [filterSelect(client), playerRowOne, playerRowTwo],
+          components: [filterSelect(client), playerRowOne(client), playerRowTwo(client)],
           // files: client.config.bot.SAFE_PLAYER_MODE ? [] : [attachment],
         })
       : undefined;
@@ -143,7 +139,7 @@ export default class {
           return true;
         else {
           message.reply({
-            content: `${client.getString(language, "event.player", "join_voice")}`,
+            content: `${client.i18n.get(language, "event.player", "join_voice")}`,
             ephemeral: true,
           });
           return false;
@@ -161,7 +157,7 @@ export default class {
           return true;
         else {
           message.reply({
-            content: `${client.getString(language, "event.player", "join_voice")}`,
+            content: `${client.i18n.get(language, "event.player", "join_voice")}`,
             ephemeral: true,
           });
           return false;
@@ -169,45 +165,61 @@ export default class {
       },
     });
 
-    client.nplayingMsg.set(player.guildId, { coll: collector, msg: nplaying, filterColl: collectorFilter });
+    client.nplayingMsg.set(player.guildId, {
+      coll: collector,
+      msg: nplaying,
+      filterColl: collectorFilter,
+    });
 
     collectorFilter.on("collect", async (message): Promise<void> => {
       const filterMode = message.values[0] as WacelinkFilterMode;
 
       if (player.data.get("filter-mode") == filterMode) {
         const embed = new EmbedBuilder()
-          .setDescription(`${client.getString(language, "button.music", "filter_already", { name: filterMode })}`)
+          .setDescription(
+            `${client.i18n.get(language, "button.music", "filter_already", { name: filterMode })}`
+          )
           .setColor(client.color);
         const msg = await message
           .reply({
             embeds: [embed],
           })
           .catch(() => {});
-        if (msg) setTimeout(() => msg.delete().catch(() => {}), client.config.bot.DELETE_MSG_TIMEOUT);
+        if (msg)
+          setTimeout(
+            () => msg.delete().catch(() => {}),
+            client.config.utilities.DELETE_MSG_TIMEOUT
+          );
         return;
       }
 
       if (filterMode == "clear" && !player.data.get("filter-mode")) {
         const embed = new EmbedBuilder()
-          .setDescription(`${client.getString(language, "button.music", "reset_already")}`)
+          .setDescription(`${client.i18n.get(language, "button.music", "reset_already")}`)
           .setColor(client.color);
         const msg = await message
           .reply({
             embeds: [embed],
           })
           .catch(() => {});
-        if (msg) setTimeout(() => msg.delete().catch(() => {}), client.config.bot.DELETE_MSG_TIMEOUT);
+        if (msg)
+          setTimeout(
+            () => msg.delete().catch(() => {}),
+            client.config.utilities.DELETE_MSG_TIMEOUT
+          );
         return;
       }
 
-      filterMode == "clear" ? player.data.delete("filter-mode") : player.data.set("filter-mode", filterMode);
+      filterMode == "clear"
+        ? player.data.delete("filter-mode")
+        : player.data.set("filter-mode", filterMode);
       filterMode == "clear" ? await player.filter.clear() : await player.filter.set(filterMode);
 
       const embed = new EmbedBuilder()
         .setDescription(
           filterMode == "clear"
-            ? `${client.getString(language, "button.music", "reset_on")}`
-            : `${client.getString(language, "button.music", "filter_on", { name: filterMode })}`
+            ? `${client.i18n.get(language, "button.music", "reset_on")}`
+            : `${client.i18n.get(language, "button.music", "filter_on", { name: filterMode })}`
         )
         .setColor(client.color);
 
@@ -216,7 +228,8 @@ export default class {
           embeds: [embed],
         })
         .catch(() => {});
-      if (msg) setTimeout(() => msg.delete().catch(() => {}), client.config.bot.DELETE_MSG_TIMEOUT);
+      if (msg)
+        setTimeout(() => msg.delete().catch(() => {}), client.config.utilities.DELETE_MSG_TIMEOUT);
     });
 
     collector.on("collect", async (message): Promise<void> => {

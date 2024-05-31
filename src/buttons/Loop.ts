@@ -28,9 +28,13 @@ export default class implements PlayerButton {
       case "none":
         player.setLoop(WacelinkLoopMode.SONG);
 
-        setLoop247(WacelinkLoopMode.SONG);
+        if (client.config.utilities.AUTO_RESUME) setLoop247(WacelinkLoopMode.SONG);
 
-        new ReplyInteractionService(client, message, `${client.getString(language, "button.music", "loop_current")}`);
+        new ReplyInteractionService(
+          client,
+          message,
+          `${client.i18n.get(language, "button.music", "loop_current")}`
+        );
 
         client.wsl.get(message.guild!.id)?.send({
           op: "playerLoop",
@@ -43,9 +47,13 @@ export default class implements PlayerButton {
       case "song":
         player.setLoop(WacelinkLoopMode.QUEUE);
 
-        setLoop247(WacelinkLoopMode.QUEUE);
+        if (client.config.utilities.AUTO_RESUME) setLoop247(WacelinkLoopMode.QUEUE);
 
-        new ReplyInteractionService(client, message, `${client.getString(language, "button.music", "loop_all")}`);
+        new ReplyInteractionService(
+          client,
+          message,
+          `${client.i18n.get(language, "button.music", "loop_all")}`
+        );
 
         client.wsl.get(message.guild!.id)?.send({
           op: "playerLoop",
@@ -58,9 +66,13 @@ export default class implements PlayerButton {
       case "queue":
         player.setLoop(WacelinkLoopMode.NONE);
 
-        setLoop247(WacelinkLoopMode.NONE);
+        if (client.config.utilities.AUTO_RESUME) setLoop247(WacelinkLoopMode.NONE);
 
-        new ReplyInteractionService(client, message, `${client.getString(language, "button.music", "unloop_all")}`);
+        new ReplyInteractionService(
+          client,
+          message,
+          `${client.i18n.get(language, "button.music", "unloop_all")}`
+        );
 
         client.wsl.get(message.guild!.id)?.send({
           op: "playerLoop",

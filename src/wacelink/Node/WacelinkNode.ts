@@ -48,8 +48,11 @@ export class WacelinkNode {
     }
     this.driver.initial(manager, this);
     const customRest =
-      this.manager.wacelinkOptions.options!.structures && this.manager.wacelinkOptions.options!.structures.rest;
-    this.rest = customRest ? new customRest(manager, options, this) : new WacelinkRest(manager, options, this);
+      this.manager.wacelinkOptions.options!.structures &&
+      this.manager.wacelinkOptions.options!.structures.rest;
+    this.rest = customRest
+      ? new customRest(manager, options, this)
+      : new WacelinkRest(manager, options, this);
     this.wsEvent = new WacelinkPlayerEvents();
     this.stats = {
       players: 0,
@@ -95,7 +98,8 @@ export class WacelinkNode {
         const timeout = this.manager.wacelinkOptions.options?.resumeTimeout;
         this.driver.sessionId = data.sessionId;
         const customRest =
-          this.manager.wacelinkOptions.options!.structures && this.manager.wacelinkOptions.options!.structures.rest;
+          this.manager.wacelinkOptions.options!.structures &&
+          this.manager.wacelinkOptions.options!.structures.rest;
         this.rest = customRest
           ? new customRest(this.manager, this.options, this)
           : new WacelinkRest(this.manager, this.options, this);
@@ -131,7 +135,10 @@ export class WacelinkNode {
     this.state = WacelinkConnectState.Disconnected;
     this.debug(`Node disconnected! URL: ${this.driver.wsUrl}`);
     this.manager.emit(WacelinkEvents.NodeDisconnect, this, code, reason);
-    if (!this.sudoDisconnect && this.retryCounter !== this.manager.wacelinkOptions.options!.retryCount) {
+    if (
+      !this.sudoDisconnect &&
+      this.retryCounter !== this.manager.wacelinkOptions.options!.retryCount
+    ) {
       await setTimeout(this.manager.wacelinkOptions.options!.retryTimeout);
       this.retryCounter = this.retryCounter + 1;
       this.reconnect(true);

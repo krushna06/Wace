@@ -1,6 +1,10 @@
 import { WacelinkTrack } from "../../main.js";
 import { WacelinkPluginType } from "../../main.js";
-import { WacelinkSearchOptions, WacelinkSearchResult, WacelinkSearchResultType } from "../../main.js";
+import {
+  WacelinkSearchOptions,
+  WacelinkSearchResult,
+  WacelinkSearchResultType,
+} from "../../main.js";
 import { Wacelink } from "../../main.js";
 import { WacelinkPlugin as Plugin } from "../../main.js";
 
@@ -20,11 +24,15 @@ export type YoutubeConvertOptions = {
 
 export class WacelinkPlugin extends Plugin {
   private options: YoutubeConvertOptions;
-  private _search?: (query: string, options?: WacelinkSearchOptions) => Promise<WacelinkSearchResult>;
+  private _search?: (
+    query: string,
+    options?: WacelinkSearchOptions
+  ) => Promise<WacelinkSearchResult>;
   constructor(options?: YoutubeConvertOptions) {
     super();
     this.options = options ?? { sources: ["scsearch"] };
-    if (!this.options.sources || this.options.sources.length == 0) this.options.sources = ["scsearch"];
+    if (!this.options.sources || this.options.sources.length == 0)
+      this.options.sources = ["scsearch"];
   }
   /** Name function for getting plugin name */
   public name(): string {
@@ -51,7 +59,10 @@ export class WacelinkPlugin extends Plugin {
     this._search = undefined;
   }
 
-  private async search(query: string, options?: WacelinkSearchOptions): Promise<WacelinkSearchResult> {
+  private async search(
+    query: string,
+    options?: WacelinkSearchOptions
+  ): Promise<WacelinkSearchResult> {
     // Check if search func avaliable
     if (!this._search) return this.buildSearch(undefined, [], WacelinkSearchResultType.SEARCH);
 
@@ -80,7 +91,10 @@ export class WacelinkPlugin extends Plugin {
     return preRes;
   }
 
-  private async searchEngine(query: string, options?: WacelinkSearchOptions): Promise<WacelinkSearchResult> {
+  private async searchEngine(
+    query: string,
+    options?: WacelinkSearchOptions
+  ): Promise<WacelinkSearchResult> {
     if (!this._search) return this.buildSearch(undefined, [], WacelinkSearchResultType.SEARCH);
     for (const SearchParams of this.options.sources!) {
       const res = await this._search(`directSearch=${SearchParams}:${query}`, options);

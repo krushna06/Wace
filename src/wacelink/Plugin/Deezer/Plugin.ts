@@ -1,4 +1,8 @@
-import { WacelinkSearchOptions, WacelinkSearchResult, WacelinkSearchResultType } from "../../Interface/Manager.js";
+import {
+  WacelinkSearchOptions,
+  WacelinkSearchResult,
+  WacelinkSearchResultType,
+} from "../../Interface/Manager.js";
 import { Wacelink } from "../../Wacelink.js";
 import { WacelinkTrack } from "../../Player/WacelinkTrack.js";
 import { SourceWacelinkPlugin } from "../SourceWacelinkPlugin.js";
@@ -11,7 +15,10 @@ const SHORT_REGEX = /^https:\/\/deezer\.page\.link\/[a-zA-Z0-9]{12}$/;
 
 export class WacelinkPlugin extends SourceWacelinkPlugin {
   private manager: Wacelink | null;
-  private _search?: (query: string, options?: WacelinkSearchOptions) => Promise<WacelinkSearchResult>;
+  private _search?: (
+    query: string,
+    options?: WacelinkSearchOptions
+  ) => Promise<WacelinkSearchResult>;
   private readonly methods: Record<string, (id: string, requester: unknown) => Promise<Result>>;
   /**
    * Source identify of the plugin
@@ -75,7 +82,10 @@ export class WacelinkPlugin extends SourceWacelinkPlugin {
     return "wacelink-deezer";
   }
 
-  protected async search(query: string, options?: WacelinkSearchOptions): Promise<WacelinkSearchResult> {
+  protected async search(
+    query: string,
+    options?: WacelinkSearchOptions
+  ): Promise<WacelinkSearchResult> {
     const res = await this._search!(query, options);
     if (!this.directSearchChecker(query)) return res;
     if (res.tracks.length == 0) return this.searchDirect(query, options);
@@ -88,7 +98,10 @@ export class WacelinkPlugin extends SourceWacelinkPlugin {
    * @param options search option like WacelinkSearchOptions
    * @returns WacelinkSearchResult
    */
-  public async searchDirect(query: string, options?: WacelinkSearchOptions | undefined): Promise<WacelinkSearchResult> {
+  public async searchDirect(
+    query: string,
+    options?: WacelinkSearchOptions | undefined
+  ): Promise<WacelinkSearchResult> {
     if (!this.manager || !this._search) throw new Error("wacelink-deezer is not loaded yet.");
 
     if (!query) throw new Error("Query is required");
@@ -109,7 +122,8 @@ export class WacelinkPlugin extends SourceWacelinkPlugin {
         const _function = this.methods[type];
         const result: Result = await _function(id, options?.requester);
 
-        const loadType = type === "track" ? WacelinkSearchResultType.TRACK : WacelinkSearchResultType.PLAYLIST;
+        const loadType =
+          type === "track" ? WacelinkSearchResultType.TRACK : WacelinkSearchResultType.PLAYLIST;
         const playlistName = result.name ?? undefined;
 
         const tracks = result.tracks.filter(this.filterNullOrUndefined);
@@ -223,7 +237,9 @@ export class WacelinkPlugin extends SourceWacelinkPlugin {
   }
 
   private debug(logs: string) {
-    this.manager ? this.manager.emit(WacelinkEvents.Debug, `[Wacelink Deezer Plugin]: ${logs}`) : true;
+    this.manager
+      ? this.manager.emit(WacelinkEvents.Debug, `[Wacelink Deezer Plugin]: ${logs}`)
+      : true;
   }
 }
 

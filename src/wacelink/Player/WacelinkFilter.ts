@@ -1,5 +1,10 @@
 import util from "node:util";
-import { WacelinkEvents, WacelinkFilterData, WacelinkFilterMode, WacelinkPlayerState } from "../Interface/Constants.js";
+import {
+  WacelinkEvents,
+  WacelinkFilterData,
+  WacelinkFilterMode,
+  WacelinkPlayerState,
+} from "../Interface/Constants.js";
 import {
   Band,
   ChannelMix,
