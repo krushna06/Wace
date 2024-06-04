@@ -29,13 +29,15 @@ export class WacelinkTrack {
   /** Track's isrc */
   isrc?: string;
   /** Track's source name */
-  source: string;
+  sourceName: string;
   /** Data from lavalink plugin */
   pluginInfo: unknown;
   /** Track's requester */
   requester: unknown;
   /** Track's realUri (youtube fall back) */
   realUri?: string;
+  /** Track's source */
+  source: string;
 
   /**
    * The wacelink track class for playing track from lavalink
@@ -57,7 +59,7 @@ export class WacelinkTrack {
     this.uri = options.info.uri;
     this.artworkUrl = options.info.artworkUrl;
     this.isrc = options.info.isrc;
-    this.source = options.info.sourceName;
+    this.sourceName = options.info.sourceName; // Set source name
     this.pluginInfo = options.pluginInfo;
     this.requester = requester;
     this.realUri = undefined;
@@ -70,7 +72,7 @@ export class WacelinkTrack {
   get isPlayable(): boolean {
     return (
       !!this.encoded &&
-      !!this.source &&
+      !!this.sourceName &&
       !!this.identifier &&
       !!this.author &&
       !!this.duration &&
@@ -97,7 +99,7 @@ export class WacelinkTrack {
         uri: this.uri,
         artworkUrl: this.artworkUrl,
         isrc: this.isrc,
-        sourceName: this.source,
+        sourceName: this.sourceName, // Include sourceName
       },
       pluginInfo: this.pluginInfo,
     };
@@ -118,7 +120,7 @@ export class WacelinkTrack {
 
     manager.emit(
       WacelinkEvents.Debug,
-      `[Wacelink] / [Track] | Resolving ${this.source} track ${this.title}; Source: ${this.source}`
+      `[Wacelink] / [Track] | Resolving ${this.sourceName} track ${this.title}; Source: ${this.sourceName}`
     );
 
     const result = await this.getTrack(manager, options ? options.nodeName : undefined);
@@ -182,7 +184,7 @@ export class WacelinkTrack {
     node: WacelinkNode
   ): Promise<WacelinkSearchResult> {
     const defaultSearchEngine = manager.wacelinkOptions.options!.defaultSearchEngine;
-    const engine = manager.searchEngines.get(this.source || defaultSearchEngine || "youtube");
+    const engine = manager.searchEngines.get(this.sourceName || defaultSearchEngine || "youtube");
     const searchQuery = [this.author, this.title].filter((x) => !!x).join(" - ");
     const searchFallbackEngineName = manager.wacelinkOptions.options!.searchFallback!.engine;
     const searchFallbackEngine = manager.searchEngines.get(searchFallbackEngineName);
