@@ -4,6 +4,10 @@ import {
   ButtonStyle,
   ActionRowBuilder,
   StringSelectMenuBuilder,
+  ModalBuilder,
+  TextInputBuilder,
+  TextInputStyle,
+  InteractionCollector
 } from "discord.js";
 import { readdirSync } from "fs";
 import { join, dirname } from "path";
@@ -48,11 +52,6 @@ export default class implements Command {
       .setURL("https://discord.gg/m5Y3rRPuFT")
       .setStyle(ButtonStyle.Link);
 
-    const buttonPaypal = new ButtonBuilder()
-      .setLabel("Donate")
-      .setStyle(ButtonStyle.Link)
-      .setURL("https://www.paypal.com/krushna06");
-
     const buttonInvite = new ButtonBuilder()
       .setLabel("Invite")
       .setStyle(ButtonStyle.Link)
@@ -62,6 +61,11 @@ export default class implements Command {
       .setLabel("Support")
       .setStyle(ButtonStyle.Link)
       .setURL("https://discord.gg/ReA5JyJCR6");
+
+    const buttonDonate = new ButtonBuilder()
+      .setEmoji('<:__paypal:996085845423562762>')
+      .setStyle(ButtonStyle.Secondary)
+      .setCustomId("donate");
 
     const initialEmbed = new EmbedBuilder()
       .setDescription(
@@ -90,9 +94,9 @@ export default class implements Command {
     const row = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(selectMenu);
     const buttons = new ActionRowBuilder<ButtonBuilder>().addComponents(
       buttonsourcecode,
-      buttonPaypal,
       buttonInvite,
-      buttonSupport
+      buttonSupport,
+      buttonDonate
     );
 
     const initialMessage = await handler.editReply({
@@ -117,6 +121,53 @@ export default class implements Command {
     collector.on("end", (collected) => {
       if (!collected.size) {
         handler.editReply({ content: "You did not select any category.", components: [] });
+      }
+    });
+
+    // Event listener for button clicks
+    handler.client.on("interactionCreate", async (interaction) => {
+      if (!interaction.isButton()) return;
+
+      if (interaction.customId === "donate") {
+        // Create a modal
+        const modal = new ModalBuilder()
+          .setCustomId("donateModal")
+          .setTitle("Donate");
+
+        // Create a text input for the donation amount
+        const donationInput = new TextInputBuilder()
+          .setCustomId("donationAmount")
+          .setLabel("Enter the amount you want to donate:")
+          .setStyle(TextInputStyle.Short);
+
+        // Add the text input to the modal
+        modal.addComponents(
+          new ActionRowBuilder<TextInputBuilder>().addComponents(donationInput)
+        );
+
+        // Show the modal to the user
+        await interaction.showModal(modal);
+      }
+    });
+
+    // Handle modal submission
+    handler.client.on("interactionCreate", async (interaction) => {
+      if (!interaction.isModalSubmit()) return;
+
+      if (interaction.customId === "donateModal") {
+        const donationAmount = interaction.fields.getTextInputValue("donationAmount");
+
+        const amount = parseFloat(donationAmount);
+        if (isNaN(amount)) {
+          await interaction.reply({ content: "Invalid amount. Please enter a valid number.", ephemeral: true });
+          return;
+        }
+
+        // Generate PayPal donation link based on the entered amount
+        const paypalLink = `https://www.paypal.com/paypalme/krushna06/${amount}`;
+
+        // Send the PayPal link to the user
+        await interaction.reply({ content: `[Click here to donate $${amount}](${paypalLink})`, ephemeral: true });
       }
     });
   }
