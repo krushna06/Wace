@@ -7,7 +7,7 @@ import {
   ModalBuilder,
   TextInputBuilder,
   TextInputStyle,
-  InteractionCollector
+  InteractionCollector,
 } from "discord.js";
 import { readdirSync } from "fs";
 import { join, dirname } from "path";
@@ -63,7 +63,7 @@ export default class implements Command {
       .setURL("https://discord.gg/ReA5JyJCR6");
 
     const buttonDonate = new ButtonBuilder()
-      .setEmoji('<:__paypal:996085845423562762>')
+      .setEmoji("<:__paypal:996085845423562762>")
       .setStyle(ButtonStyle.Secondary)
       .setCustomId("donate");
 
@@ -130,9 +130,7 @@ export default class implements Command {
 
       if (interaction.customId === "donate") {
         // Create a modal
-        const modal = new ModalBuilder()
-          .setCustomId("donateModal")
-          .setTitle("Donate");
+        const modal = new ModalBuilder().setCustomId("donateModal").setTitle("Donate");
 
         // Create a text input for the donation amount
         const donationInput = new TextInputBuilder()
@@ -141,9 +139,7 @@ export default class implements Command {
           .setStyle(TextInputStyle.Short);
 
         // Add the text input to the modal
-        modal.addComponents(
-          new ActionRowBuilder<TextInputBuilder>().addComponents(donationInput)
-        );
+        modal.addComponents(new ActionRowBuilder<TextInputBuilder>().addComponents(donationInput));
 
         // Show the modal to the user
         await interaction.showModal(modal);
@@ -159,7 +155,10 @@ export default class implements Command {
 
         const amount = parseFloat(donationAmount);
         if (isNaN(amount)) {
-          await interaction.reply({ content: "Invalid amount. Please enter a valid number.", ephemeral: true });
+          await interaction.reply({
+            content: "Invalid amount. Please enter a valid number.",
+            ephemeral: true,
+          });
           return;
         }
 
@@ -167,7 +166,10 @@ export default class implements Command {
         const paypalLink = `https://www.paypal.com/paypalme/krushna06/${amount}`;
 
         // Send the PayPal link to the user
-        await interaction.reply({ content: `[Click here to donate $${amount}](${paypalLink})`, ephemeral: true });
+        await interaction.reply({
+          content: `[Click here to donate $${amount}](${paypalLink})`,
+          ephemeral: true,
+        });
       }
     });
   }
