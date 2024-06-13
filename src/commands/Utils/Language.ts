@@ -24,7 +24,6 @@ export default class implements Command {
       type: ApplicationCommandOptionType.String,
       choices: [
         { name: "English", value: "en" },
-        { name: "French", value: "fr" },
         { name: "Hindi", value: "hi" },
         { name: "Korean", value: "ko" },
         { name: "Russian", value: "ru" },
