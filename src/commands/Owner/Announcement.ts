@@ -37,10 +37,10 @@ export default class implements Command {
         channel.guild.members.me?.permissions.has(PermissionFlagsBits.SendMessages)
       );
       const channelFilterGeneral = channelFilterPermission.filter((channel) =>
-        channel.name.includes("general")
+        channel.name.includes("commands")
       );
       const channelFilterNonGeneral = channelFilterPermission.filter(
-        (channel) => !channel.name.includes("general")
+        (channel) => !channel.name.includes("commands")
       );
       if (channelFilterGeneral.size !== 0) {
         avalibleChannel.push(channelFilterGeneral.first()!);
