@@ -1,0 +1,8 @@
+display_name: "Görünen İsim"
+username: "Kullanıcı Adı"
+createdAt: "Oluşturulma Tarihi"
+redeemedAt: "Kullanma Tarihi"
+expiresAt: "Son Kullanma Tarihi"
+plan: "Plan"
+title: "💫 Yeni kullanıcı başarıyla premium oldu!"
+guild_title: "💫 Yeni sunucu başarıyla premium oldu!"

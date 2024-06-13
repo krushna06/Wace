@@ -18,10 +18,21 @@ export default class implements Command {
 
   public options = [
     {
-      name: "input",
-      description: "The new language",
+      name: "language",
+      description: "Select the new language",
       required: true,
       type: ApplicationCommandOptionType.String,
+      choices: [
+        { name: "English", value: "en" },
+        { name: "French", value: "fr" },
+        { name: "Hindi", value: "hi" },
+        { name: "Korean", value: "ko" },
+        { name: "Russian", value: "ru" },
+        { name: "Turkish", value: "tu" },
+        { name: "French (Incomplete)", value: "fr" },
+        { name: "German (Incomplete)", value: "gr" },
+        { name: "Spanish (Incomplete)", value: "sp" },
+      ],
     },
   ];
 
@@ -33,14 +44,14 @@ export default class implements Command {
     const languages = client.i18n.getLocales();
 
     if (!languages.includes(input as string)) {
-      const onsome = new EmbedBuilder()
+      const embed = new EmbedBuilder()
         .setDescription(
           `${client.i18n.get(handler.language, "command.utils", "provide_lang", {
             languages: languages.join(", "),
           })}`
         )
         .setColor(client.color);
-      return handler.editReply({ content: " ", embeds: [onsome] });
+      return handler.editReply({ content: " ", embeds: [embed] });
     }
 
     const newLang = await client.db.language.get(`${handler.guild!.id}`);

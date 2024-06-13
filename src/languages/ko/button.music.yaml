@@ -1,0 +1,38 @@
+queue_author: "💾 %{guild}"
+queue_description: "`📀` | 현재 재생 중:\n**%{track}** `[%{duration}]` • %{requester}\n\n`💤` | 큐 남은 곡:**%{list_song}**"
+queue_footer: "페이지 • %{page}/%{pages} | 곡 수 • %{queue_lang} | 총 재생 시간 • %{total_duration}"
+# Pause
+pause_msg: "`⏸️` | **플레이어**를 일시 정지했습니다!"
+resume_msg: "`▶️` | **플레이어**를 재개했습니다!"
+# Skip
+skip_msg: "`⏭️` | **곡**을 건너뛰었습니다!"
+skip_notfound: "`⚠️` | 건너뛸 곡을 찾을 수 없습니다!"
+# Stop
+stop_msg: "`⏹️` | **플레이어**를 정지했습니다!"
+# Volume
+volup_msg: "`🔊` | 볼륨을 **%{volume}%**로 변경했습니다"
+voldown_msg: "`🔉` | 볼륨을 **%{volume}%**로 변경했습니다"
+volume_invalid: "`⚠️` | 유효하지 않은 볼륨입니다. **1**부터 **100** 사이의 숫자를 사용해주세요!"
+volume_max: "`⚠️` | 플레이어는 이미 최대 볼륨입니다!"
+volume_min: "`⚠️` | 플레이어는 이미 최소 볼륨입니다!"
+# Clear
+clear_msg: "`🗑️` | 큐가 **지워졌습니다**!"
+# Loop
+loop_current: "`🔁` | 현재 **곡**을 반복합니다!"
+loop_all: "`🔁` | **큐**를 반복합니다!"
+unloop_all: "`❌` | 반복이 **비활성화**되었습니다!"
+loop_invalid: "`⚠️` | 유효하지 않은 반복 모드입니다. %{mode}을(를) 사용해주세요!"
+loop_already: "`⚠️` | 이미 **%{mode}** 반복 모드입니다!"
+# Previous
+previous_msg: "`⏮️` | 이전 **곡**으로 건너뛰었습니다!"
+previous_notfound: "`⚠️` | 이전 곡을 찾을 수 없습니다!"
+# Shuffle
+shuffle_msg: "🔀 큐를 섞었습니다"
+
+### All filter command!
+filter_on: "`✅` | %{name} 필터가 **활성화**되었습니다!"
+filter_already: "`⚠️` | %{name} 필터는 이미 **활성화**되어 있습니다!"
+
+### Reset command!
+reset_on: "`❌` | 필터가 **리셋**되었습니다!"
+reset_already: "`⚠️` | 필터는 이미 **리셋**되었습니다!"

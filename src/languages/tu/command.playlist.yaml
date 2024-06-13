@@ -1,0 +1,95 @@
+### Create command!
+create_created: "`💿` | **%{playlist}** oluşturuldu • `%{id}`"
+create_toolong: "`⚠️` | Oyun Listesi Adı **16 Karakterden Uzun Olamaz**!"
+des_toolong: "`⚠️` | Oyun Listesi Açıklaması **1000 Karakterden Uzun Olamaz**!"
+create_limit_playlist: "`⚠️` | **%{limit} Oyun Listesinden** fazlasını oluşturamazsınız!"
+
+### Add command!
+add_track: "`🔍` | **%{title}** `%{duration}` • %{user} arandı"
+add_playlist: "`🔍` | **%{title}** `%{duration}` • (**%{track} Şarkı**) • %{user} arandı"
+add_search: "`🔍` | **%{title}** `%{duration}` • %{user} arandı"
+add_added: "`➕` | **%{playlist}** listesine **%{count} Şarkı** eklendi"
+add_match: "`⚠️` | Lütfen geçerli bir şarkı adı veya URL sağlayın!"
+add_owner: "`⚠️` | **Oyun Listesi Sahibi Değilsiniz**!"
+add_limit_track: "`⚠️` | **%{limit} Şarkıdan** fazlasını ekleyemezsiniz!"
+
+### Delete command!
+delete_confirm: "`❓` | `%{playlist_id}` silmek istiyor musunuz?"
+delete_deleted: "`❌` | `%{name}` silindi"
+delete_notfound: "`⚠️` | Lütfen geçerli bir Oyun Listesi ID'si sağlayın!"
+delete_no: "`⚠️` | İptal edildi **Silme**!"
+delete_owner: "`⚠️` | **Oyun Listesi Sahibi Değilsiniz**!"
+
+### Detail command!
+detail_private: "`🔒` | Oyun Listesi **Gizli**!"
+detail_embed_title: "%{name}"
+detail_embed_footer: "Sayfa • %{page}/%{pages} | Şarkılar • %{songs} | Toplam Süre • %{duration}"
+detail_track: "%{num}. **%{title}** `[%{duration}]` • Yazar: **%{author}**"
+detail_notfound: "`⚠️` | Lütfen geçerli bir Oyun Listesi ID'si sağlayın!"
+detail_notnumber: "`⚠️` | Lütfen geçerli bir sayfa numarası sağlayın!"
+detail_page_notfound: "`⚠️` | Sadece **%{page} Sayfa** var!"
+
+### Import command!
+import_private: "`🔒` | Oyun Listesi **Gizli**!"
+import_imported: "`💿` | **%{name}** içe aktarıldı • `[%{duration}]` • (**%{tracks} Şarkı**) • %{user}"
+import_voice: "`⚠️` | Bu komutu kullanabilmek için bir ses kanalında olmanız gerekiyor!"
+import_empty: "`⚠️` | Oyun Listesi **Boş**!"
+
+### All command!
+view_embed_title: "%{user}"
+view_embed_footer: "Sayfa • %{page}/%{pages} | Oyun Listeleri • %{songs}"
+view_embed_playlist: "%{num}. `%{name}` • (**%{tracks} Şarkı**) • Oluşturulma: `[%{create} önce]`"
+view_notnumber: "`⚠️` | Lütfen geçerli bir sayfa numarası sağlayın!"
+view_page_notfound: "`⚠️` | Sadece **%{page} Sayfa** var!"
+
+### Remove command!
+remove_removed: "`➖` | `%{name}` listesinden **%{position} Numaralı** şarkı kaldırıldı"
+remove_notfound: "`⚠️` | Lütfen geçerli bir Oyun Listesi ID'si sağlayın!"
+remove_song_notfound: "`⚠️` | Şarkı bulunamadı!"
+remove_owner: "`⚠️` | **Oyun Listesi Sahibi Değilsiniz**!"
+
+### SaveQueue command!
+savequeue_saved: "`✅` | **%{tracks} Şarkı**, `%{name}` listesine kaydedildi"
+savequeue_notfound: "`⚠️` | Lütfen geçerli bir Oyun Listesi ID'si sağlayın!"
+savequeue_owner: "`⚠️` | **Oyun Listesi Sahibi Değilsiniz**!"
+savequeue_no_new_saved: "`⚠️` | Şarkı zaten `%{name}` listesinde mevcut"
+savequeue_no_tracks: "`⚠️` | Şu anda hiçbir şarkı çalmıyor!"
+
+### Info Command!
+info_id: "`🆔` | ID:"
+info_total: "`🎵` | Toplam Şarkılar:"
+info_created: "`📅` | Oluşturulma Tarihi:"
+info_private: "`👀` | Gizlilik Durumu:"
+info_owner: "`👑` | Sahip:"
+info_des: "`💬` | Açıklama:"
+no_des: "Açıklama sağlanmadı!"
+public: "Herkese Açık"
+private: "Gizli"
+invalid: "`⚠️` | Lütfen geçerli bir Oyun Listesi ID'si sağlayın!"
+
+### Editor command!
+edit_playlist_id_label: "**Yeni Oyun Listesi ID'nizi** girin! `[a-z, A-Z, 0-9]`"
+edit_playlist_name_label: "**Yeni Oyun Listesi Adınızı** girin!"
+edit_playlist_des_label: "**Yeni Oyun Listesi Açıklamanızı** girin!"
+edit_playlist_private_label: "**Yeni Oyun Listesi Gizliliğinizi** girin! `[public/private]`"
+edit_success: "`✅` | Başarıyla düzenlendi `%{playlistId}` bilgileri!"
+edit_arg: "`⚠️` | Lütfen geçerli bir Oyun Listesi ID'si sağlayın!"
+edit_notfound: "`⚠️` | Lütfen geçerli bir Oyun Listesi ID'si sağlayın!"
+edit_playlist_owner: "`⚠️` | **Oyun Listesi Sahibi Değilsiniz**!"
+edit_invalid_id: "`⚠️` | Lütfen geçerli ve var olmayan bir Oyun Listesi ID'si girin!"
+edit_invalid_mode: "`⚠️` | Geçersiz Gizlilik modu. Lütfen **public** veya **private** kullanın!"
+
+### Editor interaction!
+ineraction_edit_playlist_id_label: "Yeni Oyun Listesi ID"
+ineraction_edit_playlist_name_label: "Yeni Oyun Listesi Adı"
+ineraction_edit_playlist_des_label: "Yeni Oyun Listesi Açıklaması"
+ineraction_edit_playlist_private_label: "Yeni Oyun Listesi Gizliliği"
+ineraction_edit_playlist_id_placeholder: "Yeni Oyun Listesi ID'nizi girin! [a-z, A-Z, 0-9]"
+ineraction_edit_playlist_name_placeholder: "Yeni Oyun Listesi Adınızı girin!"
+ineraction_edit_playlist_des_placeholder: "Yeni Oyun Listesi Açıklamanızı girin!"
+ineraction_edit_playlist_private_placeholder: "Yeni Oyun Listesi Gizliliğinizi girin! [public/private]"
+ineraction_edit_success: "`✅` | Başarıyla düzenlendi `%{playlistId}` bilgileri!"
+ineraction_edit_playlist_error: "`⚠️` | Bir şeyler yanlış gitti. Lütfen tekrar deneyin!"
+ineraction_edit_notfound: "`⚠️` | Lütfen geçerli bir Oyun Listesi ID'si sağlayın!"
+ineraction_edit_playlist_owner: "`⚠️` | **Oyun Listesi Sahibi Değilsiniz**!"
+ineraction_edit_invalid_id: "`⚠️` | Lütfen geçerli ve var olmayan bir Oyun Listesi ID'si girin!"

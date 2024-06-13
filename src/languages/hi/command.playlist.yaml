@@ -1,0 +1,95 @@
+### Create command!
+create_created: "`💿` | **%{playlist}** बनाया गया • `%{id}`"
+create_toolong: "`⚠️` | प्लेलिस्ट नाम **16 अक्षर** से अधिक नहीं हो सकता!"
+des_toolong: "`⚠️` | प्लेलिस्ट विवरण **1000 अक्षर** से अधिक नहीं हो सकता!"
+create_limit_playlist: "`⚠️` | आप **%{limit} प्लेलिस्ट्स** से अधिक नहीं बना सकते!"
+
+### Add command!
+add_track: "`🔍` | **%{title}** `%{duration}` • %{user} द्वारा खोजा गया"
+add_playlist: "`🔍` | **%{title}** `%{duration}` • (**%{track} गाने**) • %{user} द्वारा खोजा गया"
+add_search: "`🔍` | **%{title}** `%{duration}` • %{user} द्वारा खोजा गया"
+add_added: "`➕` | `%{playlist}` में **%{count} गाने** जोड़े गए"
+add_match: "`⚠️` | कृपया एक मान्य गाना नाम या URL प्रदान करें!"
+add_owner: "`⚠️` | आप **प्लेलिस्ट मालिक** नहीं हैं!"
+add_limit_track: "`⚠️` | आप **%{limit} गानों** से अधिक नहीं जोड़ सकते!"
+
+### Delete command!
+delete_confirm: "`❓` | क्या आप `%{playlist_id}` को हटाना चाहते हैं?"
+delete_deleted: "`❌` | `%{name}` हटा दिया गया"
+delete_notfound: "`⚠️` | कृपया एक मान्य प्लेलिस्ट ID प्रदान करें!"
+delete_no: "`⚠️` | **हटाना** रद्द किया गया!"
+delete_owner: "`⚠️` | आप **प्लेलिस्ट मालिक** नहीं हैं!"
+
+### Detail command!
+detail_private: "`🔒` | प्लेलिस्ट **निजी** है!"
+detail_embed_title: "%{name}"
+detail_embed_footer: "पृष्ठ • %{page}/%{pages} | गाने • %{songs} | कुल अवधि • %{duration}"
+detail_track: "%{num}. **%{title}** `[%{duration}]` • लेखक: **%{author}**"
+detail_notfound: "`⚠️` | कृपया एक मान्य प्लेलिस्ट ID प्रदान करें!"
+detail_notnumber: "`⚠️` | कृपया एक मान्य पृष्ठ संख्या प्रदान करें!"
+detail_page_notfound: "`⚠️` | केवल **%{page} पृष्ठ** उपलब्ध हैं!"
+
+### Import command!
+import_private: "`🔒` | प्लेलिस्ट **निजी** है!"
+import_imported: "`💿` | **%{name}** आयात किया गया • `[%{duration}]` • (**%{tracks} गाने**) • %{user}"
+import_voice: "`⚠️` | आपको इस आदेश का उपयोग करने के लिए एक आवाज चैनल में होना चाहिए!"
+import_empty: "`⚠️` | प्लेलिस्ट **खाली** है!"
+
+### All command!
+view_embed_title: "%{user}"
+view_embed_footer: "पृष्ठ • %{page}/%{pages} | प्लेलिस्ट्स • %{songs}"
+view_embed_playlist: "%{num}. `%{name}` • (**%{tracks} गाने**) • बनाया गया: `[%{create} पहले]`"
+view_notnumber: "`⚠️` | कृपया एक मान्य पृष्ठ संख्या प्रदान करें!"
+view_page_notfound: "`⚠️` | केवल **%{page} पृष्ठ** उपलब्ध हैं!"
+
+### Remove command!
+remove_removed: "`➖` | `%{position} संख्या` गाना `%{name}` से हटा दिया गया"
+remove_notfound: "`⚠️` | कृपया एक मान्य प्लेलिस्ट ID प्रदान करें!"
+remove_song_notfound: "`⚠️` | गाना नहीं मिला!"
+remove_owner: "`⚠️` | आप **प्लेलिस्ट मालिक** नहीं हैं!"
+
+### SaveQueue command!
+savequeue_saved: "`✅` | `%{tracks} गानों` को `%{name}` में सहेज लिया गया"
+savequeue_notfound: "`⚠️` | कृपया एक मान्य प्लेलिस्ट ID प्रदान करें!"
+savequeue_owner: "`⚠️` | आप **प्लेलिस्ट मालिक** नहीं हैं!"
+savequeue_no_new_saved: "`⚠️` | गाना पहले से ही `%{name}` में मौजूद है"
+savequeue_no_tracks: "`⚠️` | कोई गाना वर्तमान में नहीं बज रहा है!"
+
+### Info Command!
+info_id: "`🆔` | आईडी:"
+info_total: "`🎵` | कुल गाने:"
+info_created: "`📅` | बनाया गया:"
+info_private: "`👀` | दृश्यता:"
+info_owner: "`👑` | मालिक:"
+info_des: "`💬` | विवरण:"
+no_des: "कोई विवरण उपलब्ध नहीं है!"
+public: "सार्वजनिक"
+private: "निजी"
+invalid: "`⚠️` | कृपया एक मान्य प्लेलिस्ट ID प्रदान करें!"
+
+### Editor command!
+edit_playlist_id_label: "**नई प्लेलिस्ट आईडी** दर्ज करें! `[a-z, A-Z, 0-9]`"
+edit_playlist_name_label: "**नई प्लेलिस्ट नाम** दर्ज करें!"
+edit_playlist_des_label: "**नई प्लेलिस्ट विवरण** दर्ज करें!"
+edit_playlist_private_label: "**नई प्लेलिस्ट दृश्यता** दर्ज करें! `[public/private]`"
+edit_success: "`✅` | सफलतापूर्वक `%{playlistId}` जानकारी संपादित की गई!"
+edit_arg: "`⚠️` | कृपया एक मान्य प्लेलिस्ट ID प्रदान करें!"
+edit_notfound: "`⚠️` | कृपया एक मान्य प्लेलिस्ट ID प्रदान करें!"
+edit_playlist_owner: "`⚠️` | आप **प्लेलिस्ट मालिक** नहीं हैं!"
+edit_invalid_id: "`⚠️` | कृपया एक मान्य और पहले से मौजूद ना होने वाला प्लेलिस्ट आईडी दर्ज करें!"
+edit_invalid_mode: "`⚠️` | अवैध दृश्यता मोड। कृपया **public** या **private** का उपयोग करें!"
+
+### Editor interaction!
+ineraction_edit_playlist_id_label: "नई प्लेलिस्ट आईडी"
+ineraction_edit_playlist_name_label: "नई प्लेलिस्ट नाम"
+ineraction_edit_playlist_des_label: "नई प्लेलिस्ट विवरण"
+ineraction_edit_playlist_private_label: "नई प्लेलिस्ट दृश्यता"
+ineraction_edit_playlist_id_placeholder: "अपना नया प्लेलिस्ट आईडी दर्ज करें! [a-z, A-Z, 0-9]"
+ineraction_edit_playlist_name_placeholder: "अपना नया प्लेलिस्ट नाम दर्ज करें!"
+ineraction_edit_playlist_des_placeholder: "अपना नया प्लेलिस्ट विवरण दर्ज करें!"
+ineraction_edit_playlist_private_placeholder: "अपनी नई प्लेलिस्ट दृश्यता दर्ज करें! [public/private]"
+ineraction_edit_success: "`✅` | सफलतापूर्वक `%{playlistId}` जानकारी संपादित की गई!"
+ineraction_edit_playlist_error: "`⚠️` | कुछ गड़बड़ हो गई है। कृपया पुन: प्रयास करें!"
+ineraction_edit_notfound: "`⚠️` | कृपया एक मान्य प्लेलिस्ट ID प्रदान करें!"
+ineraction_edit_playlist_owner: "`⚠️` | आप **प्लेलिस्ट मालिक** नहीं हैं!"
+ineraction_edit_invalid_id: "`⚠️` | कृपया एक मान्य और पहले से मौजूद ना होने वाला प्लेलिस्ट आईडी दर्ज करें!"

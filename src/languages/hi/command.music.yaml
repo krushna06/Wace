@@ -1,0 +1,102 @@
+### Autoplay command!
+autoplay_on: "`✅` | Autoplay अब **सक्षम** है!"
+autoplay_off: "`❌` | Autoplay अब **अक्षम** है!"
+autoplay_already: "`⚠️` | Autoplay पहले से ही **%{mode}** है!"
+
+### ClearQueue command!
+clearqueue_msg: "`🗑️` | कतार **हटा दी गई** है!"
+
+### Forward command!
+forward_msg: "`⏩` | %{duration} को आगे भेजा गया"
+forward_beyond: "`⚠️` | गाना समाप्त होने वाला है। इससे आगे नहीं भेजा जा सकता!"
+
+### Join command!
+join_msg: "`🔊` | %{channel} में शामिल हो गया"
+join_voice: "`⚠️` | इस कमांड का उपयोग करने के लिए आपको वॉयस चैनल में होना चाहिए!"
+join_already: "`⚠️` | मैं पहले से ही %{channel} में हूँ"
+
+### Stop command!
+stop_msg: "`⏹️` | **प्लेयर** को बंद कर दिया गया है!"
+
+### Loop command!
+loop_current: "`🔁` | वर्तमान **गाने** को लूप में डाला गया है!"
+loop_all: "`🔁` | **कतार** को लूप में डाल दिया गया है!"
+unloop_all: "`❌` | लूप अब **अक्षम** है!"
+loop_invalid: "`⚠️` | अमान्य लूप मोड। कृपया %{mode} का उपयोग करें!"
+loop_already: "`⚠️` | लूप मोड पहले से ही **%{mode}** है!"
+
+### Lyrics command!
+lyrics_title: "📜 %{song}"
+lyrics_notfound: "`⚠️` | गीत के बोल नहीं मिले!"
+lyrics_toolong: "`⚠️` | बहुत लंबे बोल हैं, जो दिखाए नहीं जा सकते!"
+
+### Nowplaying command!
+np_icon: "https://cdn.discordapp.com/emojis/741605543046807626.gif"
+np_title: "अभी बज रहा है"
+np_current_duration: "`⏰` | वर्तमान अवधि: `[%{current_duration} / %{total_duration}]`"
+
+### Pause command!
+pause_msg: "`⏸️` | **प्लेयर** को रोक दिया गया है!"
+
+### Play command!
+play_track: "`💾` | **%{title}** `%{duration}` कतार में डाल दिया गया • %{request}"
+play_playlist: "`💾` | **%{title}** `%{duration}` कतार में डाल दिया गया • (**%{songs} गाने**) • %{request}"
+play_result: "`💾` | **%{title}** `%{duration}` कतार में डाल दिया गया • %{request}"
+play_arg: "`⚠️` | कृपया एक वैध गाने का नाम या URL दें!"
+play_match: "`⚠️` | गाना नहीं मिला!"
+play_emoji: "`⚠️` | आप इमोजी का उपयोग करके गाने नहीं बजा सकते!"
+
+### File command!
+file_notfound: "`⚠️` | कृपया एक वैध फ़ाइल दें!"
+play_invalid_file: "`⚠️` | अवैध फ़ाइल प्रकार। कृपया **mp3** या **ogg** का उपयोग करें!"
+play_warning_file: "`⚠️` | मैंने फ़ाइल प्रकार का पता नहीं लगा सका। कृपया **mp3** या **ogg** का उपयोग करें!"
+
+### Previous command!
+previous_msg: "`⏮️` | पिछले **गाने** पर स्किप किया गया!"
+previous_notfound: "`⚠️` | कोई पिछला गाना नहीं मिला!"
+
+### Queue command!
+queue_author: "💾 %{guild}"
+queue_description: "`📀` | वर्तमान में चल रहा है:\n**%{title}** `[%{duration}]` • %{request}\n\n`💤` | कतार का शेष:**%{rest}**"
+queue_footer: "पृष्ठ • %{page}/%{pages} | गाने • %{queue_lang} | कुल अवधि • %{duration}"
+queue_notnumber: "`⚠️` | कृपया एक वैध पृष्ठ संख्या दें!"
+queue_page_notfound: "`⚠️` | केवल **%{page} पृष्ठ** हैं!"
+
+### Replay command!
+replay_msg: "`🔄` | गाने को फिर से चलाया गया है!"
+
+### Resume command!
+resume_msg: "`▶️` | **प्लेयर** को फिर से चालू किया गया है!"
+
+### Rewind command!
+rewind_msg: "`⏪` | %{duration} पर वापस गया गया"
+rewind_beyond: "`⚠️` | गाना अभी शुरू हुआ है। इससे पहले नहीं वापस जाया जा सकता!"
+
+### RemoveTrack command!
+removetrack_desc: "`🗑️` | **%{name}** `%{duration}` • %{request} को हटा दिया गया है"
+removetrack_already: "`⚠️` | मैं उस गाने को हटा नहीं सकता जो पहले से चल रहा है!"
+removetrack_notfound: "`⚠️` | गाना नहीं मिला!"
+
+### Seek command!
+seek_msg: "`➿` | %{duration} पर जाया गया है"
+seek_beyond: "`⚠️` | आप गाने की अवधि से परे सीक नहीं कर सकते!"
+seek_invalid: "`⚠️` | अमान्य सीक अवधि। कृपया एक वैध समय-चिह्न उपयोग करें। उदाहरण: **1:30**!"
+
+### Seek command! (continued)
+eek_invalid: "`⚠️` | अमान्य सीक अवधि। कृपया एक वैध समय-चिह्न उपयोग करें। उदाहरण: **1:30**!"
+
+### Shuffle command!
+shuffle_msg: "🔀 कतार को शफल किया गया है"
+
+### Skip command!
+skip_msg: "`⏭️` | **गाना** को स्किप कर दिया गया है!"
+skip_notfound: "`⚠️` | स्किप करने के लिए कोई गाना नहीं मिला!"
+
+### Volume command!
+volume_msg: "`🔊` | वॉल्यूम को **%{volume}%** पर सेट किया गया है"
+volume_invalid: "`⚠️` | अवैध वॉल्यूम। कृपया **1** से **100** के बीच एक संख्या उपयोग करें!"
+
+### RemoveTrack command!
+insert_desc: "`➕` | **%{name}** `%{duration}` • %{request} को डाल दिया गया है"
+insert_already: "`⚠️` | मैं उस गाने को डाल नहीं सकता जो पहले से चल रहा है!"
+insert_notfound: "`⚠️` | गाना नहीं मिला!"

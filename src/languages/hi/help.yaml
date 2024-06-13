@@ -1,0 +1,25 @@
+help_menu: "## **[Wace मदद मेन्यू](https://wace.live)**"
+categories: "**उपलब्ध श्रेणियां: [5]**"
+categories_list: "```Filter\n Info\n Music\n Playlist\n Premium\n Utils```"
+information_title: "📰 सूचना:"
+information_content: "Wace एक सरल संगीत बॉट है। यह एक आरामदायक अनुभव के लिए नेविगेट करता है जो उपयोगकर्ता-मित्र है, यह YouTube, Soundcloud, Spotify, Twitch और अधिक का समर्थन करता है!"
+get_started_title: "शुरू हो जाओ"
+get_started_content: "```एक वॉयस चैनल में शामिल हो जाएं और /play {गाना/URL} एक गाना चलाएं। (नाम, Youtube वीडियो लिंक्स या प्लेलिस्ट लिंक्स या Spotify लिंक्स Wace पर समर्थित हैं)```"
+didnt_select: "त्रुटि | आपने कोई श्रेणी चुनी नहीं।"
+choose_category: "एक कमांड श्रेणी चुनें।"
+
+# Buttons
+source_code_label: "स्रोत कोड"
+invite_label: "आमंत्रण"
+support_label: "समर्थन"
+donate_label: "दान"
+
+# Donate Modal
+donate_amount_title: "दान करें"
+donate_amount_description: "वह राशि दर्ज करें जिसे आप दान करना चाहते हैं।"
+invalid_amount: "अमान्य राशि। कृपया एक वैध संख्या दर्ज करें।"
+donate_amount_invalid: "दान राशि अमान्य है।"
+
+# Links
+invite_link: "https://discord.com/oauth2/authorize?client_id=1221392528566386768"
+support_link: "https://discord.gg/wacebot"

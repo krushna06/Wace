@@ -1,0 +1,43 @@
+### Comando Generate!
+gen_author: "Создать Премиум Код"
+gen_desc: "`🔑` | **Код успешно создан** `[%{codes_length}]`\n```%{codes}```\n`💰` | **План:** `%{plan}`\n`📅` | **Действует до:** `%{expires}`"
+gen_footer: "Используйте • %{prefix}redeem <code>, чтобы активировать премиум"
+
+### Comando Profile!
+profile_author: "Профиль Премиум Пользователя"
+profile_error_desc: "`⚠️` | **%{user}** не является премиум пользователем!"
+profile_desc: "`👤` | **Пользователь:** `%{user}`\n`💰` | **План:** `%{plan}`\n`📅` | **Действует до:** `%{expires}`"
+
+### Comando Guild Profile!
+guild_profile_author: "Профиль Премиум Сервера"
+guild_profile_desc: "`👤` | **Сервер:** `%{guild}`\n`💰` | **План:** `%{plan}`\n`📅` | **Действует до:** `%{expires}`"
+
+### Comando Redeem!
+redeem_title: "Активация Премиума"
+redeem_desc: "`💰` | **План:** `%{plan}`\n`📅` | **Действует до:** `%{expires}`"
+redeem_already: "`⚠️` | Вы уже являетесь **Премиум пользователем**!"
+redeem_invalid: "`⚠️` | Недействительный код. Попробуйте снова или используйте допустимый код!"
+redeem_invalid_mode: "`⚠️` | Недействительный тип активации премиума. Пожалуйста, укажите только `guild` или `user`!"
+redeem_already_guild: "`⚠️` | Этот сервер уже имеет **Премиум**!"
+
+### Comando Remove!
+remove_desc: "`✅` | Премиум успешно удален у %{user}!"
+remove_already: "`⚠️` | %{user} уже не имеет премиума!"
+remove_no_params: "`⚠️` | Пожалуйста, укажите **имя пользователя** или **ID пользователя**, чтобы удалить премиум!"
+remove_404: "`⚠️` | %{userid} не является **премиум пользователем**!"
+
+### Comando Guild Remove!
+guild_remove_desc: "`✅` | Премиум успешно удален с сервера %{user}!"
+guild_remove_already: "`⚠️` | Сервер %{user} уже не имеет премиума!"
+guild_remove_no_params: "`⚠️` | Пожалуйста, укажите **ID сервера**, чтобы удалить премиум!"
+guild_remove_404: "`⚠️` | Сервер %{userid} не является **премиум сервером**!"
+
+### Comando Guild List
+guild_list_title: "💫 Список Премиум Серверов!"
+guild_list_notnumber: "`⚠️` | Для страницы допустимы только числа!"
+guild_list_page_notfound: "`⚠️` | Всего **%{page} страниц** доступны!"
+
+### Comando User List
+list_title: "💫 Список Премиум Пользователей"
+list_notnumber: "`⚠️` | Для страницы допустимы только числа!"
+list_page_notfound: "`⚠️` | Всего **%{page} страниц** доступны!"

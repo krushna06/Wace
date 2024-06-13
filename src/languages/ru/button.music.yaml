@@ -1,0 +1,38 @@
+queue_author: "💾 %{guild}"
+queue_description: "`📀` | Сейчас играет:\n**%{track}** `[%{duration}]` • %{requester}\n\n`💤` | Остальная очередь:**%{list_song}**"
+queue_footer: "Страница • %{page}/%{pages} | Песни • %{queue_lang} | Общая продолжительность • %{total_duration}"
+# Pause
+pause_msg: "`⏸️` | Плеер **приостановлен**!"
+resume_msg: "`▶️` | Плеер **возобновлен**!"
+# Skip
+skip_msg: "`⏭️` | Пропущена **песня**!"
+skip_notfound: "`⚠️` | Не найдено песен для пропуска!"
+# Stop
+stop_msg: "`⏹️` | Плеер **остановлен**!"
+# Volume
+volup_msg: "`🔊` | Громкость изменена на **%{volume}%**"
+voldown_msg: "`🔉` | Громкость изменена на **%{volume}%**"
+volume_invalid: "`⚠️` | Недопустимая громкость. Пожалуйста, используйте число от **1** до **100**!"
+volume_max: "`⚠️` | Громкость уже на максимуме!"
+volume_min: "`⚠️` | Громкость уже на минимуме!"
+# Clear
+clear_msg: "`🗑️` | Очередь **очищена**!"
+# Loop
+loop_current: "`🔁` | Повтор текущей **песни**!"
+loop_all: "`🔁` | Повтор **очереди**!"
+unloop_all: "`❌` | Повтор **отключен**!"
+loop_invalid: "`⚠️` | Недопустимый режим повтора. Пожалуйста, используйте %{mode}!"
+loop_already: "`⚠️` | Режим повтора уже **%{mode}**!"
+# Previous
+previous_msg: "`⏮️` | Переключено на предыдущую **песню**!"
+previous_notfound: "`⚠️` | Предыдущая песня не найдена!"
+# Shuffle
+shuffle_msg: "🔀 Очередь перемешана"
+
+### All filter command!
+filter_on: "`✅` | Фильтр %{name} **включен**!"
+filter_already: "`⚠️` | Фильтр %{name} уже **включен**!"
+
+### Reset command!
+reset_on: "`❌` | Фильтр **сброшен**!"
+reset_already: "`⚠️` | Фильтр уже **сброшен**!"

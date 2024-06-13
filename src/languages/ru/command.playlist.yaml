@@ -1,0 +1,95 @@
+### Create command!
+create_created: "`💿` | Создан **%{playlist}** • `%{id}`"
+create_toolong: "`⚠️` | Название плейлиста не может быть длиннее **16 символов**!"
+des_toolong: "`⚠️` | Описание плейлиста не может быть длиннее **1000 символов**!"
+create_limit_playlist: "`⚠️` | Вы не можете создать более **%{limit} плейлистов**!"
+
+### Add command!
+add_track: "`🔍` | Найдена **%{title}** `%{duration}` • %{user}"
+add_playlist: "`🔍` | Найден **%{title}** `%{duration}` • (**%{track} песен**) • %{user}"
+add_search: "`🔍` | Найдена **%{title}** `%{duration}` • %{user}"
+add_added: "`➕` | Добавлено **%{count} песен** в `%{playlist}`"
+add_match: "`⚠️` | Пожалуйста, укажите допустимое название песни или URL!"
+add_owner: "`⚠️` | Вы не являетесь **владельцем плейлиста**!"
+add_limit_track: "`⚠️` | Вы не можете добавить более **%{limit} песен**!"
+
+### Delete command!
+delete_confirm: "`❓` | Вы хотите удалить `%{playlist_id}`"
+delete_deleted: "`❌` | Удален `%{name}`"
+delete_notfound: "`⚠️` | Пожалуйста, укажите допустимый идентификатор плейлиста!"
+delete_no: "`⚠️` | **Удаление отменено**!"
+delete_owner: "`⚠️` | Вы не являетесь **владельцем плейлиста**!"
+
+### Detail command!
+detail_private: "`🔒` | Плейлист **приватный**!"
+detail_embed_title: "%{name}"
+detail_embed_footer: "Страница • %{page}/%{pages} | Песни • %{songs} | Общая продолжительность • %{duration}"
+detail_track: "%{num}. **%{title}** `[%{duration}]` • Автор: **%{author}**"
+detail_notfound: "`⚠️` | Пожалуйста, укажите допустимый идентификатор плейлиста!"
+detail_notnumber: "`⚠️` | Пожалуйста, укажите допустимый номер страницы!"
+detail_page_notfound: "`⚠️` | Всего **%{page} страниц**!"
+
+### Import command!
+import_private: "`🔒` | Плейлист **приватный**!"
+import_imported: "`💿` | Импортирован **%{name}** • `[%{duration}]` • (**%{tracks} песен**) • %{user}"
+import_voice: "`⚠️` | Вам нужно быть в голосовом канале, чтобы использовать эту команду!"
+import_empty: "`⚠️` | Плейлист **пуст**!"
+
+### All command!
+view_embed_title: "%{user}"
+view_embed_footer: "Страница • %{page}/%{pages} | Плейлисты • %{songs}"
+view_embed_playlist: "%{num}. `%{name}` • (**%{tracks} песен**) • Создан: `[%{create} назад]`"
+view_notnumber: "`⚠️` | Пожалуйста, укажите допустимый номер страницы!"
+view_page_notfound: "`⚠️` | Всего **%{page} страниц**!"
+
+### Remove command!
+remove_removed: "`➖` | Удалена **%{position}** песня из `%{name}`"
+remove_notfound: "`⚠️` | Пожалуйста, укажите допустимый идентификатор плейлиста!"
+remove_song_notfound: "`⚠️` | Песня не найдена!"
+remove_owner: "`⚠️` | Вы не являетесь **владельцем плейлиста**!"
+
+### SaveQueue command!
+savequeue_saved: "`✅` | Сохранено **%{tracks} песен** в `%{name}`"
+savequeue_notfound: "`⚠️` | Пожалуйста, укажите допустимый идентификатор плейлиста!"
+savequeue_owner: "`⚠️` | Вы не являетесь **владельцем плейлиста**!"
+savequeue_no_new_saved: "`⚠️` | Песня уже существует в `%{name}`"
+savequeue_no_tracks: "`⚠️` | В настоящее время песня не воспроизводится!"
+
+### Info Command!
+info_id: "`🆔` | ID:"
+info_total: "`🎵` | Всего песен:"
+info_created: "`📅` | Создан:"
+info_private: "`👀` | Видимость:"
+info_owner: "`👑` | Владелец:"
+info_des: "`💬` | Описание:"
+no_des: "Описание отсутствует!"
+public: "Публичный"
+private: "Приватный"
+invalid: "`⚠️` | Пожалуйста, укажите допустимый идентификатор плейлиста!"
+
+### Editor command!
+edit_playlist_id_label: "Введите новый **идентификатор плейлиста**! `[a-z, A-Z, 0-9]`"
+edit_playlist_name_label: "Введите новое **название плейлиста**!"
+edit_playlist_des_label: "Введите новое **описание плейлиста**!"
+edit_playlist_private_label: "Введите новую **видимость плейлиста**! `[public/private]`"
+edit_success: "`✅` | Информация о `%{playlistId}` успешно отредактирована!"
+edit_arg: "`⚠️` | Пожалуйста, укажите допустимый идентификатор плейлиста!"
+edit_notfound: "`⚠️` | Пожалуйста, укажите допустимый идентификатор плейлиста!"
+edit_playlist_owner: "`⚠️` | Вы не являетесь **владельцем плейлиста**!"
+edit_invalid_id: "`⚠️` | Пожалуйста, введите допустимый и несуществующий идентификатор плейлиста!"
+edit_invalid_mode: "`⚠️` | Недопустимый режим видимости. Пожалуйста, используйте **public** или **private**!"
+
+### Editor interaction!
+ineraction_edit_playlist_id_label: "Новый идентификатор плейлиста"
+ineraction_edit_playlist_name_label: "Новое название плейлиста"
+ineraction_edit_playlist_des_label: "Новое описание плейлиста"
+ineraction_edit_playlist_private_label: "Новая видимость плейлиста"
+ineraction_edit_playlist_id_placeholder: "Введите новый идентификатор плейлиста! [a-z, A-Z, 0-9]"
+ineraction_edit_playlist_name_placeholder: "Введите новое название плейлиста!"
+ineraction_edit_playlist_des_placeholder: "Введите новое описание плейлиста!"
+ineraction_edit_playlist_private_placeholder: "Введите новую видимость плейлиста! [public/private]"
+ineraction_edit_success: "`✅` | Информация о `%{playlistId}` успешно отредактирована!"
+ineraction_edit_playlist_error: "`⚠️` | Что-то пошло не так. Пожалуйста, попробуйте снова!"
+ineraction_edit_notfound: "`⚠️` | Пожалуйста, укажите допустимый идентификатор плейлиста!"
+ineraction_edit_playlist_owner: "`⚠️` | Вы не являетесь **владельцем плейлиста**!"
+ineraction_edit_invalid_id: "`⚠️` | Пожалуйста, введите допустимый и несуществующий идентификатор плейлиста!"

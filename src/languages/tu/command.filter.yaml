@@ -1,0 +1,35 @@
+### All filter command!
+filter_on: "`✅` | %{name} filtresi şimdi **etkin**!"
+filter_already: "`⚠️` | %{name} filtresi zaten **etkin**!"
+filter_number: "`⚠️` | Lütfen geçerli bir sayı girin!"
+filter_greater: "`⚠️` | Sayı **0**'dan büyük olmalıdır!"
+filter_less: "`⚠️` | Sayı **10**'dan küçük olmalıdır!"
+
+### Bassboost command!
+bassboost_set: "`🎚️` | Bassboost **%{amount}dB** olarak ayarlandı!"
+bassboost_limit: "`⚠️` | Lütfen **-10** ile **10** arasında bir sayı kullanın!"
+
+### Equalizer command!
+eq_author: "Equalizer"
+eq_icon: "https://i.pinimg.com/originals/cb/17/b8/cb17b80a942d7c317a35ff1324fae12f.gif"
+eq_desc: "`🎚️` | **14 Band** -10 ile 10 arasında ayarlanabilir. Tümünü ayarlamak zorunlu değildir!"
+eq_field_title: "Örnek:"
+eq_field_value: "%{prefix}eq 2 3 0 8 0 5 0 -5 0 0"
+eq_footer: "Equalizer Sıfırla • %{prefix}eq sıfırla"
+eq_on: "`🎚️` | Equalizer %{bands} olarak ayarlandı!"
+eq_number: "`⚠️` | Lütfen geçerli bir sayı girin!"
+eq_greater: "`⚠️` | Sayı **-10**'dan büyük olmalıdır!"
+eq_than: "`⚠️` | Sayı **10**'dan küçük olmalıdır!"
+
+### Pitch command!
+pitch_on: "`🎚️` | Pitch **%{amount}** olarak ayarlandı!"
+
+### Rate command!
+rate_on: "`🎚️` | Rate **%{amount}x** olarak ayarlandı!"
+
+### Speed command!
+speed_on: "`🎚️` | Speed **%{amount}x** olarak ayarlandı!"
+
+### Reset command!
+reset_on: "`❌` | Filtre **Sıfırlandı**!"
+reset_already: "`⚠️` | Filtre zaten **Sıfırlandı**!"

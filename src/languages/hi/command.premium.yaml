@@ -1,0 +1,43 @@
+### Comando Generate!
+gen_author: "प्रीमियम कोड जेनेरेट करें"
+gen_desc: "`🔑` | **कोड सफलतापूर्वक बनाया गया** `[%{codes_length}]`\n```%{codes}```\n`💰` | **योजना:** `%{plan}`\n`📅` | **समाप्त होने का समय:** `%{expires}`"
+gen_footer: "उपयोग करें • %{prefix}redeem <code> को प्रीमियम सक्रिय करने के लिए"
+
+### Comando Profile!
+profile_author: "प्रीमियम प्रोफ़ाइल"
+profile_error_desc: "`⚠️` | **%{user}** प्रीमियम सदस्य नहीं है!"
+profile_desc: "`👤` | **उपयोगकर्ता:** `%{user}`\n`💰` | **योजना:** `%{plan}`\n`📅` | **समाप्त होने का समय:** `%{expires}`"
+
+### Comando Guild Profile!
+guild_profile_author: "प्रीमियम सर्वर प्रोफ़ाइल"
+guild_profile_desc: "`👤` | **सर्वर:** `%{guild}`\n`💰` | **योजना:** `%{plan}`\n`📅` | **समाप्त होने का समय:** `%{expires}`"
+
+### Comando Redeem!
+redeem_title: "प्रीमियम रिडीम"
+redeem_desc: "`💰` | **योजना:** `%{plan}`\n`📅` | **समाप्त होने का समय:** `%{expires}`"
+redeem_already: "`⚠️` | आप पहले से ही **प्रीमियम उपयोगकर्ता** हैं!"
+redeem_invalid: "`⚠️` | अमान्य कोड। कृपया फिर से प्रयास करें या एक वैध कोड का उपयोग करें!"
+redeem_invalid_mode: "`⚠️` | अमान्य प्रीमियम सक्रियण प्रकार। कृपया केवल `guild` या `user` निर्दिष्ट करें!"
+redeem_already_guild: "`⚠️` | इस सर्वर में पहले से ही **प्रीमियम** है!"
+
+### Comando Remove!
+remove_desc: "`✅` | %{user} से प्रीमियम सफलतापूर्वक हटा दिया गया!"
+remove_already: "`⚠️` | %{user} पहले से ही प्रीमियम उपयोगकर्ता हैं!"
+remove_no_params: "`⚠️` | कृपया प्रीमियम हटाने के लिए **उपयोगकर्ता का नाम** या **उपयोगकर्ता का आईडी** निर्दिष्ट करें!"
+remove_404: "`⚠️` | %{userid} कोई **प्रीमियम सदस्य** नहीं है!"
+
+### Comando Guild Remove!
+guild_remove_desc: "`✅` | %{user} सर्वर से प्रीमियम सफलतापूर्वक हटा दिया गया!"
+guild_remove_already: "`⚠️` | %{user} का सर्वर पहले से ही प्रीमियम नहीं है!"
+guild_remove_no_params: "`⚠️` | कृपया प्रीमियम हटाने के लिए **सर्वर आईडी** निर्दिष्ट करें!"
+guild_remove_404: "`⚠️` | %{userid} का सर्वर **प्रीमियम सर्वर** नहीं है!"
+
+### Comando Guild List
+guild_list_title: "💫 प्रीमियम सर्वरों की सूची!"
+guild_list_notnumber: "`⚠️` | पेज के लिए केवल अंक ही अनुमत हैं!"
+guild_list_page_notfound: "`⚠️` | केवल **%{page} पेज** उपलब्ध हैं!"
+
+### Comando User List
+list_title: "💫 प्रीमियम उपयोगकर्ताओं की सूची"
+list_notnumber: "`⚠️` | पेज के लिए केवल अंक ही अनुमत हैं!"
+list_page_notfound: "`⚠️` | केवल **%{page} पेज** उपलब्ध हैं!"

@@ -1,0 +1,99 @@
+### Autoplay command!
+autoplay_on: "`✅` | 자동 재생이 **활성화**되었습니다!"
+autoplay_off: "`❌` | 자동 재생이 **비활성화**되었습니다!"
+autoplay_already: "`⚠️` | 이미 자동 재생이 **%{mode}** 상태입니다!"
+
+### ClearQueue command!
+clearqueue_msg: "`🗑️` | 큐가 **지워졌습니다**!"
+
+### Forward command!
+forward_msg: "`⏩` | `%{duration}`로 이동했습니다"
+forward_beyond: "`⚠️` | 곡이 끝나려고 합니다. 그 이후로는 이동할 수 없습니다!"
+
+### Join command!
+join_msg: "`🔊` | %{channel}에 입장했습니다"
+join_voice: "`⚠️` | 이 명령어를 사용하려면 음성 채널에 있어야 합니다!"
+join_already: "`⚠️` | 이미 %{channel}에 있습니다"
+
+### Stop command!
+stop_msg: "`⏹️` | **플레이어**를 정지했습니다!"
+
+### Loop command!
+loop_current: "`🔁` | 현재 **곡**을 반복합니다!"
+loop_all: "`🔁` | **큐**를 반복합니다!"
+unloop_all: "`❌` | 반복이 **비활성화**되었습니다!"
+loop_invalid: "`⚠️` | 유효하지 않은 반복 모드입니다. %{mode}을(를) 사용해주세요!"
+loop_already: "`⚠️` | 이미 **%{mode}** 반복 모드입니다!"
+
+### Lyrics command!
+lyrics_title: "📜 %{song}"
+lyrics_notfound: "`⚠️` | 가사를 찾을 수 없습니다!"
+lyrics_toolong: "`⚠️` | 표시할 수 있는 가사가 너무 깁니다!"
+
+### Nowplaying command!
+np_icon: "https://cdn.discordapp.com/emojis/741605543046807626.gif"
+np_title: "지금 재생 중"
+np_current_duration: "`⏰` | 현재 재생 시간: `[%{current_duration} / %{total_duration}]`"
+
+### Pause command!
+pause_msg: "`⏸️` | **플레이어**를 일시 정지했습니다!"
+
+### Play command!
+play_track: "`💾` | **%{title}** `%{duration}` • %{request}을(를) 대기열에 추가했습니다"
+play_playlist: "`💾` | **%{title}** `%{duration}` • (**%{songs} 곡**) • %{request}을(를) 대기열에 추가했습니다"
+play_result: "`💾` | **%{title}** `%{duration}` • %{request}을(를) 대기열에 추가했습니다"
+play_arg: "`⚠️` | 유효한 곡 이름 또는 URL을 입력해주세요!"
+play_match: "`⚠️` | 곡을 찾을 수 없습니다!"
+play_emoji: "`⚠️` | 이모지를 사용하여 곡을 재생할 수 없습니다!"
+
+### File command!
+file_notfound: "`⚠️` | 유효한 파일을 제공해주세요!"
+play_invalid_file: "`⚠️` | 유효하지 않은 파일 형식입니다. **mp3** 또는 **ogg** 파일을 사용해주세요!"
+play_warning_file: "`⚠️` | 파일 형식을 감지할 수 없습니다. **mp3** 또는 **ogg** 파일을 사용해주세요!"
+
+### Previous command!
+previous_msg: "`⏮️` | 이전 **곡**으로 건너뛰었습니다!"
+previous_notfound: "`⚠️` | 이전 곡을 찾을 수 없습니다!"
+
+### Queue command!
+queue_author: "💾 %{guild}"
+queue_description: "`📀` | 현재 재생 중:\n**%{title}** `[%{duration}]` • %{request}\n\n`💤` | 나머지 큐:**%{rest}**"
+queue_footer: "페이지 • %{page}/%{pages} | 곡 수 • %{queue_lang} | 총 재생 시간 • %{duration}"
+queue_notnumber: "`⚠️` | 유효한 페이지 번호를 입력해주세요!"
+queue_page_notfound: "`⚠️` | 총 **%{page} 페이지**만 있습니다!"
+
+### Replay command!
+replay_msg: "`🔄` | **곡**을 다시 재생했습니다!"
+
+### Resume command!
+resume_msg: "`▶️` | **플레이어**를 재개했습니다!"
+
+### Rewind command!
+rewind_msg: "`⏪` | `%{duration}`로 되감았습니다"
+rewind_beyond: "`⚠️` | 곡이 시작되었습니다. 그 이전으로 되감을 수 없습니다!"
+
+### RemoveTrack command!
+removetrack_desc: "`🗑️` | **%{name}** `%{duration}` • %{request}을(를) 삭제했습니다"
+removetrack_already: "`⚠️` | 이미 재생 중인 곡은 삭제할 수 없습니다!"
+removetrack_notfound: "`⚠️` | 곡을 찾을 수 없습니다!"
+
+### Seek command!
+seek_msg: "`➿` | `%{duration}`로 이동했습니다"
+seek_beyond: "`⚠️` | 곡의 재생 시간을 넘어서 이동할 수 없습니다!"
+seek_invalid: "`⚠️` | 유효하지 않은 시간을 입력했습니다. 올바른 타임스탬프를 사용해주세요. 예시: **1:30**!"
+
+### Shuffle command!
+shuffle_msg: "🔀 큐를 섞었습니다"
+
+### Skip command!
+skip_msg: "`⏭️` | **곡**을 건너뛰었습니다!"
+skip_notfound: "`⚠️` | 건너뛸 곡을 찾을 수 없습니다!"
+
+### Volume command!
+volume_msg: "`🔊` | 볼륨을 **%{volume}%**로 설정했습니다"
+volume_invalid: "`⚠️` | 유효하지 않은 볼륨입니다. **1**에서 **100** 사이의 숫자를 사용해주세요!"
+
+### InsertTrack command!
+insert_desc: "`➕` | **%{name}** `%{duration}` • %{request}을(를) 삽입했습니다"
+insert_already: "`⚠️` | 이미 재생 중인 곡은 삽입할 수 없습니다!"
+insert_notfound: "`⚠️` | 곡을 찾을 수 없습니다!"

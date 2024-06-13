@@ -1,0 +1,24 @@
+### Playing event!
+track_title: "재생 시작"
+track_icon: "https://cdn.discordapp.com/emojis/741605543046807626.gif"
+author_title: "`✒️` | 작곡자:"
+request_title: "`👤` | 요청자:"
+volume_title: "`🔊` | 볼륨:"
+queue_title: "`💾` | 대기열 길이:"
+duration_title: "`🕒` | 곡 재생 시간:"
+total_duration_title: "`🕰️` | 대기열 시간:"
+download_title: "`⬇️` | 다운로드:"
+
+### Same voice!
+join_voice: "`⚠️` | 저와 동일한 음성 채널에 있지 않습니다!"
+
+### QueueEnd event!
+queue_end_desc: "`🔚` | 곡이 **종료**되었습니다!"
+
+### Song error!
+error_desc: "`⚠️` | 곡에 오류가 있습니다. 곡을 건너뜁니다!"
+
+### Auto function!
+player_end: "`🛑` | 음성 채널에서 나가겠습니다 <#%{leave}> 인원이 없기 때문입니다!"
+leave_pause: "`⏸️` | 저는 혼자 남겨졌기 때문에 곡 재생이 일시 중지되었습니다!"
+leave_resume: "`▶️` | 다시 누군가 들어왔기 때문에 곡 재생이 재개되었습니다!"

@@ -1,0 +1,40 @@
+# Invalid Number
+number_invalid: "`⚠️` | कृपया एक वैध संख्या दें!"
+
+# Execute when invalid
+no_node: "`⚠️` | कोई Lavalink सर्वर नहीं मिला। कृपया **5 मिनट** बाद पुन: प्रयास करें!"
+
+# No song is currently playing!
+no_player: "`⚠️` | वर्तमान में कोई गाना नहीं बज रहा है!"
+
+# Need to join voice & same voice to use command!
+no_in_voice: "`⚠️` | आप एक वॉयस चैनल में नहीं हैं!"
+no_same_voice: "`⚠️` | आप मुझसे वही वॉयस चैनल में नहीं हैं!"
+
+# No permission!
+no_perms: "`⚠️` | मेरे पास **%{perm}** अनुमति इस कमांड को निष्पादित करने के लिए नहीं है!"
+no_perms_channel: "`⚠️` | मेरे पास **%{perm}** अनुमति <#%{channel}> में इस कमांड को निष्पादित करने के लिए नहीं है!"
+
+# Getting error!
+unexpected_error: "`⚠️` | कुछ गड़बड़ हो गई। कृपया बाद में पुन: प्रयास करें!"
+
+# Client owner!
+owner_only: "`⚠️` | आप मेरे **मालिक** नहीं हैं!"
+
+# No premium Event!
+no_premium_author: "प्रीमियम"
+no_premium_desc: "`⚠️` | आप एक प्रीमियम उपयोगकर्ता नहीं हैं!"
+no_guild_premium_desc: "`⚠️` | आप प्रीमियम समुदाय में नहीं हैं!"
+
+# Rate limit!
+ratelimit: "`⚠️` | आप बहुत तेजी से कार्रवाई कर रहे हैं। कृपया **%{time} सेकंड** के लिए प्रतीक्षा करें!"
+
+# Missing args
+arg_error: "`⚠️` | अमान्य तर्क। कृपया %{text} का उपयोग करें"
+
+# Top.gg error
+topgg_error_author: "❌ | Top.gg त्रुटि"
+topgg_error_desc: "Top.gg पर अपने वोट की जांच करते समय एक अप्रत्याशित त्रुटि हुई है, इसका कारण Top.gg डाउन हो सकता है। कृपया 5-10 मिनट बाद पुन: प्रयास करें।"
+topgg_vote_author: "❌ | आपने अभी तक वोट नहीं किया है"
+topgg_vote_desc: "इस कमांड का उपयोग करने के लिए, आपको इस बॉट को वोट करना होगा!"
+topgg_vote_button: "यहाँ क्लिक करें वोट करने के लिए!"

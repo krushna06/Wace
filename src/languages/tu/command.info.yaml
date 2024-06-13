@@ -1,0 +1,34 @@
+### Developer command!
+dev_title: "n0step_"
+dev_desc: "Geliştirme ve tasarım arasındaki boşluğu köprüleyen tutkulu bir UI/UX tasarımcısıyım. Modern frontend mimarisi kullanarak iyi bir kullanıcı deneyimi oluşturma sorumluluğunu üstleniyorum."
+dev_foot: "Benim sunucuma katılmayı veya botumu davet etmeyi düşünün."
+
+### Invite command!
+inv_title: "✉️ %{username}"
+inv_desc: "Önceden beni davet ettiğiniz için teşekkürler!"
+
+### Ping command!
+ping_title: "🏓 "
+ping_desc: "**Ping:** `%{ping}ms`\n**Cevap Süresi:** `%{response}ms`"
+
+### Uptime command!
+uptime_title: "🕒 "
+uptime_desc: "**Çalışma Süresi:** `%{uptime}`"
+
+### Help command!
+ce_finder_name: "**Komut:**"
+ce_finder_des: "**Açıklama:**"
+ce_finder_usage: "**Kullanım:**"
+ce_finder_access: "**Erişilebilirlik:**"
+ce_finder_aliases: "**Takma Adlar:**"
+ce_finder_slash: "**Slash:**"
+ce_finder_des_no: "Açıklama Yok"
+ce_finder_usage_no: "Kullanım Yok"
+ce_finder_aliases_prefix: " [Sadece Önek]"
+ce_finder_aliases_no: "Takma Ad Yok"
+ce_finder_slash_enable: "Etkin"
+ce_finder_slash_disable: "Devre Dışı"
+ce_finder_invalid: "Geçersiz Komut"
+ce_finder_example: "`⚠️` | Lütfen geçerli bir **Komut Adı** sağlayın!"
+ce_name: "Yardım Komutu"
+ce_total: "Toplam Komutlar: "

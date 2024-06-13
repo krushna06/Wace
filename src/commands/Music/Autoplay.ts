@@ -4,7 +4,6 @@ import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
 import { WacelinkPlayer } from "../../wacelink/main.js";
 
-// Main code
 export default class implements Command {
   public name = ["autoplay"];
   public description = "Autoplay music (Random play songs)";

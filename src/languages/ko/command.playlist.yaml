@@ -1,0 +1,95 @@
+### Create command!
+create_created: "`💿` | **%{playlist}**을(를) 생성했습니다 • `%{id}`"
+create_toolong: "`⚠️` | 재생 목록 이름은 **16자**를 초과할 수 없습니다!"
+des_toolong: "`⚠️` | 재생 목록 설명은 **1000자**를 초과할 수 없습니다!"
+create_limit_playlist: "`⚠️` | **%{limit}개** 이상의 재생 목록을 생성할 수 없습니다!"
+
+### Add command!
+add_track: "`🔍` | **%{title}** `%{duration}` • %{user}님이 추가했습니다"
+add_playlist: "`🔍` | **%{title}** `%{duration}` • (**%{track} 곡**) • %{user}님이 추가했습니다"
+add_search: "`🔍` | **%{title}** `%{duration}` • %{user}님이 추가했습니다"
+add_added: "`➕` | **%{playlist}**에 **%{count} 곡**을 추가했습니다"
+add_match: "`⚠️` | 유효한 곡 이름 또는 URL을 입력해주세요!"
+add_owner: "`⚠️` | 재생 목록 소유자가 아닙니다!"
+add_limit_track: "`⚠️` | **%{limit} 곡** 이상을 추가할 수 없습니다!"
+
+### Delete command!
+delete_confirm: "`❓` | `%{playlist_id}`를 삭제하시겠습니까?"
+delete_deleted: "`❌` | `%{name}`을(를) 삭제했습니다"
+delete_notfound: "`⚠️` | 유효한 재생 목록 ID를 입력해주세요!"
+delete_no: "`⚠️` | **삭제**가 취소되었습니다!"
+delete_owner: "`⚠️` | 재생 목록 소유자가 아닙니다!"
+
+### Detail command!
+detail_private: "`🔒` | 재생 목록이 **비공개** 상태입니다!"
+detail_embed_title: "%{name}"
+detail_embed_footer: "페이지 • %{page}/%{pages} | 곡 수 • %{songs} | 총 재생 시간 • %{duration}"
+detail_track: "%{num}. **%{title}** `[%{duration}]` • 작성자: **%{author}**"
+detail_notfound: "`⚠️` | 유효한 재생 목록 ID를 입력해주세요!"
+detail_notnumber: "`⚠️` | 유효한 페이지 번호를 입력해주세요!"
+detail_page_notfound: "`⚠️` | **%{page} 페이지**만 있습니다!"
+
+### Import command!
+import_private: "`🔒` | 재생 목록이 **비공개** 상태입니다!"
+import_imported: "`💿` | **%{name}**을(를) 가져왔습니다 • `[%{duration}]` • (**%{tracks} 곡**) • %{user}"
+import_voice: "`⚠️` | 이 명령어를 사용하려면 음성 채널에 있어야 합니다!"
+import_empty: "`⚠️` | 재생 목록이 **비어** 있습니다!"
+
+### All command!
+view_embed_title: "%{user}"
+view_embed_footer: "페이지 • %{page}/%{pages} | 재생 목록 • %{songs}"
+view_embed_playlist: "%{num}. `%{name}` • (**%{tracks} 곡**) • 생성 날짜: `[%{create} 전]`"
+view_notnumber: "`⚠️` | 유효한 페이지 번호를 입력해주세요!"
+view_page_notfound: "`⚠️` | **%{page} 페이지**만 있습니다!"
+
+### Remove command!
+remove_removed: "`➖` | **%{position}번째** 곡을 **%{name}**에서 삭제했습니다"
+remove_notfound: "`⚠️` | 유효한 재생 목록 ID를 입력해주세요!"
+remove_song_notfound: "`⚠️` | 곡을 찾을 수 없습니다!"
+remove_owner: "`⚠️` | 재생 목록 소유자가 아닙니다!"
+
+### SaveQueue command!
+savequeue_saved: "`✅` | **%{tracks} 곡**을 **%{name}**에 저장했습니다"
+savequeue_notfound: "`⚠️` | 유효한 재생 목록 ID를 입력해주세요!"
+savequeue_owner: "`⚠️` | 재생 목록 소유자가 아닙니다!"
+savequeue_no_new_saved: "`⚠️` | 이미 **%{name}**에 저장된 곡입니다"
+savequeue_no_tracks: "`⚠️` | 현재 재생 중인 곡이 없습니다!"
+
+### Info Command!
+info_id: "`🆔` | ID:"
+info_total: "`🎵` | 총 곡 수:"
+info_created: "`📅` | 생성 날짜:"
+info_private: "`👀` | 공개 상태:"
+info_owner: "`👑` | 소유자:"
+info_des: "`💬` | 설명:"
+no_des: "설명이 제공되지 않았습니다!"
+public: "공개"
+private: "비공개"
+invalid: "`⚠️` | 유효한 재생 목록 ID를 입력해주세요!"
+
+### Editor command!
+edit_playlist_id_label: "**새 재생 목록 ID**를 입력하세요! `[a-z, A-Z, 0-9]`"
+edit_playlist_name_label: "**새 재생 목록 이름**을 입력하세요!"
+edit_playlist_des_label: "**새 재생 목록 설명**을 입력하세요!"
+edit_playlist_private_label: "**새 재생 목록 공개 여부**를 입력하세요! `[public/private]`"
+edit_success: "`✅` | **%{playlistId}** 정보를 성공적으로 수정했습니다!"
+edit_arg: "`⚠️` | 유효한 재생 목록 ID를 입력해주세요!"
+edit_notfound: "`⚠️` | 유효한 재생 목록 ID를 입력해주세요!"
+edit_playlist_owner: "`⚠️` | 재생 목록 소유자가 아닙니다!"
+edit_invalid_id: "`⚠️` | 유효하고 이미 존재하지 않는 재생 목록 ID를 입력해주세요!"
+edit_invalid_mode: "`⚠️` | 유효하지 않은 공개 여부입니다. **public** 또는 **private**를 사용해주세요!"
+
+### Editor interaction!
+ineraction_edit_playlist_id_label: "새 재생 목록 ID"
+ineraction_edit_playlist_name_label: "새 재생 목록 이름"
+ineraction_edit_playlist_des_label: "새 재생 목록 설명"
+ineraction_edit_playlist_private_label: "새 재생 목록 공개 여부"
+ineraction_edit_playlist_id_placeholder: "**새 재생 목록 ID**를 입력하세요! [a-z, A-Z, 0-9]"
+ineraction_edit_playlist_name_placeholder: "**새 재생 목록 이름**을 입력하세요!"
+ineraction_edit_playlist_des_placeholder: "**새 재생 목록 설명**을 입력하세요!"
+ineraction_edit_playlist_private_placeholder: "**새 재생 목록 공개 여부**를 입력하세요! [public/private]"
+ineraction_edit_success: "`✅` | **%{playlistId}** 정보를 성공적으로 수정했습니다!"
+ineraction_edit_playlist_error: "`⚠️` | 오류가 발생했습니다. 다시 시도해주세요!"
+ineraction_edit_notfound: "`⚠️` | 유효한 재생 목록 ID를 입력해주세요!"
+ineraction_edit_playlist_owner: "`⚠️` | 재생 목록 소유자가 아닙니다!"
+ineraction_edit_invalid_id: "`⚠️` | 유효하고 이미 존재하지 않는 재생 목록 ID를 입력해주세요!"

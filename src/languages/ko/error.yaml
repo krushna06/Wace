@@ -1,0 +1,40 @@
+# Invalid Number
+number_invalid: "`⚠️` | 유효한 숫자를 입력해주세요!"
+
+# Execute when invalid
+no_node: "`⚠️` | Lavalink 서버를 찾을 수 없습니다. **5분 후** 다시 시도해주세요!"
+
+# No song is currently playing!
+no_player: "`⚠️` | 현재 재생 중인 곡이 없습니다!"
+
+# Need to join voice & same voice to use command!
+no_in_voice: "`⚠️` | 음성 채널에 접속해주세요!"
+no_same_voice: "`⚠️` | 저와 같은 음성 채널에 접속해주세요!"
+
+# No permission!
+no_perms: "`⚠️` | **%{perm}** 권한이 없어 이 명령을 실행할 수 없습니다!"
+no_perms_channel: "`⚠️` | <#%{channel}>에서 **%{perm}** 권한이 없어 이 명령을 실행할 수 없습니다!"
+
+# Getting error!
+unexpected_error: "`⚠️` | 오류가 발생했습니다. 나중에 다시 시도해주세요!"
+
+# Client owner!
+owner_only: "`⚠️` | 당신은 제 **소유자**가 아닙니다!"
+
+# No premium Event!
+no_premium_author: "프리미엄"
+no_premium_desc: "`⚠️` | 프리미엄 사용자가 아닙니다!"
+no_guild_premium_desc: "`⚠️` | 프리미엄 길드에 속해 있지 않습니다!"
+
+# Rate limit!
+ratelimit: "`⚠️` | 너무 빠르게 명령을 실행하고 있습니다. **%{time}초** 후에 다시 시도해주세요!"
+
+# Missing args
+arg_error: "`⚠️` | 잘못된 인자입니다. %{text}을(를) 사용해주세요"
+
+# Top.gg error
+topgg_error_author: "❌ | Top.gg 오류"
+topgg_error_desc: "Top.gg에서 투표를 확인하는 동안 예외가 발생했습니다. 이는 Top.gg가 다운된 경우일 수 있습니다. 5-10분 후에 다시 시도해주세요."
+topgg_vote_author: "❌ | 아직 투표하지 않으셨습니다"
+topgg_vote_desc: "이 명령을 사용하려면 이 봇에게 투표해야 합니다!"
+topgg_vote_button: "여기를 클릭하여 투표하세요!"

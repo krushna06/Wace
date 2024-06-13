@@ -1,0 +1,30 @@
+### Language command!
+lang_set: "`📙` | Dil **%{language}** olarak ayarlandı!"
+lang_change: "`📙` | Dil **%{language}** olarak değiştirildi!"
+lang_perm: "`⚠️` | Bu komutu kullanma izniniz yok!"
+provide_lang: "`⚠️` | Geçersiz dil. Lütfen şunları kullanın:\n`%{languages}`"
+
+### Shutdown command!
+restart_msg: "`🔌` | **Kapatılıyor**..."
+
+### Prefix command!
+prefix_set: "`㊙️` | Ön ek **%{prefix}** olarak ayarlandı"
+prefix_change: "`㊙️` | Ön ek **%{prefix}** olarak değiştirildi"
+prefix_arg: "`⚠️` | Lütfen geçerli bir ön ek belirtin!"
+prefix_length: "`⚠️` | Ön ek **10 Karakterden** uzun olamaz!"
+
+### SongNoti command!
+songnoti_set: "`🔔` | Şarkı Bildirimleri **%{toggle}** olarak ayarlandı!"
+songnoti_already: "`⚠️` | Şarkı Bildirimleri zaten **%{mode}**!"
+
+### 24/7 command!
+247_on: "`✅` | 24/7 modu şimdi **Etkin**!"
+247_off: "`❌` | 24/7 modu şimdi **Devre Dışı**!"
+247_already: "`⚠️` | 24/7 modu zaten **%{mode}**!"
+
+### Setup command!
+setup_msg: "**`⚙️` | Müzik Sistemi Oluşturuldu** %{channel}\n```Not: Müzik Sisteminin düzgün çalışması için gönderdiğim herhangi bir mesajı silmeyin!```"
+setup_deleted: "**`⚙️` | Müzik Sistemi Silindi!**"
+setup_topic: "⏹ **Dur**\n⏮️ **Önceki**\n⏯ **Duraklat/Devam Et**\n⏭️ **Atla**\n🔁 **Döngü/Yineleme Kaldır**"
+setup_enable: "`⚠️` | Müzik Sistemi zaten mevcut!"
+setup_null: "`⚠️` | Müzik Sistemi bulunamadı!"

@@ -1,0 +1,99 @@
+### Autoplay command!
+autoplay_on: "`✅` | Автовоспроизведение **включено**!"
+autoplay_off: "`❌` | Автовоспроизведение **отключено**!"
+autoplay_already: "`⚠️` | Автовоспроизведение уже **%{mode}**!"
+
+### ClearQueue command!
+clearqueue_msg: "`🗑️` | Очередь **очищена**!"
+
+### Forward command!
+forward_msg: "`⏩` | Перемотано до `%{duration}`"
+forward_beyond: "`⚠️` | Песня почти закончилась. Невозможно перемотать дальше!"
+
+### Join command!
+join_msg: "`🔊` | Подключился к %{channel}"
+join_voice: "`⚠️` | Вам нужно быть в голосовом канале, чтобы использовать эту команду!"
+join_already: "`⚠️` | Я уже в %{channel}"
+
+### Stop command!
+stop_msg: "`⏹️` | Плеер **остановлен**!"
+
+### Loop command!
+loop_current: "`🔁` | Повтор текущей **песни**!"
+loop_all: "`🔁` | Повтор **очереди**!"
+unloop_all: "`❌` | Повтор **отключен**!"
+loop_invalid: "`⚠️` | Недопустимый режим повтора. Пожалуйста, используйте %{mode}!"
+loop_already: "`⚠️` | Режим повтора уже **%{mode}**!"
+
+### Lyrics command!
+lyrics_title: "📜 %{song}"
+lyrics_notfound: "`⚠️` | Текст песни не найден!"
+lyrics_toolong: "`⚠️` | Текст песни слишком длинный для отображения!"
+
+### Nowplaying command!
+np_icon: "https://cdn.discordapp.com/emojis/741605543046807626.gif"
+np_title: "Сейчас играет"
+np_current_duration: "`⏰` | Текущее время: `[%{current_duration} / %{total_duration}]`"
+
+### Pause command!
+pause_msg: "`⏸️` | Плеер **приостановлен**!"
+
+### Play command!
+play_track: "`💾` | В очереди **%{title}** `%{duration}` • %{request}"
+play_playlist: "`💾` | В очереди **%{title}** `%{duration}` • (**%{songs} песен**) • %{request}"
+play_result: "`💾` | В очереди **%{title}** `%{duration}` • %{request}"
+play_arg: "`⚠️` | Пожалуйста, укажите допустимое название песни или URL!"
+play_match: "`⚠️` | Песня не найдена!"
+play_emoji: "`⚠️` | Невозможно воспроизвести песни с помощью эмодзи!"
+
+### File command!
+file_notfound: "`⚠️` | Пожалуйста, укажите допустимый файл!"
+play_invalid_file: "`⚠️` | Недопустимый тип файла. Пожалуйста, используйте **mp3** или **ogg**!"
+play_warning_file: "`⚠️` | Не удалось определить тип файла. Пожалуйста, используйте **mp3** или **ogg**!"
+
+### Previous command!
+previous_msg: "`⏮️` | Переключено на предыдущую **песню**!"
+previous_notfound: "`⚠️` | Предыдущая песня не найдена!"
+
+### Queue command!
+queue_author: "💾 %{guild}"
+queue_description: "`📀` | Сейчас играет:\n**%{title}** `[%{duration}]` • %{request}\n\n`💤` | Остальная очередь:**%{rest}**"
+queue_footer: "Страница • %{page}/%{pages} | Песни • %{queue_lang} | Общая продолжительность • %{duration}"
+queue_notnumber: "`⚠️` | Пожалуйста, укажите допустимый номер страницы!"
+queue_page_notfound: "`⚠️` | Всего **%{page} страниц**!"
+
+### Replay command!
+replay_msg: "`🔄` | Песня **воспроизведена заново**!"
+
+### Resume command!
+resume_msg: "`▶️` | Плеер **возобновлен**!"
+
+### Rewind command!
+rewind_msg: "`⏪` | Перемотано на `%{duration}`"
+rewind_beyond: "`⚠️` | Песня только началась. Невозможно перемотать назад!"
+
+### RemoveTrack command!
+removetrack_desc: "`🗑️` | Удалена **%{name}** `%{duration}` • %{request}"
+removetrack_already: "`⚠️` | Невозможно удалить песню, которая уже играет!"
+removetrack_notfound: "`⚠️` | Песня не найдена!"
+
+### Seek command!
+seek_msg: "`➿` | Перемотано на `%{duration}`"
+seek_beyond: "`⚠️` | Невозможно перемотать дальше времени песни!"
+seek_invalid: "`⚠️` | Недопустимое время перемотки. Пожалуйста, используйте допустимую временную метку. Пример: **1:30**!"
+
+### Shuffle command!
+shuffle_msg: "🔀 Очередь перемешана"
+
+### Skip command!
+skip_msg: "`⏭️` | Пропущена **песня**!"
+skip_notfound: "`⚠️` | Песня для пропуска не найдена!"
+
+### Volume command!
+volume_msg: "`🔊` | Громкость установлена на **%{volume}%**"
+volume_invalid: "`⚠️` | Недопустимая громкость. Пожалуйста, используйте число от **1** до **100**!"
+
+### RemoveTrack command!
+insert_desc: "`➕` | Вставлена **%{name}** `%{duration}` • %{request}"
+insert_already: "`⚠️` | Невозможно вставить песню, которая уже играет!"
+insert_notfound: "`⚠️` | Песня не найдена!"

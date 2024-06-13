@@ -1,0 +1,40 @@
+# Invalid Number
+number_invalid: "`⚠️` | Lütfen geçerli bir sayı girin!"
+
+# Execute when invalid
+no_node: "`⚠️` | Lavalink sunucusu bulunamadı. Lütfen **5 dakika** sonra tekrar deneyin!"
+
+# No song is currently playing!
+no_player: "`⚠️` | Şu anda hiçbir şarkı çalmıyor!"
+
+# Need to join voice & same voice to use command!
+no_in_voice: "`⚠️` | Bir ses kanalına bağlanmalısınız!"
+no_same_voice: "`⚠️` | Benimle aynı ses kanalında değilsiniz!"
+
+# No permission!
+no_perms: "`⚠️` | Bu komutu çalıştırmak için **%{perm}** iznim yok!"
+no_perms_channel: "`⚠️` | Bu komutu <#%{channel}> kanalında çalıştırmak için **%{perm}** iznim yok!"
+
+# Getting error!
+unexpected_error: "`⚠️` | Bir şeyler yanlış gitti. Lütfen daha sonra tekrar deneyin!"
+
+# Client owner!
+owner_only: "`⚠️` | Bu komutu sadece benim **Sahibim** kullanabilir!"
+
+# No premium Event!
+no_premium_author: "Premium"
+no_premium_desc: "`⚠️` | Premium üye değilsiniz!"
+no_guild_premium_desc: "`⚠️` | Premium bir sunucuda bulunmuyorsunuz!"
+
+# Rate limit!
+ratelimit: "`⚠️` | Çok hızlı işlem yapıyorsunuz. Lütfen **%{time} saniye** bekleyin!"
+
+# Missing args
+arg_error: "`⚠️` | Geçersiz argüman. Lütfen %{text} kullanın"
+
+# Top.gg error
+topgg_error_author: "❌ | Top.gg hatası"
+topgg_error_desc: "Top.gg'de oyunuzun kontrol edilirken bir hata oluştu, bu durum Top.gg'nin kapalı olmasından kaynaklanıyor olabilir. Lütfen 5-10 dakika sonra tekrar deneyin."
+topgg_vote_author: "❌ | Henüz oy vermediniz"
+topgg_vote_desc: "Bu komutu kullanabilmek için bu botu oy vermeniz gerekiyor!"
+topgg_vote_button: "Oy vermek için buraya tıklayın!"

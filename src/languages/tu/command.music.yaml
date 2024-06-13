@@ -1,0 +1,97 @@
+### Autoplay command!
+autoplay_on: "`✅` | Autoplay şimdi **Etkin**!"
+autoplay_off: "`❌` | Autoplay şimdi **Devre Dışı**!"
+autoplay_already: "`⚠️` | Autoplay zaten **%{mode}**!"
+
+### ClearQueue command!
+clearqueue_msg: "`🗑️` | Kuyruk **Temizlendi**!"
+
+### Forward command!
+forward_msg: "`⏩` | `%{duration}` kadar ileri sarıldı"
+forward_beyond: "`⚠️` | Şarkı bitmek üzere. Daha ileriye sarılamazsınız!"
+
+### Join command!
+join_msg: "`🔊` | %{channel} kanalına katıldı"
+join_voice: "`⚠️` | Bu komutu kullanabilmek için bir ses kanalında olmanız gerekiyor!"
+join_already: "`⚠️` | Zaten %{channel} kanalındayım"
+
+### Stop command!
+stop_msg: "`⏹️` | **Oynatıcı** durduruldu!"
+
+### Loop command!
+loop_current: "`🔁` | Şu anki **Şarkı** tekrarlanıyor!"
+loop_all: "`🔁` | **Kuyruk** tekrarlanıyor!"
+unloop_all: "`❌` | Tekrarlama şimdi **Devre Dışı** bırakıldı!"
+loop_invalid: "`⚠️` | Geçersiz Tekrarlama modu. Lütfen %{mode} kullanın!"
+loop_already: "`⚠️` | Tekrarlama modu zaten **%{mode}**!"
+
+### Lyrics command!
+lyrics_title: "📜 %{song}"
+lyrics_notfound: "`⚠️` | Şarkı sözleri bulunamadı!"
+lyrics_toolong: "`⚠️` | Şarkı sözleri çok uzun, görüntülenemiyor!"
+
+### Nowplaying command!
+np_icon: "https://cdn.discordapp.com/emojis/741605543046807626.gif"
+np_title: "Şu Anda Çalıyor"
+np_current_duration: "`⏰` | Geçen Süre: `[%{current_duration} / %{total_duration}]`"
+
+### Pause command!
+pause_msg: "`⏸️` | **Oynatıcı** duraklatıldı!"
+
+### Play command!
+play_track: "`💾` | **%{title}** `%{duration}` • %{request} kuyruğa eklendi"
+play_playlist: "`💾` | **%{title}** `%{duration}` • (**%{songs} Şarkı**) • %{request} kuyruğa eklendi"
+play_result: "`💾` | **%{title}** `%{duration}` • %{request} kuyruğa eklendi"
+play_arg: "`⚠️` | Lütfen geçerli bir şarkı adı veya URL sağlayın!"
+play_match: "`⚠️` | Şarkı bulunamadı!"
+play_emoji: "`⚠️` | Emoji kullanarak şarkı çalamazsınız!"
+
+### File command!
+file_notfound: "`⚠️` | Lütfen geçerli bir Dosya sağlayın!"
+play_invalid_file: "`⚠️` | Geçersiz Dosya türü. Lütfen **mp3** veya **ogg** kullanın!"
+play_warning_file: "`⚠️` | Dosya türü algılanamadı. Lütfen **mp3** veya **ogg** kullanın!"
+
+### Previous command!
+previous_msg: "`⏮️` | Önceki **Şarkı'ya** geçildi!"
+previous_notfound: "`⚠️` | Önceki şarkı bulunamadı!"
+
+### Queue command!
+queue_author: "💾 %{guild}"
+queue_description: "`📀` | Şu anda Çalınıyor:\n**%{title}** `[%{duration}]` • %{request}\n\n`💤` | Kuyruğun Geri Kalanı:**%{rest}**"
+queue_footer: "Sayfa • %{page}/%{pages} | Şarkılar • %{queue_lang} | Toplam Süre • %{duration}"
+queue_notnumber: "`⚠️` | Lütfen geçerli bir sayfa numarası girin!"
+queue_page_notfound: "`⚠️` | Sadece **%{page} Sayfa** var!"
+
+### Replay command!
+replay_msg: "`🔄` | **Şarkı** tekrar oynatıldı!"
+
+### Resume command!
+resume_msg: "`▶️` | **Oynatıcı** devam ettirildi!"
+
+### Rewind command!
+rewind_msg: "`⏪` | `%{duration}` kadar geri sarıldı"
+rewind_beyond: "`⚠️` | Şarkı yeni başladı. Daha geriye sarılamazsınız!"
+
+### RemoveTrack command!
+removetrack_desc: "`🗑️` | **%{name}** `%{duration}` • %{request} kaldırıldı"
+removetrack_already: "`⚠️` | Şu anda çalan bir şarkıyı kaldıramam!"
+removetrack_notfound: "`⚠️` | Şarkı bulunamadı!"
+
+### Seek command!
+seek_msg: "`➿` | `%{duration}` zamanına atlandı"
+seek_beyond: "`⚠️` | Şarkı süresinden daha ileriye gidemezsiniz!"
+seek_invalid: "`⚠️` | Geçersiz atlatma süresi. Lütfen geçerli bir zaman damgası kullanın. Örnek: **1:30**!"
+
+### Shuffle command!
+shuffle_msg: "🔀 Kuyruk karıştırıldı"
+
+### Skip command!
+skip_msg: "`⏭️` | **Şarkı** atlandı!"
+skip_notfound: "`⚠️` | Atlanacak şarkı bulunamadı!"
+
+### Volume command!
+volume_msg: "`🔊` | Ses seviyesi **%{volume}%** olarak ayarlandı"
+volume_invalid: "`⚠️` | Geçersiz Ses seviyesi. Lütfen **1** ile **100** arasında bir sayı kullanın!"
+
+### Insert command!
+insert_desc: "`➕` | **%{name}** `%{duration}` • %{request} eklendi"

@@ -1,0 +1,43 @@
+### Comando Generate!
+gen_author: "프리미엄 코드 생성"
+gen_desc: "`🔑` | **코드가 성공적으로 생성되었습니다** `[%{codes_length}]`\n```%{codes}```\n`💰` | **플랜:** `%{plan}`\n`📅` | **만료일:** `%{expires}`"
+gen_footer: "사용 방법 • %{prefix}redeem <code>으로 프리미엄을 활성화하세요"
+
+### Comando Profile!
+profile_author: "프리미엄 프로필"
+profile_error_desc: "`⚠️` | **%{user}**님은 프리미엄 회원이 아닙니다!"
+profile_desc: "`👤` | **사용자:** `%{user}`\n`💰` | **플랜:** `%{plan}`\n`📅` | **만료일:** `%{expires}`"
+
+### Comando Guild Profile!
+guild_profile_author: "프리미엄 서버 프로필"
+guild_profile_desc: "`👤` | **서버:** `%{guild}`\n`💰` | **플랜:** `%{plan}`\n`📅` | **만료일:** `%{expires}`"
+
+### Comando Redeem!
+redeem_title: "프리미엄 활성화"
+redeem_desc: "`💰` | **플랜:** `%{plan}`\n`📅` | **만료일:** `%{expires}`"
+redeem_already: "`⚠️` | 이미 **프리미엄 사용자**입니다!"
+redeem_invalid: "`⚠️` | 유효하지 않은 코드입니다. 다시 시도하거나 유효한 코드를 사용해주세요!"
+redeem_invalid_mode: "`⚠️` | 유효하지 않은 프리미엄 활성화 유형입니다. `guild` 또는 `user`만 지정해주세요!"
+redeem_already_guild: "`⚠️` | 이 서버는 이미 **프리미엄 서버**입니다!"
+
+### Comando Remove!
+remove_desc: "`✅` | %{user}님의 프리미엄을 성공적으로 제거했습니다!"
+remove_already: "`⚠️` | %{user}님은 이미 프리미엄 없는 상태입니다!"
+remove_no_params: "`⚠️` | 프리미엄을 제거할 사용자 이름 또는 사용자 ID를 지정해주세요!"
+remove_404: "`⚠️` | %{userid}님은 프리미엄 회원이 아닙니다!"
+
+### Comando Guild Remove!
+guild_remove_desc: "`✅` | %{user}님의 서버의 프리미엄을 성공적으로 제거했습니다!"
+guild_remove_already: "`⚠️` | %{user}님의 서버는 이미 프리미엄 없는 상태입니다!"
+guild_remove_no_params: "`⚠️` | 프리미엄을 제거할 서버 ID를 지정해주세요!"
+guild_remove_404: "`⚠️` | %{userid} 서버는 프리미엄 서버가 아닙니다!"
+
+### Comando Guild List
+guild_list_title: "💫 프리미엄 서버 목록!"
+guild_list_notnumber: "`⚠️` | 페이지 번호는 숫자만 허용됩니다!"
+guild_list_page_notfound: "`⚠️` | **%{page} 페이지**만 있습니다!"
+
+### Comando User List
+list_title: "💫 프리미엄 사용자 목록"
+list_notnumber: "`⚠️` | 페이지 번호는 숫자만 허용됩니다!"
+list_page_notfound: "`⚠️` | **%{page} 페이지**만 있습니다!"

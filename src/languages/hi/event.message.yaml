@@ -1,0 +1,12 @@
+### Help command!
+intro1: "・**%{bot}** एक उन्नत संगीत बॉट है जिसमें समृद्ध सुविधाएँ हैं!"
+intro2: "・**n0step_** द्वारा विकसित"
+intro3: "・**[Academy Gaming](https://www.academy-hosting.com/aff.php?aff=10)** के साथ साझेदारी"
+prefix: "・**बॉट प्रिफिक्स:** %{prefix}"
+ver: "・**बॉट संस्करण:** `%{botver}`"
+djs: "・**Discord.js:** `%{djsver}`"
+lavalink: "・**ऑटोफिक्स:** `%{aver}`"
+help1: "・**शुरू करने के लिए:** %{help}"
+help2: "・**अधिक जानकारी प्राप्त करने के लिए:** %{botinfo}"
+wel: "👋 %{bot} में आपका स्वागत है"
+codename: "・**कोडनेम:** `%{codename}`"

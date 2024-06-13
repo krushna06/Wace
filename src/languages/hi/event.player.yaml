@@ -1,0 +1,24 @@
+### Playing event!
+track_title: "बजाना शुरू कर दिया"
+track_icon: "https://cdn.discordapp.com/emojis/741605543046807626.gif"
+author_title: "`✒️` | लेखक:"
+request_title: "`👤` | अनुरोधकर्ता:"
+volume_title: "`🔊` | वॉल्यूम:"
+queue_title: "`💾` | कतार लंबाई:"
+duration_title: "`🕒` | गाने की अवधि:"
+total_duration_title: "`🕰️` | कतार की अवधि:"
+download_title: "`⬇️` | डाउनलोड:"
+
+### Same voice!
+join_voice: "`⚠️` | आप मुझसे वही वॉयस चैनल में नहीं हैं!"
+
+### QueueEnd event!
+queue_end_desc: "`🔚` | गाना समाप्त हो गया है!"
+
+### Song error!
+error_desc: "`⚠️` | गाने में त्रुटि है। गाना छोड़ दिया गया है!"
+
+### Auto function!
+player_end: "`🛑` | मैंने <#%{leave}> को छोड़ दिया क्योंकि वॉयस चैनल में कोई नहीं था!"
+leave_pause: "`⏸️` | गाना रोक दिया गया है क्योंकि मैं अकेला छोड़ दिया गया था!"
+leave_resume: "`▶️` | गाना फिर से शुरू हो गया है क्योंकि कोई जुड़ गया था!"

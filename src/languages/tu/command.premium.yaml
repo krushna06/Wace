@@ -1,0 +1,43 @@
+### Comando Generate!
+gen_author: "Premium Kodu Oluştur"
+gen_desc: "`🔑` | **Kod Başarıyla Oluşturuldu** `[%{codes_length}]`\n```%{codes}```\n`💰` | **Plan:** `%{plan}`\n`📅` | **Bitiş Tarihi:** `%{expires}`"
+gen_footer: "Kullan • %{prefix}redeem <kod> premiumu aktive etmek için"
+
+### Comando Profile!
+profile_author: "Premium Profil"
+profile_error_desc: "`⚠️` | **%{user}** premium üye değil!"
+profile_desc: "`👤` | **Kullanıcı:** `%{user}`\n`💰` | **Plan:** `%{plan}`\n`📅` | **Bitiş Tarihi:** `%{expires}`"
+
+### Comando Guild Profile!
+guild_profile_author: "Premium Sunucu Profili"
+guild_profile_desc: "`👤` | **Sunucu:** `%{guild}`\n`💰` | **Plan:** `%{plan}`\n`📅` | **Bitiş Tarihi:** `%{expires}`"
+
+### Comando Redeem!
+redeem_title: "Premium Aktivasyonu"
+redeem_desc: "`💰` | **Plan:** `%{plan}`\n`📅` | **Bitiş Tarihi:** `%{expires}`"
+redeem_already: "`⚠️` | Zaten bir **Premium kullanıcısı**sınız!"
+redeem_invalid: "`⚠️` | Geçersiz kod. Lütfen tekrar deneyin veya geçerli bir kod kullanın!"
+redeem_invalid_mode: "`⚠️` | Geçersiz premium aktivasyon türü. Lütfen yalnızca `guild` veya `user` belirtin!"
+redeem_already_guild: "`⚠️` | Bu sunucu zaten **Premium**!"
+
+### Comando Remove!
+remove_desc: "`✅` | %{user} kullanıcısından premium başarıyla kaldırıldı!"
+remove_already: "`⚠️` | %{user} zaten premium üyesi değil!"
+remove_no_params: "`⚠️` | Lütfen premiumu kaldırmak için bir **kullanıcı adı** veya **kullanıcı ID'si** belirtin!"
+remove_404: "`⚠️` | %{userid} bir **premium üye** değil!"
+
+### Comando Guild Remove!
+guild_remove_desc: "`✅` | %{user} sunucusundan premium başarıyla kaldırıldı!"
+guild_remove_already: "`⚠️` | %{user} sunucusu zaten premium değil!"
+guild_remove_no_params: "`⚠️` | Premiumu kaldırmak için lütfen **sunucu ID'sini** belirtin!"
+guild_remove_404: "`⚠️` | %{userid} bir **premium sunucu** değil!"
+
+### Comando Guild List
+guild_list_title: "💫 Premium Sunucu Listesi!"
+guild_list_notnumber: "`⚠️` | Sayfa için yalnızca rakamlar geçerlidir!"
+guild_list_page_notfound: "`⚠️` | Yalnızca **%{page} sayfa** mevcut!"
+
+### Comando User List
+list_title: "💫 Premium Kullanıcı Listesi"
+list_notnumber: "`⚠️` | Sayfa için yalnızca rakamlar geçerlidir!"
+list_page_notfound: "`⚠️` | Yalnızca **%{page} sayfa** mevcut!"

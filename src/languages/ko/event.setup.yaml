@@ -1,0 +1,22 @@
+setup_queuemsg: "음성 채널에 참여하고 여기서 이름 또는 URL을 사용하여 노래를 재생하세요!"
+setup_playembed_author: "현재 재생 중인 곡이 없습니다"
+
+setup_author: "재생 중"
+setup_author_icon: "https://cdn.discordapp.com/emojis/741605543046807626.gif"
+setup_desc: "**%{title}** `[%{duration}]` • %{request}"
+setup_footer: "볼륨 • %{volume}% | 총 재생 시간 • %{duration}"
+setup_content: "**__대기열:__**"
+setup_content_queue: "`%{index}.` **%{title}** `[%{duration}]` • %{request}"
+setup_content_empty: "음성 채널에 참여하고 여기서 이름 또는 URL을 사용하여 노래를 재생하세요!"
+
+status_create: "**`📊` | 상태 채널 생성됨!**"
+status_delete: "**`📊` | 상태 채널 삭제됨!**"
+status_enable: "`⚠️` | 상태 채널이 이미 존재합니다!"
+status_null: "`⚠️` | 상태 채널을 찾을 수 없습니다!"
+
+play_track: "`💾` | **%{title}** `%{duration}`을(를) 대기열에 추가했습니다 • %{request}"
+play_playlist: "`💾` | **%{title}** `%{duration}` • (**%{songs} 곡**)을(를) 대기열에 추가했습니다 • %{request}"
+play_result: "`💾` | **%{title}** `%{duration}`을(를) 대기열에 추가했습니다 • %{request}"
+play_arg: "`⚠️` | 유효한 노래 이름 또는 URL을 입력해주세요!"
+play_match: "`⚠️` | 해당 노래를 찾을 수 없습니다!"
+play_emoji: "`⚠️` | 이모지를 사용하여 노래를 재생할 수 없습니다!"

@@ -1,0 +1,34 @@
+### Developer command!
+dev_title: "n0step_"
+dev_desc: "Я страстный UI/UX дизайнер, который соединяет разработку и дизайн. Я отвечаю за создание хорошего пользовательского опыта, используя современную фронтенд-архитектуру."
+dev_foot: "Рассмотрите возможность присоединиться к моему серверу или пригласить моего бота."
+
+### Invite command!
+inv_title: "✉️ %{username}"
+inv_desc: "Заранее спасибо за приглашение!"
+
+### Ping command!
+ping_title: "🏓 "
+ping_desc: "**Пинг:** `%{ping}ms`\n**Время отклика:** `%{response}ms`"
+
+### Uptime command!
+uptime_title: "🕒 "
+uptime_desc: "**Время работы:** `%{uptime}`"
+
+### Help command!
+ce_finder_name: "**Команда:**"
+ce_finder_des: "**Описание:**"
+ce_finder_usage: "**Использование:**"
+ce_finder_access: "**Доступно для:**"
+ce_finder_aliases: "**Псевдонимы:**"
+ce_finder_slash: "**Слэш:**"
+ce_finder_des_no: "Нет описания"
+ce_finder_usage_no: "Нет использования"
+ce_finder_aliases_prefix: " [Только префикс]"
+ce_finder_aliases_no: "Нет псевдонимов"
+ce_finder_slash_enable: "Включен"
+ce_finder_slash_disable: "Отключен"
+ce_finder_invalid: "Недопустимая команда"
+ce_finder_example: "`⚠️` | Пожалуйста, введите допустимое **имя команды**!"
+ce_name: "Команда помощи"
+ce_total: "Всего команд: "

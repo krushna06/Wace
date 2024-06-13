@@ -1,0 +1,38 @@
+queue_author: "💾 %{guild}"
+queue_description: "`📀` | Şu anda Çalınıyor:\n**%{track}** `[%{duration}]` • %{requester}\n\n`💤` | Kuyruğun Geri Kalanı: **%{list_song}**"
+queue_footer: "Sayfa • %{page}/%{pages} | Şarkılar • %{queue_lang} | Toplam Süre • %{total_duration}"
+# Pause
+pause_msg: "`⏸️` | **Oynatıcı** duraklatıldı!"
+resume_msg: "`▶️` | **Oynatıcı** devam ettirildi!"
+# Skip
+skip_msg: "`⏭️` | **Şarkı** atlandı!"
+skip_notfound: "`⚠️` | Atlamak için şarkı bulunamadı!"
+# Stop
+stop_msg: "`⏹️` | **Oynatıcı** durduruldu!"
+# Volume
+volup_msg: "`🔊` | Ses seviyesi **%{volume}%** olarak değiştirildi"
+voldown_msg: "`🔉` | Ses seviyesi **%{volume}%** olarak düşürüldü"
+volume_invalid: "`⚠️` | Geçersiz ses seviyesi. Lütfen **1** ile **100** arasında bir sayı kullanın!"
+volume_max: "`⚠️` | Oynatıcı zaten en yüksek ses seviyesinde!"
+volume_min: "`⚠️` | Oynatıcı zaten en düşük ses seviyesinde!"
+# Clear
+clear_msg: "`🗑️` | Kuyruk **Temizlendi**!"
+# Loop
+loop_current: "`🔁` | Şu anki **Şarkı** tekrarlanıyor!"
+loop_all: "`🔁` | **Kuyruk** tekrarlanıyor!"
+unloop_all: "`❌` | Tekrarlama şimdi **Devre Dışı** bırakıldı!"
+loop_invalid: "`⚠️` | Geçersiz Tekrarlama modu. Lütfen %{mode} kullanın!"
+loop_already: "`⚠️` | Tekrarlama modu zaten **%{mode}**!"
+# Previous
+previous_msg: "`⏮️` | Önceki **Şarkı'ya** geçildi!"
+previous_notfound: "`⚠️` | Önceki şarkı bulunamadı!"
+# Shuffle
+shuffle_msg: "🔀 Kuyruk karıştırıldı"
+
+### All filter command!
+filter_on: "`✅` | %{name} filtresi şimdi **etkin**!"
+filter_already: "`⚠️` | %{name} filtresi zaten **etkin**!"
+
+### Reset command!
+reset_on: "`❌` | Filtre **Sıfırlandı**!"
+reset_already: "`⚠️` | Filtre zaten **Sıfırlandı**!"

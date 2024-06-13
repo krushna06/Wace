@@ -1,0 +1,25 @@
+help_menu: "## **[Wace Yardım Menüsü](https://wace.live)**"
+categories: "**Mevcut Kategoriler: [5]**"
+categories_list: "```Filtre\n Bilgi\n Müzik\n Çalma Listesi\n Premium\n Araçlar```"
+information_title: "📰 Bilgi:"
+information_content: "Wace basit bir müzik botudur. Kullanıcı dostu bir deneyim sunar, YouTube, Soundcloud, Spotify, Twitch ve daha fazlasını destekler!"
+get_started_title: "Başlangıç"
+get_started_content: "```Bir ses kanalına katılın ve /play {Şarkı/URL} komutunu kullanarak bir şarkı çalın. (Wace üzerinde isimler, YouTube video bağlantıları, çalma listesi bağlantıları veya Spotify bağlantıları desteklenir)```"
+didnt_select: "Hata | Bir kategori seçmediniz."
+choose_category: "Bir komut kategorisi seçin."
+
+# Düğmeler
+source_code_label: "Kaynak Kodu"
+invite_label: "Davet Et"
+support_label: "Destek"
+donate_label: "Bağış Yap"
+
+# Bağış Modalı
+donate_amount_title: "Bağış Yap"
+donate_amount_description: "Bağış yapmak istediğiniz miktarı girin."
+invalid_amount: "Geçersiz miktar. Lütfen geçerli bir sayı girin."
+donate_amount_invalid: "Bağış miktarı geçersiz."
+
+# Bağlantılar
+invite_link: "https://discord.com/oauth2/authorize?client_id=1221392528566386768"
+support_link: "https://discord.gg/wacebot"

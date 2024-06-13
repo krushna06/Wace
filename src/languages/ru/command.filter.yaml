@@ -1,0 +1,35 @@
+### All filter command!
+filter_on: "`✅` | Фильтр %{name} **включен**!"
+filter_already: "`⚠️` | Фильтр %{name} уже **включен**!"
+filter_number: "`⚠️` | Пожалуйста, введите допустимое число!"
+filter_greater: "`⚠️` | Число должно быть больше **0**!"
+filter_less: "`⚠️` | Число должно быть меньше **10**!"
+
+### Bassboost command!
+bassboost_set: "`🎚️` | Басбуст установлен на **%{amount}dB**!"
+bassboost_limit: "`⚠️` | Пожалуйста, используйте число от **-10** до **10**!"
+
+### Equalizer command!
+eq_author: "Эквалайзер"
+eq_icon: "https://i.pinimg.com/originals/cb/17/b8/cb17b80a942d7c317a35ff1324fae12f.gif"
+eq_desc: "`🎚️` | Есть **14 полос**, которые можно настроить от **-10** до **10**. Не обязательно настраивать все!"
+eq_field_title: "Пример:"
+eq_field_value: "%{prefix}eq 2 3 0 8 0 5 0 -5 0 0"
+eq_footer: "Сбросить эквалайзер • %{prefix}eq reset"
+eq_on: "`🎚️` | Эквалайзер настроен на **%{bands}**!"
+eq_number: "`⚠️` | Пожалуйста, введите допустимое число!"
+eq_greater: "`⚠️` | Число должно быть больше **-10**!"
+eq_than: "`⚠️` | Число должно быть меньше **10**!"
+
+### Pitch command!
+pitch_on: "`🎚️` | Питч установлен на **%{amount}**!"
+
+### Rate command!
+rate_on: "`🎚️` | Скорость установлена на **%{amount}x**!"
+
+### Speed command!
+speed_on: "`🎚️` | Скорость установлена на **%{amount}x**!"
+
+### Reset command!
+reset_on: "`❌` | Фильтр **сброшен**!"
+reset_already: "`⚠️` | Фильтр уже **сброшен**!"

@@ -1,0 +1,26 @@
+### Ayarla işlemleri!
+setup_queuemsg: "Bir ses kanalına katılın ve burada adı veya URL'si ile şarkıları çalın!"
+setup_playembed_author: "Şu anda herhangi bir şarkı çalmıyor"
+
+### Güncelle işlemleri!
+setup_author: "Oynatılıyor"
+setup_author_icon: "https://cdn.discordapp.com/emojis/741605543046807626.gif"
+setup_desc: "**%{title}** `[%{duration}]` • %{request}"
+setup_footer: "Ses düzeyi • %{volume}% | Toplam süre • %{duration}"
+setup_content: "**__Sıra:__**"
+setup_content_queue: "`%{index}.` **%{title}** `[%{duration}]` • %{request}"
+setup_content_empty: "Bir ses kanalına katılın ve burada adı veya URL'si ile şarkıları çalın!"
+
+### Durum komutu!
+status_create: "**`📊` | Durum Kanalı Oluşturuldu!**"
+status_delete: "**`📊` | Durum Kanalı Silindi!**"
+status_enable: "`⚠️` | Durum Kanalı zaten mevcut!"
+status_null: "`⚠️` | Durum Kanalı bulunamadı!"
+
+# Oynat!
+play_track: "`💾` | **%{title}** `%{duration}` • %{request} sıraya alındı"
+play_playlist: "`💾` | **%{title}** `%{duration}` • (**%{songs} Şarkılar**) • %{request} sıraya alındı"
+play_result: "`💾` | **%{title}** `%{duration}` • %{request} sıraya alındı"
+play_arg: "`⚠️` | Lütfen geçerli bir şarkı adı veya URL sağlayın!"
+play_match: "`⚠️` | Şarkı bulunamadı!"
+play_emoji: "`⚠️` | Emoji kullanarak şarkı çalamazsınız!"
