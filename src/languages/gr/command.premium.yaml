@@ -1,43 +1,43 @@
 ### Comando Generate!
-gen_author: "Generate Premium Code"
-gen_desc: "`🔑` | **Code Created Successfully** `[%{codes_length}]`\n```%{codes}```\n`💰` | **Plan:** `%{plan}`\n`📅` | **Expires At:** `%{expires}`"
-gen_footer: "Use • %{prefix}redeem <code> to activate premium"
+gen_author: "Generar Código Premium"
+gen_desc: "`🔑` | **Código generado exitosamente** `[%{codes_length}]`\n```%{codes}```\n`💰` | **Plan:** `%{plan}`\n`📅` | **Caduca el:** `%{expires}`"
+gen_footer: "Utiliza • %{prefix}canjear <código> para activar premium"
 
 ### Comando Profile!
-profile_author: "Premium Profile"
-profile_error_desc: "`⚠️` | **%{user}** is not a premium member!"
-profile_desc: "`👤` | **User:** `%{user}`\n`💰` | **Plan:** `%{plan}`\n`📅` | **Expires At:** `%{expires}`"
+profile_author: "Perfil Premium"
+profile_error_desc: "`⚠️` | ¡**%{user}** no es un miembro premium!"
+profile_desc: "`👤` | **Usuario:** `%{user}`\n`💰` | **Plan:** `%{plan}`\n`📅` | **Caduca el:** `%{expires}`"
 
 ### Comando Guild Profile!
-guild_profile_author: "Premium Server Profile"
-guild_profile_desc: "`👤` | **Server:** `%{guild}`\n`💰` | **Plan:** `%{plan}`\n`📅` | **Expires At:** `%{expires}`"
+guild_profile_author: "Perfil de Servidor Premium"
+guild_profile_desc: "`👤` | **Servidor:** `%{guild}`\n`💰` | **Plan:** `%{plan}`\n`📅` | **Caduca el:** `%{expires}`"
 
 ### Comando Redeem!
-redeem_title: "Redeem Premium"
-redeem_desc: "`💰` | **Plan:** `%{plan}`\n`📅` | **Expires At:** `%{expires}`"
-redeem_already: "`⚠️` | You are already a **Premium user**!"
-redeem_invalid: "`⚠️` | Invalid code. Please try again or use a valid code!"
-redeem_invalid_mode: "`⚠️` | Invalid premium activation type. Please specify `guild` or `user` only!"
-redeem_already_guild: "`⚠️` | This server already has **Premium**!"
+redeem_title: "Canjear Premium"
+redeem_desc: "`💰` | **Plan:** `%{plan}`\n`📅` | **Caduca el:** `%{expires}`"
+redeem_already: "`⚠️` | ¡Ya eres un usuario **Premium**!"
+redeem_invalid: "`⚠️` | Código inválido. ¡Por favor, inténtalo de nuevo o utiliza un código válido!"
+redeem_invalid_mode: "`⚠️` | Tipo de activación de premium inválido. ¡Especifica solo `guild` o `user`!"
+redeem_already_guild: "`⚠️` | ¡Este servidor ya tiene **Premium**!"
 
 ### Comando Remove!
-remove_desc: "`✅` | Successfully removed premium from %{user}!"
-remove_already: "`⚠️` | %{user} is already without premium!"
-remove_no_params: "`⚠️` | Please specify a **user's name** or **user's ID** to remove premium from!"
-remove_404: "`⚠️` | %{userid} is not a **premium member**!"
+remove_desc: "`✅` | ¡Premium se ha eliminado correctamente de %{user}!"
+remove_already: "`⚠️` | ¡%{user} ya no tiene premium!"
+remove_no_params: "`⚠️` | ¡Por favor, especifica el nombre de un usuario o su ID para eliminar premium!"
+remove_404: "`⚠️` | %{userid} no es un miembro **premium**!"
 
 ### Comando Guild Remove!
-guild_remove_desc: "`✅` | Successfully removed premium from the server %{user}!"
-guild_remove_already: "`⚠️` | %{user}'s server is already without premium!"
-guild_remove_no_params: "`⚠️` | Please specify the **server ID** to remove premium from!"
-guild_remove_404: "`⚠️` | The server %{userid} is not a **premium server**!"
+guild_remove_desc: "`✅` | ¡Premium se ha eliminado correctamente del servidor %{user}!"
+guild_remove_already: "`⚠️` | ¡El servidor de %{user} ya no tiene premium!"
+guild_remove_no_params: "`⚠️` | ¡Por favor, especifica el ID del servidor para eliminar premium!"
+guild_remove_404: "`⚠️` | El servidor %{userid} no es un **servidor premium**!"
 
 ### Comando Guild List
-guild_list_title: "💫 List of Premium Servers!"
-guild_list_notnumber: "`⚠️` | Only numbers are allowed for the page!"
-guild_list_page_notfound: "`⚠️` | Only **%{page} pages** are available!"
+guild_list_title: "💫 Lista de Servidores Premium"
+guild_list_notnumber: "`⚠️` | ¡Solo se permiten números para la página!"
+guild_list_page_notfound: "`⚠️` | ¡Solo hay **%{page} páginas** disponibles!"
 
 ### Comando User List
-list_title: "💫 List of Premium Users"
-list_notnumber: "`⚠️` | Only numbers are allowed for the page!"
-list_page_notfound: "`⚠️` | Only **%{page} pages** are available!"
+list_title: "💫 Lista de Usuarios Premium"
+list_notnumber: "`⚠️` | ¡Solo se permiten números para la página!"
+list_page_notfound: "`⚠️` | ¡Solo hay **%{page} páginas** disponibles!"
