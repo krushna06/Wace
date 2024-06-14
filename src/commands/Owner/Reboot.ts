@@ -4,12 +4,12 @@ import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
 
 export default class implements Command {
-  public name = ["shutdown"];
-  public description = "Shuts down the client!";
+  public name = ["reboot"];
+  public description = "Reboots the client!";
   public category = "Owner";
   public accessableby = [Accessableby.Owner];
   public usage = "";
-  public aliases = ["shutdown"];
+  public aliases = ["reboot"];
   public lavalink = false;
   public usingInteraction = true;
   public playerCheck = false;
