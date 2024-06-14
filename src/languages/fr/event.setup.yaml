@@ -1,26 +1,26 @@
 ### Setup handler!
-setup_queuemsg: "Join a voice channel and play songs using name or URL in here!"
-setup_playembed_author: "No Song Is Currently Playing"
+setup_queuemsg: "Rejoignez un salon vocal et jouez des chansons en utilisant leur nom ou leur URL ici !"
+setup_playembed_author: "Aucune chanson n'est actuellement en cours de lecture"
 
 ### Update handler!
-setup_author: "Playing"
+setup_author: "En cours de lecture"
 setup_author_icon: "https://cdn.discordapp.com/emojis/741605543046807626.gif"
 setup_desc: "**%{title}** `[%{duration}]` • %{request}"
-setup_footer: "Volume • %{volume}% | Total Duration • %{duration}"
-setup_content: "**__Queue:__**"
+setup_footer: "Volume • %{volume}% | Durée totale • %{duration}"
+setup_content: "**__File d'attente:__**"
 setup_content_queue: "`%{index}.` **%{title}** `[%{duration}]` • %{request}"
-setup_content_empty: "Join a voice channel and play songs using name or URL in here!"
+setup_content_empty: "Rejoignez un salon vocal et jouez des chansons en utilisant leur nom ou leur URL ici !"
 
 ### Status command!
-status_create: "**`📊` | Created Status Channel!**"
-status_delete: "**`📊` | Deleted Status Channel!**"
-status_enable: "`⚠️` | Status Channel already exists!"
-status_null: "`⚠️` | Status Channel not found!"
+status_create: "**`📊` | Canal de statut créé !**"
+status_delete: "**`📊` | Canal de statut supprimé !**"
+status_enable: "`⚠️` | Le canal de statut existe déjà !"
+status_null: "`⚠️` | Le canal de statut n'a pas été trouvé !"
 
 # Play!
-play_track: "`💾` | Queued **%{title}** `%{duration}` • %{request}"
-play_playlist: "`💾` | Queued **%{title}** `%{duration}` • (**%{songs} Songs**) • %{request}"
-play_result: "`💾` | Queued **%{title}** `%{duration}` • %{request}"
-play_arg: "`⚠️` | Please provide a valid song name or URL!"
-play_match: "`⚠️` | Song not found!"
-play_emoji: "`⚠️` | You can not play songs using emoji!"
+play_track: "`💾` | Mis en file d'attente **%{title}** `%{duration}` • %{request}"
+play_playlist: "`💾` | Mis en file d'attente **%{title}** `%{duration}` • (**%{songs} chansons**) • %{request}"
+play_result: "`💾` | Mis en file d'attente **%{title}** `%{duration}` • %{request}"
+play_arg: "`⚠️` | Veuillez fournir un nom de chanson ou une URL valide !"
+play_match: "`⚠️` | Chanson introuvable !"
+play_emoji: "`⚠️` | Vous ne pouvez pas jouer de chansons avec un emoji !"

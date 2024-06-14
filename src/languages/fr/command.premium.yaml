@@ -1,43 +1,43 @@
-### Comando Generate!
-gen_author: "Generate Premium Code"
-gen_desc: "`🔑` | **Code Created Successfully** `[%{codes_length}]`\n```%{codes}```\n`💰` | **Plan:** `%{plan}`\n`📅` | **Expires At:** `%{expires}`"
-gen_footer: "Use • %{prefix}redeem <code> to activate premium"
+### Commande Generate!
+gen_author: "Générer Code Premium"
+gen_desc: "`🔑` | **Code créé avec succès** `[%{codes_length}]`\n```%{codes}```\n`💰` | **Plan :** `%{plan}`\n`📅` | **Expire le :** `%{expires}`"
+gen_footer: "Utilisez • %{prefix}redeem <code> pour activer le premium"
 
-### Comando Profile!
-profile_author: "Premium Profile"
-profile_error_desc: "`⚠️` | **%{user}** is not a premium member!"
-profile_desc: "`👤` | **User:** `%{user}`\n`💰` | **Plan:** `%{plan}`\n`📅` | **Expires At:** `%{expires}`"
+### Commande Profile!
+profile_author: "Profil Premium"
+profile_error_desc: "`⚠️` | **%{user}** n'est pas un membre premium !"
+profile_desc: "`👤` | **Utilisateur :** `%{user}`\n`💰` | **Plan :** `%{plan}`\n`📅` | **Expire le :** `%{expires}`"
 
-### Comando Guild Profile!
-guild_profile_author: "Premium Server Profile"
-guild_profile_desc: "`👤` | **Server:** `%{guild}`\n`💰` | **Plan:** `%{plan}`\n`📅` | **Expires At:** `%{expires}`"
+### Commande Guild Profile!
+guild_profile_author: "Profil Premium du Serveur"
+guild_profile_desc: "`👤` | **Serveur :** `%{guild}`\n`💰` | **Plan :** `%{plan}`\n`📅` | **Expire le :** `%{expires}`"
 
-### Comando Redeem!
-redeem_title: "Redeem Premium"
-redeem_desc: "`💰` | **Plan:** `%{plan}`\n`📅` | **Expires At:** `%{expires}`"
-redeem_already: "`⚠️` | You are already a **Premium user**!"
-redeem_invalid: "`⚠️` | Invalid code. Please try again or use a valid code!"
-redeem_invalid_mode: "`⚠️` | Invalid premium activation type. Please specify `guild` or `user` only!"
-redeem_already_guild: "`⚠️` | This server already has **Premium**!"
+### Commande Redeem!
+redeem_title: "Activer Premium"
+redeem_desc: "`💰` | **Plan :** `%{plan}`\n`📅` | **Expire le :** `%{expires}`"
+redeem_already: "`⚠️` | Vous êtes déjà un utilisateur **Premium** !"
+redeem_invalid: "`⚠️` | Code invalide. Veuillez réessayer ou utiliser un code valide !"
+redeem_invalid_mode: "`⚠️` | Type d'activation premium invalide. Veuillez spécifier `guild` ou `user` seulement !"
+redeem_already_guild: "`⚠️` | Ce serveur a déjà **Premium** !"
 
-### Comando Remove!
-remove_desc: "`✅` | Successfully removed premium from %{user}!"
-remove_already: "`⚠️` | %{user} is already without premium!"
-remove_no_params: "`⚠️` | Please specify a **user's name** or **user's ID** to remove premium from!"
-remove_404: "`⚠️` | %{userid} is not a **premium member**!"
+### Commande Remove!
+remove_desc: "`✅` | Premium retiré avec succès à %{user} !"
+remove_already: "`⚠️` | %{user} n'a pas de premium !"
+remove_no_params: "`⚠️` | Veuillez spécifier le **nom de l'utilisateur** ou **l'ID de l'utilisateur** pour retirer le premium !"
+remove_404: "`⚠️` | %{userid} n'est pas un membre **premium** !"
 
-### Comando Guild Remove!
-guild_remove_desc: "`✅` | Successfully removed premium from the server %{user}!"
-guild_remove_already: "`⚠️` | %{user}'s server is already without premium!"
-guild_remove_no_params: "`⚠️` | Please specify the **server ID** to remove premium from!"
-guild_remove_404: "`⚠️` | The server %{userid} is not a **premium server**!"
+### Commande Guild Remove!
+guild_remove_desc: "`✅` | Premium retiré avec succès du serveur %{user} !"
+guild_remove_already: "`⚠️` | Le serveur de %{user} n'a pas de premium !"
+guild_remove_no_params: "`⚠️` | Veuillez spécifier l'**ID du serveur** pour retirer le premium !"
+guild_remove_404: "`⚠️` | Le serveur %{userid} n'est pas un **serveur premium** !"
 
-### Comando Guild List
-guild_list_title: "💫 List of Premium Servers!"
-guild_list_notnumber: "`⚠️` | Only numbers are allowed for the page!"
-guild_list_page_notfound: "`⚠️` | Only **%{page} pages** are available!"
+### Commande Guild List
+guild_list_title: "💫 Liste des Serveurs Premium !"
+guild_list_notnumber: "`⚠️` | Seuls les chiffres sont autorisés pour la page !"
+guild_list_page_notfound: "`⚠️` | Seules **%{page} pages** sont disponibles !"
 
-### Comando User List
-list_title: "💫 List of Premium Users"
-list_notnumber: "`⚠️` | Only numbers are allowed for the page!"
-list_page_notfound: "`⚠️` | Only **%{page} pages** are available!"
+### Commande User List
+list_title: "💫 Liste des Utilisateurs Premium"
+list_notnumber: "`⚠️` | Seuls les chiffres sont autorisés pour la page !"
+list_page_notfound: "`⚠️` | Seules **%{page} pages** sont disponibles !"

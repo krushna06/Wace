@@ -1,35 +1,35 @@
-### All filter command!
-filter_on: "`✅` | %{name} filter is now **enable**!"
-filter_already: "`⚠️` | %{name} filter is already **enabled**!"
-filter_number: "`⚠️` | Please provide a valid number!"
-filter_greater: "`⚠️` | Number must be greater than **0**!"
-filter_less: "`⚠️` | Number must be lesser than **10**!"
+### Tous les commandes de filtre !
+filter_on: "`✅` | Le filtre %{name} est maintenant **activé** !"
+filter_already: "`⚠️` | Le filtre %{name} est déjà **activé** !"
+filter_number: "`⚠️` | Veuillez fournir un nombre valide !"
+filter_greater: "`⚠️` | Le nombre doit être supérieur à **0** !"
+filter_less: "`⚠️` | Le nombre doit être inférieur à **10** !"
 
-### Bassboost command!
-bassboost_set: "`🎚️` | Bassboost has been set to **%{amount}dB**!"
-bassboost_limit: "`⚠️` | Please use a number between **-10** and **10**!"
+### Commande Bassboost !
+bassboost_set: "`🎚️` | Le Bassboost a été réglé à **%{amount}dB** !"
+bassboost_limit: "`⚠️` | Veuillez utiliser un nombre entre **-10** et **10** !"
 
-### Equalizer command!
-eq_author: "Equalizer"
+### Commande Equalizer !
+eq_author: "Égaliseur"
 eq_icon: "https://i.pinimg.com/originals/cb/17/b8/cb17b80a942d7c317a35ff1324fae12f.gif"
-eq_desc: "`🎚️` | There are **14 Bands** that can be set from **-10** to **10**. It is not mandatory to set all of them!"
-eq_field_title: "Example:"
+eq_desc: "`🎚️` | Il y a **14 bandes** qui peuvent être réglées de **-10** à **10**. Il n'est pas obligatoire de toutes les régler !"
+eq_field_title: "Exemple :"
 eq_field_value: "%{prefix}eq 2 3 0 8 0 5 0 -5 0 0"
-eq_footer: "Reset Equalizer • %{prefix}eq reset"
-eq_on: "`🎚️` | Equalizer has been set to **%{bands}**!"
-eq_number: "`⚠️` | Please provide a valid number!"
-eq_greater: "`⚠️` | Number must be greater than **-10**!"
-eq_than: "`⚠️` | Number must be lesser than **10**!"
+eq_footer: "Réinitialiser l'égaliseur • %{prefix}eq reset"
+eq_on: "`🎚️` | L'égaliseur a été réglé sur **%{bands}** !"
+eq_number: "`⚠️` | Veuillez fournir un nombre valide !"
+eq_greater: "`⚠️` | Le nombre doit être supérieur à **-10** !"
+eq_than: "`⚠️` | Le nombre doit être inférieur à **10** !"
 
-### Pitch command!
-pitch_on: "`🎚️` | Pitch has been set to **%{amount}**!"
+### Commande Pitch !
+pitch_on: "`🎚️` | Le pitch a été réglé sur **%{amount}** !"
 
-### Rate command!
-rate_on: "`🎚️` | Rate has been set to **%{amount}x**!"
+### Commande Rate !
+rate_on: "`🎚️` | Le taux a été réglé sur **%{amount}x** !"
 
-### Speed command!
-speed_on: "`🎚️` | Speed has been set to **%{amount}x**!"
+### Commande Speed !
+speed_on: "`🎚️` | La vitesse a été réglée sur **%{amount}x** !"
 
-### Reset command!
-reset_on: "`❌` | Filter has been **Reset**!"
-reset_already: "`⚠️` | Filter has already been **Reset**!"
+### Commande Réinitialiser !
+reset_on: "`❌` | Le filtre a été **réinitialisé** !"
+reset_already: "`⚠️` | Le filtre a déjà été **réinitialisé** !"

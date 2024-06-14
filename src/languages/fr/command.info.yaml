@@ -1,34 +1,34 @@
-### Developer command!
+### Commande développeur !
 dev_title: "n0step_"
-dev_desc: "I am a passionate UI/UX designer who bridges the gap between development and design. I take responsibility to craft a good user experience using modern frontend architecture."
-dev_foot: "Consider joining my server or inviting my bot."
+dev_desc: "Je suis un designer UI/UX passionné qui comble le fossé entre le développement et le design. Je prends la responsabilité de créer une bonne expérience utilisateur en utilisant une architecture frontend moderne."
+dev_foot: "Pensez à rejoindre mon serveur ou à inviter mon bot."
 
-### Invite command!
+### Commande d'invitation !
 inv_title: "✉️ %{username}"
-inv_desc: "Thanks for Inviting me in advance!"
+inv_desc: "Merci de m'inviter à l'avance !"
 
-### Ping command!
+### Commande Ping !
 ping_title: "🏓 "
-ping_desc: "**Ping:** `%{ping}ms`\n**Response Time:** `%{response}ms`"
+ping_desc: "**Ping :** `%{ping}ms`\n**Temps de réponse :** `%{response}ms`"
 
-### Uptime command!
+### Commande Uptime !
 uptime_title: "🕒 "
-uptime_desc: "**Uptime:** `%{uptime}`"
+uptime_desc: "**Uptime :** `%{uptime}`"
 
-### Help command!
-ce_finder_name: "**Command:**"
-ce_finder_des: "**Description:**"
-ce_finder_usage: "**Usage:**"
-ce_finder_access: "**Accessible by:**"
-ce_finder_aliases: "**Aliases:**"
-ce_finder_slash: "**Slash:**"
-ce_finder_des_no: "No Description"
-ce_finder_usage_no: "No Usage"
-ce_finder_aliases_prefix: " [Prefix only]"
-ce_finder_aliases_no: "No Aliases"
-ce_finder_slash_enable: "Enabled"
-ce_finder_slash_disable: "Disabled"
-ce_finder_invalid: "Invalid Command"
-ce_finder_example: "`⚠️` | Please provide a valid **Command Name**!"
-ce_name: "Help Command"
-ce_total: "Total Commands: "
+### Commande Aide !
+ce_finder_name: "**Commande :**"
+ce_finder_des: "**Description :**"
+ce_finder_usage: "**Utilisation :**"
+ce_finder_access: "**Accessible par :**"
+ce_finder_aliases: "**Alias :**"
+ce_finder_slash: "**Slash :**"
+ce_finder_des_no: "Pas de description"
+ce_finder_usage_no: "Pas d'utilisation"
+ce_finder_aliases_prefix: " [Prefix seulement]"
+ce_finder_aliases_no: "Pas d'alias"
+ce_finder_slash_enable: "Activé"
+ce_finder_slash_disable: "Désactivé"
+ce_finder_invalid: "Commande invalide"
+ce_finder_example: "`⚠️` | Veuillez fournir un nom de commande valide !"
+ce_name: "Commande d'aide"
+ce_total: "Commandes totales : "

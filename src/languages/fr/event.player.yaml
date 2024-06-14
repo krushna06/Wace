@@ -1,24 +1,24 @@
-### Playing event!
-track_title: "Started Playing"
+### Événement Lecture !
+track_title: "Lecture en cours"
 track_icon: "https://cdn.discordapp.com/emojis/741605543046807626.gif"
-author_title: "`✒️` | Author:"
-request_title: "`👤` | Requester:"
-volume_title: "`🔊` | Volume:"
-queue_title: "`💾` | Queue Length:"
-duration_title: "`🕒` | Song Duration:"
-total_duration_title: "`🕰️` | Queue Duration:"
-download_title: "`⬇️` | Download:"
+author_title: "`✒️` | Auteur :"
+request_title: "`👤` | Demandeur :"
+volume_title: "`🔊` | Volume :"
+queue_title: "`💾` | Longueur de la file d'attente :"
+duration_title: "`🕒` | Durée de la chanson :"
+total_duration_title: "`🕰️` | Durée totale de la file d'attente :"
+download_title: "`⬇️` | Téléchargement :"
 
-### Same voice!
-join_voice: "`⚠️` | You are not in the same voice channel as me!"
+### Même canal vocal !
+join_voice: "`⚠️` | Vous n'êtes pas dans le même salon vocal que moi !"
 
-### QueueEnd event!
-queue_end_desc: "`🔚` | Song has been **Ended**!"
+### Événement Fin de la file d'attente !
+queue_end_desc: "`🔚` | La chanson est terminée !"
 
-### Song error!
-error_desc: "`⚠️` | Song has error. Skipped the **Song**!"
+### Erreur de chanson !
+error_desc: "`⚠️` | Erreur lors de la lecture de la chanson. La chanson a été ignorée !"
 
-### Auto function!
-player_end: "`🛑` | I left <#%{leave}> because there is no one in the voice channel!"
-leave_pause: "`⏸️` | Song has been Paused because I was left alone!"
-leave_resume: "`▶️` | Song has been Resumed because someone joined!"
+### Fonction Auto !
+player_end: "`🛑` | J'ai quitté <#%{leave}> parce qu'il n'y avait personne dans le salon vocal !"
+leave_pause: "`⏸️` | La chanson a été mise en pause car j'étais seul !"
+leave_resume: "`▶️` | La chanson a été reprise car quelqu'un a rejoint !"

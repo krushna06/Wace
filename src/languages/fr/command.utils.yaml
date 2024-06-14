@@ -1,30 +1,30 @@
-### Language command!
-lang_set: "`📙` | Language has been set to **%{language}**!"
-lang_change: "`📙` | Language has been changed to **%{language}**!"
-lang_perm: "`⚠️` | You do not have permission to use this command!"
-provide_lang: "`⚠️` | Invalid Language. Please use:\n`%{languages}`"
+### Commande Language!
+lang_set: "`📙` | La langue a été définie sur **%{language}** !"
+lang_change: "`📙` | La langue a été changée pour **%{language}** !"
+lang_perm: "`⚠️` | Vous n'avez pas la permission d'utiliser cette commande !"
+provide_lang: "`⚠️` | Langue invalide. Veuillez utiliser :\n`%{languages}`"
 
-### Shutdown command!
-restart_msg: "`🔌` | **Shutting Down**..."
+### Commande Shutdown!
+restart_msg: "`🔌` | **Arrêt en cours**..."
 
-### Prefix command!
-prefix_set: "`㊙️` | Prefix has been set to **%{prefix}**"
-prefix_change: "`㊙️` | Prefix has been changed to **%{prefix}**"
-prefix_arg: "`⚠️` | Please provide a valid Prefix!"
-prefix_length: "`⚠️` | Prefix can not be longer than **10 Characters**!"
+### Commande Prefix!
+prefix_set: "`㊙️` | Préfixe défini sur **%{prefix}**"
+prefix_change: "`㊙️` | Préfixe changé pour **%{prefix}**"
+prefix_arg: "`⚠️` | Veuillez fournir un préfixe valide !"
+prefix_length: "`⚠️` | Le préfixe ne peut pas dépasser **10 caractères** !"
 
-### SongNoti command!
-songnoti_set: "`🔔` | Song Notifications has been set to **%{toggle}**!"
-songnoti_already: "`⚠️` | Song Notifications are already **%{mode}**!"
+### Commande SongNoti!
+songnoti_set: "`🔔` | Les notifications de chanson ont été définies sur **%{toggle}** !"
+songnoti_already: "`⚠️` | Les notifications de chanson sont déjà **%{mode}** !"
 
-### 24/7 command!
-247_on: "`✅` | 24/7 mode is now **Enabled**!"
-247_off: "`❌` | 24/7 mode is now **Disabled**!"
-247_already: "`⚠️` | 24/7 mode is already **%{mode}**!"
+### Commande 24/7!
+247_on: "`✅` | Le mode 24/7 est maintenant **activé** !"
+247_off: "`❌` | Le mode 24/7 est maintenant **désactivé** !"
+247_already: "`⚠️` | Le mode 24/7 est déjà **%{mode}** !"
 
-### Setup command!
-setup_msg: "**`⚙️` | Created Music System** %{channel}\n```Note: Do not delete any messages sent by me for the Music System to work properly!```"
-setup_deleted: "**`⚙️` | Deleted Music System!**"
-setup_topic: "⏹ **Stop**\n⏮️ **Previous**\n⏯ **Pause/Resume**\n⏭️ **Skip**\n🔁 **Loop/Unloop**"
-setup_enable: "`⚠️` | Music System already exists!"
-setup_null: "`⚠️` | Music System not found!"
+### Commande Setup!
+setup_msg: "**`⚙️` | Système musical créé** %{channel}\n```Note : Ne supprimez aucun message envoyé par moi pour que le système musical fonctionne correctement !```"
+setup_deleted: "**`⚙️` | Système musical supprimé !**"
+setup_topic: "⏹ **Arrêt**\n⏮️ **Précédent**\n⏯ **Pause/Reprise**\n⏭️ **Passer**\n🔁 **Boucler/Arrêter la boucle**"
+setup_enable: "`⚠️` | Le système musical existe déjà !"
+setup_null: "`⚠️` | Système musical introuvable !"
