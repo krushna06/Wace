@@ -24,13 +24,13 @@ export default class implements Command {
       type: ApplicationCommandOptionType.String,
       choices: [
         { name: "English", value: "en" },
+        { name: "French", value: "fr" },
+        { name: "German", value: "de" },
         { name: "Hindi", value: "hi" },
         { name: "Korean", value: "ko" },
         { name: "Russian", value: "ru" },
-        { name: "Turkish", value: "tu" },
-        { name: "French (Incomplete)", value: "fr" },
-        { name: "German (Incomplete)", value: "gr" },
-        { name: "Spanish (Incomplete)", value: "sp" },
+        { name: "Spanish", value: "es" },
+        { name: "Turkish", value: "tr" },
       ],
     },
   ];
