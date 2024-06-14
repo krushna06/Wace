@@ -13,12 +13,12 @@ download_title: "`⬇️` | Download:"
 join_voice: "`⚠️` | You are not in the same voice channel as me!"
 
 ### QueueEnd event!
-queue_end_desc: "`🔚` | Song has been **Ended**!"
+queue_end_desc: "`🔚` | Song has ended!"
 
 ### Song error!
-error_desc: "`⚠️` | Song has error. Skipped the **Song**!"
+error_desc: "`⚠️` | There was an error with the song. Skipping the **Song**!"
 
 ### Auto function!
 player_end: "`🛑` | I left <#%{leave}> because there is no one in the voice channel!"
-leave_pause: "`⏸️` | Song has been Paused because I was left alone!"
-leave_resume: "`▶️` | Song has been Resumed because someone joined!"
+leave_pause: "`⏸️` | Song has been paused because I was left alone!"
+leave_resume: "`▶️` | Song has been resumed because someone joined!"

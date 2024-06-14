@@ -1,38 +1,38 @@
 queue_author: "💾 %{guild}"
-queue_description: "`📀` | Currently Playing:\n**%{track}** `[%{duration}]` • %{requester}\n\n`💤` | Rest of Queue:**%{list_song}**"
-queue_footer: "Page • %{page}/%{pages} | Songs • %{queue_lang} | Total Duration • %{total_duration}"
+queue_description: "`📀` | Reproduciendo actualmente:\n**%{track}** `[%{duration}]` • %{requester}\n\n`💤` | Resto de la cola:**%{list_song}**"
+queue_footer: "Página • %{page}/%{pages} | Canciones • %{queue_lang} | Duración Total • %{total_duration}"
 # Pause
-pause_msg: "`⏸️` | Paused the **Player**!"
-resume_msg: "`▶️` | Resumed the **Player**!"
+pause_msg: "`⏸️` | ¡Pausado el **Reproductor**!"
+resume_msg: "`▶️` | ¡Reanudado el **Reproductor**!"
 # Skip
-skip_msg: "`⏭️` | Skipped the **Song**!"
-skip_notfound: "`⚠️` | No song was found to Skip to!"
+skip_msg: "`⏭️` | ¡Saltada la **Canción**!"
+skip_notfound: "`⚠️` | ¡No se encontró ninguna canción para saltar!"
 # Stop
-stop_msg: "`⏹️` | Stopped the **Player**!"
+stop_msg: "`⏹️` | ¡Detenido el **Reproductor**!"
 # Volume
-volup_msg: "`🔊` | Changed Volume to **%{volume}%**"
-voldown_msg: "`🔉` | Changed Volume to **%{volume}%**"
-volume_invalid: "`⚠️` | Invalid Volume. Please use a number between **1** and **100**!"
-volume_max: "`⚠️` | Player is already at max volume!"
-volume_min: "`⚠️` | Player is already at min volume!"
+volup_msg: "`🔊` | Volumen cambiado a **%{volume}%**"
+voldown_msg: "`🔉` | Volumen cambiado a **%{volume}%**"
+volume_invalid: "`⚠️` | Volumen inválido. Por favor, usa un número entre **1** y **100**!"
+volume_max: "`⚠️` | ¡El reproductor ya está al volumen máximo!"
+volume_min: "`⚠️` | ¡El reproductor ya está al volumen mínimo!"
 # Clear
-clear_msg: "`🗑️` | Queue has been **Cleared**!"
+clear_msg: "`🗑️` | ¡La cola ha sido **limpiada**!"
 # Loop
-loop_current: "`🔁` | Looping current **Song**!"
-loop_all: "`🔁` | Looping **Queue**!"
-unloop_all: "`❌` | Loop is now **Disabled**!"
-loop_invalid: "`⚠️` | Invalid Loop mode. Please use %{mode}!"
-loop_already: "`⚠️` | Loop mode is already **%{mode}**!"
+loop_current: "`🔁` | ¡Reproducción en bucle de la **canción** actual!"
+loop_all: "`🔁` | ¡Reproducción en bucle de toda la **cola**!"
+unloop_all: "`❌` | ¡El bucle ahora está **desactivado**!"
+loop_invalid: "`⚠️` | Modo de bucle inválido. Por favor, usa %{mode}!"
+loop_already: "`⚠️` | ¡El modo de bucle ya está **%{mode}**!"
 # Previous
-previous_msg: "`⏮️` | Skipped to Previous **Song**!"
-previous_notfound: "`⚠️` | No Previous song was found!"
+previous_msg: "`⏮️` | ¡Saltada a la canción **anterior**!"
+previous_notfound: "`⚠️` | ¡No se encontró ninguna canción anterior!"
 # Shuffle
-shuffle_msg: "🔀 Shuffled the Queue"
+shuffle_msg: "🔀 ¡Se ha barajado la cola!"
 
 ### All filter command!
-filter_on: "`✅` | %{name} filter is now **enable**!"
-filter_already: "`⚠️` | %{name} filter is already **enabled**!"
+filter_on: "`✅` | ¡El filtro %{name} ahora está **habilitado**!"
+filter_already: "`⚠️` | ¡El filtro %{name} ya está **habilitado**!"
 
 ### Reset command!
-reset_on: "`❌` | Filter has been **Reset**!"
-reset_already: "`⚠️` | Filter has already been **Reset**!"
+reset_on: "`❌` | ¡El filtro ha sido **restablecido**!"
+reset_already: "`⚠️` | ¡El filtro ya ha sido **restablecido**!"
