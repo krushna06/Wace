@@ -13,7 +13,8 @@ no_same_voice: "`⚠️` | 저와 같은 음성 채널에 접속해주세요!"
 
 # No permission!
 no_perms: "`⚠️` | **%{perm}** 권한이 없어 이 명령을 실행할 수 없습니다!"
-no_perms_channel: "`⚠️` | <#%{channel}>에서 **%{perm}** 권한이 없어 이 명령을 실행할 수 없습니다!"
+no_perms_channel: "`⚠️` | <#%{channel}> 채널에서 **%{perm}** 권한이 없어 이 명령을 실행할 수 없습니다!"
+
 
 # Getting error!
 unexpected_error: "`⚠️` | 오류가 발생했습니다. 나중에 다시 시도해주세요!"

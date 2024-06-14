@@ -12,8 +12,9 @@ no_in_voice: "`⚠️` | Bir ses kanalına bağlanmalısınız!"
 no_same_voice: "`⚠️` | Benimle aynı ses kanalında değilsiniz!"
 
 # No permission!
-no_perms: "`⚠️` | Bu komutu çalıştırmak için **%{perm}** iznim yok!"
-no_perms_channel: "`⚠️` | Bu komutu <#%{channel}> kanalında çalıştırmak için **%{perm}** iznim yok!"
+no_perms: "`⚠️` | Bu komutu çalıştırmak için **%{perm}** izniniz yok!"
+no_perms_channel: "`⚠️` | Bu komutu <#%{channel}> kanalında çalıştırmak için **%{perm}** izniniz yok!"
+
 
 # Getting error!
 unexpected_error: "`⚠️` | Bir şeyler yanlış gitti. Lütfen daha sonra tekrar deneyin!"
