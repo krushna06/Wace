@@ -4,12 +4,12 @@ import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
 
 export default class implements Command {
-  public name = ["radio"];
+  public name = ["radiofilter"];
   public description = "Turning on radio filter";
   public category = "Filter";
   public accessableby = [Accessableby.Member];
   public usage = "";
-  public aliases = ["radio"];
+  public aliases = [""];
   public lavalink = true;
   public options = [];
   public playerCheck = true;
