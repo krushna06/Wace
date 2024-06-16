@@ -10,7 +10,11 @@ import {
   ComponentType,
   CommandInteractionOptionResolver,
 } from "discord.js";
-import { getAccessToken, searchAlbum, getAlbumTracks } from "../../services/SpotifySearchService.js";
+import {
+  getAccessToken,
+  searchAlbum,
+  getAlbumTracks,
+} from "../../services/SpotifySearchService.js";
 
 export default class implements Command {
   public name = ["spotify", "album"];
@@ -62,33 +66,37 @@ export default class implements Command {
         .setThumbnail(album.images[0]?.url)
         .setDescription(`By ${artists}\nReleased on ${releaseDate}`);
 
-      embed.addFields(
-        {
-          name: "Total Tracks:",
-          value: album.total_tracks ? album.total_tracks.toString() : "N/A",
-          inline: true,
-        }
-      );
+      embed.addFields({
+        name: "Total Tracks:",
+        value: album.total_tracks ? album.total_tracks.toString() : "N/A",
+        inline: true,
+      });
 
       embed.setTimestamp();
 
       const listSongsButton = new ButtonBuilder()
-        .setCustomId('list-songs')
-        .setLabel('List Songs')
+        .setCustomId("list-songs")
+        .setLabel("List Songs")
         .setStyle(ButtonStyle.Primary);
 
       const actionRow = new ActionRowBuilder<ButtonBuilder>().addComponents(listSongsButton);
 
       await handler.editReply({ embeds: [embed], components: [actionRow] });
 
-      const filter = (i: any) => i.customId === 'list-songs' && i.user.id === interaction.user.id;
-      const collector = interaction.channel.createMessageComponentCollector({ filter, componentType: ComponentType.Button, time: 60000 });
+      const filter = (i: any) => i.customId === "list-songs" && i.user.id === interaction.user.id;
+      const collector = interaction.channel.createMessageComponentCollector({
+        filter,
+        componentType: ComponentType.Button,
+        time: 60000,
+      });
 
-      collector.on('collect', async (i: any) => {
-        if (i.customId === 'list-songs') {
+      collector.on("collect", async (i: any) => {
+        if (i.customId === "list-songs") {
           const tracks = await getAlbumTracks(album.id, accessToken);
 
-          const tracksList = tracks.map((track) => `[${track.name}](${track.external_urls.spotify})`).join("\n");
+          const tracksList = tracks
+            .map((track) => `[${track.name}](${track.external_urls.spotify})`)
+            .join("\n");
 
           const tracksEmbed = new EmbedBuilder()
             .setTitle(`Tracks in ${album.name}`)
@@ -99,7 +107,6 @@ export default class implements Command {
           await i.reply({ embeds: [tracksEmbed], ephemeral: true });
         }
       });
-
     } catch (error) {
       console.error("Error searching Spotify album:", error);
       await handler.editReply({ content: "An error occurred while searching for the album." });

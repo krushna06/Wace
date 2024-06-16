@@ -1,5 +1,3 @@
-
-
 import { responseFields } from "./NicoSearchConst.js";
 import { ErrorResponse, SearchAPIResponse, SearchParams } from "./@types/NicoSearch.js";
 import { fetch } from "undici";

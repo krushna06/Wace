@@ -10,7 +10,11 @@ import {
   ComponentType,
   CommandInteractionOptionResolver,
 } from "discord.js";
-import { getAccessToken, searchAlbum, getAlbumTracks } from "../../services/SpotifySearchService.js";
+import {
+  getAccessToken,
+  searchAlbum,
+  getAlbumTracks,
+} from "../../services/SpotifySearchService.js";
 
 export default class implements Command {
   public name = ["spotify", "song"];
@@ -77,24 +81,39 @@ export default class implements Command {
 
       embed.setTimestamp();
 
-      const listSongsButton = new ButtonBuilder()
-        .setCustomId('list-tracks')
-        .setLabel('List Album Tracks')
+      const listTracksButton = new ButtonBuilder()
+        .setCustomId("list-tracks")
+        .setLabel("List Album Tracks")
         .setStyle(ButtonStyle.Primary);
 
-      const actionRow = new ActionRowBuilder<ButtonBuilder>().addComponents(listSongsButton);
+      const similarSongsButton = new ButtonBuilder()
+        .setCustomId("similar-songs")
+        .setLabel("Similar Songs")
+        .setStyle(ButtonStyle.Secondary);
+
+      const actionRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
+        listTracksButton,
+        similarSongsButton
+      );
 
       await handler.editReply({ embeds: [embed], components: [actionRow] });
 
-      const filter = (i: any) => i.customId === 'list-tracks' && i.user.id === interaction.user.id;
-      const collector = interaction.channel.createMessageComponentCollector({ filter, componentType: ComponentType.Button, time: 60000 });
+      const filter = (i: any) =>
+        ["list-tracks", "similar-songs"].includes(i.customId) && i.user.id === interaction.user.id;
+      const collector = interaction.channel.createMessageComponentCollector({
+        filter,
+        componentType: ComponentType.Button,
+        time: 60000,
+      });
 
-      collector.on('collect', async (i: any) => {
-        if (i.customId === 'list-tracks') {
+      collector.on("collect", async (i: any) => {
+        if (i.customId === "list-tracks") {
           const albumId = track.album.id;
-          const tracks = await getAlbumTracks(albumId, accessToken);
+          const albumTracks = await getAlbumTracks(albumId, accessToken);
 
-          const tracksList = tracks.map((track) => `[${track.name}](${track.external_urls.spotify})`).join("\n");
+          const tracksList = albumTracks
+            .map((track: any) => `[${track.name}](${track.external_urls.spotify})`)
+            .join("\n");
 
           const tracksEmbed = new EmbedBuilder()
             .setTitle(`Tracks in ${track.album.name}`)
@@ -103,9 +122,24 @@ export default class implements Command {
             .setTimestamp();
 
           await i.reply({ embeds: [tracksEmbed], ephemeral: true });
+        } else if (i.customId === "similar-songs") {
+          const similarTracks = await getSimilarTracks(track.id, accessToken);
+
+          const similarTracksList = similarTracks
+            .map(
+              (similarTrack: any) => `[${similarTrack.name}](${similarTrack.external_urls.spotify})`
+            )
+            .join("\n");
+
+          const similarTracksEmbed = new EmbedBuilder()
+            .setTitle(`Songs similar to ${track.name}`)
+            .setColor(client.color)
+            .setDescription(similarTracksList || "No similar tracks available.")
+            .setTimestamp();
+
+          await i.reply({ embeds: [similarTracksEmbed], ephemeral: true });
         }
       });
-
     } catch (error) {
       console.error("Error searching Spotify song:", error);
       await handler.editReply({ content: "An error occurred while searching for the song." });
@@ -121,11 +155,28 @@ async function searchSong(query: string, accessToken: string): Promise<any[]> {
   };
 
   const response = await fetch(searchEndpoint, { headers });
-  const data = await response.json() as { tracks: { items: any[] } };
+  const data = (await response.json()) as { tracks: { items: any[] } };
 
   if (!response.ok) {
     throw new Error("Failed to fetch song data from Spotify.");
   }
 
   return data.tracks.items || [];
+}
+
+async function getSimilarTracks(trackId: string, accessToken: string): Promise<any[]> {
+  const recommendationsEndpoint = `https://api.spotify.com/v1/recommendations?seed_tracks=${trackId}&limit=10`;
+  const headers = {
+    Authorization: `Bearer ${accessToken}`,
+    "Content-Type": "application/json",
+  };
+
+  const response = await fetch(recommendationsEndpoint, { headers });
+  const data = (await response.json()) as { tracks: any[] };
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch similar tracks from Spotify.");
+  }
+
+  return data.tracks || [];
 }

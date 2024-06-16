@@ -1,5 +1,5 @@
-import fetch from 'node-fetch';
-import { ConfigDataService } from './ConfigDataService.js';
+import fetch from "node-fetch";
+import { ConfigDataService } from "./ConfigDataService.js";
 
 interface SpotifyAlbum {
   id: string;
@@ -31,24 +31,27 @@ export async function getAccessToken(): Promise<string> {
   const configService = new ConfigDataService();
   const config = configService.data;
 
-  const tokenEndpoint = 'https://accounts.spotify.com/api/token';
+  const tokenEndpoint = "https://accounts.spotify.com/api/token";
   const headers = {
-    'Authorization': `Basic ${Buffer.from(`${config.player.SPOTIFY.id}:${config.player.SPOTIFY.secret}`).toString('base64')}`,
-    'Content-Type': 'application/x-www-form-urlencoded'
+    Authorization: `Basic ${Buffer.from(`${config.player.SPOTIFY.id}:${config.player.SPOTIFY.secret}`).toString("base64")}`,
+    "Content-Type": "application/x-www-form-urlencoded",
   };
-  const body = 'grant_type=client_credentials';
+  const body = "grant_type=client_credentials";
 
   const response = await fetch(tokenEndpoint, {
-    method: 'POST',
+    method: "POST",
     headers: headers,
-    body: body
+    body: body,
   });
 
-  const data = await response.json() as { access_token: string };
+  const data = (await response.json()) as { access_token: string };
   return data.access_token;
 }
 
-export async function searchAlbum(query: string, accessToken: string): Promise<SpotifyAlbum | null> {
+export async function searchAlbum(
+  query: string,
+  accessToken: string
+): Promise<SpotifyAlbum | null> {
   const configService = new ConfigDataService();
   const config = configService.data;
 
@@ -59,7 +62,7 @@ export async function searchAlbum(query: string, accessToken: string): Promise<S
   };
 
   const response = await fetch(searchEndpoint, { headers });
-  const data = await response.json() as SpotifyAlbumResponse;
+  const data = (await response.json()) as SpotifyAlbumResponse;
 
   if (!response.ok) {
     throw new Error("Failed to fetch album data from Spotify.");
@@ -69,7 +72,10 @@ export async function searchAlbum(query: string, accessToken: string): Promise<S
   return album || null;
 }
 
-export async function getAlbumTracks(albumId: string, accessToken: string): Promise<SpotifyTrack[]> {
+export async function getAlbumTracks(
+  albumId: string,
+  accessToken: string
+): Promise<SpotifyTrack[]> {
   const configService = new ConfigDataService();
   const config = configService.data;
 
@@ -80,7 +86,7 @@ export async function getAlbumTracks(albumId: string, accessToken: string): Prom
   };
 
   const response = await fetch(tracksEndpoint, { headers });
-  const data = await response.json() as SpotifyTracksResponse;
+  const data = (await response.json()) as SpotifyTracksResponse;
 
   if (!response.ok) {
     throw new Error("Failed to fetch tracks data from Spotify.");

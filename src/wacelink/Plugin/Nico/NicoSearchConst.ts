@@ -1,5 +1,3 @@
-
-
 import { ResponseField } from "./@types/NicoSearch.js";
 
 export const responseFields: ResponseField[] = [
