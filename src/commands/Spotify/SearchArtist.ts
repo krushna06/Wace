@@ -11,8 +11,13 @@ import {
   ComponentType,
   MessageActionRowComponentBuilder,
 } from "discord.js";
-import fetch from "node-fetch";
-import { getAccessToken } from "../../services/SpotifySearchService.js";
+import {
+  getAccessToken,
+  searchArtists,
+  getPopularSongs,
+  getTotalSongs,
+  getTotalAlbums,
+} from "../../services/SpotifySearchService.js";
 
 export default class implements Command {
   public name = ["spotify", "artist"];
@@ -56,7 +61,6 @@ export default class implements Command {
       }
 
       let currentIndex = 0;
-      const originalArtist = artists[0];
 
       const updateArtistEmbed = async (index: number) => {
         const artist = artists[index];
@@ -66,13 +70,13 @@ export default class implements Command {
         const embed = new EmbedBuilder()
           .setTitle(artist.name)
           .setColor(client.color)
-          .setThumbnail(artist.image)
+          .setThumbnail(artist.images[0]?.url || "")
           .setTimestamp()
           .addFields(
-            { name: "Followers", value: artist.followers.toLocaleString(), inline: true },
+            { name: "Followers", value: artist.followers.total.toLocaleString(), inline: true },
             { name: "Total Songs", value: totalSongs.toLocaleString(), inline: true },
             { name: "Total Albums", value: totalAlbums.toLocaleString(), inline: true },
-            { name: "Spotify", value: `[Link](${artist.spotifyUrl})`, inline: true }
+            { name: "Spotify", value: `[Link](${artist.external_urls.spotify})`, inline: true }
           );
 
         const buttons = [
@@ -141,101 +145,5 @@ export default class implements Command {
       console.error("Error searching Spotify artist:", error);
       await handler.editReply({ content: "An error occurred while searching for the artist." });
     }
-  }
-}
-
-async function searchArtists(query: string, accessToken: string): Promise<any[]> {
-  const searchEndpoint = `https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=artist&limit=5`;
-  const headers = {
-    Authorization: `Bearer ${accessToken}`,
-    "Content-Type": "application/json",
-  };
-
-  try {
-    const response = await fetch(searchEndpoint, { headers });
-    if (!response.ok) {
-      throw new Error("Failed to fetch artist data from Spotify.");
-    }
-
-    const data = (await response.json()) as { artists: { items: any[] } };
-    if (data.artists.items.length === 0) {
-      return [];
-    }
-
-    return data.artists.items.map((artist) => ({
-      name: artist.name,
-      id: artist.id,
-      image: artist.images.length > 0 ? artist.images[0].url : null,
-      followers: artist.followers.total,
-      spotifyUrl: artist.external_urls.spotify,
-    }));
-  } catch (error) {
-    console.error("Error searching Spotify artist:", error);
-    return []; // Return an empty array in case of error
-  }
-}
-
-async function getPopularSongs(artistId: string, accessToken: string): Promise<any[]> {
-  const endpoint = `https://api.spotify.com/v1/artists/${artistId}/top-tracks?market=US`;
-  const headers = {
-    Authorization: `Bearer ${accessToken}`,
-    "Content-Type": "application/json",
-  };
-
-  try {
-    const response = await fetch(endpoint, { headers });
-    if (!response.ok) {
-      throw new Error("Failed to fetch top tracks from Spotify.");
-    }
-
-    const data = (await response.json()) as { tracks: any[] };
-    return data.tracks;
-  } catch (error) {
-    console.error("Error fetching top tracks from Spotify:", error);
-    return [];
-  }
-}
-
-async function getTotalSongs(artistId: string, accessToken: string): Promise<number> {
-  const endpoint = `https://api.spotify.com/v1/artists/${artistId}/albums?include_groups=album,single&limit=50`;
-  const headers = {
-    Authorization: `Bearer ${accessToken}`,
-    "Content-Type": "application/json",
-  };
-
-  try {
-    const response = await fetch(endpoint, { headers });
-    if (!response.ok) {
-      throw new Error("Failed to fetch albums from Spotify.");
-    }
-
-    const data = (await response.json()) as { items: any[] };
-    const totalSongs = data.items.reduce((total, album) => total + album.total_tracks, 0);
-    return totalSongs;
-  } catch (error) {
-    console.error("Error fetching albums from Spotify:", error);
-    return 0;
-  }
-}
-
-async function getTotalAlbums(artistId: string, accessToken: string): Promise<number> {
-  const endpoint = `https://api.spotify.com/v1/artists/${artistId}/albums?include_groups=album,single&limit=50`;
-  const headers = {
-    Authorization: `Bearer ${accessToken}`,
-    "Content-Type": "application/json",
-  };
-
-  try {
-    const response = await fetch(endpoint, { headers });
-    if (!response.ok) {
-      throw new Error("Failed to fetch albums from Spotify.");
-    }
-
-    const data = (await response.json()) as { items: any[] };
-    const totalAlbums = data.items.length;
-    return totalAlbums;
-  } catch (error) {
-    console.error("Error fetching albums from Spotify:", error);
-    return 0;
   }
 }
