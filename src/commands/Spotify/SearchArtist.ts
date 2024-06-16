@@ -1,4 +1,4 @@
-import { Command } from "../../structures/Command.js";
+import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
 import { Manager } from "../../manager.js";
 import {
@@ -23,7 +23,7 @@ export default class implements Command {
   public name = ["spotify", "artist"];
   public description = "Searches for a Spotify artist";
   public category = "Spotify";
-  public accessableby = [];
+  public accessableby = [Accessableby.Member];
   public usage = "";
   public aliases = [];
   public lavalink = false;
