@@ -60,6 +60,9 @@ export default class implements Command {
 
       const updateArtistEmbed = async (index: number) => {
         const artist = artists[index];
+        const totalSongs = await getTotalSongs(artist.id, accessToken);
+        const totalAlbums = await getTotalAlbums(artist.id, accessToken);
+
         const embed = new EmbedBuilder()
           .setTitle(artist.name)
           .setColor(client.color)
@@ -67,7 +70,8 @@ export default class implements Command {
           .setTimestamp()
           .addFields(
             { name: "Followers", value: artist.followers.toLocaleString(), inline: true },
-            { name: "Genres", value: artist.genres.join(", ") || "None", inline: true },
+            { name: "Total Songs", value: totalSongs.toLocaleString(), inline: true },
+            { name: "Total Albums", value: totalAlbums.toLocaleString(), inline: true },
             { name: "Spotify", value: `[Link](${artist.spotifyUrl})`, inline: true }
           );
 
@@ -82,14 +86,14 @@ export default class implements Command {
             .setLabel("🏠")
             .setStyle(ButtonStyle.Secondary),
           new ButtonBuilder()
-            .setCustomId(`popular_songs_${artist.id}`)
-            .setLabel("Popular Songs")
-            .setStyle(ButtonStyle.Primary),
-          new ButtonBuilder()
             .setCustomId("next_artist")
             .setLabel("➡️")
             .setStyle(ButtonStyle.Secondary)
             .setDisabled(index === artists.length - 1),
+          new ButtonBuilder()
+            .setCustomId(`popular_songs_${artist.id}`)
+            .setLabel("Popular Songs")
+            .setStyle(ButtonStyle.Primary),
         ];
 
         const row = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(buttons);
@@ -163,7 +167,6 @@ async function searchArtists(query: string, accessToken: string): Promise<any[]>
       id: artist.id,
       image: artist.images.length > 0 ? artist.images[0].url : null,
       followers: artist.followers.total,
-      genres: artist.genres,
       spotifyUrl: artist.external_urls.spotify,
     }));
   } catch (error) {
@@ -190,5 +193,49 @@ async function getPopularSongs(artistId: string, accessToken: string): Promise<a
   } catch (error) {
     console.error("Error fetching top tracks from Spotify:", error);
     return [];
+  }
+}
+
+async function getTotalSongs(artistId: string, accessToken: string): Promise<number> {
+  const endpoint = `https://api.spotify.com/v1/artists/${artistId}/albums?include_groups=album,single&limit=50`;
+  const headers = {
+    Authorization: `Bearer ${accessToken}`,
+    "Content-Type": "application/json",
+  };
+
+  try {
+    const response = await fetch(endpoint, { headers });
+    if (!response.ok) {
+      throw new Error("Failed to fetch albums from Spotify.");
+    }
+
+    const data = (await response.json()) as { items: any[] };
+    const totalSongs = data.items.reduce((total, album) => total + album.total_tracks, 0);
+    return totalSongs;
+  } catch (error) {
+    console.error("Error fetching albums from Spotify:", error);
+    return 0;
+  }
+}
+
+async function getTotalAlbums(artistId: string, accessToken: string): Promise<number> {
+  const endpoint = `https://api.spotify.com/v1/artists/${artistId}/albums?include_groups=album,single&limit=50`;
+  const headers = {
+    Authorization: `Bearer ${accessToken}`,
+    "Content-Type": "application/json",
+  };
+
+  try {
+    const response = await fetch(endpoint, { headers });
+    if (!response.ok) {
+      throw new Error("Failed to fetch albums from Spotify.");
+    }
+
+    const data = (await response.json()) as { items: any[] };
+    const totalAlbums = data.items.length;
+    return totalAlbums;
+  } catch (error) {
+    console.error("Error fetching albums from Spotify:", error);
+    return 0;
   }
 }
