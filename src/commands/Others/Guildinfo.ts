@@ -20,7 +20,7 @@ export default class implements Command {
   public category = "Others";
   public accessableby = [Accessableby.Member];
   public usage = "";
-  public aliases = [];
+  public aliases = ["serverinfo", "sinfo"];
   public lavalink = false;
   public options = [];
   public playerCheck = false;
@@ -173,7 +173,6 @@ export default class implements Command {
     `;
   }
 
-  
   private getRoleEmojiInfo(guild: Guild): string {
     const roles = guild.roles.cache.size;
     const emojis = guild.emojis.cache.size;
