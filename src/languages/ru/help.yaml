@@ -1,6 +1,6 @@
 help_menu: "## **[Меню помощи Wace](https://wace.live)**"
 categories: "**Доступные категории: [5]**"
-categories_list: "```Фильтр\n Информация\n Музыка\n Плейлист\n Премиум\n Утилиты```"
+categories_list: "```Фильтр\n Информация\n Музыка\n Плейлист\n Премиум\n Спотифай\n Утилиты```"
 information_title: "📰 Информация:"
 information_content: "Wace - это простой музыкальный бот. Он обеспечивает комфортное пользовательское взаимодействие и поддерживает YouTube, Soundcloud, Spotify, Twitch и многое другое!"
 get_started_title: "Начать"
