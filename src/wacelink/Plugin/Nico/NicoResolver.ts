@@ -1,12 +1,8 @@
-// Code from:
-// https://github.com/y-chan/niconico-dl.js
-
 import { parse } from "node-html-parser";
 import { NiconicoAPIData, VideoInfo } from "./@types/NicoResolver.js";
 import { fetch } from "undici";
 
 const niconicoRegexp = RegExp(
-  // https://github.com/ytdl-org/youtube-dl/blob/a8035827177d6b59aca03bd717acb6a9bdd75ada/youtube_dl/extractor/niconico.py#L162
   "https?://(?:www\\.|secure\\.|sp\\.)?nicovideo\\.jp/watch/(?<id>(?:[a-z]{2})?[0-9]+)"
 );
 

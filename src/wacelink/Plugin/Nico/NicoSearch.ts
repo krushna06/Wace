@@ -1,5 +1,4 @@
-// Code from:
-// https://github.com/blackrose514/niconico-search-api
+
 
 import { responseFields } from "./NicoSearchConst.js";
 import { ErrorResponse, SearchAPIResponse, SearchParams } from "./@types/NicoSearch.js";

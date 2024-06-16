@@ -705,8 +705,6 @@ export class Wacelink extends EventEmitter {
     };
   }
 
-  // Modded from:
-  // https://github.com/shipgirlproject/Shoukaku/blob/2677ecdf123ffef1c254c2113c5342b250ac4396/src/Utils.ts#L9-L23
   protected mergeDefault<T extends { [key: string]: any }>(def: T, given: T): Required<T> {
     if (!given) return def as Required<T>;
     const defaultKeys: (keyof T)[] = Object.keys(def);

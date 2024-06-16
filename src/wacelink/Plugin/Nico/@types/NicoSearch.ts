@@ -1,6 +1,3 @@
-// Code from:
-// https://github.com/blackrose514/niconico-search-api
-
 export interface SearchAPIResponse<F extends SearchParams["fields"]> {
   meta: {
     id: string;

@@ -9,7 +9,7 @@
   <bot>
     <version>1.0.8</version>
     <autofix>1.0.0</autofix>
-    <codename>wacelink_production</codename>
+    <codename>wacelink</codename>
   </bot>
 </metadata>
 

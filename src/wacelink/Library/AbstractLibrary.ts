@@ -1,6 +1,3 @@
-// Get from: https://github.com/shipgirlproject/Shoukaku/blob/396aa531096eda327ade0f473f9807576e9ae9df/src/connectors/Connector.ts
-// Special thanks to shipgirlproject team!
-
 import { WacelinkNodeOptions } from "../Interface/Manager.js";
 import { Wacelink } from "../Wacelink.js";
 export const AllowedPackets = ["VOICE_STATE_UPDATE", "VOICE_SERVER_UPDATE"];
