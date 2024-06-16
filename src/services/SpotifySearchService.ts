@@ -13,7 +13,17 @@ interface SpotifyAlbum {
 }
 
 interface SpotifyTrack {
+  id: string;
   name: string;
+  artists: { name: string }[];
+  album: {
+    id: string;
+    name: string;
+    release_date: string;
+    images: { url: string }[];
+    total_tracks: number;
+    external_urls: { spotify: string };
+  };
   external_urls: { spotify: string };
 }
 
@@ -32,17 +42,13 @@ interface SpotifyAlbumResponse {
 }
 
 interface SpotifyTracksResponse {
-  items: SpotifyTrack[];
+  tracks: SpotifyTrack[];
 }
 
 interface SpotifyArtistsResponse {
   artists: {
     items: SpotifyArtist[];
   };
-}
-
-interface SpotifyTracksResponse {
-  tracks: SpotifyTrack[];
 }
 
 interface SpotifyAlbumsResponse {
@@ -96,7 +102,7 @@ export async function getAlbumTracks(albumId: string, accessToken: string): Prom
   };
 
   const response = await fetch(tracksEndpoint, { headers });
-  const data = (await response.json()) as SpotifyTracksResponse;
+  const data = (await response.json()) as { items: SpotifyTrack[] };
 
   if (!response.ok) {
     throw new Error("Failed to fetch tracks data from Spotify.");
@@ -172,4 +178,38 @@ export async function getTotalAlbums(artistId: string, accessToken: string): Pro
   }
 
   return data.items.length;
+}
+
+export async function searchSong(query: string, accessToken: string): Promise<SpotifyTrack[]> {
+  const searchEndpoint = `https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=track&limit=1`;
+  const headers = {
+    Authorization: `Bearer ${accessToken}`,
+    "Content-Type": "application/json",
+  };
+
+  const response = await fetch(searchEndpoint, { headers });
+  const data = (await response.json()) as { tracks: { items: SpotifyTrack[] } };
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch song data from Spotify.");
+  }
+
+  return data.tracks.items || [];
+}
+
+export async function getSimilarTracks(trackId: string, accessToken: string): Promise<SpotifyTrack[]> {
+  const recommendationsEndpoint = `https://api.spotify.com/v1/recommendations?seed_tracks=${trackId}&limit=10`;
+  const headers = {
+    Authorization: `Bearer ${accessToken}`,
+    "Content-Type": "application/json",
+  };
+
+  const response = await fetch(recommendationsEndpoint, { headers });
+  const data = (await response.json()) as { tracks: SpotifyTrack[] };
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch similar tracks from Spotify.");
+  }
+
+  return data.tracks || [];
 }
