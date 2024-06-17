@@ -76,7 +76,10 @@ export async function getAccessToken(): Promise<string> {
   return data.access_token;
 }
 
-export async function searchAlbum(query: string, accessToken: string): Promise<SpotifyAlbum | null> {
+export async function searchAlbum(
+  query: string,
+  accessToken: string
+): Promise<SpotifyAlbum | null> {
   const searchEndpoint = `https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=album&limit=1`;
   const headers = {
     Authorization: `Bearer ${accessToken}`,
@@ -94,7 +97,10 @@ export async function searchAlbum(query: string, accessToken: string): Promise<S
   return album || null;
 }
 
-export async function getAlbumTracks(albumId: string, accessToken: string): Promise<SpotifyTrack[]> {
+export async function getAlbumTracks(
+  albumId: string,
+  accessToken: string
+): Promise<SpotifyTrack[]> {
   const tracksEndpoint = `https://api.spotify.com/v1/albums/${albumId}/tracks`;
   const headers = {
     Authorization: `Bearer ${accessToken}`,
@@ -128,7 +134,10 @@ export async function searchArtists(query: string, accessToken: string): Promise
   return data.artists.items;
 }
 
-export async function getPopularSongs(artistId: string, accessToken: string): Promise<SpotifyTrack[]> {
+export async function getPopularSongs(
+  artistId: string,
+  accessToken: string
+): Promise<SpotifyTrack[]> {
   const endpoint = `https://api.spotify.com/v1/artists/${artistId}/top-tracks?market=US`;
   const headers = {
     Authorization: `Bearer ${accessToken}`,
@@ -197,7 +206,10 @@ export async function searchSong(query: string, accessToken: string): Promise<Sp
   return data.tracks.items || [];
 }
 
-export async function getSimilarTracks(trackId: string, accessToken: string): Promise<SpotifyTrack[]> {
+export async function getSimilarTracks(
+  trackId: string,
+  accessToken: string
+): Promise<SpotifyTrack[]> {
   const recommendationsEndpoint = `https://api.spotify.com/v1/recommendations?seed_tracks=${trackId}&limit=10`;
   const headers = {
     Authorization: `Bearer ${accessToken}`,
