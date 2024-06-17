@@ -12,8 +12,8 @@ no_in_voice: "`⚠️` | You are not in a voice channel!"
 no_same_voice: "`⚠️` | You are not in the same voice channel as me!"
 
 # No permission!
-no_perms: "`⚠️` | You don't have **%{perm}** permission to execute this command!"
-no_perms_channel: "`⚠️` | You don't have **%{perm}** permission in <#%{channel}> to execute this command!"
+no_perms: "`⚠️` | I don't have **%{perm}** permission to execute this command!"
+no_perms_channel: "`⚠️` | I don't have **%{perm}** permission in <#%{channel}> to execute this command!"
 
 # Getting error!
 unexpected_error: "`⚠️` | Something went wrong. Please try again later!"

@@ -1,12 +1,9 @@
 ### Help command!
-intro1: "・**%{bot}** is an advanced music bot with rich features!"
+intro1: "・I'm Wace, a music bot with wide-range of commands."
 intro2: "・Developed by **n0step_**"
 intro3: "・Partnered with **[Academy Gaming](https://www.academy-hosting.com/aff.php?aff=10)**"
 prefix: "・**Bot Prefix:** %{prefix}"
-ver: "・**Bot Version:** `%{botver}`"
-djs: "・**Discord.js:** `%{djsver}`"
-lavalink: "・**Autofix:** `%{aver}`"
-help1: "・**To get started:** %{help}"
-help2: "・**To get more info:** %{botinfo}"
-wel: "👋 Welcome to %{bot}"
+wel: "👋 Hello"
 codename: "・**Codename:** `%{codename}`"
+
+intro: "・We're partnered with [Academy Gaming](https://www.academy-hosting.com/aff.php?aff=10).\n\n **__To get started:__**\n My prefixes are: `/help` & `w!help`\n Setup the music channels using `/setup`\n Enable 24/7 using `/247`\n\n **__How to change the language?__**\n Set the language using `/language`"

@@ -8,10 +8,6 @@ import { SongNotiEnum } from "../../database/schema/SongNoti.js";
 import { WacelinkFilterMode, WacelinkPlayer, WacelinkTrack } from "../../wacelink/main.js";
 import { getTitle } from "../../utilities/GetTitle.js";
 
-function capitalizeFirstLetter(string: string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
 export default class {
   async execute(client: Manager, player: WacelinkPlayer, track: WacelinkTrack) {
     if (!client.isDatabaseConnected)
@@ -85,22 +81,6 @@ export default class {
 
     if (SongNoti == SongNotiEnum.Disable) return;
 
-    const source = player.queue.current.sourceName || "unknown";
-    let src = "";
-    if (source === "youtube") {
-      src = "https://cdn.littleediz.in.th/YouTube_social_red_circle_(2017).png";
-    } else if (source === "spotify") {
-      src = "https://cdn.littleediz.in.th/spotify-logo-png-7053.png";
-    } else if (source === "soundcloud") {
-      src = "https://cdn.littleediz.in.th/Soundcloud-Icon.png";
-    } else if (source === "twitch") {
-      src = "https://cdn.littleediz.in.th/pngimg.com - twitch_PNG27.png";
-    } else if (source === "applemusic") {
-      src = "https://cdn.littleediz.in.th/apple-music-icon-seeklogo.png";
-    } else {
-      src = "https://cdn.littleediz.in.th/rocket8.png";
-    }
-
     const embeded = new EmbedBuilder()
       .setAuthor({
         name: `${client.i18n.get(language, "event.player", "track_title")}`,
@@ -133,11 +113,7 @@ export default class {
       .setThumbnail(
         track.artworkUrl ?? `https://img.youtube.com/vi/${track.identifier}/hqdefault.jpg`
       )
-      .setTimestamp()
-      .setFooter({
-        text: capitalizeFirstLetter(source),
-        iconURL: src, // Setting the source avatar as the footer author icon
-      });
+      .setTimestamp();
 
     const playing_channel = (await client.channels
       .fetch(player.textId)
@@ -147,6 +123,7 @@ export default class {
       ? await playing_channel.send({
           embeds: [embeded],
           components: [filterSelect(client), playerRowOne(client), playerRowTwo(client)],
+          // files: client.config.bot.SAFE_PLAYER_MODE ? [] : [attachment],
         })
       : undefined;
 
