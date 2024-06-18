@@ -4,12 +4,12 @@ import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
 
 export default class implements Command {
-  public name = ["reset"];
+  public name = ["filter", "reset"];
   public description = "Reset filter";
   public category = "Filter";
   public accessableby = [Accessableby.Member];
   public usage = "";
-  public aliases = ["reset"];
+  public aliases = ["reset", "clear"];
   public lavalink = true;
   public options = [];
   public playerCheck = true;

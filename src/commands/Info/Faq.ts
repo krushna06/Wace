@@ -1,10 +1,10 @@
 import {
-    EmbedBuilder,
-    StringSelectMenuBuilder,
-    ActionRowBuilder,
-    ButtonBuilder,
-    ButtonStyle,
-  } from "discord.js";
+  EmbedBuilder,
+  StringSelectMenuBuilder,
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
+} from "discord.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
 import { Manager } from "../../manager.js";
@@ -69,9 +69,12 @@ export default class implements Command {
       .setLabel("Sources")
       .setStyle(ButtonStyle.Primary);
 
-    const navigationRow = new ActionRowBuilder<ButtonBuilder>()
-      .addComponents(backButton, homeButton, forwardButton, sourcesButton);
-
+    const navigationRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
+      backButton,
+      homeButton,
+      forwardButton,
+      sourcesButton
+    );
 
     const initialMessage = await handler.editReply({
       embeds: [initialEmbed],
@@ -80,7 +83,13 @@ export default class implements Command {
 
     let currentIndex = 0; // Track the current FAQ index
 
-    const filter = (i) => (i.customId.startsWith("select-faq") || i.customId === "show-sources" || i.customId === "go-home" || i.customId === "back-button" || i.customId === "forward-button") && i.user.id === handler.user.id;
+    const filter = (i) =>
+      (i.customId.startsWith("select-faq") ||
+        i.customId === "show-sources" ||
+        i.customId === "go-home" ||
+        i.customId === "back-button" ||
+        i.customId === "forward-button") &&
+      i.user.id === handler.user.id;
     const collector = handler.channel.createMessageComponentCollector({ filter, time: 60000 });
 
     collector.on("collect", async (i) => {

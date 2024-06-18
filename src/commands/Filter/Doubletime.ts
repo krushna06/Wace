@@ -4,7 +4,7 @@ import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
 
 export default class implements Command {
-  public name = ["doubletime"];
+  public name = ["filter", "doubletime"];
   public description = "Turning on doubletime filter";
   public category = "Filter";
   public accessableby = [Accessableby.Member];
