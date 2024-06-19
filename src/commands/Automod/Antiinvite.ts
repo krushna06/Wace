@@ -85,7 +85,9 @@ export default class implements Command {
       return handler.editReply({
         embeds: [
           new EmbedBuilder()
-            .setDescription("Please specify either **enable** or **disable**.")
+            .setDescription(
+              client.i18n.get(handler.language, "automod.antiinvite", "specify_enable_disable")
+            )
             .setColor(client.color),
         ],
       });
@@ -100,14 +102,14 @@ export default class implements Command {
         embeds: [
           new EmbedBuilder()
             .setDescription(
-              "❌ You can only have 6 keyword rules enabled at once. Please disable one of the existing keyword rules before enabling this one."
+              client.i18n.get(handler.language, "automod.antiinvite", "max_keyword_rules")
             )
             .setColor(client.color),
         ],
       });
     }
 
-    const ruleName = "Disallow invites [Wace]";
+    const ruleName = client.i18n.get(handler.language, "automod.antiinvite", "rule_name");
     const existingRule = existingRules.find((rule) => rule.name === ruleName);
 
     if (type === "enable") {
@@ -115,7 +117,9 @@ export default class implements Command {
         return handler.editReply({
           embeds: [
             new EmbedBuilder()
-              .setDescription("❌ The anti-invite system is already enabled.")
+              .setDescription(
+                client.i18n.get(handler.language, "automod.antiinvite", "system_already_enabled")
+              )
               .setColor(client.color),
           ],
         });
@@ -143,12 +147,17 @@ export default class implements Command {
             {
               type: AutoModerationActionType.BlockMessage,
               metadata: {
-                customMessage:
-                  "Message blocked due to containing an invite link. Rule added by Wace",
+                customMessage: client.i18n.get(
+                  handler.language,
+                  "automod.antiinvite",
+                  "block_message"
+                ),
               },
             },
           ],
-          reason: `Requested by ${handler.member.user.username}`,
+          reason: client.i18n.get(handler.language, "automod.antiinvite", "requested_by", {
+            username: handler.member.user.username,
+          }),
         };
 
         if (timeout) {
@@ -166,7 +175,11 @@ export default class implements Command {
             return handler.editReply({
               embeds: [
                 new EmbedBuilder()
-                  .setDescription(`❌ I don't have permission to view <#${logChannel.id}> channel`)
+                  .setDescription(
+                    client.i18n.get(handler.language, "automod.antiinvite", "no_view_permission", {
+                      channelId: logChannel.id,
+                    })
+                  )
                   .setColor(client.color),
               ],
             });
@@ -177,7 +190,9 @@ export default class implements Command {
               embeds: [
                 new EmbedBuilder()
                   .setDescription(
-                    `❌ I don't have permission to send messages in <#${logChannel.id}> channel`
+                    client.i18n.get(handler.language, "automod.antiinvite", "no_send_permission", {
+                      channelId: logChannel.id,
+                    })
                   )
                   .setColor(client.color),
               ],
@@ -190,7 +205,12 @@ export default class implements Command {
               embeds: [
                 new EmbedBuilder()
                   .setDescription(
-                    `❌ You don't have permission to view <#${logChannel.id}> channel`
+                    client.i18n.get(
+                      handler.language,
+                      "automod.antiinvite",
+                      "no_member_view_permission",
+                      { channelId: logChannel.id }
+                    )
                   )
                   .setColor(client.color),
               ],
@@ -202,7 +222,12 @@ export default class implements Command {
               embeds: [
                 new EmbedBuilder()
                   .setDescription(
-                    `❌ You don't have permission to send messages in <#${logChannel.id}> channel`
+                    client.i18n.get(
+                      handler.language,
+                      "automod.antiinvite",
+                      "no_member_send_permission",
+                      { channelId: logChannel.id }
+                    )
                   )
                   .setColor(client.color),
               ],
@@ -213,8 +238,11 @@ export default class implements Command {
             type: AutoModerationActionType.SendAlertMessage,
             metadata: {
               channelId: logChannel.id,
-              customMessage:
-                "Message blocked due to containing an invite link. Rule added by Wace",
+              customMessage: client.i18n.get(
+                handler.language,
+                "automod.antiinvite",
+                "block_message"
+              ),
             },
           });
         }
@@ -225,31 +253,47 @@ export default class implements Command {
       const embed = new EmbedBuilder()
         .setColor(client.color)
         .setTimestamp()
-        .setTitle("✅ Successfully enabled the anti-invite system")
+        .setTitle(client.i18n.get(handler.language, "automod.antiinvite", "system_enabled"))
         .setDescription(
-          "The anti-invite system has been enabled. All Discord invites will now be blocked."
+          client.i18n.get(handler.language, "automod.antiinvite", "system_enabled_description")
         )
         .addFields([
-          { name: "🔒 Rule name", value: "`Disallow invites`", inline: true },
-          { name: "📨 Rule event", value: "`Message send`", inline: true },
           {
-            name: `📛 Rule action${timeout || logChannel ? "s" : ""}`,
-            value: `\`Block message\`${timeout ? `, Timeout for \`${timeout}\` seconds` : ""}${logChannel ? `, Send alert message in <#${logChannel.id}>` : ""}`,
+            name: client.i18n.get(handler.language, "automod.antiinvite", "rule_name_label"),
+            value: "`Disallow invites`",
             inline: true,
           },
           {
-            name: "⏱️ Rule timeout",
+            name: client.i18n.get(handler.language, "automod.antiinvite", "rule_event"),
+            value: "`Message send`",
+            inline: true,
+          },
+          {
+            name: client.i18n.get(handler.language, "automod.antiinvite", "rule_actions", {
+              s: timeout || logChannel ? "s" : "",
+            }),
+            value: `\`Block message\`${timeout ? `, ${client.i18n.get(handler.language, "automod.antiinvite", "timeout_for", { timeout: timeout.toString() })}` : ""}${logChannel ? `, ${client.i18n.get(handler.language, "automod.antiinvite", "send_alert_message", { logChannel: `<#${logChannel.id}>` })}` : ""}`,
+            inline: true,
+          },
+          {
+            name: client.i18n.get(handler.language, "automod.antiinvite", "rule_timeout"),
             value: timeout ? `\`${timeout} seconds\`` : "`None`",
             inline: true,
           },
           {
-            name: "📝 Rule log channel",
+            name: client.i18n.get(handler.language, "automod.antiinvite", "rule_log_channel"),
             value: logChannel ? `<#${logChannel.id}>` : "`None`",
             inline: true,
           },
-          { name: "🔑 Rule trigger", value: codeBlock("All Discord invite links"), inline: false },
           {
-            name: "🔗 Rule exempt channels",
+            name: client.i18n.get(handler.language, "automod.antiinvite", "rule_trigger"),
+            value: codeBlock(
+              client.i18n.get(handler.language, "automod.antiinvite", "discord_invite_links")
+            ),
+            inline: false,
+          },
+          {
+            name: client.i18n.get(handler.language, "automod.antiinvite", "rule_exempt_channels"),
             value: exemptChannels
               ? exemptChannels.type === ChannelType.GuildCategory
                 ? `\`${exemptChannels.name}\``
@@ -258,7 +302,7 @@ export default class implements Command {
             inline: true,
           },
           {
-            name: "🔗 Rule exempt roles",
+            name: client.i18n.get(handler.language, "automod.antiinvite", "rule_exempt_roles"),
             value: exemptRoles ? `<@&${exemptRoles.id}>` : "`None`",
             inline: true,
           },
@@ -271,7 +315,9 @@ export default class implements Command {
         return handler.editReply({
           embeds: [
             new EmbedBuilder()
-              .setDescription("❌ The anti-invite system is already disabled.")
+              .setDescription(
+                client.i18n.get(handler.language, "automod.antiinvite", "system_already_disabled")
+              )
               .setColor(client.color),
           ],
         });
@@ -284,9 +330,9 @@ export default class implements Command {
       const embed = new EmbedBuilder()
         .setColor(client.color)
         .setTimestamp()
-        .setTitle("✅ Successfully disabled the anti-invite system")
+        .setTitle(client.i18n.get(handler.language, "automod.antiinvite", "system_disabled"))
         .setDescription(
-          "The anti-invite system has been disabled. All Discord invites will now be allowed."
+          client.i18n.get(handler.language, "automod.antiinvite", "system_disabled_description")
         )
         .setThumbnail(handler.guild.iconURL({ size: 256 }));
 
