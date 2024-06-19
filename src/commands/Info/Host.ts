@@ -1,4 +1,10 @@
-import { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } from "discord.js";
+import {
+  EmbedBuilder,
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
+  ComponentType,
+} from "discord.js";
 import os from "os";
 import ms from "pretty-ms";
 import { stripIndents } from "common-tags";
@@ -73,7 +79,11 @@ export default class implements Command {
       .setDescription(hostInfo)
       .setColor(client.color);
 
-    const actionRow = new ActionRowBuilder<ButtonBuilder>().addComponents(prevButton, homeButton, nextButton);
+    const actionRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
+      prevButton,
+      homeButton,
+      nextButton
+    );
 
     const initialMessage = await handler.editReply({
       embeds: [initialEmbed],
@@ -121,8 +131,9 @@ export default class implements Command {
       try {
         await initialMessage.edit({ components: [] });
       } catch (error) {
-        if (error.code !== 10008) { // Ignore "Unknown Message" error
-          console.error('Failed to edit the message:', error);
+        if (error.code !== 10008) {
+          // Ignore "Unknown Message" error
+          console.error("Failed to edit the message:", error);
         }
       }
     });

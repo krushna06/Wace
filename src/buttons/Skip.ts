@@ -18,12 +18,17 @@ export default class implements PlayerButton {
       collector.stop();
     }
 
-    if (player.queue.size == 0 && player.data.get("autoplay") !== true)
+    if (player.queue.size == 0 && player.data.get("autoplay") !== true) {
+      player.data.set("sudo-destroy", true);
+      const is247 = await client.db.autoreconnect.get(`${message.guildId}`);
+      player.stop(is247 && is247.twentyfourseven ? false : true);
+  
       return new ReplyInteractionService(
         client,
         message,
-        `${client.i18n.get(language, "button.music", "skip_notfound")}`
+        `${client.i18n.get(language, "button.music", "stop_msg")}`
       );
+    }
 
     player.skip();
 
