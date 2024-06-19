@@ -86,7 +86,9 @@ export default class implements Command {
       return handler.editReply({
         embeds: [
           new EmbedBuilder()
-            .setDescription(client.i18n.get(handler.language, "automod.antilink", "specify_enable_disable"))
+            .setDescription(
+              client.i18n.get(handler.language, "automod.antilink", "specify_enable_disable")
+            )
             .setColor(client.color),
         ],
       });
@@ -100,7 +102,9 @@ export default class implements Command {
       return handler.editReply({
         embeds: [
           new EmbedBuilder()
-            .setDescription(client.i18n.get(handler.language, "automod.antilink", "max_keyword_rules"))
+            .setDescription(
+              client.i18n.get(handler.language, "automod.antilink", "max_keyword_rules")
+            )
             .setColor(client.color),
         ],
       });
@@ -114,7 +118,9 @@ export default class implements Command {
         return handler.editReply({
           embeds: [
             new EmbedBuilder()
-              .setDescription(client.i18n.get(handler.language, "automod.antilink", "system_already_enabled"))
+              .setDescription(
+                client.i18n.get(handler.language, "automod.antilink", "system_already_enabled")
+              )
               .setColor(client.color),
           ],
         });
@@ -140,11 +146,17 @@ export default class implements Command {
             {
               type: AutoModerationActionType.BlockMessage,
               metadata: {
-                customMessage: client.i18n.get(handler.language, "automod.antilink", "block_message"),
+                customMessage: client.i18n.get(
+                  handler.language,
+                  "automod.antilink",
+                  "block_message"
+                ),
               },
             },
           ],
-          reason: client.i18n.get(handler.language, "automod.antilink", "requested_by", { username: handler.member.user.username }),
+          reason: client.i18n.get(handler.language, "automod.antilink", "requested_by", {
+            username: handler.member.user.username,
+          }),
         };
 
         if (timeout) {
@@ -162,7 +174,11 @@ export default class implements Command {
             return handler.editReply({
               embeds: [
                 new EmbedBuilder()
-                  .setDescription(client.i18n.get(handler.language, "automod.antilink", "no_view_permission", { channelId: logChannel.id }))
+                  .setDescription(
+                    client.i18n.get(handler.language, "automod.antilink", "no_view_permission", {
+                      channelId: logChannel.id,
+                    })
+                  )
                   .setColor(client.color),
               ],
             });
@@ -172,7 +188,11 @@ export default class implements Command {
             return handler.editReply({
               embeds: [
                 new EmbedBuilder()
-                  .setDescription(client.i18n.get(handler.language, "automod.antilink", "no_send_permission", { channelId: logChannel.id }))
+                  .setDescription(
+                    client.i18n.get(handler.language, "automod.antilink", "no_send_permission", {
+                      channelId: logChannel.id,
+                    })
+                  )
                   .setColor(client.color),
               ],
             });
@@ -183,7 +203,14 @@ export default class implements Command {
             return handler.editReply({
               embeds: [
                 new EmbedBuilder()
-                  .setDescription(client.i18n.get(handler.language, "automod.antilink", "no_member_view_permission", { channelId: logChannel.id }))
+                  .setDescription(
+                    client.i18n.get(
+                      handler.language,
+                      "automod.antilink",
+                      "no_member_view_permission",
+                      { channelId: logChannel.id }
+                    )
+                  )
                   .setColor(client.color),
               ],
             });
@@ -193,7 +220,14 @@ export default class implements Command {
             return handler.editReply({
               embeds: [
                 new EmbedBuilder()
-                  .setDescription(client.i18n.get(handler.language, "automod.antilink", "no_member_send_permission", { channelId: logChannel.id }))
+                  .setDescription(
+                    client.i18n.get(
+                      handler.language,
+                      "automod.antilink",
+                      "no_member_send_permission",
+                      { channelId: logChannel.id }
+                    )
+                  )
                   .setColor(client.color),
               ],
             });
@@ -215,12 +249,24 @@ export default class implements Command {
         .setColor(client.color)
         .setTimestamp()
         .setTitle(client.i18n.get(handler.language, "automod.antilink", "system_enabled"))
-        .setDescription(client.i18n.get(handler.language, "automod.antilink", "system_enabled_description"))
+        .setDescription(
+          client.i18n.get(handler.language, "automod.antilink", "system_enabled_description")
+        )
         .addFields([
-          { name: client.i18n.get(handler.language, "automod.antilink", "rule_name_label"), value: "`Disallow links`", inline: true },
-          { name: client.i18n.get(handler.language, "automod.antilink", "rule_event"), value: "`Message send`", inline: true },
           {
-            name: client.i18n.get(handler.language, "automod.antilink", "rule_actions", { s: timeout || logChannel ? "s" : "" }),
+            name: client.i18n.get(handler.language, "automod.antilink", "rule_name_label"),
+            value: "`Disallow links`",
+            inline: true,
+          },
+          {
+            name: client.i18n.get(handler.language, "automod.antilink", "rule_event"),
+            value: "`Message send`",
+            inline: true,
+          },
+          {
+            name: client.i18n.get(handler.language, "automod.antilink", "rule_actions", {
+              s: timeout || logChannel ? "s" : "",
+            }),
             value: `\`Block message\`${timeout ? `, ${client.i18n.get(handler.language, "automod.antilink", "timeout_for", { timeout: timeout.toString() })}` : ""}${logChannel ? `, ${client.i18n.get(handler.language, "automod.antilink", "send_alert_message", { logChannel: `<#${logChannel.id}>` })}` : ""}`,
             inline: true,
           },
@@ -234,7 +280,11 @@ export default class implements Command {
             value: logChannel ? `<#${logChannel.id}>` : "`None`",
             inline: true,
           },
-          { name: client.i18n.get(handler.language, "automod.antilink", "rule_trigger"), value: codeBlock(client.i18n.get(handler.language, "automod.antilink", "all_links")), inline: false },
+          {
+            name: client.i18n.get(handler.language, "automod.antilink", "rule_trigger"),
+            value: codeBlock(client.i18n.get(handler.language, "automod.antilink", "all_links")),
+            inline: false,
+          },
           {
             name: client.i18n.get(handler.language, "automod.antilink", "rule_exempt_channels"),
             value: exemptChannels
@@ -259,7 +309,9 @@ export default class implements Command {
         return handler.editReply({
           embeds: [
             new EmbedBuilder()
-              .setDescription(client.i18n.get(handler.language, "automod.antilink", "system_already_disabled"))
+              .setDescription(
+                client.i18n.get(handler.language, "automod.antilink", "system_already_disabled")
+              )
               .setColor(client.color),
           ],
         });
@@ -273,7 +325,9 @@ export default class implements Command {
             .setColor(client.color)
             .setTitle(client.i18n.get(handler.language, "automod.antilink", "system_disabled"))
             .setTimestamp()
-            .setDescription(client.i18n.get(handler.language, "automod.antilink", "system_disabled_description")),
+            .setDescription(
+              client.i18n.get(handler.language, "automod.antilink", "system_disabled_description")
+            ),
         ],
       });
     }

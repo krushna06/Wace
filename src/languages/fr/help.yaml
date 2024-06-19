@@ -1,5 +1,5 @@
 help_menu: "## **[Menu d'Aide Wace](https://wace.live)**"
-categories: "**Catégories Disponibles : [5]**"
+categories: "**Catégories Disponibles : [7]**"
 categories_list: "```automatique\n Filtre\n Info\n Musique\n Playlist\n Premium\n Spotify\n Utilitaires```"
 information_title: "📰 Informations :"
 information_content: "Wace est un bot musical simple. Il offre une expérience confortable et conviviale. Il prend en charge YouTube, SoundCloud, Spotify, Twitch et plus encore !"
