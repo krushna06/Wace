@@ -1,6 +1,6 @@
 help_menu: "## **[Wace 도움말 메뉴](https://wace.live)**"
 categories: "**사용 가능한 카테고리: [5]**"
-categories_list: "```필터\n 정보\n 음악\n 재생 목록\n 프리미엄\n 스포티파이\n 유틸리티```"
+categories_list: "```자동 모드\n 필터\n 정보\n 음악\n 재생 목록\n 프리미엄\n 스포티파이\n 유틸리티```"
 information_title: "📰 정보:"
 information_content: "Wace는 간단한 음악 봇입니다. 사용자 친화적인 편리한 경험을 제공하며 YouTube, Soundcloud, Spotify, Twitch 등을 지원합니다!"
 get_started_title: "시작하기"
