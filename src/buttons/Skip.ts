@@ -22,7 +22,7 @@ export default class implements PlayerButton {
       player.data.set("sudo-destroy", true);
       const is247 = await client.db.autoreconnect.get(`${message.guildId}`);
       player.stop(is247 && is247.twentyfourseven ? false : true);
-  
+
       return new ReplyInteractionService(
         client,
         message,
