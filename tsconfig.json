@@ -1,5 +1,5 @@
 {
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "src/commands/Automod"],
   "ts-node": {
     "esm": true,
     "experimentalSpecifierResolution": "node",
