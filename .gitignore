@@ -140,5 +140,6 @@ wace.database.json
 draft/
 temp/
 pnpm-lock.yaml
+package-lock.json
 
 test.*************
