@@ -29,8 +29,9 @@ export default class implements PlayerButton {
       const is247 = await client.db.autoreconnect.get(`${message.guildId}`);
       player.stop(is247 && is247.twentyfourseven ? false : true);
 
-      const embed = new EmbedBuilder()
-        .setDescription(`${client.i18n.get(language, "button.music", "stop_msg")}`);
+      const embed = new EmbedBuilder().setDescription(
+        `${client.i18n.get(language, "button.music", "stop_msg")}`
+      );
 
       await message.reply({ embeds: [embed] });
 
@@ -43,8 +44,9 @@ export default class implements PlayerButton {
 
     player.skip();
 
-    const embed = new EmbedBuilder()
-      .setDescription(`${client.i18n.get(language, "button.music", "skip_msg")}`);
+    const embed = new EmbedBuilder().setDescription(
+      `${client.i18n.get(language, "button.music", "skip_msg")}`
+    );
 
     await message.reply({ embeds: [embed] });
 
