@@ -172,6 +172,7 @@ export class WacelinkFilter {
   }
 
   protected debug(logs: string) {
+    // @ts-ignore
     this.player.manager.emit(
       WacelinkEvents.Debug,
       `[Wacelink] / [Player @ ${this.player.guildId}] / [Filter] | ${logs}`

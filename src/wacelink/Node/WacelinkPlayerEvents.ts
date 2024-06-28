@@ -29,7 +29,9 @@ export class WacelinkPlayerEvents {
     if (player) {
       player.playing = true;
       player.paused = false;
+      // @ts-ignore
       manager.emit(WacelinkEvents.TrackStart, player, player.queue.current);
+      // @ts-ignore
       manager.emit(
         WacelinkEvents.Debug,
         `[Wacelink] / [Player @ ${data.guildId}] / [Events] / [Start] | ` + JSON.stringify(data)
@@ -43,11 +45,13 @@ export class WacelinkPlayerEvents {
     if (player) {
       // This event emits STOPPED reason when destroying, so return to prevent double emit
       if (player.state === WacelinkPlayerState.DESTROYED)
+        // @ts-ignore
         return manager.emit(
           WacelinkEvents.Debug,
           `[Wacelink] / [Player @ ${data.guildId}] / [Events] / [End] | Player ${player.guildId} destroyed from end event`
         );
 
+      // @ts-ignore
       manager.emit(
         WacelinkEvents.Debug,
         `[Wacelink] / [Player @ ${data.guildId}] / [Events] / [End] | ` +
@@ -59,12 +63,15 @@ export class WacelinkPlayerEvents {
       player.paused = true;
 
       if (data.reason === "replaced") {
+        // @ts-ignore
         return manager.emit(WacelinkEvents.TrackEnd, player, player.queue.current);
       }
       if (["loadFailed", "cleanup"].includes(data.reason)) {
         if (player.queue.current) player.queue.previous.push(player.queue.current);
         if (!player.queue.length && !player.sudoDestroy)
+          // @ts-ignore
           return manager.emit(WacelinkEvents.QueueEmpty, player);
+        // @ts-ignore
         manager.emit(WacelinkEvents.QueueEmpty, player, player.queue.current);
         player.queue.current = null;
         return player.play();
@@ -80,8 +87,10 @@ export class WacelinkPlayerEvents {
       player.queue.current = null;
 
       if (player.queue.length) {
+        // @ts-ignore
         manager.emit(WacelinkEvents.TrackEnd, player, currentSong);
       } else if (!player.queue.length && !player.sudoDestroy) {
+        // @ts-ignore
         return manager.emit(WacelinkEvents.QueueEmpty, player);
       } else return;
 
@@ -93,7 +102,9 @@ export class WacelinkPlayerEvents {
   protected TrackExceptionEvent(manager: Wacelink, data: Record<string, any>) {
     const player = manager.players.get(data.guildId);
     if (player) {
+      // @ts-ignore
       manager.emit(WacelinkEvents.PlayerException, player, data);
+      // @ts-ignore
       manager.emit(
         WacelinkEvents.Debug,
         `[Wacelink] / [Player @ ${data.guildId}] / [Events] / [Exception] | ` + JSON.stringify(data)
@@ -105,7 +116,9 @@ export class WacelinkPlayerEvents {
   protected TrackStuckEvent(manager: Wacelink, data: Record<string, any>) {
     const player = manager.players.get(data.guildId);
     if (player) {
+      // @ts-ignore
       manager.emit(WacelinkEvents.TrackStuck, player, data);
+      // @ts-ignore
       manager.emit(
         WacelinkEvents.Debug,
         `[Wacelink] / [Player @ ${data.guildId}] / [Events] / [Stuck] | ` + JSON.stringify(data)
@@ -117,7 +130,9 @@ export class WacelinkPlayerEvents {
   protected WebSocketClosedEvent(manager: Wacelink, data: Record<string, any>) {
     const player = manager.players.get(data.guildId);
     if (player) {
+      // @ts-ignore
       manager.emit(WacelinkEvents.PlayerWebsocketClosed, player, data);
+      // @ts-ignore
       manager.emit(
         WacelinkEvents.Debug,
         `[Wacelink] / [Player @ ${data.guildId}] / [Events] / [WebsocketClosed] | ` +
@@ -131,10 +146,12 @@ export class WacelinkPlayerEvents {
     const player = manager.players.get(data.guildId);
     if (player) {
       player.position = Number(data.state.position);
+      // @ts-ignore
       manager.emit(
         WacelinkEvents.Debug,
         `[Wacelink] / [Player @ ${data.guildId}] / [Events] / [Updated] | ` + JSON.stringify(data)
       );
+      // @ts-ignore
       manager.emit(WacelinkEvents.PlayerUpdate, player, data);
     }
     return;

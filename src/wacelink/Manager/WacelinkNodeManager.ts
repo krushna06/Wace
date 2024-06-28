@@ -77,6 +77,7 @@ export class WacelinkNodeManager extends WacelinkDatabase<WacelinkNode> {
   }
 
   protected debug(logs: string) {
+    // @ts-ignore
     this.manager.emit(WacelinkEvents.Debug, `[Wacelink] / [NodeManager] | ${logs}`);
   }
 }

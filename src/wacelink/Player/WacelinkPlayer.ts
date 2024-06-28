@@ -216,6 +216,7 @@ export class WacelinkPlayer extends EventEmitter {
     this.state = WacelinkPlayerState.DESTROYED;
     this.debug("Player destroyed at " + this.guildId);
     this.voiceId = "";
+    // @ts-ignore
     this.manager.emit(WacelinkEvents.PlayerDestroy, this);
     this.sudoDestroy = false;
   }
@@ -256,9 +257,11 @@ export class WacelinkPlayer extends EventEmitter {
       });
 
     if (!resolveResult || (resolveResult && !resolveResult.isPlayable)) {
+      // @ts-ignore
       this.manager.emit(WacelinkEvents.TrackResolveError, this, current, errorMessage);
       this.debug(`Player ${this.guildId} resolve error: ${errorMessage}`);
       this.queue.current = null;
+      // @ts-ignore
       this.queue.size ? await this.play() : this.manager.emit(WacelinkEvents.QueueEmpty, this);
       return this;
     }
@@ -330,6 +333,7 @@ export class WacelinkPlayer extends EventEmitter {
     });
     this.paused = true;
     this.playing = false;
+    // @ts-ignore
     this.manager.emit(WacelinkEvents.PlayerPause, this, this.queue.current);
     return this;
   }
@@ -349,6 +353,7 @@ export class WacelinkPlayer extends EventEmitter {
     });
     this.paused = false;
     this.playing = true;
+    // @ts-ignore
     this.manager.emit(WacelinkEvents.PlayerResume, this, this.queue.current);
     return this;
   }
@@ -369,6 +374,7 @@ export class WacelinkPlayer extends EventEmitter {
     });
     this.paused = mode;
     this.playing = !mode;
+    // @ts-ignore
     this.manager.emit(
       mode ? WacelinkEvents.PlayerPause : WacelinkEvents.PlayerResume,
       this,
@@ -498,7 +504,9 @@ export class WacelinkPlayer extends EventEmitter {
         },
       },
     });
+    // @ts-ignore
     this.manager.emit(WacelinkEvents.TrackEnd, this, this.queue.current);
+    // @ts-ignore
     this.manager.emit(WacelinkEvents.PlayerStop, this);
     return this;
   }
@@ -519,6 +527,7 @@ export class WacelinkPlayer extends EventEmitter {
     this.track = null;
     if (!this.data.get("sudo-destroy")) this.data.clear();
     this.position = 0;
+    // @ts-ignore
     if (emitEmpty) this.manager.emit(WacelinkEvents.QueueEmpty, this);
     return;
   }
@@ -576,6 +585,7 @@ export class WacelinkPlayer extends EventEmitter {
     );
     try {
       const [status] = await WacelinkPlayer.once(this, "connectionUpdate", {
+        // @ts-ignore
         signal: controller.signal,
       });
       if (status !== VoiceState.SESSION_READY) {
@@ -664,10 +674,12 @@ export class WacelinkPlayer extends EventEmitter {
 
   protected debug(logs: string): void {
     this.manager.emit(WacelinkEvents.Debug, `[Wacelink] / [Player @ ${this.guildId}] | ${logs}`);
+    // @ts-ignore
   }
 
   protected debugDiscord(logs: string): void {
     this.manager.emit(
+      // @ts-ignore
       WacelinkEvents.Debug,
       `[Wacelink] / [Player @ ${this.guildId}] / [Voice] | ${logs}`
     );
@@ -706,10 +718,12 @@ export class WacelinkPlayer extends EventEmitter {
   public setServerUpdate(data: ServerUpdate): void {
     if (!data.endpoint) {
       this.emit("connectionUpdate", VoiceState.SESSION_ENDPOINT_MISSING);
+      // @ts-ignore
       return;
     }
     if (!this.sessionId) {
       this.emit("connectionUpdate", VoiceState.SESSION_ID_MISSING);
+      // @ts-ignore
       return;
     }
 
@@ -724,6 +738,7 @@ export class WacelinkPlayer extends EventEmitter {
 
     this.serverUpdate = data;
     this.emit("connectionUpdate", VoiceState.SESSION_READY);
+    // @ts-ignore
     this.debugDiscord(`Server Update Received | Server: ${this.region} Guild: ${this.guildId}`);
   }
 

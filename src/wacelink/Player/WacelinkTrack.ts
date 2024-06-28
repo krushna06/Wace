@@ -116,6 +116,7 @@ export class WacelinkTrack {
     if (this.isPlayable) {
       this.realUri = this.raw.info.uri;
       return this;
+      // @ts-ignore
     }
 
     manager.emit(

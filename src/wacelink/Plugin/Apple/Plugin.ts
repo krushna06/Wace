@@ -312,7 +312,8 @@ export class WacelinkPlugin extends SourceWacelinkPlugin {
 
   private debug(logs: string) {
     this.manager
-      ? this.manager.emit(WacelinkEvents.Debug, `[Wacelink] -> [Plugin] -> [Apple] | ${logs}`)
+      ? // @ts-ignore
+        this.manager.emit(WacelinkEvents.Debug, `[Wacelink] -> [Plugin] -> [Apple] | ${logs}`)
       : true;
   }
 }

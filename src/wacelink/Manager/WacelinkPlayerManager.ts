@@ -47,9 +47,11 @@ export class WacelinkPlayerManager extends WacelinkDatabase<WacelinkPlayer> {
       player.sendServerUpdate();
     };
     await player.sendServerUpdate();
+    // @ts-ignore
     player.on("connectionUpdate", onUpdate);
     player.state = WacelinkPlayerState.CONNECTED;
     this.debug("Player created at " + options.guildId);
+    // @ts-ignore
     this.manager.emit(WacelinkEvents.PlayerCreate, player);
     const voiceReceiver = this.manager.plugins.get("wacelink-voiceReceiver") as WacelinkPlugin;
     if (voiceReceiver && node.driver.id.includes("nodelink")) voiceReceiver.open(node, options);
@@ -67,6 +69,7 @@ export class WacelinkPlayerManager extends WacelinkDatabase<WacelinkPlayer> {
   }
 
   protected debug(logs: string) {
+    // @ts-ignore
     this.manager.emit(WacelinkEvents.Debug, `[Wacelink] / [PlayerManager] | ${logs}`);
   }
 }

@@ -202,6 +202,7 @@ export class Lavalink3 extends AbstractDriver {
 
     // Seek player
     if (data.playerOptions.position)
+      // @ts-ignore
       this.wsSendData({
         op: "seek",
         guildId: data.guildId,

@@ -65,6 +65,7 @@ export class WacelinkQueue extends Array<WacelinkTrack> {
 
     if (Array.isArray(track)) for (const t of track) this.push(t);
     else this.push(track);
+    // @ts-ignore
     this.manager.emit(WacelinkEvents.QueueAdd, this.player, this, track);
     return this;
   }
@@ -79,6 +80,7 @@ export class WacelinkQueue extends Array<WacelinkTrack> {
       throw new Error("Position must be between 0 and " + (this.length - 1));
     const track = this[position];
     this.splice(position, 1);
+    // @ts-ignore
     this.manager.emit(WacelinkEvents.QueueRemove, this.player, this, track);
     return this;
   }
@@ -89,6 +91,7 @@ export class WacelinkQueue extends Array<WacelinkTrack> {
       const j = Math.floor(Math.random() * (i + 1));
       [this[i], this[j]] = [this[j], this[i]];
     }
+    // @ts-ignore
     this.manager.emit(WacelinkEvents.QueueShuffle, this.player, this);
     return this;
   }
@@ -96,6 +99,7 @@ export class WacelinkQueue extends Array<WacelinkTrack> {
   /** Clear the queue */
   public clear(): WacelinkQueue {
     this.splice(0, this.length);
+    // @ts-ignore
     this.manager.emit(WacelinkEvents.QueueClear, this.player, this);
     return this;
   }

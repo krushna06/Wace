@@ -238,7 +238,8 @@ export class WacelinkPlugin extends SourceWacelinkPlugin {
 
   private debug(logs: string) {
     this.manager
-      ? this.manager.emit(WacelinkEvents.Debug, `[Wacelink Deezer Plugin]: ${logs}`)
+      ? // @ts-ignore
+        this.manager.emit(WacelinkEvents.Debug, `[Wacelink Deezer Plugin]: ${logs}`)
       : true;
   }
 }

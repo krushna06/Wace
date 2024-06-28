@@ -16,6 +16,7 @@ export abstract class AbstractLibrary {
     this.manager!.emit(
       "debug",
       `[Wacelink] | Finished the initialization process | Registered ${this.manager!.plugins.size} plugins | Now connect all current nodes`
+      // @ts-ignore
     );
     for (const node of nodes) this.manager?.nodes.add(node);
   }

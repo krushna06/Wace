@@ -87,6 +87,7 @@ export class WacelinkNode {
     this.clean(true);
     this.state = WacelinkConnectState.Connected;
     this.debug(`Node connected! URL: ${this.driver.wsUrl}`);
+    // @ts-ignore
     this.manager.emit(WacelinkEvents.NodeConnect, this);
   }
 
@@ -126,6 +127,7 @@ export class WacelinkNode {
   /** @ignore */
   public wsErrorEvent(logs: Error) {
     this.debug(`Node errored! URL: ${this.driver.wsUrl}`);
+    // @ts-ignore
     this.manager.emit(WacelinkEvents.NodeError, this, logs);
   }
 
@@ -134,6 +136,7 @@ export class WacelinkNode {
     this.online = false;
     this.state = WacelinkConnectState.Disconnected;
     this.debug(`Node disconnected! URL: ${this.driver.wsUrl}`);
+    // @ts-ignore
     this.manager.emit(WacelinkEvents.NodeDisconnect, this, code, reason);
     if (
       !this.sudoDisconnect &&
@@ -149,6 +152,7 @@ export class WacelinkNode {
   }
 
   protected nodeClosed() {
+    // @ts-ignore
     this.manager.emit(WacelinkEvents.NodeClosed, this);
     this.debug(`Node closed! URL: ${this.driver.wsUrl}`);
     this.clean();
@@ -186,6 +190,7 @@ export class WacelinkNode {
   }
 
   protected debug(logs: string) {
+    // @ts-ignore
     this.manager.emit(WacelinkEvents.Debug, `[Wacelink] / [Node @ ${this.options.name}] | ${logs}`);
   }
 }

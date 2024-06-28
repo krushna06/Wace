@@ -658,6 +658,7 @@ export class Wacelink extends EventEmitter {
       }
     }
 
+    // @ts-ignore
     this.emit(
       WacelinkEvents.Debug,
       `[Wacelink] / [Search] | Searched ${query}; Track results: ${normalizedData.tracks.length}`

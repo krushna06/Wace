@@ -62,7 +62,7 @@ export class WacelinkPlugin extends Plugin {
     else if (oldChannelId && newChannelId && oldChannelId !== newChannelId) state = "MOVED";
 
     if (state === "UNKNOWN") return;
-
+    // @ts-ignore
     this.wacelink.emit(WacelinkEvents.PlayerMoved, player, state, {
       oldChannelId,
       newChannelId,

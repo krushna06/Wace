@@ -217,7 +217,8 @@ export class WacelinkPlugin extends SourceWacelinkPlugin {
 
   private debug(logs: string) {
     this.wacelink
-      ? this.wacelink.emit(WacelinkEvents.Debug, `[Wacelink Nico Plugin]: ${logs}`)
+      ? // @ts-ignore
+        this.wacelink.emit(WacelinkEvents.Debug, `[Wacelink Nico Plugin]: ${logs}`)
       : true;
   }
 }
