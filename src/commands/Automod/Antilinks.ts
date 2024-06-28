@@ -20,7 +20,7 @@ export default class implements Command {
   public name = ["antilink"];
   public description = "Enable or disable anti-link system";
   public category = "Automod";
-  public accessableby = [Accessableby.Member];
+  public accessableby = [Accessableby.Member, Accessableby.Manager];
   public usage = "<enable> or <disable>";
   public aliases = ["antilink"];
   public lavalink = false;

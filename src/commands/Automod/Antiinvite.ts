@@ -19,7 +19,7 @@ export default class implements Command {
   public name = ["antiinvite"];
   public description = "Enable or disable anti-invite system";
   public category = "Automod";
-  public accessableby = [Accessableby.Member];
+  public accessableby = [Accessableby.Member, Accessableby.Manager];
   public usage = "<enable> or <disable>";
   public aliases = ["antiinvite"];
   public lavalink = false;

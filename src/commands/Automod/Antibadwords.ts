@@ -20,7 +20,7 @@ export default class implements Command {
   public name = ["antibadwords"];
   public description = "Enable or disable anti-bad-words system";
   public category = "Automod";
-  public accessableby = [Accessableby.Member];
+  public accessableby = [Accessableby.Member, Accessableby.Manager];
   public usage = "<enable> or <disable>";
   public aliases = ["antibadwords"];
   public lavalink = false;
