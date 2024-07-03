@@ -75,7 +75,8 @@ export default class implements Command {
           song: query,
         })}`
       )
-      .setDescription(`${lyricsRes}`)
+      .setDescription(`${lyricsRes}\n\nNot the correct lyrics?\n Try \`/lyrics song_name author_name\``)
+
       .setTimestamp();
 
     if (lyricsRes.length > 4096) {
