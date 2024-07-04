@@ -9,7 +9,7 @@ export default class {
   async execute(client: Manager, player: WacelinkPlayer, data: Record<string, any>) {
     client.logger.error(
       "PlayerException",
-      `Player get exception ${util.inspect(data).slice(1).slice(0, -1)}`
+      `Player got an exception ${util.inspect(data).slice(1).slice(0, -1)}`
     );
     /////////// Update Music Setup //////////
     await client.UpdateMusic(player);
@@ -21,7 +21,7 @@ export default class {
         embeds: [
           new EmbedBuilder()
             .setColor(client.color)
-            .setDescription("Player get exception, please contact with owner to fix this error"),
+            .setDescription("Player got an exception, please contact <@853620650592567304>\n Such error usually occurs from the lavalink server."),
         ],
       });
     }
