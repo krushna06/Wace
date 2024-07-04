@@ -75,7 +75,9 @@ export default class implements Command {
           song: query,
         })}`
       )
-      .setDescription(`${lyricsRes}\n\nNot the correct lyrics?\n Try \`/lyrics song_name author_name\``)
+      .setDescription(
+        `${lyricsRes}\n\nNot the correct lyrics?\n Try \`/lyrics song_name author_name\``
+      )
 
       .setTimestamp();
 
