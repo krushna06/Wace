@@ -118,7 +118,7 @@ export class WacelinkTrack {
       return this;
       // @ts-ignore
     }
-
+    // @ts-ignore
     manager.emit(
       WacelinkEvents.Debug,
       `[Wacelink] / [Track] | Resolving ${this.sourceName} track ${this.title}; Source: ${this.sourceName}`

@@ -555,6 +555,7 @@ export class WacelinkPlayer extends EventEmitter {
     this.voiceId = null;
     this.deaf = false;
     this.mute = false;
+    // @ts-ignore
     this.removeAllListeners();
     this.sendVoiceUpdate();
     this.voiceState = VoiceConnectState.DISCONNECTED;
@@ -584,6 +585,7 @@ export class WacelinkPlayer extends EventEmitter {
       this.manager.wacelinkOptions.options!.voiceConnectionTimeout
     );
     try {
+      // @ts-ignore
       const [status] = await WacelinkPlayer.once(this, "connectionUpdate", {
         // @ts-ignore
         signal: controller.signal,
@@ -671,13 +673,15 @@ export class WacelinkPlayer extends EventEmitter {
     this.node.rest.updatePlayer(data);
     return this;
   }
-
+  // @ts-ignore
   protected debug(logs: string): void {
+    // @ts-ignore
     this.manager.emit(WacelinkEvents.Debug, `[Wacelink] / [Player @ ${this.guildId}] | ${logs}`);
     // @ts-ignore
   }
-
+  // @ts-ignore
   protected debugDiscord(logs: string): void {
+    // @ts-ignore
     this.manager.emit(
       // @ts-ignore
       WacelinkEvents.Debug,
@@ -715,13 +719,18 @@ export class WacelinkPlayer extends EventEmitter {
    * Sets the server update data for this connection
    * @internal
    */
+  // @ts-ignore
   public setServerUpdate(data: ServerUpdate): void {
+    // @ts-ignore
     if (!data.endpoint) {
+      // @ts-ignore
       this.emit("connectionUpdate", VoiceState.SESSION_ENDPOINT_MISSING);
       // @ts-ignore
       return;
     }
+    // @ts-ignore
     if (!this.sessionId) {
+      // @ts-ignore
       this.emit("connectionUpdate", VoiceState.SESSION_ID_MISSING);
       // @ts-ignore
       return;
@@ -735,8 +744,9 @@ export class WacelinkPlayer extends EventEmitter {
         `Voice Region Moved | Old Region: ${this.lastRegion} New Region: ${this.region} Guild: ${this.guildId}`
       );
     }
-
+    // @ts-ignore
     this.serverUpdate = data;
+    // @ts-ignore
     this.emit("connectionUpdate", VoiceState.SESSION_READY);
     // @ts-ignore
     this.debugDiscord(`Server Update Received | Server: ${this.region} Guild: ${this.guildId}`);

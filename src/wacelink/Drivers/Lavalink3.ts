@@ -283,6 +283,7 @@ export class Lavalink3 extends AbstractDriver {
 
   protected debug(logs: string) {
     if (!this.isRegistered) throw new Error(`Driver ${this.id} not registered by using initial()`);
+    // @ts-ignore
     this.manager!.emit(
       WacelinkEvents.Debug,
       `[Wacelink] / [Node @ ${this.node?.options.name}] / [Driver] / [Lavalink3] | ${logs}`

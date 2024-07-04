@@ -21,7 +21,9 @@ export default class {
         embeds: [
           new EmbedBuilder()
             .setColor(client.color)
-            .setDescription("Player got an exception, please contact <@853620650592567304>\n Such error usually occurs from the lavalink server."),
+            .setDescription(
+              "Player got an exception, please contact <@853620650592567304>\n Such error usually occurs from the lavalink server."
+            ),
         ],
       });
     }
