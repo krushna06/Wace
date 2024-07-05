@@ -113,14 +113,14 @@ export default class {
       interaction: ChatInputCommandInteraction | CommandInteraction,
       permissionResult: CheckPermissionResultInterface
     ) {
-      const selfErrorString = `${client.i18n.get(language, "error", "no_perms_you", {
+      const selfErrorString = `${client.i18n.get(language, "error", "user_no_perms", {
         perm: permissionResult.result,
       })}`;
       const embed = new EmbedBuilder()
         .setDescription(
           permissionResult.channel == "Self"
             ? selfErrorString
-            : `${client.i18n.get(language, "error", "no_perms_you_channel", {
+            : `${client.i18n.get(language, "error", "no_perms_channel", {
                 perm: permissionResult.result,
                 channel: permissionResult.channel,
               })}`
@@ -158,7 +158,7 @@ export default class {
         embeds: [
           new EmbedBuilder()
             .setDescription(
-              `${client.i18n.get(language, "error", "no_perms_you", { perm: "ManageGuild" })}`
+              `${client.i18n.get(language, "error", "user_no_perms", { perm: "ManageGuild" })}`
             )
             .setColor(client.color),
         ],
@@ -236,7 +236,7 @@ export default class {
         embeds: [
           new EmbedBuilder()
             .setDescription(
-              `${client.i18n.get(language, "error", "no_perms_you", { perm: "wace@admin" })}`
+              `${client.i18n.get(language, "error", "user_no_perms", { perm: "wace@admin" })}`
             )
             .setColor(client.color),
         ],
