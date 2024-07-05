@@ -19,10 +19,11 @@ const ignored = [
   ".prettierrc.json",
   "app.yml",
   ".git",
-  ".wace",
+  ".cylane",
   "src",
   "scripts",
   "build.mjs",
+  "byteblaze.database.json",
   "pnpm-lock.yaml",
   "tsconfig.json",
   ".github",
@@ -31,7 +32,7 @@ const ignored = [
 ];
 
 function logger(data, type) {
-  const text = String(data).replace(/(\r\n|\n|\r)/gm, " || ");
+  const text = String(data).replace(/(\r\n|\n)/gm, "");
   switch (type) {
     case "build":
       console.log(`BUILD - ${text}`);
@@ -45,7 +46,7 @@ function logger(data, type) {
   }
 }
 
-logger("Wace .zip build script", "info");
+logger("ByteBlaze .zip build script", "info");
 logger("Version: 1.0.0", "info");
 
 if (!acceptedParams.includes(args.get(0))) {
@@ -53,7 +54,7 @@ if (!acceptedParams.includes(args.get(0))) {
 }
 
 if (args.get(0) == acceptedParams[0]) {
-  const checkDir = ["./dist", "./out", "./.wace", "./logs"];
+  const checkDir = ["./dist", "./out", "./.cylane", "./logs"];
 
   checkDir.forEach(async (data) => {
     if (fse.existsSync(data)) fse.rmdirSync(data, { recursive: true, force: true });
@@ -103,9 +104,9 @@ if (args.get(0) == acceptedParams[2]) {
     logger("Edit manifest file complete!", "build");
 
     await fse.mkdir("./out");
-    await fse.mkdir("./out/Wace");
+    await fse.mkdir("./out/ByteBlaze");
 
-    copydir.sync(".", "./out/Wace", {
+    copydir.sync(".", "./out/ByteBlaze", {
       filter: function (stat, filepath, filename) {
         if (stat === "file" && ignored.includes(filename)) {
           return false;
@@ -159,7 +160,7 @@ if (args.get(0) == acceptedParams[2]) {
 
     // Archive build
     await fse.mkdir("./out");
-    const path = `./out/Wace.zip`;
+    const path = `./out/ByteBlaze.zip`;
 
     const zipper = new archiver(".", path, false, ignored);
     zipper.createZip();
