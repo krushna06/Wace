@@ -1,3 +1,5 @@
+// Preview: https://i.imgur.com/oscHdGS.png
+
 import { Manager } from "../../manager.js";
 import { EmbedBuilder, TextChannel } from "discord.js";
 import { formatDuration } from "../../utilities/FormatDuration.js";
