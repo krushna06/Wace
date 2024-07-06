@@ -632,6 +632,7 @@ export class WacelinkPlayer extends EventEmitter {
    * @param voiceId Voice channel ID
    * @returns WacelinkPlayer
    */
+  // @ts-ignore
   public setVoiceChannel(voiceId: string): WacelinkPlayer {
     this.checkDestroyed();
     this.disconnect();
