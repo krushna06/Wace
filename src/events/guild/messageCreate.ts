@@ -221,7 +221,9 @@ export default class {
     const isPremiumGuild = (premiumGuild && premiumGuild.isPremium) ?? false;
     const isOwner = message.author.id == client.owner;
     const isAdmin = client.config.bot.ADMIN.includes(message.author.id);
-    const isBothUserAndGuild = command.accessableby.includes(Accessableby.GuildPremium) && command.accessableby.includes(Accessableby.Premium)
+    const isBothUserAndGuild =
+    command.accessableby.includes(Accessableby.GuildPremium) &&
+    command.accessableby.includes(Accessableby.Premium);
     const userPerm = {
       owner: isOwner,
       admin: isOwner || isAdmin,
@@ -249,7 +251,11 @@ export default class {
         ],
       });
 
-      if (!isBothUserAndGuild && command.accessableby.includes(Accessableby.GuildPremium) && !userPerm.guildPre) {
+          if (
+      !isBothUserAndGuild &&
+      command.accessableby.includes(Accessableby.Premium) &&
+      !userPerm.premium
+    ) {
       const embed = new EmbedBuilder()
         .setAuthor({
           name: `${client.i18n.get(language, "error", "no_premium_author")}`,
@@ -278,7 +284,11 @@ export default class {
 
     const isNotPassAll = Object.values(userPerm).some((data) => data === false);
 
-    if (command.accessableby.includes(Accessableby.Voter) && client.topgg && isNotPassAll) {
+    if (
+      !isBothUserAndGuild &&
+      command.accessableby.includes(Accessableby.GuildPremium) &&
+      !userPerm.guildPre
+    ) {
       const voteChecker = await client.topgg.checkVote(message.author.id);
       if (voteChecker == TopggServiceEnum.ERROR) {
         const embed = new EmbedBuilder()
