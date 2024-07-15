@@ -583,7 +583,7 @@ export class Wacelink extends EventEmitter {
   async search(query: string, options?: WacelinkSearchOptions): Promise<WacelinkSearchResult> {
     const node =
       options && options?.nodeName
-        ? this.nodes.get(options.nodeName) ?? (await this.nodes.getLeastUsed())
+        ? (this.nodes.get(options.nodeName) ?? (await this.nodes.getLeastUsed()))
         : await this.nodes.getLeastUsed();
 
     if (!node) throw new Error("No node is available");
