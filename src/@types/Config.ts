@@ -53,6 +53,7 @@ export interface Commands {
 
 export interface WebServer {
   enable: boolean;
+  host: string,
   port: number;
   auth: string;
   whitelist: string[];

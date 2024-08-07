@@ -137,6 +137,7 @@ export class ConfigDataService {
         },
         WEB_SERVER: {
           enable: false,
+          host: "0.0.0.0",
           port: 2880,
           auth: "youshallnotpass",
           whitelist: [],
