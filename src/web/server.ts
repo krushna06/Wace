@@ -10,7 +10,7 @@ export class WebServer {
   app: Fastify.FastifyInstance;
   constructor(private client: Manager) {
     this.app = Fastify({
-      logger: false
+      logger: false,
     });
 
     this.app.register(

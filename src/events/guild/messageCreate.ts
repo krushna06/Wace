@@ -222,8 +222,8 @@ export default class {
     const isOwner = message.author.id == client.owner;
     const isAdmin = client.config.bot.ADMIN.includes(message.author.id);
     const isBothUserAndGuild =
-    command.accessableby.includes(Accessableby.GuildPremium) &&
-    command.accessableby.includes(Accessableby.Premium);
+      command.accessableby.includes(Accessableby.GuildPremium) &&
+      command.accessableby.includes(Accessableby.Premium);
     const userPerm = {
       owner: isOwner,
       admin: isOwner || isAdmin,
@@ -251,7 +251,7 @@ export default class {
         ],
       });
 
-          if (
+    if (
       !isBothUserAndGuild &&
       command.accessableby.includes(Accessableby.Premium) &&
       !userPerm.premium

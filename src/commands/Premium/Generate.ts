@@ -151,21 +151,21 @@ export default class implements Command {
         iconURL: handler.user?.displayAvatarURL(),
       });
 
-      const embedMes = (pass) =>
-        new EmbedBuilder()
-          .setDescription(
-            `${client.i18n.get(
-              handler.language,
-              "command.premium",
-              pass ? "gen_success" : "gen_failed"
-            )}`
-          )
-          .setColor(client.color);
-  
-      const getDM = await handler.user.createDM(true);
-      if (!getDM) return handler.editReply({ embeds: [embedMes(false)] });
-      if (!getDM.isDMBased()) return handler.editReply({ embeds: [embedMes(false)] });
-      await getDM.send({ embeds: [embed] });
-      await handler.editReply({ embeds: [embedMes(true)] });
+    const embedMes = (pass) =>
+      new EmbedBuilder()
+        .setDescription(
+          `${client.i18n.get(
+            handler.language,
+            "command.premium",
+            pass ? "gen_success" : "gen_failed"
+          )}`
+        )
+        .setColor(client.color);
+
+    const getDM = await handler.user.createDM(true);
+    if (!getDM) return handler.editReply({ embeds: [embedMes(false)] });
+    if (!getDM.isDMBased()) return handler.editReply({ embeds: [embedMes(false)] });
+    await getDM.send({ embeds: [embed] });
+    await handler.editReply({ embeds: [embedMes(true)] });
   }
 }
