@@ -1,5 +1,5 @@
 import { Manager } from "../../manager.js";
-import { JSONDriver } from "dreamvast.quick.db/JSONDriver";
+import { JSONDriver } from "wace.quick.db/JSONDriver";
 import { Database } from "../../@types/Config.js";
 import { TableSetup } from "../table.js";
 import { keyChecker } from "../keyChecker.js";

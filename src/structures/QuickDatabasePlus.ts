@@ -1,4 +1,4 @@
-import { IQuickDBOptions, QuickDB } from "dreamvast.quick.db";
+import { IQuickDBOptions, QuickDB } from "wace.quick.db";
 import { Collection } from "./Collection.js";
 import cron from "node-cron";
 
