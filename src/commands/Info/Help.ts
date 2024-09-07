@@ -102,6 +102,7 @@ export default class implements Command {
     });
 
     const filter = (i) => i.customId === "select-category" && i.user.id === handler.user.id;
+    // @ts-ignore
     const collector = handler.channel.createMessageComponentCollector({ filter, time: 60000 });
 
     collector.on("collect", async (i) => {

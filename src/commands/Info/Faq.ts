@@ -90,6 +90,7 @@ export default class implements Command {
         i.customId === "back-button" ||
         i.customId === "forward-button") &&
       i.user.id === handler.user.id;
+    // @ts-ignore
     const collector = handler.channel.createMessageComponentCollector({ filter, time: 60000 });
 
     collector.on("collect", async (i) => {

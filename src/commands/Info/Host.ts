@@ -93,6 +93,7 @@ export default class implements Command {
     let currentPage = "hostInfo"; // Start with hostInfo page
 
     const filter = (i) => i.user.id === handler.user.id;
+    // @ts-ignore
     const collector = handler.channel.createMessageComponentCollector({ filter, time: 60000 });
 
     collector.on("collect", async (i) => {

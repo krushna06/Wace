@@ -126,6 +126,7 @@ export class PlayerContentLoader {
 
     let voiceChannel = await message.member!.voice.channel;
     if (!voiceChannel)
+      // @ts-ignore
       return message.channel.send({
         embeds: [
           new EmbedBuilder()
