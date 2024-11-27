@@ -211,6 +211,7 @@ export class WacelinkPlugin extends SourceWacelinkPlugin {
 
       while (
         next &&
+        // @ts-ignore
         (!this.options.playlistPageLimit ? true : (page < this.options.playlistPageLimit ?? 1))
       ) {
         const nextTracks = await this.requestManager.makeRequest<PlaylistTracks>(next ?? "", true);
@@ -259,6 +260,7 @@ export class WacelinkPlugin extends SourceWacelinkPlugin {
       let page = 1;
       while (
         next &&
+        // @ts-ignore
         (!this.options.playlistPageLimit ? true : (page < this.options.playlistPageLimit ?? 1))
       ) {
         const nextTracks = await this.requestManager.makeRequest<PlaylistTracks>(next ?? "", true);
