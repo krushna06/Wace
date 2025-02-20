@@ -1,5 +1,6 @@
 import { Manager } from "../manager.js";
 import Fastify from "fastify";
+import Cors from "@fastify/cors";
 import WebsocketPlugin from "@fastify/websocket";
 import { WebsocketRoute } from "./websocket.js";
 import { PlayerRoute } from "./player.js";
@@ -8,9 +9,17 @@ import { getCommands } from "./route/getCommands.js";
 
 export class WebServer {
   app: Fastify.FastifyInstance;
+
   constructor(private client: Manager) {
     this.app = Fastify({
       logger: false,
+    });
+
+    this.app.register(Cors, {
+      origin: "*",
+      methods: ["GET", "POST", "PUT", "DELETE"],
+      allowedHeaders: ["Content-Type", "Authorization"],
+      credentials: true,
     });
 
     this.app.register(
@@ -36,11 +45,13 @@ export class WebServer {
           }
           done();
         });
+
         fastify.register(WebsocketPlugin);
         fastify.register((fastify, _, done) => {
           new WebsocketRoute(client).main(fastify);
           done();
         });
+
         fastify.register(
           (fastify, _, done) => {
             new PlayerRoute(client).main(fastify);
@@ -48,8 +59,10 @@ export class WebServer {
           },
           { prefix: "players" }
         );
+
         fastify.get("/search", (req, res) => getSearch(client, req, res));
         fastify.get("/commands", (req, res) => getCommands(client, req, res));
+
         done();
       },
       { prefix: "v1" }
