@@ -40,7 +40,8 @@ export class PatchControl {
       position: jsonBody.position,
       volume: jsonBody.volume,
       added: this.addedTrack,
-      paused: jsonBody.paused
+      paused: jsonBody.paused,
+      shuffled: jsonBody.shuffle
     });
     this.resetData();
   }
@@ -132,7 +133,7 @@ export class PatchControl {
   }
 
   async checker(req: Fastify.FastifyRequest, res: Fastify.FastifyReply): Promise<boolean> {
-    const accpetKey: string[] = ["loop", "skipMode", "position", "volume", "add", "paused"];
+    const accpetKey: string[] = ["loop", "skipMode", "position", "volume", "add", "paused", "shuffle"];
     const guildId = (req.params as Record<string, string>)["guildId"];
     const player = this.client.wacelink.players.get(guildId);
     if (!player) {
@@ -177,5 +178,17 @@ export class PatchControl {
     }
 
     return url.protocol === "http:" || url.protocol === "https:";
+  }
+
+  async shuffle(res: Fastify.FastifyReply, player: WacelinkPlayer, shuffle: boolean) {
+    if (typeof shuffle !== 'boolean') {
+      res.code(400);
+      res.send({ error: `Shuffle must be a boolean value!` });
+      return false;
+    }
+    if (shuffle) {
+      player.queue.shuffle();
+    }
+    return true;
   }
 }
