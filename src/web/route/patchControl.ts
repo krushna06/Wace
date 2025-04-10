@@ -40,6 +40,7 @@ export class PatchControl {
       position: jsonBody.position,
       volume: jsonBody.volume,
       added: this.addedTrack,
+      paused: jsonBody.paused
     });
     this.resetData();
   }
@@ -92,6 +93,16 @@ export class PatchControl {
     return true;
   }
 
+  async paused(res: Fastify.FastifyReply, player: WacelinkPlayer, paused: boolean) {
+    if (typeof paused !== 'boolean') {
+      res.code(400);
+      res.send({ error: `Paused must be a boolean value!` });
+      return false;
+    }
+    await player.setPause(paused);
+    return true;
+  }
+
   async add(res: Fastify.FastifyReply, player: WacelinkPlayer, uriArray: string) {
     if (!uriArray) return true;
     for (const uri of uriArray) {
@@ -121,7 +132,7 @@ export class PatchControl {
   }
 
   async checker(req: Fastify.FastifyRequest, res: Fastify.FastifyReply): Promise<boolean> {
-    const accpetKey: string[] = ["loop", "skipMode", "position", "volume", "add"];
+    const accpetKey: string[] = ["loop", "skipMode", "position", "volume", "add", "paused"];
     const guildId = (req.params as Record<string, string>)["guildId"];
     const player = this.client.wacelink.players.get(guildId);
     if (!player) {
