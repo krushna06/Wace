@@ -30,7 +30,15 @@ export async function getUserPlaylists(
       description: playlist.value.description,
       private: playlist.value.private,
       created: playlist.value.created,
-      trackCount: playlist.value.tracks?.length || 0
+      trackCount: playlist.value.tracks?.length || 0,
+      tracks: playlist.value.tracks?.map(track => ({
+        title: track.title,
+        uri: track.uri,
+        length: track.length,
+        thumbnail: track.thumbnail,
+        author: track.author,
+        requester: track.requester
+      })) || []
     }))
   });
 } 
