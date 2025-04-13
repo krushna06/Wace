@@ -7,6 +7,7 @@ import { PlayerRoute } from "./player.js";
 import { getSearch } from "./route/getSearch.js";
 import { getCommands } from "./route/getCommands.js";
 import { getUserPlaylists } from "./route/getUserPlaylists.js";
+import { getPlaylistDetails } from "./route/getPlaylistDetails.js";
 
 export class WebServer {
   app: Fastify.FastifyInstance;
@@ -64,6 +65,7 @@ export class WebServer {
         fastify.get("/search", (req, res) => getSearch(client, req, res));
         fastify.get("/commands", (req, res) => getCommands(client, req, res));
         fastify.get("/playlists/:userId", (req, res) => getUserPlaylists(client, req, res));
+        fastify.get("/playlist/:playlistId", (req, res) => getPlaylistDetails(client, req, res));
 
         done();
       },
