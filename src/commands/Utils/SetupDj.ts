@@ -27,9 +27,8 @@ export default class implements Command {
   public async execute(client: Manager, handler: CommandHandler) {
     await handler.deferReply();
 
-    const role = handler.interaction?.options.getRole("role");
-    
-    if (!role) {
+    const roleOption = handler.interaction?.options.get('role');
+    if (!roleOption || roleOption.role === null) {
       return handler.editReply({
         embeds: [
           new EmbedBuilder()
@@ -45,7 +44,7 @@ export default class implements Command {
 
     const setup = await client.db.setup.get(handler.guild!.id);
 
-    if (role.id === "remove") {
+    if (roleOption.value === "remove") {
       if (!setup || !setup.djRole) {
         return handler.editReply({
           embeds: [
@@ -71,6 +70,7 @@ export default class implements Command {
         ],
       });
     } else {
+      const role = roleOption.role!;
       const newSetup = setup
         ? { ...setup, djRole: role.id }
         : {
