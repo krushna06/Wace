@@ -215,11 +215,26 @@ export default class {
     const isPremiumGuild = premiumGuild && premiumGuild.isPremium;
     const isOwner = interaction.user.id == client.owner;
     const isAdmin = client.config.bot.ADMIN.includes(interaction.user.id);
+    
+    let hasDJRole = false;
+    if (command.accessableby.includes(Accessableby.DJ)) {
+      const setup = await client.db.setup.get(interaction.guild.id);
+      if (setup && setup.djRole) {
+        const member = interaction.member as GuildMember;
+        hasDJRole = member.roles.cache.has(setup.djRole);
+      } else {
+        hasDJRole = (interaction.member!.permissions as Readonly<PermissionsBitField>).has(
+          PermissionsBitField.Flags.ManageGuild
+        );
+      }
+    }
+
     const userPerm = {
       owner: isOwner,
       admin: isOwner || isAdmin,
       premium: isOwner || isAdmin || isPremium,
       guildPre: isOwner || isAdmin || isPremium || isPremiumGuild,
+      dj: isOwner || isAdmin || hasDJRole,
     };
 
     if (command.accessableby.includes(Accessableby.Owner) && !userPerm.owner)
@@ -272,7 +287,23 @@ export default class {
       });
     }
 
-    const isNotPassAll = Object.values(userPerm).some((data) => data === false);
+    const isNotPassAll = Object.entries(userPerm)
+      .filter(([key]) => key !== 'dj')
+      .some(([_, value]) => value === false);
+
+    if (command.accessableby.includes(Accessableby.DJ) && !userPerm.dj) {
+      const embed = new EmbedBuilder()
+        .setDescription(
+          hasDJRole 
+            ? `${client.i18n.get(language, "error", "dj_role_required")}`
+            : `${client.i18n.get(language, "error", "user_no_perms", { perm: "DJ Role" })}`
+        )
+        .setColor(client.color);
+      return interaction.reply({
+        embeds: [embed],
+        ephemeral: true
+      });
+    }
 
     if (command.accessableby.includes(Accessableby.Voter) && client.topgg && isNotPassAll) {
       const voteChecker = await client.topgg.checkVote(interaction.user.id);

@@ -28,3 +28,8 @@ setup_deleted: "**`⚙️` | Deleted Music System!**"
 setup_topic: "⏹ **Stop**\n⏮️ **Previous**\n⏯ **Pause/Resume**\n⏭️ **Skip**\n🔁 **Loop/Unloop**"
 setup_enable: "`⚠️` | Music System already exists!"
 setup_null: "`⚠️` | Music System not found!"
+
+### DJ Role Setup
+dj_already_empty: "`⚠️` | DJ role is already empty!"
+dj_removed: "`✅` | DJ role has been removed!"
+dj_set: "`✅` | DJ role has been set to **%{role}**!"

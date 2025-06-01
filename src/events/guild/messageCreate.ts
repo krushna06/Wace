@@ -224,11 +224,22 @@ export default class {
     const isBothUserAndGuild =
       command.accessableby.includes(Accessableby.GuildPremium) &&
       command.accessableby.includes(Accessableby.Premium);
+    let hasDJRole = false;
+    if (command.accessableby.includes(Accessableby.DJ)) {
+      const setup = await client.db.setup.get(String(message.guild?.id));
+      if (setup && setup.djRole) {
+        hasDJRole = message.member!.roles.cache.has(setup.djRole);
+      } else {
+        hasDJRole = message.member!.permissions.has(PermissionFlagsBits.ManageGuild);
+      }
+    }
+
     const userPerm = {
       owner: isOwner,
       admin: isOwner || isAdmin,
       premium: isOwner || isAdmin || isPremium,
       guildPre: isOwner || isAdmin || isPremium || isPremiumGuild,
+      dj: isOwner || isAdmin || hasDJRole,
     };
 
     if (command.accessableby.includes(Accessableby.Owner) && !userPerm.owner)
@@ -282,7 +293,22 @@ export default class {
       });
     }
 
-    const isNotPassAll = Object.values(userPerm).some((data) => data === false);
+    const isNotPassAll = Object.entries(userPerm)
+      .filter(([key]) => key !== 'dj')
+      .some(([_, value]) => value === false);
+
+    if (command.accessableby.includes(Accessableby.DJ) && !userPerm.dj) {
+      const embed = new EmbedBuilder()
+        .setDescription(
+          hasDJRole 
+            ? `${client.i18n.get(language, "error", "dj_role_required")}`
+            : `${client.i18n.get(language, "error", "user_no_perms", { perm: "DJ Role" })}`
+        )
+        .setColor(client.color);
+      return message.reply({
+        embeds: [embed],
+      });
+    }
 
     if (
       !isBothUserAndGuild &&

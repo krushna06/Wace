@@ -5,4 +5,5 @@ export interface Setup {
   playmsg: string;
   voice: string;
   category: string;
+  djRole?: string;
 }
