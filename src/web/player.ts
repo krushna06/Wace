@@ -13,6 +13,7 @@ import { deletePlayer } from "./route/deletePlayer.js";
 import { PostCreatePlayer } from "./route/postCreatePlayer.js";
 import { getCurrentShuffle } from "./route/getCurrentShuffle.js";
 import { patchShuffle } from "./route/patchShuffle.js";
+import { PostPlay } from "./route/postPlay.js";
 
 export class PlayerRoute {
   constructor(protected client: Manager) {}
@@ -31,5 +32,6 @@ export class PlayerRoute {
     fastify.get("/:guildId/member/:userId", (req, res) => getMemberStatus(this.client, req, res));
     fastify.get("/:guildId/shuffle", (req, res) => getCurrentShuffle(this.client, req, res));
     fastify.patch("/:guildId/shuffle", (req, res) => patchShuffle(this.client, req, res));
+    fastify.post("/play", (req, res) => new PostPlay(this.client).main(req, res));
   }
 }
