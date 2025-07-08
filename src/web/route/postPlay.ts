@@ -103,7 +103,7 @@ export class PostPlay {
     const Member = await Guild.members.fetch(data["userId"]).catch(() => undefined);
     if (!Member) return this.errorRes(req, res, "User not found");
     if (!Member.voice.channel || !Member.voice)
-      return this.errorRes(req, res, "User is not in voice");
+      return this.errorRes(req, res, "Please join a voice channel.");
     this.member = Member;
     return true;
   }
