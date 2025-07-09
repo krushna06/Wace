@@ -1,6 +1,7 @@
 import util from "node:util";
 import { Manager } from "../../manager.js";
 import Fastify from "fastify";
+import { PermissionFlagsBits } from "discord.js";
 
 export async function getDjStatus(
   client: Manager,
@@ -34,8 +35,8 @@ export async function getDjStatus(
   let hasDJRole = false;
   if (setup && setup.djRole) {
     hasDJRole = Member.roles.cache.has(setup.djRole);
-  } else {
-    hasDJRole = Member.permissions.has("ManageGuild");
   }
-  res.send({ data: hasDJRole ? 1 : 0 });
+  const hasManageGuild = Member.permissions.has(PermissionFlagsBits.ManageGuild);
+  const isAdmin = Member.permissions.has(PermissionFlagsBits.Administrator);
+  res.send({ data: (hasDJRole || hasManageGuild || isAdmin) ? 1 : 0 });
 } 
