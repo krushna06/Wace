@@ -8,6 +8,7 @@ import { getSearch } from "./route/getSearch.js";
 import { getCommands } from "./route/getCommands.js";
 import { getUserPlaylists } from "./route/getUserPlaylists.js";
 import { getPlaylistDetails } from "./route/getPlaylistDetails.js";
+import { getLastfmCallbackRoute } from "./route/lastfmCallback.js";
 
 export class WebServer {
   app: Fastify.FastifyInstance;
@@ -23,6 +24,8 @@ export class WebServer {
       allowedHeaders: ["Content-Type", "Authorization"],
       credentials: true,
     });
+
+    this.app.get("/api/lastfm/callback", getLastfmCallbackRoute(this.client));
 
     this.app.register(
       (fastify, _, done) => {
@@ -79,7 +82,7 @@ export class WebServer {
         "This ain't rule 34...",
         "💀",
         "Can you do something better please -_-",
-        "Don't be like yandev ._.",
+        "Don't be like nostep ._.",
         "Why you still here >:v",
         "I know catgirls do nothing wrong but why you still here...",
         "Bro, I don't have any catgirls collection (or cosplay collection) so please leave...",

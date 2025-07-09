@@ -1,0 +1,39 @@
+import { EmbedBuilder } from "discord.js";
+import { Manager } from "../../manager.js";
+import { Accessableby, Command } from "../../structures/Command.js";
+import { CommandHandler } from "../../structures/CommandHandler.js";
+
+const LASTFM_API_KEY = "1454b30ef822141a82768f46b225a4c3";
+const CALLBACK_BASE_URL = "http://localhost:3001/api/lastfm/callback";
+
+export default class implements Command {
+  public name = ["lastfm-connect"];
+  public description = "Connect your Last.fm account to the bot";
+  public category = "Utils";
+  public accessableby = [Accessableby.Member];
+  public usage = "";
+  public aliases = ["lastfm", "lfm-connect"];
+  public lavalink = false;
+  public playerCheck = false;
+  public usingInteraction = true;
+  public sameVoiceCheck = false;
+  public permissions = [];
+  public options = [];
+
+  public async execute(client: Manager, handler: CommandHandler) {
+    await handler.deferReply();
+    const discordId = handler.user?.id;
+    if (!discordId) {
+      return handler.editReply({ content: "Could not determine your Discord user ID." });
+    }
+    const callbackUrl = `${CALLBACK_BASE_URL}?discord_id=${discordId}`;
+    const authUrl = `https://www.last.fm/api/auth/?api_key=${LASTFM_API_KEY}&cb=${encodeURIComponent(callbackUrl)}`;
+
+    const embed = new EmbedBuilder()
+      .setTitle("Connect your Last.fm account")
+      .setDescription(`To connect your Last.fm account, [click here to authorize](${authUrl}).\n\nAfter authorizing, you can use /track to see your current track!`)
+      .setColor(client.color);
+
+    return handler.editReply({ content: " ", embeds: [embed] });
+  }
+} 

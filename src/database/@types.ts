@@ -9,6 +9,13 @@ import { SongNoti } from "./schema/SongNoti.js";
 import { QuickDatabasePlus } from "../structures/QuickDatabasePlus.js";
 import { GuildPremium } from "./schema/GuildPremium.js";
 
+export interface LastfmSession {
+  discord_id: string;
+  session_key: string;
+  username: string;
+  expires?: number;
+}
+
 export interface DatabaseTable {
   autoreconnect: QuickDatabasePlus<AutoReconnect>;
   playlist: QuickDatabasePlus<Playlist>;
@@ -19,4 +26,5 @@ export interface DatabaseTable {
   language: QuickDatabasePlus<Language>;
   prefix: QuickDatabasePlus<Prefix>;
   songNoti: QuickDatabasePlus<SongNoti>;
+  lastfmSession: QuickDatabasePlus<LastfmSession>;
 }
