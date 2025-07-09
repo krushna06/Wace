@@ -9,6 +9,7 @@ import { getCommands } from "./route/getCommands.js";
 import { getUserPlaylists } from "./route/getUserPlaylists.js";
 import { getPlaylistDetails } from "./route/getPlaylistDetails.js";
 import { getLastfmCallbackRoute } from "./route/lastfmCallback.js";
+import { getDjStatus } from "./route/getDjStatus.js";
 
 export class WebServer {
   app: Fastify.FastifyInstance;
@@ -69,6 +70,7 @@ export class WebServer {
         fastify.get("/commands", (req, res) => getCommands(client, req, res));
         fastify.get("/playlists/:userId", (req, res) => getUserPlaylists(client, req, res));
         fastify.get("/playlist/:playlistId", (req, res) => getPlaylistDetails(client, req, res));
+        fastify.get("/dj/:guildId/userid", (req, res) => getDjStatus(client, req, res));
 
         done();
       },
