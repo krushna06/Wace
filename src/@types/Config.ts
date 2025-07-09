@@ -61,6 +61,7 @@ export interface WebServer {
 
 export interface Player {
   SPOTIFY: Spotify;
+  LASTFM: Lastfm;
   AUTOCOMPLETE_SEARCH: string[];
   NP_REALTIME: boolean;
   LEAVE_TIMEOUT: number;
@@ -69,6 +70,13 @@ export interface Player {
   AVOID_SUSPEND: boolean;
   LIMIT_TRACK: number;
   LIMIT_PLAYLIST: number;
+}
+
+export interface Lastfm {
+  enable: boolean;
+  api_key: string;
+  shared_secret: string;
+  callback_url?: string;
 }
 
 export interface Spotify {

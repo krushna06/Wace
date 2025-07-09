@@ -4,8 +4,6 @@ import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
 import fetch from "node-fetch";
 
-const LASTFM_API_KEY = "1454b30ef822141a82768f46b225a4c3";
-
 export default class implements Command {
   public name = ["track"];
   public description = "Show the track you're currently listening to (via Last.fm)";
@@ -34,7 +32,8 @@ export default class implements Command {
         .setColor(client.color);
       return handler.editReply({ content: " ", embeds: [embed] });
     }
-    const url = `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${encodeURIComponent(session.username)}&api_key=${LASTFM_API_KEY}&sk=${session.session_key}&format=json&limit=1`;
+    const apiKey = client.config.player.LASTFM.api_key;
+    const url = `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${encodeURIComponent(session.username)}&api_key=${apiKey}&sk=${session.session_key}&format=json&limit=1`;
     try {
       const response = await fetch(url);
       const data: any = await response.json();

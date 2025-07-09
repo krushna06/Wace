@@ -3,9 +3,6 @@ import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
 
-const LASTFM_API_KEY = "1454b30ef822141a82768f46b225a4c3";
-const CALLBACK_BASE_URL = "http://localhost:3001/api/lastfm/callback";
-
 export default class implements Command {
   public name = ["lastfm-connect"];
   public description = "Connect your Last.fm account to the bot";
@@ -26,8 +23,10 @@ export default class implements Command {
     if (!discordId) {
       return handler.editReply({ content: "Could not determine your Discord user ID." });
     }
-    const callbackUrl = `${CALLBACK_BASE_URL}?discord_id=${discordId}`;
-    const authUrl = `https://www.last.fm/api/auth/?api_key=${LASTFM_API_KEY}&cb=${encodeURIComponent(callbackUrl)}`;
+    const apiKey = client.config.player.LASTFM.api_key;
+    const callbackBaseUrl = client.config.player.LASTFM.callback_url || "http://localhost:3001/api/lastfm/callback";
+    const callbackUrl = `${callbackBaseUrl}?discord_id=${discordId}`;
+    const authUrl = `https://www.last.fm/api/auth/?api_key=${apiKey}&cb=${encodeURIComponent(callbackUrl)}`;
 
     const embed = new EmbedBuilder()
       .setTitle("Connect your Last.fm account")

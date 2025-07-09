@@ -17,6 +17,17 @@ bot:
   DEBUG_MODE: false
 
 player:
+  # Your Last.fm API key and Shared Secret, get them from https://www.last.fm/api/account/create
+  # If you don't have or don't want, you can disable it
+  LASTFM:
+    # Your Last.fm API key and Shared Secret, get them from https://www.last.fm/api/account/create
+    # If you don't have or don't want, you can disable it
+    enable: false
+    api_key: ""
+    shared_secret: ""
+    callback_url: "http://localhost:3001/api/lastfm/callback"
+
+
   SPOTIFY:
     # Your Spotify ID and Secret, you can get it from here: https://developer.spotify.com
     # If you don't have or don't want, you can disable it

@@ -105,6 +105,12 @@ export class ConfigDataService {
           id: "",
           secret: "",
         },
+        LASTFM: {
+          enable: false,
+          api_key: "",
+          shared_secret: "",
+          callback_url: "http://localhost:3001/api/lastfm/callback",
+        },
         AUTOCOMPLETE_SEARCH: ["yorushika", "yoasobi", "tuyu", "hinkik"],
         NP_REALTIME: false,
         LEAVE_TIMEOUT: 30000,

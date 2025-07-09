@@ -3,9 +3,6 @@ import { Manager } from "../../manager.js";
 import { FastifyRequest, FastifyReply } from "fastify";
 import crypto from "crypto";
 
-const LASTFM_API_KEY = "1454b30ef822141a82768f46b225a4c3";
-const LASTFM_SHARED_SECRET = "a05e15c77f07dadc585e8cae48ea3df2";
-
 function generateApiSig(params: Record<string, string>, sharedSecret: string): string {
   const keys = Object.keys(params).sort();
   let sig = "";
@@ -24,13 +21,15 @@ export function getLastfmCallbackRoute(client: Manager) {
       return;
     }
 
+    const apiKey = client.config.player.LASTFM.api_key;
+    const sharedSecret = client.config.player.LASTFM.shared_secret;
     const params = {
-      api_key: LASTFM_API_KEY,
+      api_key: apiKey,
       method: "auth.getSession",
       token: String(token),
     };
-    const api_sig = generateApiSig(params, LASTFM_SHARED_SECRET);
-    const url = `https://ws.audioscrobbler.com/2.0/?method=auth.getSession&api_key=${LASTFM_API_KEY}&token=${token}&api_sig=${api_sig}&format=json`;
+    const api_sig = generateApiSig(params, sharedSecret);
+    const url = `https://ws.audioscrobbler.com/2.0/?method=auth.getSession&api_key=${apiKey}&token=${token}&api_sig=${api_sig}&format=json`;
 
     try {
       const response = await fetch(url);
