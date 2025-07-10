@@ -1,5 +1,5 @@
 # Wace config file via .yml
-# Version 1.0.7
+# Version 1.1.1
 # You can use ${} to pass an enviroment varible from .env file
 # Eg:
 # something: ${DATA}
