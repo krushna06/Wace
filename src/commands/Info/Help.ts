@@ -128,31 +128,25 @@ export default class implements Command {
       }
     });
 
-    // Event listener for button clicks
     handler.client.on("interactionCreate", async (interaction) => {
       if (!interaction.isButton()) return;
 
       if (interaction.customId === "donate") {
-        // Create a modal
         const modal = new ModalBuilder()
           .setCustomId("donateModal")
           .setTitle(client.i18n.get(handler.language, "help", "donate_amount_title"));
 
-        // Create a text input for the donation amount
         const donationInput = new TextInputBuilder()
           .setCustomId("donationAmount")
           .setLabel(client.i18n.get(handler.language, "help", "donate_amount_description"))
           .setStyle(TextInputStyle.Short);
 
-        // Add the text input to the modal
         modal.addComponents(new ActionRowBuilder<TextInputBuilder>().addComponents(donationInput));
 
-        // Show the modal to the user
         await interaction.showModal(modal);
       }
     });
 
-    // Handle modal submission
     handler.client.on("interactionCreate", async (interaction) => {
       if (!interaction.isModalSubmit()) return;
 
@@ -168,10 +162,8 @@ export default class implements Command {
           return;
         }
 
-        // Generate PayPal donation link based on the entered amount
         const paypalLink = `https://www.paypal.com/paypalme/krushna06/${amount}`;
 
-        // Send the PayPal link to the user
         await interaction.reply({
           content: `[Click here to donate $${amount}](${paypalLink})`,
           ephemeral: true,

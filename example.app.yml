@@ -9,7 +9,7 @@ bot:
   # Note that performance will be dreaded and you can't set each config for each cloned bot
   # Config data of each bot will be the same
   TOKEN: ["BOT_TOKEN"]
-  EMBED_COLOR: "#2F3136"
+  EMBED_COLOR: "#393a41"
   OWNER_ID: "YOUR_USER_ID"
   ADMIN: ["YOUR_TRUSTED_ADMIN"]
   # You can set it to en, fr, de, hi, ko, ru, es and tu. More will come soon.
