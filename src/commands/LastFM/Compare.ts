@@ -2,7 +2,7 @@ import { EmbedBuilder, User as DiscordUser } from "discord.js";
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
-import { getUserTopArtists } from "../../services/LastfmService.js";
+import { getUserTopArtists, getUserAllArtists } from "../../services/LastfmService.js";
 
 export default class implements Command {
   public name = ["compare"];
@@ -65,28 +65,50 @@ export default class implements Command {
     }
 
     const apiKey = client.config.player.LASTFM.api_key;
-    const [topA, topB] = await Promise.all([
-      getUserTopArtists(sessionA.username, apiKey, "overall", 20, sessionA.session_key),
-      getUserTopArtists(sessionB.username, apiKey, "overall", 20, sessionB.session_key),
+    const [allA, allB] = await Promise.all([
+      getUserAllArtists(sessionA.username, apiKey),
+      getUserAllArtists(sessionB.username, apiKey),
     ]);
-    const artistsA = Array.isArray((topA as any)?.topartists?.artist) ? (topA as any).topartists.artist : [(topA as any)?.topartists?.artist].filter(Boolean);
-    const artistsB = Array.isArray((topB as any)?.topartists?.artist) ? (topB as any).topartists.artist : [(topB as any)?.topartists?.artist].filter(Boolean);
-    if (!artistsA.length || !artistsB.length) {
-      return handler.editReply({ content: "Could not fetch top artists for one or both users." });
+    if (!allA.length || !allB.length) {
+      return handler.editReply({ content: "Could not fetch artists for one or both users." });
     }
-    const mapA = new Map(artistsA.map((a: any) => [a.name.toLowerCase(), a]));
-    const mapB = new Map(artistsB.map((a: any) => [a.name.toLowerCase(), a]));
+    const topA = allA
+      .slice()
+      .sort((a: any, b: any) => parseInt(b.playcount || '0', 10) - parseInt(a.playcount || '0', 10))
+      .slice(0, 1000);
+    const topB = allB
+      .slice()
+      .sort((a: any, b: any) => parseInt(b.playcount || '0', 10) - parseInt(a.playcount || '0', 10))
+      .slice(0, 1000);
+    const mapA = new Map(topA.map((a: any) => [a.name.toLowerCase(), a]));
+    const mapB = new Map(topB.map((a: any) => [a.name.toLowerCase(), a]));
     const intersectionKeys = [...mapA.keys()].filter(x => mapB.has(x));
+    const sortedCommon = intersectionKeys
+      .map(key => {
+        const artistA = mapA.get(key);
+        const artistB = mapB.get(key);
+        const playcountA = parseInt(artistA?.playcount || '0', 10);
+        const playcountB = parseInt(artistB?.playcount || '0', 10);
+        return {
+          name: artistA?.name || key,
+          playcountA,
+          playcountB,
+        };
+      })
+      .sort((a, b) => (b.playcountA + b.playcountB) - (a.playcountA + a.playcountB))
+      .slice(0, 15);
+    let table = 'Artist'.padEnd(16) + handler.user?.username.padStart(8) + '   ' + targetUser.username.padStart(8) + '\n';
+    table += '-'.repeat(16) + ' ' + '-'.repeat(8) + '   ' + '-'.repeat(8) + '\n';
+    for (const row of sortedCommon) {
+      table += row.name.padEnd(16).slice(0, 16) + String(row.playcountA).padStart(8) + '   ' + String(row.playcountB).padEnd(8) + '\n';
+    }
     const percent = ((intersectionKeys.length / Math.min(mapA.size, mapB.size)) * 100).toFixed(1);
     const embed = new EmbedBuilder()
-      .setTitle(`Music Taste Comparison: ${handler.user?.username} vs ${targetUser.username}`)
+      .setTitle(`Top artist comparison - ${handler.user?.username} vs ${targetUser.username}`)
       .setDescription(
         intersectionKeys.length > 0
-          ? `You have **${intersectionKeys.length}** artists in common out of 20.\n**${percent}%** similarity!\n\n**Common Artists:**\n${intersectionKeys.map((key, i) => {
-              const artist = (mapA.get(key) || mapB.get(key)) as any;
-              return `**${i + 1}.** [${artist.name}](${artist.url})`;
-            }).join("\n")}`
-          : `No common top artists found in your top 20.\nSimilarity: **0%**`
+          ? `${intersectionKeys.length} (${percent}%) out of top ${Math.min(mapA.size, mapB.size)} alltime match\n\n\`\`\`\n${table}\`\`\``
+          : `No common artists found in your top ${Math.min(mapA.size, mapB.size)}.`
       )
       .setColor(client.color);
     return handler.editReply({ content: " ", embeds: [embed] });

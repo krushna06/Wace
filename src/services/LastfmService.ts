@@ -77,3 +77,21 @@ export async function getTrackInfo(artist: string, track: string, apiKey: string
   const res = await fetch(url);
   return res.json();
 }
+
+// Get all artists in a user's library
+export async function getUserAllArtists(username: string, apiKey: string) {
+  let page = 1;
+  let totalPages = 1;
+  const allArtists: any[] = [];
+  do {
+    const url = `https://ws.audioscrobbler.com/2.0/?method=library.getartists&user=${encodeURIComponent(username)}&api_key=${apiKey}&format=json&limit=2000&page=${page}`;
+    const res = await fetch(url);
+    const data: any = await res.json();
+    if (Array.isArray(data?.artists?.artist)) {
+      allArtists.push(...data.artists.artist);
+    }
+    totalPages = parseInt(data?.artists?.['@attr']?.totalPages || '1', 10);
+    page++;
+  } while (page <= totalPages);
+  return allArtists;
+}
