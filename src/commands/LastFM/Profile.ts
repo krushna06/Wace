@@ -7,7 +7,7 @@ import { getUserInfo, getUserTopArtists, getUserTopAlbums, getUserTopTracks } fr
 export default class implements Command {
   public name = ["fmprofile"];
   public description = "Shows your Last.fm profile summary (scrobbles, top artist, top album, top track, etc.)";
-  public category = "Utils";
+  public category = "LastFM";
   public accessableby = [Accessableby.Member];
   public usage = "";
   public aliases = ["lastfm-profile", "lfm-profile", "profile"];

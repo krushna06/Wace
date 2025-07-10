@@ -6,7 +6,7 @@ import { CommandHandler } from "../../structures/CommandHandler.js";
 export default class implements Command {
   public name = ["lastfm-connect"];
   public description = "Connect your Last.fm account to the bot";
-  public category = "Utils";
+  public category = "LastFM";
   public accessableby = [Accessableby.Member];
   public usage = "";
   public aliases = ["lastfm", "lfm-connect"];

@@ -7,7 +7,7 @@ import { getUserTopArtists, getUserAllArtists } from "../../services/LastfmServi
 export default class implements Command {
   public name = ["compare"];
   public description = "Compare your music taste with another user (Last.fm)";
-  public category = "Utils";
+  public category = "LastFM";
   public accessableby = [Accessableby.Member];
   public usage = "@user";
   public aliases = ["lastfm-compare", "lfm-compare"];

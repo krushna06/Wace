@@ -7,7 +7,7 @@ import { getGlobalTopArtists, getGlobalTopTracks } from "../../services/LastfmSe
 export default class implements Command {
   public name = ["globaltop"];
   public description = "Shows global top tracks or artists from Last.fm";
-  public category = "Utils";
+  public category = "LastFM";
   public accessableby = [Accessableby.Member];
   public usage = "[tracks|artists]";
   public aliases = ["lastfm-globaltop", "lfm-globaltop", "global-top"];

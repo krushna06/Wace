@@ -7,7 +7,7 @@ import { getArtistInfo, getUserRecentTracks } from "../../services/LastfmService
 export default class implements Command {
   public name = ["artistinfo"];
   public description = "Shows info about an artist (bio, tags, playcount)";
-  public category = "Utils";
+  public category = "LastFM";
   public accessableby = [Accessableby.Member];
   public usage = "";
   public aliases = ["artist-info", "lastfm-artist"];

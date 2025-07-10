@@ -7,7 +7,7 @@ import { getUserRecentTracks } from "../../services/LastfmService.js";
 export default class implements Command {
   public name = ["track"];
   public description = "Show the track you're currently listening to (via Last.fm)";
-  public category = "Utils";
+  public category = "LastFM";
   public accessableby = [Accessableby.Member];
   public usage = "";
   public aliases = ["nowplaying", "np", "lastfm-track"];

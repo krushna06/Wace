@@ -13,7 +13,7 @@ const PERIODS = {
 export default class implements Command {
   public name = ["topalbums"];
   public description = "Shows your top albums (week/month/all-time) via Last.fm";
-  public category = "Utils";
+  public category = "LastFM";
   public accessableby = [Accessableby.Member];
   public usage = "[period]";
   public aliases = ["lastfm-topalbums", "lfm-topalbums", "top-album"];

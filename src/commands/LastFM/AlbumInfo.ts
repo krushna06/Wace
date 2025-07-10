@@ -7,7 +7,7 @@ import { getAlbumInfo, getUserRecentTracks } from "../../services/LastfmService.
 export default class implements Command {
   public name = ["albuminfo"];
   public description = "Shows info about the current album (tags, listeners, plays)";
-  public category = "Utils";
+  public category = "LastFM";
   public accessableby = [Accessableby.Member];
   public usage = "";
   public aliases = ["album-info", "lastfm-album"];

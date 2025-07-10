@@ -7,7 +7,7 @@ import { getTrackInfo, getUserRecentTracks } from "../../services/LastfmService.
 export default class implements Command {
   public name = ["trackinfo"];
   public description = "Shows info about the currently playing track";
-  public category = "Utils";
+  public category = "LastFM";
   public accessableby = [Accessableby.Member];
   public usage = "";
   public aliases = ["track-info", "lastfm-track-info"];

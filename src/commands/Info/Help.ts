@@ -42,6 +42,9 @@ export default class implements Command {
       value: category,
     }));
 
+    // Dynamically generate the categories list for the embed
+    const categoriesList = '```\n' + categories.join('\n') + '\n```';
+
     const selectMenu = new StringSelectMenuBuilder()
       .setCustomId("select-category")
       .setPlaceholder(client.i18n.get(handler.language, "help", "choose_category"))
@@ -73,7 +76,7 @@ export default class implements Command {
       .addFields(
         {
           name: client.i18n.get(handler.language, "help", "categories"),
-          value: client.i18n.get(handler.language, "help", "categories_list"),
+          value: categoriesList,
           inline: true,
         },
         {
@@ -184,7 +187,7 @@ export default class implements Command {
 
     const embed = new EmbedBuilder()
       .setTitle(`Commands in ${category.toUpperCase()}`)
-      .setDescription(description)
+      .setDescription(description && description.length > 0 ? description : null)
       .setColor(client.color);
 
     return embed;

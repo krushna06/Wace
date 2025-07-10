@@ -7,7 +7,7 @@ import { getUserRecentTracks } from "../../services/LastfmService.js";
 export default class implements Command {
   public name = ["cover"];
   public description = "Displays the album cover of the currently playing or most recent track (via Last.fm)";
-  public category = "Utils";
+  public category = "LastFM";
   public accessableby = [Accessableby.Member];
   public usage = "";
   public aliases = ["albumcover", "lastfm-cover", "lfm-cover"];
