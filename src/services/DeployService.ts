@@ -31,6 +31,7 @@ export class DeployService {
     });
 
     await chillout.forEach(interactionFilePaths, async (interactionFilePath: string) => {
+      if (/Manager|Handler|Service/.test(interactionFilePath) || /LastfmManager\.ts$/.test(interactionFilePath)) return;
       const cmd = new (await import(pathToFileURL(interactionFilePath).toString())).default();
       cmd.usingInteraction ? store.push(cmd) : true;
       return;

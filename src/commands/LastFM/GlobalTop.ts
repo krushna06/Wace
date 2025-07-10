@@ -2,7 +2,7 @@ import { EmbedBuilder } from "discord.js";
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
-import fetch from "node-fetch";
+import { getGlobalTopArtists, getGlobalTopTracks } from "../../services/LastfmService.js";
 
 export default class implements Command {
   public name = ["globaltop"];
@@ -33,15 +33,13 @@ export default class implements Command {
     await handler.deferReply();
     const typeRaw = handler.args[0]?.toLowerCase?.() || "tracks";
     const type = typeRaw === "artists" ? "artists" : "tracks";
-    let url = "";
+    let data;
     if (type === "artists") {
-      url = `https://ws.audioscrobbler.com/2.0/?method=chart.gettopartists&api_key=${client.config.player.LASTFM.api_key}&format=json&limit=10`;
+      data = await getGlobalTopArtists(client.config.player.LASTFM.api_key, 10);
     } else {
-      url = `https://ws.audioscrobbler.com/2.0/?method=chart.gettoptracks&api_key=${client.config.player.LASTFM.api_key}&format=json&limit=10`;
+      data = await getGlobalTopTracks(client.config.player.LASTFM.api_key, 10);
     }
     try {
-      const response = await fetch(url);
-      const data: any = await response.json();
       if (type === "artists") {
         if (!data || !data.artists || !data.artists.artist || data.artists.artist.length === 0) {
           const embed = new EmbedBuilder()

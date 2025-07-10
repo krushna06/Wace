@@ -2,7 +2,7 @@ import { EmbedBuilder } from "discord.js";
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
-import fetch from "node-fetch";
+import { getUserTopAlbums } from "../../services/LastfmService.js";
 
 const PERIODS = {
   week: "7day",
@@ -53,36 +53,26 @@ export default class implements Command {
     const periodInputRaw = handler.args[0]?.toLowerCase?.() || "week";
     const period = PERIODS[periodInputRaw] || PERIODS.week;
     const apiKey = client.config.player.LASTFM.api_key;
-    const url = `https://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=${encodeURIComponent(session.username)}&api_key=${apiKey}&sk=${session.session_key}&format=json&period=${period}&limit=10`;
-    try {
-      const response = await fetch(url);
-      const data: any = await response.json();
-      if (!data || !data.topalbums || !data.topalbums.album || data.topalbums.album.length === 0) {
-        const embed = new EmbedBuilder()
-          .setTitle("No Top Albums Found")
-          .setDescription("Could not find any top albums for the selected period.")
-          .setColor(client.color);
-        return handler.editReply({ content: " ", embeds: [embed] });
-      }
-      const albums = Array.isArray(data.topalbums.album) ? data.topalbums.album : [data.topalbums.album];
+    const albumsData: any = await getUserTopAlbums(session.username, apiKey, period, 10, session.session_key);
+    const albums = Array.isArray(albumsData.topalbums.album) ? albumsData.topalbums.album : [albumsData.topalbums.album];
+    if (!albumsData || !albumsData.topalbums || !albumsData.topalbums.album || albumsData.topalbums.album.length === 0) {
       const embed = new EmbedBuilder()
-        .setTitle(`Your Top Albums (${periodInputRaw}) (via Last.fm)`)
-        .setColor(client.color)
-        .setDescription(
-          albums
-            .map((album: any, i: number) => `**${i + 1}.** [${album.name}](${album.url}) by **${album.artist?.name || 'Unknown'}** — ${album.playcount} plays`)
-            .join("\n")
-        );
-      if (albums[0]?.image?.length) {
-        embed.setThumbnail(albums[0].image[albums[0].image.length - 1]['#text'] || null);
-      }
-      return handler.editReply({ content: " ", embeds: [embed] });
-    } catch (err) {
-      const embed = new EmbedBuilder()
-        .setTitle("Error Fetching Top Albums")
-        .setDescription("There was an error fetching your top albums from Last.fm.")
+        .setTitle("No Top Albums Found")
+        .setDescription("Could not find any top albums for the selected period.")
         .setColor(client.color);
       return handler.editReply({ content: " ", embeds: [embed] });
     }
+    const embed = new EmbedBuilder()
+      .setTitle(`Your Top Albums (${periodInputRaw}) (via Last.fm)`)
+      .setColor(client.color)
+      .setDescription(
+        albums
+          .map((album: any, i: number) => `**${i + 1}.** [${album.name}](${album.url}) by **${album.artist?.name || 'Unknown'}** — ${album.playcount} plays`)
+          .join("\n")
+      );
+    if (albums[0]?.image?.length) {
+      embed.setThumbnail(albums[0].image[albums[0].image.length - 1]['#text'] || null);
+    }
+    return handler.editReply({ content: " ", embeds: [embed] });
   }
 } 

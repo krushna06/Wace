@@ -2,7 +2,7 @@ import { EmbedBuilder } from "discord.js";
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
-import fetch from "node-fetch";
+import { getUserRecentTracks } from "../../services/LastfmService.js";
 
 export default class implements Command {
   public name = ["recent"];
@@ -33,39 +33,29 @@ export default class implements Command {
       return handler.editReply({ content: " ", embeds: [embed] });
     }
     const apiKey = client.config.player.LASTFM.api_key;
-    const url = `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${encodeURIComponent(session.username)}&api_key=${apiKey}&sk=${session.session_key}&format=json&limit=5`;
-    try {
-      const response = await fetch(url);
-      const data: any = await response.json();
-      if (!data || !data.recenttracks || !data.recenttracks.track || data.recenttracks.track.length === 0) {
-        const embed = new EmbedBuilder()
-          .setTitle("No Recent Tracks")
-          .setDescription("You have not played any tracks recently on Last.fm.")
-          .setColor(client.color);
-        return handler.editReply({ content: " ", embeds: [embed] });
-      }
-      const tracks = Array.isArray(data.recenttracks.track) ? data.recenttracks.track : [data.recenttracks.track];
+    const tracksData: any = await getUserRecentTracks(session.username, apiKey, 5, session.session_key);
+    const tracks = Array.isArray(tracksData.recenttracks.track) ? tracksData.recenttracks.track : [tracksData.recenttracks.track];
+    if (!tracksData || !tracksData.recenttracks || !tracksData.recenttracks.track || tracksData.recenttracks.track.length === 0) {
       const embed = new EmbedBuilder()
-        .setTitle(`Your 5 Most Recent Tracks (via Last.fm)`)
-        .setColor(client.color)
-        .setDescription(
-          tracks
-            .map((track: any, i: number) => {
-              const nowPlaying = track["@attr"] && track["@attr"].nowplaying === "true";
-              return `**${i + 1}.** [${track.name}](${track.url}) by **${track.artist['#text']}**${nowPlaying ? " _(Now Playing)_" : ""}`;
-            })
-            .join("\n")
-        );
-      if (tracks[0]?.image?.length) {
-        embed.setThumbnail(tracks[0].image[tracks[0].image.length - 1]['#text'] || null);
-      }
-      return handler.editReply({ content: " ", embeds: [embed] });
-    } catch (err) {
-      const embed = new EmbedBuilder()
-        .setTitle("Error Fetching Recent Tracks")
-        .setDescription("There was an error fetching your recent tracks from Last.fm.")
+        .setTitle("No Recent Tracks")
+        .setDescription("You have not played any tracks recently on Last.fm.")
         .setColor(client.color);
       return handler.editReply({ content: " ", embeds: [embed] });
     }
+    const embed = new EmbedBuilder()
+      .setTitle(`Your 5 Most Recent Tracks (via Last.fm)`)
+      .setColor(client.color)
+      .setDescription(
+        tracks
+          .map((track: any, i: number) => {
+            const nowPlaying = track["@attr"] && track["@attr"].nowplaying === "true";
+            return `**${i + 1}.** [${track.name}](${track.url}) by **${track.artist['#text']}**${nowPlaying ? " _(Now Playing)_" : ""}`;
+          })
+          .join("\n")
+      );
+    if (tracks[0]?.image?.length) {
+      embed.setThumbnail(tracks[0].image[tracks[0].image.length - 1]['#text'] || null);
+    }
+    return handler.editReply({ content: " ", embeds: [embed] });
   }
 } 

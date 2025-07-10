@@ -2,7 +2,7 @@ import { EmbedBuilder } from "discord.js";
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
-import fetch from "node-fetch";
+import { getUserTopArtists } from "../../services/LastfmService.js";
 
 const PERIODS = {
   week: "7day",
@@ -53,36 +53,26 @@ export default class implements Command {
     const periodInputRaw = handler.args[0]?.toLowerCase?.() || "week";
     const period = PERIODS[periodInputRaw] || PERIODS.week;
     const apiKey = client.config.player.LASTFM.api_key;
-    const url = `https://ws.audioscrobbler.com/2.0/?method=user.gettopartists&user=${encodeURIComponent(session.username)}&api_key=${apiKey}&sk=${session.session_key}&format=json&period=${period}&limit=10`;
-    try {
-      const response = await fetch(url);
-      const data: any = await response.json();
-      if (!data || !data.topartists || !data.topartists.artist || data.topartists.artist.length === 0) {
-        const embed = new EmbedBuilder()
-          .setTitle("No Top Artists Found")
-          .setDescription("Could not find any top artists for the selected period.")
-          .setColor(client.color);
-        return handler.editReply({ content: " ", embeds: [embed] });
-      }
-      const artists = Array.isArray(data.topartists.artist) ? data.topartists.artist : [data.topartists.artist];
+    const artistsData: any = await getUserTopArtists(session.username, apiKey, period, 10, session.session_key);
+    const artists = Array.isArray(artistsData.topartists.artist) ? artistsData.topartists.artist : [artistsData.topartists.artist];
+    if (!artistsData || !artistsData.topartists || !artistsData.topartists.artist || artistsData.topartists.artist.length === 0) {
       const embed = new EmbedBuilder()
-        .setTitle(`Your Top Artists (${periodInputRaw}) (via Last.fm)`)
-        .setColor(client.color)
-        .setDescription(
-          artists
-            .map((artist: any, i: number) => `**${i + 1}.** [${artist.name}](${artist.url}) — ${artist.playcount} plays`)
-            .join("\n")
-        );
-      if (artists[0]?.image?.length) {
-        embed.setThumbnail(artists[0].image[artists[0].image.length - 1]['#text'] || null);
-      }
-      return handler.editReply({ content: " ", embeds: [embed] });
-    } catch (err) {
-      const embed = new EmbedBuilder()
-        .setTitle("Error Fetching Top Artists")
-        .setDescription("There was an error fetching your top artists from Last.fm.")
+        .setTitle("No Top Artists Found")
+        .setDescription("Could not find any top artists for the selected period.")
         .setColor(client.color);
       return handler.editReply({ content: " ", embeds: [embed] });
     }
+    const embed = new EmbedBuilder()
+      .setTitle(`Your Top Artists (${periodInputRaw}) (via Last.fm)`)
+      .setColor(client.color)
+      .setDescription(
+        artists
+          .map((artist: any, i: number) => `**${i + 1}.** [${artist.name}](${artist.url}) — ${artist.playcount} plays`)
+          .join("\n")
+      );
+    if (artists[0]?.image?.length) {
+      embed.setThumbnail(artists[0].image[artists[0].image.length - 1]['#text'] || null);
+    }
+    return handler.editReply({ content: " ", embeds: [embed] });
   }
 } 

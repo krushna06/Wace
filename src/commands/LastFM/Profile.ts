@@ -2,7 +2,7 @@ import { EmbedBuilder } from "discord.js";
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
-import fetch from "node-fetch";
+import { getUserInfo, getUserTopArtists, getUserTopAlbums, getUserTopTracks } from "../../services/LastfmService.js";
 
 export default class implements Command {
   public name = ["fmprofile"];
@@ -35,17 +35,13 @@ export default class implements Command {
     const apiKey = client.config.player.LASTFM.api_key;
     const username = session.username;
     try {
-      const userInfoRes = await fetch(`https://ws.audioscrobbler.com/2.0/?method=user.getinfo&user=${encodeURIComponent(username)}&api_key=${apiKey}&format=json`);
-      const userInfo: any = await userInfoRes.json();
+      const userInfo: any = await getUserInfo(username, apiKey);
       if (!userInfo || !userInfo.user) throw new Error("No user info");
-      const [topArtistRes, topAlbumRes, topTrackRes] = await Promise.all([
-        fetch(`https://ws.audioscrobbler.com/2.0/?method=user.gettopartists&user=${encodeURIComponent(username)}&api_key=${apiKey}&format=json&period=overall&limit=1`),
-        fetch(`https://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=${encodeURIComponent(username)}&api_key=${apiKey}&format=json&period=overall&limit=1`),
-        fetch(`https://ws.audioscrobbler.com/2.0/?method=user.gettoptracks&user=${encodeURIComponent(username)}&api_key=${apiKey}&format=json&period=overall&limit=1`),
+      const [topArtistData, topAlbumData, topTrackData]: any[] = await Promise.all([
+        getUserTopArtists(username, apiKey, "overall", 1),
+        getUserTopAlbums(username, apiKey, "overall", 1),
+        getUserTopTracks(username, apiKey, "overall", 1),
       ]);
-      const topArtistData: any = await topArtistRes.json();
-      const topAlbumData: any = await topAlbumRes.json();
-      const topTrackData: any = await topTrackRes.json();
       const topArtist = topArtistData?.topartists?.artist?.[0] || null;
       const topAlbum = topAlbumData?.topalbums?.album?.[0] || null;
       const topTrack = topTrackData?.toptracks?.track?.[0] || null;

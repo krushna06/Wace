@@ -48,6 +48,7 @@ export class CommandLoader {
   }
 
   async register(commandFile: string) {
+    if (/Manager|Handler|Service/.test(commandFile) || /LastfmManager\.ts$/.test(commandFile)) return;
     const rltPath = relative(__dirname, commandFile);
     const command = new (await import(pathToFileURL(commandFile).toString())).default();
 

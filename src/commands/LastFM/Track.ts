@@ -2,7 +2,7 @@ import { EmbedBuilder } from "discord.js";
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
-import fetch from "node-fetch";
+import { getUserRecentTracks } from "../../services/LastfmService.js";
 
 export default class implements Command {
   public name = ["track"];
@@ -33,46 +33,29 @@ export default class implements Command {
       return handler.editReply({ content: " ", embeds: [embed] });
     }
     const apiKey = client.config.player.LASTFM.api_key;
-    const url = `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${encodeURIComponent(session.username)}&api_key=${apiKey}&sk=${session.session_key}&format=json&limit=1`;
-    try {
-      const response = await fetch(url);
-      const data: any = await response.json();
-      if (!data || !data.recenttracks) {
-         const embed = new EmbedBuilder()
-           .setTitle("No Track Playing")
-           .setDescription("You are not currently playing any track on Last.fm.")
-           .setColor(client.color);
-         return handler.editReply({ content: " ", embeds: [embed] });
-      }
-      const tracks = data.recenttracks.track;
-      let nowPlaying = null;
-      if (Array.isArray(tracks)) {
-        nowPlaying = tracks.find((t) => t["@attr"] && t["@attr"].nowplaying === "true");
-      } else if (tracks && tracks["@attr"] && tracks["@attr"].nowplaying === "true") {
-        nowPlaying = tracks;
-      }
-      if (nowPlaying) {
-        const embed = new EmbedBuilder()
-          .setTitle("Now Playing on Spotify (via Last.fm)")
-          .setDescription(`**${nowPlaying.name}** by **${nowPlaying.artist['#text']}**`)
-          .setColor(client.color)
-          .addFields(
-            { name: "Album", value: nowPlaying.album['#text'] || "Unknown", inline: true },
-            { name: "Link", value: nowPlaying.url ? `[Open in Last.fm](${nowPlaying.url})` : "N/A", inline: true }
-          )
-          .setThumbnail(nowPlaying.image?.[nowPlaying.image.length - 1]?.['#text'] || null);
-        return handler.editReply({ content: " ", embeds: [embed] });
-      } else {
-        const embed = new EmbedBuilder()
-          .setTitle("No Track Playing")
-          .setDescription("You are not currently playing any track on Last.fm.")
-          .setColor(client.color);
-        return handler.editReply({ content: " ", embeds: [embed] });
-      }
-    } catch (err) {
+    const tracksData: any = await getUserRecentTracks(session.username, apiKey, 1, session.session_key);
+    const tracks = tracksData.recenttracks.track;
+    let nowPlaying = null;
+    if (Array.isArray(tracks)) {
+      nowPlaying = tracks.find((t) => t["@attr"] && t["@attr"].nowplaying === "true");
+    } else if (tracks && tracks["@attr"] && tracks["@attr"].nowplaying === "true") {
+      nowPlaying = tracks;
+    }
+    if (nowPlaying) {
       const embed = new EmbedBuilder()
-        .setTitle("Error Fetching Track")
-        .setDescription("There was an error fetching your current track from Last.fm.")
+        .setTitle("Now Playing on Spotify (via Last.fm)")
+        .setDescription(`**${nowPlaying.name}** by **${nowPlaying.artist['#text']}**`)
+        .setColor(client.color)
+        .addFields(
+          { name: "Album", value: nowPlaying.album['#text'] || "Unknown", inline: true },
+          { name: "Link", value: nowPlaying.url ? `[Open in Last.fm](${nowPlaying.url})` : "N/A", inline: true }
+        )
+        .setThumbnail(nowPlaying.image?.[nowPlaying.image.length - 1]?.['#text'] || null);
+      return handler.editReply({ content: " ", embeds: [embed] });
+    } else {
+      const embed = new EmbedBuilder()
+        .setTitle("No Track Playing")
+        .setDescription("You are not currently playing any track on Last.fm.")
         .setColor(client.color);
       return handler.editReply({ content: " ", embeds: [embed] });
     }
