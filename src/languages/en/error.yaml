@@ -43,3 +43,7 @@ topgg_vote_button: "Click here to vote!"
 # DJ Role error
 dj_role_required: "`⚠️` | You need to have the DJ role to use this command!"
 dj_role_not_set: "`⚠️` | No DJ role has been set up in this server. Please ask a server manager to set one up using `/setup-dj`."
+
+# Role error
+no_role: "`⚠️` | Please provide a valid role!"
+role_not_editable: "`⚠️` | I cannot manage this role. Please make sure I have the **Manage Roles** permission and the role is below my highest role!"

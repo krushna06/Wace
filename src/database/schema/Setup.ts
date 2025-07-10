@@ -6,4 +6,5 @@ export interface Setup {
   voice: string;
   category: string;
   djRole?: string;
+  premiumRole?: string;
 }

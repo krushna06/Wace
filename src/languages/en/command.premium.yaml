@@ -43,3 +43,18 @@ guild_list_page_notfound: "`⚠️` | Only **%{page} pages** are available!"
 list_title: "💫 List of Premium Users"
 list_notnumber: "`⚠️` | Only numbers are allowed for the page!"
 list_page_notfound: "`⚠️` | Only **%{page} pages** are available!"
+
+### Comando Setup Pm!
+setup_pm_author: "Premium Role Setup"
+setup_pm_success: "`✅` | Successfully set **%{role}** as the premium role for **%{guild}**!\n\n`💡` | Users with this role will now have access to premium commands without needing to redeem a license."
+
+### Comando Setup Pm Remove!
+setup_pm_remove_author: "Premium Role Removal"
+setup_pm_remove_success: "`✅` | Successfully removed the premium role from **%{guild}**!\n\n`💡` | Users will no longer get premium access through roles and will need to redeem licenses individually."
+setup_pm_remove_no_role: "`⚠️` | No premium role has been set up in this server!"
+
+### Comando Setup Pm Info!
+setup_pm_info_author: "Premium Role Information"
+setup_pm_info_desc: "`🎭` | **Premium Role:** %{role} (`%{roleId}`)\n`🏠` | **Server:** %{guild}\n\n`💡` | Users with this role have access to premium commands without needing to redeem a license."
+setup_pm_info_no_role: "`⚠️` | No premium role has been set up in this server!"
+setup_pm_info_role_deleted: "`⚠️` | The premium role has been deleted from this server. Please set a new one using `/setup-pm`."

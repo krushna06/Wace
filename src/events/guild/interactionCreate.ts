@@ -217,8 +217,10 @@ export default class {
     const isAdmin = client.config.bot.ADMIN.includes(interaction.user.id);
     
     let hasDJRole = false;
+    let hasPremiumRole = false;
+    const setup = await client.db.setup.get(interaction.guild.id);
+    
     if (command.accessableby.includes(Accessableby.DJ)) {
-      const setup = await client.db.setup.get(interaction.guild.id);
       if (setup && setup.djRole) {
         const member = interaction.member as GuildMember;
         hasDJRole = member.roles.cache.has(setup.djRole);
@@ -228,12 +230,17 @@ export default class {
         );
       }
     }
+    
+    if (setup && setup.premiumRole) {
+      const member = interaction.member as GuildMember;
+      hasPremiumRole = member.roles.cache.has(setup.premiumRole);
+    }
 
     const userPerm = {
       owner: isOwner,
       admin: isOwner || isAdmin,
-      premium: isOwner || isAdmin || isPremium,
-      guildPre: isOwner || isAdmin || isPremium || isPremiumGuild,
+      premium: isOwner || isAdmin || isPremium || hasPremiumRole,
+      guildPre: isOwner || isAdmin || isPremium || isPremiumGuild || hasPremiumRole,
       dj: isOwner || isAdmin || hasDJRole,
     };
 

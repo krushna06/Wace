@@ -225,20 +225,25 @@ export default class {
       command.accessableby.includes(Accessableby.GuildPremium) &&
       command.accessableby.includes(Accessableby.Premium);
     let hasDJRole = false;
+    let hasPremiumRole = false;
+    
     if (command.accessableby.includes(Accessableby.DJ)) {
-      const setup = await client.db.setup.get(String(message.guild?.id));
       if (setup && setup.djRole) {
         hasDJRole = message.member!.roles.cache.has(setup.djRole);
       } else {
         hasDJRole = message.member!.permissions.has(PermissionFlagsBits.ManageGuild);
       }
     }
+    
+    if (setup && setup.premiumRole) {
+      hasPremiumRole = message.member!.roles.cache.has(setup.premiumRole);
+    }
 
     const userPerm = {
       owner: isOwner,
       admin: isOwner || isAdmin,
-      premium: isOwner || isAdmin || isPremium,
-      guildPre: isOwner || isAdmin || isPremium || isPremiumGuild,
+      premium: isOwner || isAdmin || isPremium || hasPremiumRole,
+      guildPre: isOwner || isAdmin || isPremium || isPremiumGuild || hasPremiumRole,
       dj: isOwner || isAdmin || hasDJRole,
     };
 
