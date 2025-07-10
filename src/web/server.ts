@@ -10,6 +10,8 @@ import { getUserPlaylists } from "./route/getUserPlaylists.js";
 import { getPlaylistDetails } from "./route/getPlaylistDetails.js";
 import { getLastfmCallbackRoute } from "./route/lastfmCallback.js";
 import { getDjStatus } from "./route/getDjStatus.js";
+import { getUserPremium } from "./route/getUserPremium.js";
+import { getGuildPremium } from "./route/getGuildPremium.js";
 
 export class WebServer {
   app: Fastify.FastifyInstance;
@@ -71,6 +73,8 @@ export class WebServer {
         fastify.get("/playlists/:userId", (req, res) => getUserPlaylists(client, req, res));
         fastify.get("/playlist/:playlistId", (req, res) => getPlaylistDetails(client, req, res));
         fastify.get("/dj/:guildId/userid", (req, res) => getDjStatus(client, req, res));
+        fastify.get("/premium/user/:userId", (req, res) => getUserPremium(client, req, res));
+        fastify.get("/premium/guild/:guildId", (req, res) => getGuildPremium(client, req, res));
 
         done();
       },
