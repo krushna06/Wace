@@ -70,7 +70,7 @@ export default class implements Command {
         .setColor(client.color)
         .setDescription(
           albums
-            .map((album: any, i: number) => `**${i + 1}.** [${album.name}](${album.url}) by **${album.artist['#text']}** — ${album.playcount} plays`)
+            .map((album: any, i: number) => `**${i + 1}.** [${album.name}](${album.url}) by **${album.artist?.name || 'Unknown'}** — ${album.playcount} plays`)
             .join("\n")
         );
       if (albums[0]?.image?.length) {

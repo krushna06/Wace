@@ -12,10 +12,10 @@ const PERIODS = {
 
 export default class implements Command {
   public name = ["toptracks"];
-  public description = "Shows your top tracks (week/month/all-time) via Last.fm";
+  public description = "Shows your top tracks for a selected period: week, month, or all-time (via Last.fm)";
   public category = "Utils";
   public accessableby = [Accessableby.Member];
-  public usage = "[period]";
+  public usage = "[week|month|all]";
   public aliases = ["lastfm-toptracks", "lfm-toptracks", "top-track"];
   public lavalink = false;
   public playerCheck = false;
@@ -25,12 +25,12 @@ export default class implements Command {
   public options = [
     {
       name: "period",
-      description: "Time period (week, month, all)",
+      description: "Time period (week, month, all-time)",
       type: 3,
       required: false,
       choices: [
-        { name: "Week", value: "week" },
-        { name: "Month", value: "month" },
+        { name: "Week (last 7 days)", value: "week" },
+        { name: "Month (last 30 days)", value: "month" },
         { name: "All Time", value: "all" },
       ],
     },
@@ -70,7 +70,7 @@ export default class implements Command {
         .setColor(client.color)
         .setDescription(
           tracks
-            .map((track: any, i: number) => `**${i + 1}.** [${track.name}](${track.url}) by **${track.artist['#text']}** — ${track.playcount} plays`)
+            .map((track: any, i: number) => `**${i + 1}.** [${track.name}](${track.url}) by **${track.artist?.name || 'Unknown'}** — ${track.playcount} plays`)
             .join("\n")
         );
       if (tracks[0]?.image?.length) {
