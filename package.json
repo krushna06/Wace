@@ -7,7 +7,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc --build --verbose",
-    "build:full": "npm run build:prettier && npm run build && npm run build:manifest && npm run build:languages",
+    "build:full": "&& npm run build && npm run build:manifest && npm run build:languages",
     "build:languages": "node --no-deprecation ./scripts/copyLanguagePackage.mjs",
     "build:manifest": "node --no-deprecation ./scripts/copyManifest.mjs",
     "start": "node --no-deprecation ./dist/index.js",
