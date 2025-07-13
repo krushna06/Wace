@@ -17,6 +17,7 @@ import { getCurrentFilter } from "./route/getCurrentFilter.js";
 import { postApplyFilter } from "./route/postApplyFilter.js";
 import { deleteClearFilter } from "./route/deleteClearFilter.js";
 import { getGuildLanguage, patchGuildLanguage } from "./route/patchGuildLanguage.js";
+import { deleteQueue } from "./route/deleteQueue.js";
 
 export class WebServer {
   app: Fastify.FastifyInstance;
@@ -87,6 +88,7 @@ export class WebServer {
         fastify.delete("/filters/:guildId", (req, res) => deleteClearFilter(client)(req as any, res));
         fastify.get("/language/:guildId", (req, res) => getGuildLanguage(client, req, res));
         fastify.patch("/language/:guildId", (req, res) => patchGuildLanguage(client, req, res));
+        fastify.delete("/queue/:guildId", deleteQueue(client));
 
         done();
       },
