@@ -28,21 +28,35 @@ export const postApplyFilter = (client: Manager) => {
         });
       }
 
-      if (!WacelinkFilterData[filter as WacelinkFilterMode]) {
+      const filterCommand = client.commands.find(cmd => 
+        cmd.category === "Filter" && 
+        cmd.name.some(name => name === filter || name === `filter2` || name === `filter`)
+      );
+
+      if (!filterCommand) {
         return reply.code(400).send({
           success: false,
           error: `Filter '${filter}' not found. Use GET /v1/filters to see available filters.`
         });
       }
 
-      if (player.data.get("filter-mode") === filter && filter !== "clear") {
+      const actualFilterName = filterCommand.name.find(name => name !== "filter" && name !== "filter2") || filter;
+
+      if (!WacelinkFilterData[actualFilterName as WacelinkFilterMode]) {
         return reply.code(400).send({
           success: false,
-          error: `Filter '${filter}' is already applied`
+          error: `Filter '${actualFilterName}' not found in WacelinkFilterData. Use GET /v1/filters to see available filters.`
         });
       }
 
-      if (filter === "bass" && amount !== undefined) {
+      if (player.data.get("filter-mode") === actualFilterName && actualFilterName !== "clear") {
+        return reply.code(400).send({
+          success: false,
+          error: `Filter '${actualFilterName}' is already applied`
+        });
+      }
+
+      if (actualFilterName === "bass" && amount !== undefined) {
         if (isNaN(amount) || amount > 10 || amount < -10) {
           return reply.code(400).send({
             success: false,
@@ -66,15 +80,15 @@ export const postApplyFilter = (client: Manager) => {
           { band: 12, gain: 0 },
           { band: 13, gain: 0 },
         ]);
-        player.data.set("filter-mode", filter);
+        player.data.set("filter-mode", actualFilterName);
       } else {
-        if (filter === "clear") {
+        if (actualFilterName === "clear") {
           player.data.delete("filter-mode");
           await player.filter.clear();
           await player.setVolume(100);
         } else {
-          player.data.set("filter-mode", filter);
-          await player.filter.set(filter as WacelinkFilterMode);
+          player.data.set("filter-mode", actualFilterName);
+          await player.filter.set(actualFilterName as WacelinkFilterMode);
         }
       }
 
@@ -82,10 +96,11 @@ export const postApplyFilter = (client: Manager) => {
         success: true,
         data: {
           guildId,
-          filter: filter === "clear" ? null : filter,
-          message: filter === "clear" 
+          filter: actualFilterName === "clear" ? null : actualFilterName,
+          commandName: filter,
+          message: actualFilterName === "clear" 
             ? "All filters have been reset" 
-            : `Filter '${filter}' has been applied successfully`
+            : `Filter '${actualFilterName}' has been applied successfully`
         }
       });
     } catch (error) {
