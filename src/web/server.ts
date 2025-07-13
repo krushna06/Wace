@@ -12,6 +12,10 @@ import { getLastfmCallbackRoute } from "./route/lastfmCallback.js";
 import { getDjStatus } from "./route/getDjStatus.js";
 import { getUserPremium } from "./route/getUserPremium.js";
 import { getGuildPremium } from "./route/getGuildPremium.js";
+import { getFilters } from "./route/getFilters.js";
+import { getCurrentFilter } from "./route/getCurrentFilter.js";
+import { postApplyFilter } from "./route/postApplyFilter.js";
+import { deleteClearFilter } from "./route/deleteClearFilter.js";
 
 export class WebServer {
   app: Fastify.FastifyInstance;
@@ -75,6 +79,11 @@ export class WebServer {
         fastify.get("/dj/:guildId/userid", (req, res) => getDjStatus(client, req, res));
         fastify.get("/premium/user/:userId", (req, res) => getUserPremium(client, req, res));
         fastify.get("/premium/guild/:guildId", (req, res) => getGuildPremium(client, req, res));
+        
+        fastify.get("/filters", (req, res) => getFilters(client)(req, res));
+        fastify.get("/filters/:guildId", (req, res) => getCurrentFilter(client)(req as any, res));
+        fastify.post("/filters/:guildId", (req, res) => postApplyFilter(client)(req as any, res));
+        fastify.delete("/filters/:guildId", (req, res) => deleteClearFilter(client)(req as any, res));
 
         done();
       },

@@ -1,0 +1,99 @@
+import { FastifyRequest, FastifyReply } from "fastify";
+import { Manager } from "../../manager.js";
+import { WacelinkFilterData, WacelinkFilterMode } from "../../wacelink/Interface/Constants.js";
+
+interface ApplyFilterBody {
+  filter: string;
+  amount?: number;
+}
+
+export const postApplyFilter = (client: Manager) => {
+  return async (request: FastifyRequest<{ Params: { guildId: string }, Body: ApplyFilterBody }>, reply: FastifyReply) => {
+    try {
+      const { guildId } = request.params;
+      const { filter, amount } = request.body;
+
+      if (!filter) {
+        return reply.code(400).send({
+          success: false,
+          error: "Filter name is required"
+        });
+      }
+
+      const player = client.wacelink.players.get(guildId);
+      if (!player) {
+        return reply.code(404).send({
+          success: false,
+          error: "No active player found for this guild"
+        });
+      }
+
+      if (!WacelinkFilterData[filter as WacelinkFilterMode]) {
+        return reply.code(400).send({
+          success: false,
+          error: `Filter '${filter}' not found. Use GET /v1/filters to see available filters.`
+        });
+      }
+
+      if (player.data.get("filter-mode") === filter && filter !== "clear") {
+        return reply.code(400).send({
+          success: false,
+          error: `Filter '${filter}' is already applied`
+        });
+      }
+
+      if (filter === "bass" && amount !== undefined) {
+        if (isNaN(amount) || amount > 10 || amount < -10) {
+          return reply.code(400).send({
+            success: false,
+            error: "Bass amount must be a number between -10 and 10"
+          });
+        }
+
+        player.filter.setEqualizer([
+          { band: 0, gain: amount / 10 },
+          { band: 1, gain: amount / 10 },
+          { band: 2, gain: amount / 10 },
+          { band: 3, gain: amount / 10 },
+          { band: 4, gain: amount / 10 },
+          { band: 5, gain: amount / 10 },
+          { band: 6, gain: amount / 10 },
+          { band: 7, gain: 0 },
+          { band: 8, gain: 0 },
+          { band: 9, gain: 0 },
+          { band: 10, gain: 0 },
+          { band: 11, gain: 0 },
+          { band: 12, gain: 0 },
+          { band: 13, gain: 0 },
+        ]);
+        player.data.set("filter-mode", filter);
+      } else {
+        if (filter === "clear") {
+          player.data.delete("filter-mode");
+          await player.filter.clear();
+          await player.setVolume(100);
+        } else {
+          player.data.set("filter-mode", filter);
+          await player.filter.set(filter as WacelinkFilterMode);
+        }
+      }
+
+      reply.send({
+        success: true,
+        data: {
+          guildId,
+          filter: filter === "clear" ? null : filter,
+          message: filter === "clear" 
+            ? "All filters have been reset" 
+            : `Filter '${filter}' has been applied successfully`
+        }
+      });
+    } catch (error) {
+      client.logger.error("postApplyFilter", error);
+      reply.code(500).send({
+        success: false,
+        error: "Internal server error"
+      });
+    }
+  };
+}; 
