@@ -20,6 +20,7 @@ import { getGuildLanguage, patchGuildLanguage } from "./route/patchGuildLanguage
 import { deleteQueue } from "./route/deleteQueue.js";
 import { deleteQueueTrack } from "./route/deleteQueueTrack.js";
 import { getGuildChecker } from "./route/getGuildChecker.js";
+import { createPlaylist, deletePlaylist, editPlaylist } from "./route/playlist.js";
 
 export class WebServer {
   app: Fastify.FastifyInstance;
@@ -93,6 +94,9 @@ export class WebServer {
         fastify.patch("/language/:guildId", (req, res) => patchGuildLanguage(client, req, res));
         fastify.delete("/queue/:guildId", deleteQueue(client));
         fastify.delete("/queue/:guildId/:position", deleteQueueTrack(client));
+        fastify.post("/playlist", createPlaylist(client));
+        fastify.delete("/playlist/:playlistId", deletePlaylist(client));
+        fastify.patch("/playlist/:playlistId", editPlaylist(client));
 
         done();
       },
