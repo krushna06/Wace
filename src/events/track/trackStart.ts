@@ -79,6 +79,12 @@ export default class {
 
     const song = player.queue.current;
 
+    if (song) {
+      Object.keys(player.data.full).forEach(([key]) => {
+        if (key.startsWith("voteskip_")) player.data.delete(key);
+      });
+    }
+
     if (SongNoti == SongNotiEnum.Disable) return;
 
     const embeded = new EmbedBuilder()
