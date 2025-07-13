@@ -19,6 +19,7 @@ import { deleteClearFilter } from "./route/deleteClearFilter.js";
 import { getGuildLanguage, patchGuildLanguage } from "./route/patchGuildLanguage.js";
 import { deleteQueue } from "./route/deleteQueue.js";
 import { deleteQueueTrack } from "./route/deleteQueueTrack.js";
+import { getGuildChecker } from "./route/getGuildChecker.js";
 
 export class WebServer {
   app: Fastify.FastifyInstance;
@@ -82,6 +83,7 @@ export class WebServer {
         fastify.get("/dj/:guildId/userid", (req, res) => getDjStatus(client, req, res));
         fastify.get("/premium/user/:userId", (req, res) => getUserPremium(client, req, res));
         fastify.get("/premium/guild/:guildId", (req, res) => getGuildPremium(client, req, res));
+        fastify.get("/guild-checker/:guildId/:userId", getGuildChecker(client));
         
         fastify.get("/filters", (req, res) => getFilters(client)(req, res));
         fastify.get("/filters/:guildId", (req, res) => getCurrentFilter(client)(req as any, res));
