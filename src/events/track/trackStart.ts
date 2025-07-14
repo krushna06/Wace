@@ -7,6 +7,7 @@ import { AutoReconnectBuilderService } from "../../services/AutoReconnectBuilder
 import { SongNotiEnum } from "../../database/schema/SongNoti.js";
 import { WacelinkFilterMode, WacelinkPlayer, WacelinkTrack } from "../../wacelink/main.js";
 import { getTitle } from "../../utilities/GetTitle.js";
+import { incrementUserSongPlay, incrementGuildSongPlay } from "../../database/handler.js";
 
 export default class {
   async execute(client: Manager, player: WacelinkPlayer, track: WacelinkTrack) {
@@ -78,6 +79,17 @@ export default class {
     const language = guildModel;
 
     const song = player.queue.current;
+
+    if (song && song.requester && player.guildId) {
+      let userId: string;
+      if (typeof song.requester === 'object' && song.requester !== null && 'id' in song.requester) {
+        userId = (song.requester as any).id;
+      } else {
+        userId = String(song.requester);
+      }
+      await incrementUserSongPlay(client.db, userId, player.guildId);
+      await incrementGuildSongPlay(client.db, player.guildId);
+    }
 
     if (song) {
       Object.keys(player.data.full).forEach(([key]) => {

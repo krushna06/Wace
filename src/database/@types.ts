@@ -8,6 +8,8 @@ import { Prefix } from "./schema/Prefix.js";
 import { SongNoti } from "./schema/SongNoti.js";
 import { QuickDatabasePlus } from "../structures/QuickDatabasePlus.js";
 import { GuildPremium } from "./schema/GuildPremium.js";
+import { GuildStats } from "./schema/GuildStats.js";
+import { UserStats } from "./schema/UserStats.js";
 
 export interface LastfmSession {
   discord_id: string;
@@ -27,4 +29,6 @@ export interface DatabaseTable {
   prefix: QuickDatabasePlus<Prefix>;
   songNoti: QuickDatabasePlus<SongNoti>;
   lastfmSession: QuickDatabasePlus<LastfmSession>;
+  userStats: QuickDatabasePlus<UserStats>;
+  guildStats: QuickDatabasePlus<GuildStats>;
 }

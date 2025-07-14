@@ -20,6 +20,7 @@ import { RatelimitReplyService } from "../../services/RatelimitReplyService.js";
 import { RateLimitManager } from "@sapphire/ratelimits";
 import { TopggServiceEnum } from "../../services/TopggService.js";
 import { AutoReconnectBuilderService } from "../../services/AutoReconnectBuilderService.js";
+import { incrementUserCommand, incrementGuildCommand } from "../../database/handler.js";
 const commandRateLimitManager = new RateLimitManager(1000);
 
 export default class {
@@ -370,6 +371,8 @@ export default class {
       );
 
       command.execute(client, handler);
+      await incrementUserCommand(client.db, message.author.id, message.guild!.id);
+      await incrementGuildCommand(client.db, message.guild!.id);
     } catch (error) {
       client.logger.error("CommandManager | Message", error);
       message.reply({

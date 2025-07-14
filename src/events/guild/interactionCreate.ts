@@ -27,6 +27,7 @@ import { RateLimitManager } from "@sapphire/ratelimits";
 import { AutoCompleteService } from "../../services/AutoCompleteService.js";
 import { TopggServiceEnum } from "../../services/TopggService.js";
 import { AutoReconnectBuilderService } from "../../services/AutoReconnectBuilderService.js";
+import { incrementUserCommand, incrementGuildCommand } from "../../database/handler.js";
 const commandRateLimitManager = new RateLimitManager(1000);
 
 /**
@@ -396,6 +397,8 @@ export default class {
       );
 
       command.execute(client, handler);
+      await incrementUserCommand(client.db, interaction.user.id, interaction.guild.id);
+      await incrementGuildCommand(client.db, interaction.guild.id);
     } catch (error) {
       client.logger.error("CommandManager | Interaction", error);
       interaction.reply({
