@@ -4,123 +4,587 @@ This directory contains the web API for the Wace Discord bot.
 
 ## Authentication
 
-All API endpoints require authentication via the `Authorization` header. The value should match your bot's `WEB_SERVER.auth` configuration.
+All API endpoints require authentication via the `Authorization` header. The value should match your bot's `app.yml | WEB_SERVER` configuration.
 
 ## Endpoints
 
 ### Player Management
 
-- `GET /v1/players/:guildId` - Get player status
-- `POST /v1/players/:guildId` - Create a new player
-- `DELETE /v1/players/:guildId` - Destroy a player
-- `PATCH /v1/players/:guildId/control` - Control player (play, pause, skip, etc.)
-- `PATCH /v1/players/:guildId/shuffle` - Toggle shuffle mode
+<table border="1">
+<tr><th>Method</th><th>Path</th><th>Params</th><th>Description</th></tr>
+<tr><td>GET</td><td>/v1/players/:guildId</td><td>Path: guildId<br>Header: [user-id] (optional)</td><td>Get player status for a guild</td></tr>
+</table>
+
+**Success Response**
+```json
+{
+  "guildId": "...",
+  "loop": "...",
+  "pause": false,
+  "member": "true/false/notGiven",
+  "position": 12345,
+  "current": { ... },
+  "queue": [ ... ]
+}
+```
+**Error Response**
+```json
+{
+  "error": "Current player not found!"
+}
+```
+<hr style="border: 2px solid #0078D7; margin: 32px 0;">
+
+<table border="1">
+<tr><th>Method</th><th>Path</th><th>Params</th><th>Description</th></tr>
+<tr><td>PATCH</td><td>/v1/players/:guildId</td><td>Path: guildId<br>Body: { loop, skipMode, position, volume, add, paused, shuffle }</td><td>Control player (play, pause, skip, etc.)</td></tr>
+</table>
+
+**Success Response**
+```json
+{
+  "loop": "...",
+  "skiped": false,
+  "previous": false,
+  "position": 12345,
+  "volume": 100,
+  "added": [ ... ],
+  "paused": false,
+  "shuffled": false
+}
+```
+**Error Response**
+```json
+{
+  "error": "..."
+}
+```
+<hr style="border: 2px solid #0078D7; margin: 32px 0;">
+
+<table border="1">
+<tr><th>Method</th><th>Path</th><th>Params</th><th>Description</th></tr>
+<tr><td>DELETE</td><td>/v1/players/:guildId</td><td>Path: guildId</td><td>Destroy a player</td></tr>
+</table>
+
+**Success Response**
+204 No Content
+**Error Response**
+```json
+{
+  "error": "Current player not found!"
+}
+```
+<hr style="border: 2px solid #0078D7; margin: 32px 0;">
+
+<table border="1">
+<tr><th>Method</th><th>Path</th><th>Params</th><th>Description</th></tr>
+<tr><td>POST</td><td>/v1/players</td><td>Body: { guildId, userId }</td><td>Create a new player</td></tr>
+</table>
+
+**Success Response**
+```json
+{
+  "guildId": "...",
+  "voiceId": "...",
+  "textId": "...",
+  "shardId": 0,
+  "deaf": true,
+  "volume": 100
+}
+```
+**Error Response**
+```json
+{
+  "error": "..."
+}
+```
+<hr style="border: 2px solid #0078D7; margin: 32px 0;">
 
 ### Music Control
 
-- `POST /v1/play/:guildId` - Play a track
-- `GET /v1/search` - Search for tracks
-- `GET /v1/queue/:guildId` - Get current queue
-- `GET /v1/current/:guildId` - Get current track info
+<table border="1">
+<tr><th>Method</th><th>Path</th><th>Params</th><th>Description</th></tr>
+<tr><td>GET</td><td>/v1/search</td><td>Query: identifier, requester, [source]</td><td>Search for tracks</td></tr>
+</table>
+
+**Success Response**
+```json
+{
+  "type": "...",
+  "playlistName": "...",
+  "tracks": [ ... ]
+}
+```
+**Error Response**
+```json
+{
+  "error": "..."
+}
+```
+<hr style="border: 2px solid #0078D7; margin: 32px 0;">
 
 ### Filters
 
-- `GET /v1/filters` - Get all available filters
-- `GET /v1/filters/:guildId` - Get current filter for a guild
-- `POST /v1/filters/:guildId` - Apply a filter to a guild's player
-- `DELETE /v1/filters/:guildId` - Clear all filters from a guild's player
+<table border="1">
+<tr><th>Method</th><th>Path</th><th>Params</th><th>Description</th></tr>
+<tr><td>GET</td><td>/v1/filters</td><td>None</td><td>Get all available filters</td></tr>
+</table>
 
-#### Filter Usage Examples
-
-**Get all available filters:**
-```bash
-curl -H "Authorization: your-auth-token" http://localhost:3000/v1/filters
+**Success Response**
+```json
+{
+  "success": true,
+  "data": { ... }
+}
 ```
-
-**Apply a filter:**
-```bash
-curl -X POST -H "Authorization: your-auth-token" \
-  -H "Content-Type: application/json" \
-  -d '{"filter": "nightcore"}' \
-  http://localhost:3000/v1/filters/123456789
+**Error Response**
+```json
+{
+  "success": false,
+  "error": "..."
+}
 ```
+<hr style="border: 2px solid #0078D7; margin: 32px 0;">
 
-**Apply bass filter with custom amount:**
-```bash
-curl -X POST -H "Authorization: your-auth-token" \
-  -H "Content-Type: application/json" \
-  -d '{"filter": "bass", "amount": 5}' \
-  http://localhost:3000/v1/filters/123456789
+<table border="1">
+<tr><th>Method</th><th>Path</th><th>Params</th><th>Description</th></tr>
+<tr><td>GET</td><td>/v1/filters/:guildId</td><td>Path: guildId</td><td>Get current filter for a guild</td></tr>
+</table>
+
+**Success Response**
+```json
+{
+  "success": true,
+  "data": {
+    "guildId": "...",
+    "currentFilter": "...",
+    "hasFilter": true
+  }
+}
 ```
-
-**Clear all filters:**
-```bash
-curl -X DELETE -H "Authorization: your-auth-token" \
-  http://localhost:3000/v1/filters/123456789
+**Error Response**
+```json
+{
+  "success": false,
+  "error": "..."
+}
 ```
+<hr style="border: 2px solid #0078D7; margin: 32px 0;">
 
-**Get current filter:**
-```bash
-curl -H "Authorization: your-auth-token" \
-  http://localhost:3000/v1/filters/123456789
+<table border="1">
+<tr><th>Method</th><th>Path</th><th>Params</th><th>Description</th></tr>
+<tr><td>POST</td><td>/v1/filters/:guildId</td><td>Path: guildId<br>Body: { filter, [amount] }</td><td>Apply a filter</td></tr>
+</table>
+
+**Success Response**
+```json
+{
+  "success": true,
+  "data": {
+    "guildId": "...",
+    "filter": "...",
+    "commandName": "...",
+    "message": "..."
+  }
+}
 ```
+**Error Response**
+```json
+{
+  "success": false,
+  "error": "..."
+}
+```
+<hr style="border: 2px solid #0078D7; margin: 32px 0;">
 
-#### Available Filters
+<table border="1">
+<tr><th>Method</th><th>Path</th><th>Params</th><th>Description</th></tr>
+<tr><td>DELETE</td><td>/v1/filters/:guildId</td><td>Path: guildId</td><td>Clear all filters</td></tr>
+</table>
 
-- `3d` - 3D audio effect
-- `bass` - Bass boost (can use custom amount)
-- `bassboost` - Bass boost filter
-- `china` - Chinese radio effect
-- `chipmunk` - Chipmunk voice effect
-- `darthvader` - Darth Vader voice effect
-- `daycore` - Daycore effect
-- `doubletime` - Double time effect
-- `earrape` - Earrape effect
-- `electronic` - Electronic music filter
-- `equalizer` - Equalizer preset
-- `karaoke` - Karaoke filter
-- `nightcore` - Nightcore effect
-- `party` - Party filter
-- `pitch` - Pitch shift
-- `pop` - Pop music filter
-- `radio` - Radio filter
-- `rate` - Playback rate control
-- `slow` - Slow motion effect
-- `slowmotion` - Slow motion effect
-- `soft` - Soft filter
-- `speed` - Speed control
-- `superbass` - Super bass effect
-- `television` - Television effect
-- `treblebass` - Treble and bass boost
-- `tremolo` - Tremolo effect
-- `vaporwave` - Vaporwave effect
-- `vibrate` - Vibrate effect
-- `vibrato` - Vibrato effect
-- `clear` - Reset all filters
+**Success Response**
+```json
+{
+  "success": true,
+  "data": { ... }
+}
+```
+**Error Response**
+```json
+{
+  "success": false,
+  "error": "..."
+}
+```
+<hr style="border: 2px solid #0078D7; margin: 32px 0;">
+
+### Queue Management
+
+<table border="1">
+<tr><th>Method</th><th>Path</th><th>Params</th><th>Description</th></tr>
+<tr><td>DELETE</td><td>/v1/queue/:guildId</td><td>Path: guildId</td><td>Clear the queue</td></tr>
+</table>
+
+**Success Response**
+```json
+{
+  "success": true,
+  "data": {
+    "guildId": "...",
+    "message": "Queue has been cleared successfully"
+  }
+}
+```
+**Error Response**
+```json
+{
+  "success": false,
+  "error": "..."
+}
+```
+<hr style="border: 2px solid #0078D7; margin: 32px 0;">
+
+<table border="1">
+<tr><th>Method</th><th>Path</th><th>Params</th><th>Description</th></tr>
+<tr><td>DELETE</td><td>/v1/queue/:guildId/:position</td><td>Path: guildId, position</td><td>Remove a track from queue</td></tr>
+</table>
+
+**Success Response**
+```json
+{
+  "success": true,
+  "data": {
+    "guildId": "...",
+    "position": 1,
+    "message": "Removed song at position 1 from the queue",
+    "removed": { ... }
+  }
+}
+```
+**Error Response**
+```json
+{
+  "success": false,
+  "error": "..."
+}
+```
+<hr style="border: 2px solid #0078D7; margin: 32px 0;">
 
 ### Playlists
 
-- `GET /v1/playlists/:userId` - Get user's playlists
-- `GET /v1/playlist/:playlistId` - Get playlist details
+<table border="1">
+<tr><th>Method</th><th>Path</th><th>Params</th><th>Description</th></tr>
+<tr><td>GET</td><td>/v1/playlists/:userId</td><td>Path: userId</td><td>Get user's playlists</td></tr>
+</table>
+
+**Success Response**
+```json
+{
+  "data": [ ...playlists ]
+}
+```
+**Error Response**
+```json
+{
+  "error": "..."
+}
+```
+<hr style="border: 2px solid #0078D7; margin: 32px 0;">
+
+<table border="1">
+<tr><th>Method</th><th>Path</th><th>Params</th><th>Description</th></tr>
+<tr><td>GET</td><td>/v1/playlist/:playlistId</td><td>Path: playlistId<br>Header: x-user-id</td><td>Get playlist details</td></tr>
+</table>
+
+**Success Response**
+```json
+{
+  "data": { ...playlist }
+}
+```
+**Error Response**
+```json
+{
+  "error": "..."
+}
+```
+<hr style="border: 2px solid #0078D7; margin: 32px 0;">
+
+<table border="1">
+<tr><th>Method</th><th>Path</th><th>Params</th><th>Description</th></tr>
+<tr><td>POST</td><td>/v1/playlist</td><td>Body: { name, [description], owner }</td><td>Create playlist</td></tr>
+</table>
+
+**Success Response**
+```json
+{
+  "success": true,
+  "data": { ...playlist }
+}
+```
+**Error Response**
+```json
+{
+  "error": "..."
+}
+```
+<hr style="border: 2px solid #0078D7; margin: 32px 0;">
+
+<table border="1">
+<tr><th>Method</th><th>Path</th><th>Params</th><th>Description</th></tr>
+<tr><td>DELETE</td><td>/v1/playlist/:playlistId</td><td>Path: playlistId<br>Body: { owner } or Header: x-owner</td><td>Delete playlist</td></tr>
+</table>
+
+**Success Response**
+```json
+{
+  "success": true,
+  "message": "Playlist ... deleted"
+}
+```
+**Error Response**
+```json
+{
+  "error": "..."
+}
+```
+<hr style="border: 2px solid #0078D7; margin: 32px 0;">
+
+<table border="1">
+<tr><th>Method</th><th>Path</th><th>Params</th><th>Description</th></tr>
+<tr><td>PATCH</td><td>/v1/playlist/:playlistId</td><td>Path: playlistId<br>Body: { name, description, private, owner }</td><td>Edit playlist</td></tr>
+</table>
+
+**Success Response**
+```json
+{
+  "success": true,
+  "data": { ...playlist }
+}
+```
+**Error Response**
+```json
+{
+  "error": "..."
+}
+```
+<hr style="border: 2px solid #0078D7; margin: 32px 0;">
 
 ### Premium
 
-- `GET /v1/premium/user/:userId` - Get user premium status
-- `GET /v1/premium/guild/:guildId` - Get guild premium status
+<table border="1">
+<tr><th>Method</th><th>Path</th><th>Params</th><th>Description</th></tr>
+<tr><td>GET</td><td>/v1/premium/user/:userId</td><td>Path: userId</td><td>Get user premium status</td></tr>
+</table>
+
+**Success Response**
+```json
+{
+  "premium": true
+}
+```
+**Error Response**
+```json
+{
+  "error": "..."
+}
+```
+<hr style="border: 2px solid #0078D7; margin: 32px 0;">
+
+<table border="1">
+<tr><th>Method</th><th>Path</th><th>Params</th><th>Description</th></tr>
+<tr><td>GET</td><td>/v1/premium/guild/:guildId</td><td>Path: guildId</td><td>Get guild premium status</td></tr>
+</table>
+
+**Success Response**
+```json
+{
+  "premium": false
+}
+```
+**Error Response**
+```json
+{
+  "error": "..."
+}
+```
+<hr style="border: 2px solid #0078D7; margin: 32px 0;">
 
 ### DJ System
 
-- `GET /v1/dj/:guildId/userid` - Get DJ status for a user
+<table border="1">
+<tr><th>Method</th><th>Path</th><th>Params</th><th>Description</th></tr>
+<tr><td>GET</td><td>/v1/dj/:guildId/userid</td><td>Path: guildId<br>Query: userid</td><td>Get DJ status for a user</td></tr>
+</table>
 
-### LastFM
+**Success Response**
+```json
+{
+  "data": 1
+}
+```
+**Error Response**
+```json
+{
+  "error": "..."
+}
+```
+<hr style="border: 2px solid #0078D7; margin: 32px 0;">
 
-- `GET /api/lastfm/callback` - LastFM OAuth callback
+### Language
 
-## WebSocket
+<table border="1">
+<tr><th>Method</th><th>Path</th><th>Params</th><th>Description</th></tr>
+<tr><td>GET</td><td>/v1/language/:guildId</td><td>Path: guildId</td><td>Get guild language</td></tr>
+</table>
 
-The API also provides WebSocket endpoints for real-time updates:
+**Success Response**
+```json
+{
+  "guildId": "...",
+  "language": "en",
+  "available": [ "en", "de", ... ]
+}
+```
+**Error Response**
+```json
+{
+  "error": "..."
+}
+```
+<hr style="border: 2px solid #0078D7; margin: 32px 0;">
 
-- `ws://localhost:3000/v1/ws/:guildId` - WebSocket connection for guild updates
+<table border="1">
+<tr><th>Method</th><th>Path</th><th>Params</th><th>Description</th></tr>
+<tr><td>PATCH</td><td>/v1/language/:guildId</td><td>Path: guildId<br>Body: { language }</td><td>Set guild language</td></tr>
+</table>
+
+**Success Response**
+```json
+{
+  "success": true,
+  "language": "en"
+}
+```
+**Error Response**
+```json
+{
+  "error": "..."
+}
+```
+<hr style="border: 2px solid #0078D7; margin: 32px 0;">
+
+### Stats
+
+<table border="1">
+<tr><th>Method</th><th>Path</th><th>Params</th><th>Description</th></tr>
+<tr><td>GET</td><td>/v1/stats/user/:userId</td><td>Path: userId</td><td>Get user stats (all guilds)</td></tr>
+</table>
+
+**Success Response**
+```json
+{
+  "userId": "...",
+  "songsPlayed": 123,
+  "commandsExecuted": 456
+}
+```
+**Error Response**
+```json
+{
+  "error": "User stats not found"
+}
+```
+<hr style="border: 2px solid #0078D7; margin: 32px 0;">
+
+<table border="1">
+<tr><th>Method</th><th>Path</th><th>Params</th><th>Description</th></tr>
+<tr><td>GET</td><td>/v1/stats/guild/:guildId</td><td>Path: guildId</td><td>Get guild stats</td></tr>
+</table>
+
+**Success Response**
+```json
+{
+  "guildId": "...",
+  "songsPlayed": 789,
+  "commandsExecuted": 101
+}
+```
+**Error Response**
+```json
+{
+  "error": "Guild stats not found"
+}
+```
+<hr style="border: 2px solid #0078D7; margin: 32px 0;">
+
+### Miscellaneous
+
+<table border="1">
+<tr><th>Method</th><th>Path</th><th>Params</th><th>Description</th></tr>
+<tr><td>GET</td><td>/v1/commands</td><td>None</td><td>Get all bot commands</td></tr>
+</table>
+
+**Success Response**
+```json
+{
+  "data": [ ...commands ]
+}
+```
+<hr style="border: 2px solid #0078D7; margin: 32px 0;">
+
+<table border="1">
+<tr><th>Method</th><th>Path</th><th>Params</th><th>Description</th></tr>
+<tr><td>GET</td><td>/v1/guild-checker/:guildId/:userId</td><td>Path: guildId, userId</td><td>Check if user is in guild/voice</td></tr>
+</table>
+
+**Success Response**
+```json
+{
+  "inGuild": true,
+  "inSameVoice": false,
+  "userVoiceChannelId": "...",
+  "botVoiceChannelId": "..."
+}
+```
+**Error Response**
+```json
+{
+  "inGuild": false,
+  "inSameVoice": null,
+  "error": "..."
+}
+```
+<hr style="border: 2px solid #0078D7; margin: 32px 0;">
+
+<table border="1">
+<tr><th>Method</th><th>Path</th><th>Params</th><th>Description</th></tr>
+<tr><td>GET</td><td>/api/lastfm/callback</td><td>Query: code, state</td><td>LastFM OAuth callback</td></tr>
+</table>
+
+**Success Response**
+(varies)
+<hr style="border: 2px solid #0078D7; margin: 32px 0;">
+
+<table border="1">
+<tr><th>Method</th><th>Path</th><th>Params</th><th>Description</th></tr>
+<tr><td>GET</td><td>/catgirls</td><td>None</td><td>Fun endpoint</td></tr>
+</table>
+
+**Success Response**
+```json
+{
+  "wace": "..."
+}
+```
+<hr style="border: 2px solid #0078D7; margin: 32px 0;">
+
+### WebSocket
+
+<table border="1">
+<tr><th>Path</th><th>Description</th></tr>
+<tr><td>ws://localhost:3000/v1/ws/:guildId</td><td>WebSocket connection for guild updates</td></tr>
+</table>
 
 ## Error Responses
 
