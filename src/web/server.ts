@@ -21,6 +21,7 @@ import { deleteQueue } from "./route/deleteQueue.js";
 import { deleteQueueTrack } from "./route/deleteQueueTrack.js";
 import { getGuildChecker } from "./route/getGuildChecker.js";
 import { createPlaylist, deletePlaylist, editPlaylist } from "./route/playlist.js";
+import { getUserStats, getGuildStats } from "./route/getStats.js";
 
 export class WebServer {
   app: Fastify.FastifyInstance;
@@ -97,6 +98,8 @@ export class WebServer {
         fastify.post("/playlist", createPlaylist(client));
         fastify.delete("/playlist/:playlistId", deletePlaylist(client));
         fastify.patch("/playlist/:playlistId", editPlaylist(client));
+        fastify.get("/stats/user/:userId", getUserStats(client));
+        fastify.get("/stats/guild/:guildId", getGuildStats(client));
 
         done();
       },
