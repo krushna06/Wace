@@ -29,7 +29,7 @@ export default class implements PlayerButton {
     const embed = new EmbedBuilder()
       .setDescription(client.i18n.get(language, "button.music", "stop_msg"))
       .setImage(
-        "https://media.discordapp.net/attachments/890634398981042246/1251990013193879562/54.png?ex=6675dc0f&is=66748a8f&hm=d8da087fdf8cc829c1509a651ffd5028768f388d0d1b810c9dd1ce56e55683a6&=&format=webp&quality=lossless&width=1440&height=468"
+        client.config.PATREON_IMAGE?.[0]
       );
 
     await message.reply({ embeds: [embed] });

@@ -37,7 +37,7 @@ export default class implements Command {
         })}`
       )
       .setImage(
-        "https://media.discordapp.net/attachments/890634398981042246/1251990013193879562/54.png?ex=6670960f&is=666f448f&hm=d11ef9f858c1a2030ccdfe58aaa6fcd4a80725f6d250a67adb7aca38b88628de&=&format=webp&quality=lossless&width=687&height=223"
+        client.config.PATREON_IMAGE?.[0]
       )
       .setColor(client.color);
 

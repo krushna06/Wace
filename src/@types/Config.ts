@@ -5,6 +5,7 @@ export interface Config {
   player: Player;
   utilities: Utilities;
   emojis: Emojis;
+  PATREON_IMAGE?: string[];
 }
 
 export interface Bot {
