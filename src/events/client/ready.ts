@@ -1,5 +1,7 @@
 import { Manager } from "../../manager.js";
 import { TopggService } from "../../services/TopggService.js";
+import { VoiceChannel } from "discord.js";
+import { joinVoiceChannel } from "@discordjs/voice";
 
 export default class {
   async execute(client: Manager) {
@@ -22,6 +24,34 @@ export default class {
         client.topgg = topgg;
         client.topgg.startInterval();
       }
+    }
+
+    try {
+      const allAutoReconnect = await client.db.autoreconnect.all();
+      for (const entry of allAutoReconnect) {
+        const data = entry.value;
+        if (!data.twentyfourseven || !data.guild || !data.voice) continue;
+        const guild = await client.guilds.fetch(data.guild).catch(() => null);
+        if (!guild) continue;
+        const voiceChannel = await guild.channels.fetch(data.voice).catch(() => null);
+        if (!voiceChannel || voiceChannel.type !== 2) continue;
+        if (!guild.members.me.voice.channelId || guild.members.me.voice.channelId !== data.voice) {
+          try {
+            joinVoiceChannel({
+              channelId: data.voice,
+              guildId: guild.id,
+              adapterCreator: guild.voiceAdapterCreator,
+              selfDeaf: true,
+              selfMute: false,
+            });
+            client.logger.info("247Startup", `Joined VC for 24/7 in guild ${guild.id}`);
+          } catch (e) {
+            client.logger.error("247Startup", `Failed to join VC for guild ${guild.id}: ${e}`);
+          }
+        }
+      }
+    } catch (e) {
+      client.logger.error("247Startup", `Error during 24/7 auto-join: ${e}`);
     }
   }
 }

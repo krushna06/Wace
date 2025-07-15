@@ -40,6 +40,11 @@ export default class {
     }
     const language = guildModel;
 
+    const isLavalinkDisconnected = player.data.get("lavalink-disconnected");
+    if (data && data.twentyfourseven && isLavalinkDisconnected) {
+      return;
+    }
+
     if (data && data.twentyfourseven) return;
 
     const isInVoice = await newState.guild.members.fetch(client.user!.id).catch(() => undefined);

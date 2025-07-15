@@ -28,7 +28,9 @@ export default class {
 
     if (!channel) return;
 
-    if (data !== null && data && data.twentyfourseven) {
+    const isLavalinkDisconnected = player.data.get("lavalink-disconnected");
+    
+    if (data !== null && data && data.twentyfourseven && !isLavalinkDisconnected) {
       await new AutoReconnectBuilderService(client, player).build247(
         player.guildId,
         true,
@@ -42,7 +44,15 @@ export default class {
         deaf: true,
         volume: client.config.player.DEFAULT_VOLUME,
       });
-    } else await client.db.autoreconnect.delete(player.guildId);
+    } else if (data !== null && data && data.twentyfourseven && isLavalinkDisconnected) {
+      client.logger.info(
+        "PlayerDestroy", 
+        `Keeping 24/7 player in voice channel for guild ${player.guildId} despite Lavalink disconnection`
+      );
+      return;
+    } else {
+      await client.db.autoreconnect.delete(player.guildId);
+    }
 
     let guildModel = await client.db.language.get(`${channel.guild.id}`);
     if (!guildModel) {

@@ -91,30 +91,42 @@ export class Lavalink4 extends AbstractDriver {
 
     options.headers = lavalinkHeaders;
 
-    const res = await fetch(url, options);
+    try {
+      const res = await fetch(url, options);
 
-    if (res.status == 204) {
-      this.debug("Player now destroyed");
-      return undefined;
-    }
-    if (res.status !== 200) {
+      if (res.status == 204) {
+        this.debug("Player now destroyed");
+        return undefined;
+      }
+      if (res.status !== 200) {
+        this.debug(
+          `${options.method ?? "GET"} ${url.pathname + url.search} payload=${options.body ? String(options.body) : "{}"}`
+        );
+        this.debug(
+          "Something went wrong with lavalink server. " +
+            `Status code: ${res.status}\n Headers: ${util.inspect(options.headers)}`
+        );
+        return undefined;
+      }
+
+      const finalData = await res.json();
+
       this.debug(
         `${options.method ?? "GET"} ${url.pathname + url.search} payload=${options.body ? String(options.body) : "{}"}`
       );
-      this.debug(
-        "Something went wrong with lavalink server. " +
-          `Status code: ${res.status}\n Headers: ${util.inspect(options.headers)}`
-      );
+
+      return finalData as D;
+    } catch (err: any) {
+      if (
+        (err.code === 'ECONNREFUSED') ||
+        (err.cause && err.cause.code === 'ECONNREFUSED') ||
+        (err.message && err.message.includes('fetch failed'))
+      ) {
+        return undefined;
+      }
+      this.debug(`Lavalink4.requester error: ${err?.stack || err}`);
       return undefined;
     }
-
-    const finalData = await res.json();
-
-    this.debug(
-      `${options.method ?? "GET"} ${url.pathname + url.search} payload=${options.body ? String(options.body) : "{}"}`
-    );
-
-    return finalData as D;
   }
 
   protected wsMessageEvent(data: string) {

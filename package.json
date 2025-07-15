@@ -28,6 +28,7 @@
     }
   },
   "dependencies": {
+    "@discordjs/voice": "^0.18.0",
     "@execaman/lyricist": "^2.0.2",
     "@fastify/cors": "^8.5.0",
     "@fastify/websocket": "^10.0.1",
