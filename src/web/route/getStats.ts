@@ -1,6 +1,6 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { Manager } from "../../manager.js";
-import { getTopSongsForGuild, getTopUsersForGuild, getLastPlayedSongForGuild } from "../../database/handler.js";
+import { getTopSongsForGuild, getTopUsersForGuild, getLastPlayedSongForGuild, getTopSongsForUser, getLastPlayedSongForUser } from "../../database/handler.js";
 
 export const getUserStats = (client: Manager) => {
   return async (
@@ -95,5 +95,27 @@ export const getLastPlayed = (client: Manager) => {
     const { guildId } = request.params;
     const lastPlayed = await getLastPlayedSongForGuild(client.db, guildId);
     reply.send({ guildId, lastPlayed });
+  };
+};
+
+export const getTopSongsUser = (client: Manager) => {
+  return async (
+    request: FastifyRequest<{ Params: { userId: string } }>,
+    reply: FastifyReply
+  ) => {
+    const { userId } = request.params;
+    const topSongs = await getTopSongsForUser(client.db, userId);
+    reply.send({ userId, topSongs });
+  };
+};
+
+export const getLastPlayedUser = (client: Manager) => {
+  return async (
+    request: FastifyRequest<{ Params: { userId: string } }>,
+    reply: FastifyReply
+  ) => {
+    const { userId } = request.params;
+    const lastPlayed = await getLastPlayedSongForUser(client.db, userId);
+    reply.send({ userId, lastPlayed });
   };
 }; 

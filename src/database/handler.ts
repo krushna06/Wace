@@ -105,3 +105,24 @@ export async function getTopUsersForGuild(db, guildId, limit = 5) {
 export async function getLastPlayedSongForGuild(db, guildId) {
   return await db.guildLastPlayed.get(guildId);
 }
+
+export async function getTopSongsForUser(db, userId, limit = 5) {
+  const all = await db.songStats.all();
+  return [];
+}
+
+export async function setUserLastPlayed(db, userId, song) {
+  const data = {
+    userId,
+    songId: song.identifier || song.uri,
+    title: song.title,
+    author: song.author,
+    uri: song.uri,
+    playedAt: Date.now(),
+  };
+  await db.userLastPlayed.set(userId, data);
+}
+
+export async function getLastPlayedSongForUser(db, userId) {
+  return await db.userLastPlayed.get(userId);
+}

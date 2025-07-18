@@ -7,7 +7,7 @@ import { AutoReconnectBuilderService } from "../../services/AutoReconnectBuilder
 import { SongNotiEnum } from "../../database/schema/SongNoti.js";
 import { WacelinkFilterMode, WacelinkPlayer, WacelinkTrack } from "../../wacelink/main.js";
 import { getTitle } from "../../utilities/GetTitle.js";
-import { incrementUserSongPlay, incrementGuildSongPlay, incrementGuildSongStats, setGuildLastPlayed } from "../../database/handler.js";
+import { incrementUserSongPlay, incrementGuildSongPlay, incrementGuildSongStats, setGuildLastPlayed, setUserLastPlayed } from "../../database/handler.js";
 
 export default class {
   async execute(client: Manager, player: WacelinkPlayer, track: WacelinkTrack) {
@@ -91,6 +91,7 @@ export default class {
       await incrementGuildSongPlay(client.db, player.guildId);
       await incrementGuildSongStats(client.db, player.guildId, song);
       await setGuildLastPlayed(client.db, player.guildId, song);
+      await setUserLastPlayed(client.db, userId, song);
     }
 
     if (song) {
