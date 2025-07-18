@@ -59,7 +59,31 @@ export const getTopUsers = (client: Manager) => {
   ) => {
     const { guildId } = request.params;
     const topUsers = await getTopUsersForGuild(client.db, guildId);
-    reply.send({ guildId, topUsers });
+    let usersWithNames = [];
+    try {
+      const guild = await client.guilds.fetch(guildId).catch(() => undefined);
+      if (guild) {
+        usersWithNames = (await Promise.all(
+          topUsers.map(async (u) => {
+            let username = u.userId;
+            let isBot = false;
+            try {
+              const member = await guild.members.fetch(u.userId).catch(() => undefined);
+              if (member) {
+                username = member.user.username;
+                isBot = member.user.bot;
+              }
+            } catch {}
+            return { ...u, username, isBot };
+          })
+        )).filter(u => !u.isBot);
+      } else {
+        usersWithNames = topUsers.map((u) => ({ ...u, username: u.userId, isBot: false }));
+      }
+    } catch {
+      usersWithNames = topUsers.map((u) => ({ ...u, username: u.userId, isBot: false }));
+    }
+    reply.send({ guildId, topUsers: usersWithNames });
   };
 };
 
