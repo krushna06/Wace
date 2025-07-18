@@ -89,7 +89,7 @@ export default class {
       }
       await incrementUserSongPlay(client.db, userId, player.guildId);
       await incrementGuildSongPlay(client.db, player.guildId);
-      await incrementGuildSongStats(client.db, player.guildId, song);
+      await incrementGuildSongStats(client.db, player.guildId, song, userId);
       await setGuildLastPlayed(client.db, player.guildId, song);
       await setUserLastPlayed(client.db, userId, song);
     }

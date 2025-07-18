@@ -11,7 +11,6 @@ export class Handler {
   }
 }
 
-// Utility: Increment user song play count
 export async function incrementUserSongPlay(db, userId, guildId) {
   const key = `${userId}:${guildId}`;
   let stats = await db.userStats.get(key);
@@ -54,12 +53,13 @@ export async function incrementGuildCommand(db, guildId) {
   await db.guildStats.set(guildId, stats);
 }
 
-export async function incrementGuildSongStats(db, guildId, song) {
-  const key = `${guildId}:${song.identifier || song.uri}`;
+export async function incrementGuildSongStats(db, guildId, song, userId) {
+  const key = `${guildId}:${userId}:${song.identifier || song.uri}`;
   let stats = await db.songStats.get(key);
   if (!stats) {
     stats = {
       guildId,
+      userId,
       songId: song.identifier || song.uri,
       title: song.title,
       author: song.author,
@@ -108,7 +108,11 @@ export async function getLastPlayedSongForGuild(db, guildId) {
 
 export async function getTopSongsForUser(db, userId, limit = 5) {
   const all = await db.songStats.all();
-  return [];
+  return all
+    .filter((entry) => entry.value.userId === userId)
+    .sort((a, b) => (b.value.playCount || 0) - (a.value.playCount || 0))
+    .slice(0, limit)
+    .map((entry) => entry.value);
 }
 
 export async function setUserLastPlayed(db, userId, song) {
