@@ -1,5 +1,6 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { Manager } from "../../manager.js";
+import { getTopSongsForGuild, getTopUsersForGuild, getLastPlayedSongForGuild } from "../../database/handler.js";
 
 export const getUserStats = (client: Manager) => {
   return async (
@@ -37,5 +38,38 @@ export const getGuildStats = (client: Manager) => {
       songsPlayed: stats.songsPlayed ?? 0,
       commandsExecuted: stats.commandsExecuted ?? 0,
     });
+  };
+};
+
+export const getTopSongs = (client: Manager) => {
+  return async (
+    request: FastifyRequest<{ Params: { guildId: string } }>,
+    reply: FastifyReply
+  ) => {
+    const { guildId } = request.params;
+    const topSongs = await getTopSongsForGuild(client.db, guildId);
+    reply.send({ guildId, topSongs });
+  };
+};
+
+export const getTopUsers = (client: Manager) => {
+  return async (
+    request: FastifyRequest<{ Params: { guildId: string } }>,
+    reply: FastifyReply
+  ) => {
+    const { guildId } = request.params;
+    const topUsers = await getTopUsersForGuild(client.db, guildId);
+    reply.send({ guildId, topUsers });
+  };
+};
+
+export const getLastPlayed = (client: Manager) => {
+  return async (
+    request: FastifyRequest<{ Params: { guildId: string } }>,
+    reply: FastifyReply
+  ) => {
+    const { guildId } = request.params;
+    const lastPlayed = await getLastPlayedSongForGuild(client.db, guildId);
+    reply.send({ guildId, lastPlayed });
   };
 }; 

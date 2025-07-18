@@ -53,3 +53,55 @@ export async function incrementGuildCommand(db, guildId) {
   }
   await db.guildStats.set(guildId, stats);
 }
+
+export async function incrementGuildSongStats(db, guildId, song) {
+  const key = `${guildId}:${song.identifier || song.uri}`;
+  let stats = await db.songStats.get(key);
+  if (!stats) {
+    stats = {
+      guildId,
+      songId: song.identifier || song.uri,
+      title: song.title,
+      author: song.author,
+      uri: song.uri,
+      playCount: 1,
+    };
+  } else {
+    stats.playCount = (stats.playCount || 0) + 1;
+  }
+  await db.songStats.set(key, stats);
+}
+
+export async function setGuildLastPlayed(db, guildId, song) {
+  const data = {
+    guildId,
+    songId: song.identifier || song.uri,
+    title: song.title,
+    author: song.author,
+    uri: song.uri,
+    playedAt: Date.now(),
+  };
+  await db.guildLastPlayed.set(guildId, data);
+}
+
+export async function getTopSongsForGuild(db, guildId, limit = 5) {
+  const all = await db.songStats.all();
+  return all
+    .filter((entry) => entry.value.guildId === guildId)
+    .sort((a, b) => (b.value.playCount || 0) - (a.value.playCount || 0))
+    .slice(0, limit)
+    .map((entry) => entry.value);
+}
+
+export async function getTopUsersForGuild(db, guildId, limit = 5) {
+  const all = await db.userStats.all();
+  return all
+    .filter((entry) => entry.value.guildId === guildId)
+    .sort((a, b) => (b.value.songsPlayed || 0) - (a.value.songsPlayed || 0))
+    .slice(0, limit)
+    .map((entry) => entry.value);
+}
+
+export async function getLastPlayedSongForGuild(db, guildId) {
+  return await db.guildLastPlayed.get(guildId);
+}

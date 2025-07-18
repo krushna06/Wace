@@ -10,6 +10,8 @@ import { QuickDatabasePlus } from "../structures/QuickDatabasePlus.js";
 import { GuildPremium } from "./schema/GuildPremium.js";
 import { GuildStats } from "./schema/GuildStats.js";
 import { UserStats } from "./schema/UserStats.js";
+import { SongStats } from "./schema/SongStats.js";
+import { GuildLastPlayed } from "./schema/GuildLastPlayed.js";
 
 export interface LastfmSession {
   discord_id: string;
@@ -31,4 +33,6 @@ export interface DatabaseTable {
   lastfmSession: QuickDatabasePlus<LastfmSession>;
   userStats: QuickDatabasePlus<UserStats>;
   guildStats: QuickDatabasePlus<GuildStats>;
+  songStats: QuickDatabasePlus<SongStats>;
+  guildLastPlayed: QuickDatabasePlus<GuildLastPlayed>;
 }

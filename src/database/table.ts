@@ -50,6 +50,8 @@ export class TableSetup {
       lastfmSession: await baseDB.table("lastfmSession"),
       userStats: await baseDB.table("userStats"),
       guildStats: await baseDB.table("guildStats"),
+      songStats: await baseDB.table("songStats"),
+      guildLastPlayed: await baseDB.table("guildLastPlayed"),
     };
 
     this.client.isDatabaseConnected = true;
