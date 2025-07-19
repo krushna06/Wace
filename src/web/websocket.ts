@@ -2,50 +2,173 @@ import Fastify from "fastify";
 import { Manager } from "../manager.js";
 import { WebSocket } from "@fastify/websocket";
 
+interface WebsocketConnection {
+  send: (data: Record<string, unknown>) => void;
+  auth?: string;
+  guildId?: string;
+}
+
 export class WebsocketRoute {
   constructor(protected client: Manager) {}
 
   main(fastify: Fastify.FastifyInstance) {
     fastify.get("/websocket", { websocket: true }, (socket, req) => {
-      this.client.logger.info(WebsocketRoute.name, `${req.method} ${req.routeOptions.url}`);
+      this.client.logger.info(WebsocketRoute.name, `WebSocket connection attempt: ${req.method} ${req.routeOptions.url}`);
+      
+      const connection: WebsocketConnection = {
+        send: (data) => socket.send(JSON.stringify(data)),
+      };
+
       socket.on("close", (code, reason) => {
         this.client.logger.info(
           WebsocketRoute.name,
           `Closed with code: ${code}, reason: ${reason}`
         );
+        if (connection.guildId) {
+          this.client.wsl.delete(connection.guildId);
+        }
       });
-      if (!this.checker(socket, req)) return;
-      this.client.wsl.set(String(req.headers["guild-id"]), {
-        send: (data) => socket.send(JSON.stringify(data)),
+
+      socket.on("message", (message) => {
+        try {
+          const data = JSON.parse(message.toString());
+          this.handleWebsocketMessage(socket, connection, data);
+        } catch (error) {
+          socket.send(JSON.stringify({ 
+            error: "Invalid JSON format",
+            type: "error"
+          }));
+        }
       });
+
       this.client.logger.info(
         WebsocketRoute.name,
-        `Websocket opened for guildId: ${req.headers["guild-id"]}`
+        `Websocket connection established`
       );
     });
   }
 
-  checker(socket: WebSocket, req: Fastify.FastifyRequest) {
-    if (!req.headers["guild-id"]) {
-      socket.send(JSON.stringify({ error: "Missing guild-id" }));
-      socket.close(1000, JSON.stringify({ error: "Missing guild-id" }));
-      return false;
+  private handleWebsocketMessage(socket: WebSocket, connection: WebsocketConnection, data: any) {
+    if (data.type === "auth") {
+      this.handleAuth(socket, connection, data);
+      return;
     }
-    if (!req.headers["authorization"]) {
-      socket.send(JSON.stringify({ error: "Missing Authorization" }));
-      socket.close(1000, JSON.stringify({ error: "Missing Authorization" }));
-      return false;
+
+    if (!connection.auth) {
+      socket.send(JSON.stringify({ 
+        error: "Authentication required. Send auth message first.",
+        type: "error"
+      }));
+      return;
     }
-    if (req.headers["authorization"] !== this.client.config.utilities.WEB_SERVER.auth) {
-      socket.send(JSON.stringify({ error: "Authorization failed" }));
-      socket.close(1000, JSON.stringify({ error: "Authorization failed" }));
-      return false;
+
+    if (connection.auth !== this.client.config.utilities.WEB_SERVER.auth) {
+      socket.send(JSON.stringify({ 
+        error: "Invalid authentication token",
+        type: "error"
+      }));
+      return;
     }
-    if (this.client.wsl.get(String(req.headers["guild-id"]))) {
-      socket.send(JSON.stringify({ error: "Alreary hae connection on this guild" }));
-      socket.close(1000, JSON.stringify({ error: "Alreary hae connection on this guild" }));
-      return false;
+
+    switch (data.type) {
+      case "subscribe":
+        this.handleSubscribe(socket, connection, data);
+        break;
+      case "unsubscribe":
+        this.handleUnsubscribe(socket, connection, data);
+        break;
+      case "ping":
+        socket.send(JSON.stringify({ 
+          type: "pong",
+          timestamp: Date.now()
+        }));
+        break;
+      default:
+        socket.send(JSON.stringify({ 
+          error: "Unknown message type",
+          type: "error"
+        }));
     }
-    return true;
+  }
+
+  private handleAuth(socket: WebSocket, connection: WebsocketConnection, data: any) {
+    if (!data.auth) {
+      socket.send(JSON.stringify({ 
+        error: "Missing auth token",
+        type: "error"
+      }));
+      return;
+    }
+
+    if (data.auth !== this.client.config.utilities.WEB_SERVER.auth) {
+      socket.send(JSON.stringify({ 
+        error: "Invalid auth token",
+        type: "error"
+      }));
+      return;
+    }
+
+    connection.auth = data.auth;
+    socket.send(JSON.stringify({ 
+      type: "auth_success",
+      message: "Authentication successful"
+    }));
+  }
+
+  private handleSubscribe(socket: WebSocket, connection: WebsocketConnection, data: any) {
+    if (!data.guildId) {
+      socket.send(JSON.stringify({ 
+        error: "Missing guildId",
+        type: "error"
+      }));
+      return;
+    }
+
+    if (this.client.wsl.get(data.guildId)) {
+      socket.send(JSON.stringify({ 
+        error: "Already have connection on this guild",
+        type: "error"
+      }));
+      return;
+    }
+
+    connection.guildId = data.guildId;
+    this.client.wsl.set(data.guildId, connection);
+    
+    socket.send(JSON.stringify({ 
+      type: "subscribe_success",
+      guildId: data.guildId,
+      message: "Successfully subscribed to guild events"
+    }));
+
+    this.client.logger.info(
+      WebsocketRoute.name,
+      `Websocket subscribed for guildId: ${data.guildId}`
+    );
+  }
+
+  private handleUnsubscribe(socket: WebSocket, connection: WebsocketConnection, data: any) {
+    if (!connection.guildId) {
+      socket.send(JSON.stringify({ 
+        error: "Not subscribed to any guild",
+        type: "error"
+      }));
+      return;
+    }
+
+    this.client.wsl.delete(connection.guildId);
+    const guildId = connection.guildId;
+    connection.guildId = undefined;
+    
+    socket.send(JSON.stringify({ 
+      type: "unsubscribe_success",
+      guildId: guildId,
+      message: "Successfully unsubscribed from guild events"
+    }));
+
+    this.client.logger.info(
+      WebsocketRoute.name,
+      `Websocket unsubscribed from guildId: ${guildId}`
+    );
   }
 }

@@ -42,7 +42,19 @@ export class WebServer {
 
     this.app.register(
       (fastify, _, done) => {
+        fastify.register(WebsocketPlugin);
+        fastify.register((fastify, _, done) => {
+          new WebsocketRoute(client).main(fastify);
+          done();
+        });
+
         fastify.addHook("preValidation", function hook(req, reply, done) {
+          client.logger.info("WebServer", `Route URL: ${req.routeOptions.url}`);
+          
+          if (req.routeOptions.url === "/v1/websocket") {
+            return done();
+          }
+          
           if (!req.headers["authorization"]) {
             reply.code(400);
             reply.send(JSON.stringify({ error: "Missing Authorization" }));
@@ -61,12 +73,6 @@ export class WebServer {
             reply.send(JSON.stringify({ error: "You're not in whitelist" }));
             return done();
           }
-          done();
-        });
-
-        fastify.register(WebsocketPlugin);
-        fastify.register((fastify, _, done) => {
-          new WebsocketRoute(client).main(fastify);
           done();
         });
 

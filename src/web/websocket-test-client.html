@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wace WebSocket Test Client</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .container {
+            display: flex;
+            gap: 20px;
+        }
+        .left-panel, .right-panel {
+            flex: 1;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, button {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #0078D7;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .log {
+            background-color: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            height: 400px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        .status.connected {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status.disconnected {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .status.connecting {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+    </style>
+</head>
+<body>
+    <h1>Wace WebSocket Test Client</h1>
+    
+    <div class="container">
+        <div class="left-panel">
+            <h2>Connection Settings</h2>
+            
+            <div class="form-group">
+                <label for="serverUrl">Server URL:</label>
+                <input type="text" id="serverUrl" value="ws://localhost:3001/v1/websocket" placeholder="ws://localhost:3001/v1/websocket">
+            </div>
+            
+            <div class="form-group">
+                <label for="authToken">Auth Token:</label>
+                <input type="password" id="authToken" placeholder="Enter your auth token">
+            </div>
+            
+            <div class="form-group">
+                <label for="guildId">Guild ID:</label>
+                <input type="text" id="guildId" placeholder="Enter guild ID to subscribe to">
+            </div>
+            
+            <button id="connectBtn" onclick="connect()">Connect</button>
+            <button id="disconnectBtn" onclick="disconnect()" disabled>Disconnect</button>
+            
+            <div id="status" class="status disconnected">
+                Disconnected
+            </div>
+            
+            <h3>Actions</h3>
+            <button id="authBtn" onclick="authenticate()" disabled>Authenticate</button>
+            <button id="subscribeBtn" onclick="subscribe()" disabled>Subscribe</button>
+            <button id="unsubscribeBtn" onclick="unsubscribe()" disabled>Unsubscribe</button>
+            <button id="pingBtn" onclick="ping()" disabled>Ping</button>
+        </div>
+        
+        <div class="right-panel">
+            <h2>Event Log</h2>
+            <div id="log" class="log"></div>
+            <button onclick="clearLog()">Clear Log</button>
+        </div>
+    </div>
+
+    <script>
+        let ws = null;
+        let isAuthenticated = false;
+        let isSubscribed = false;
+
+        function log(message, type = 'info') {
+            const logElement = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            const color = type === 'error' ? 'red' : type === 'success' ? 'green' : 'black';
+            logElement.innerHTML += `<div style="color: ${color}">[${timestamp}] ${message}</div>`;
+            logElement.scrollTop = logElement.scrollHeight;
+        }
+
+        function clearLog() {
+            document.getElementById('log').innerHTML = '';
+        }
+
+        function updateStatus(status, className) {
+            const statusElement = document.getElementById('status');
+            statusElement.textContent = status;
+            statusElement.className = `status ${className}`;
+        }
+
+        function updateButtons() {
+            document.getElementById('connectBtn').disabled = ws !== null;
+            document.getElementById('disconnectBtn').disabled = ws === null;
+            document.getElementById('authBtn').disabled = ws === null || isAuthenticated;
+            document.getElementById('subscribeBtn').disabled = ws === null || !isAuthenticated || isSubscribed;
+            document.getElementById('unsubscribeBtn').disabled = ws === null || !isSubscribed;
+            document.getElementById('pingBtn').disabled = ws === null || !isAuthenticated;
+        }
+
+        function connect() {
+            const serverUrl = document.getElementById('serverUrl').value;
+            
+            try {
+                ws = new WebSocket(serverUrl);
+                updateStatus('Connecting...', 'connecting');
+                log('Attempting to connect...');
+                
+                ws.onopen = function() {
+                    updateStatus('Connected', 'connected');
+                    log('Connected to WebSocket server', 'success');
+                    updateButtons();
+                };
+                
+                ws.onmessage = function(event) {
+                    try {
+                        const data = JSON.parse(event.data);
+                        log(`Received: ${JSON.stringify(data, null, 2)}`);
+                        
+                        switch(data.type) {
+                            case 'auth_success':
+                                isAuthenticated = true;
+                                log('Authentication successful!', 'success');
+                                updateButtons();
+                                break;
+                            case 'subscribe_success':
+                                isSubscribed = true;
+                                log('Successfully subscribed to guild events!', 'success');
+                                updateButtons();
+                                break;
+                            case 'unsubscribe_success':
+                                isSubscribed = false;
+                                log('Successfully unsubscribed from guild events!', 'success');
+                                updateButtons();
+                                break;
+                            case 'pong':
+                                log(`Pong received (latency: ${Date.now() - data.timestamp}ms)`, 'success');
+                                break;
+                            case 'error':
+                                log(`Error: ${data.error}`, 'error');
+                                break;
+                            default:
+                                log(`Event: ${data.type || 'unknown'}`);
+                        }
+                    } catch (error) {
+                        log(`Failed to parse message: ${event.data}`, 'error');
+                    }
+                };
+                
+                ws.onclose = function(event) {
+                    updateStatus('Disconnected', 'disconnected');
+                    log(`Connection closed: ${event.code} - ${event.reason}`, 'error');
+                    ws = null;
+                    isAuthenticated = false;
+                    isSubscribed = false;
+                    updateButtons();
+                };
+                
+                ws.onerror = function(error) {
+                    log(`WebSocket error: ${error}`, 'error');
+                };
+                
+            } catch (error) {
+                log(`Failed to connect: ${error.message}`, 'error');
+            }
+        }
+
+        function disconnect() {
+            if (ws) {
+                ws.close();
+            }
+        }
+
+        function authenticate() {
+            const authToken = document.getElementById('authToken').value;
+            if (!authToken) {
+                log('Please enter an auth token', 'error');
+                return;
+            }
+            
+            const message = {
+                type: 'auth',
+                auth: authToken
+            };
+            
+            ws.send(JSON.stringify(message));
+            log(`Sending auth message...`);
+        }
+
+        function subscribe() {
+            const guildId = document.getElementById('guildId').value;
+            if (!guildId) {
+                log('Please enter a guild ID', 'error');
+                return;
+            }
+            
+            const message = {
+                type: 'subscribe',
+                guildId: guildId
+            };
+            
+            ws.send(JSON.stringify(message));
+            log(`Subscribing to guild: ${guildId}`);
+        }
+
+        function unsubscribe() {
+            const message = {
+                type: 'unsubscribe'
+            };
+            
+            ws.send(JSON.stringify(message));
+            log('Unsubscribing from guild events...');
+        }
+
+        function ping() {
+            const message = {
+                type: 'ping'
+            };
+            
+            ws.send(JSON.stringify(message));
+            log('Sending ping...');
+        }
+
+        // Initialize
+        updateButtons();
+    </script>
+</body>
+</html> 

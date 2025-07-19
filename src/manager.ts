@@ -62,7 +62,7 @@ export class Manager extends Client {
   public plButton: Collection<PlayerButton>;
   public leaveDelay: Collection<NodeJS.Timeout>;
   public nowPlaying: Collection<{ interval: NodeJS.Timeout; msg: GlobalMsg }>;
-  public wsl: Collection<{ send: (data: Record<string, unknown>) => void }>;
+  public wsl: Collection<{ send: (data: Record<string, unknown>) => void; auth?: string; guildId?: string }>;
   public UpdateMusic!: (player: WacelinkPlayer) => Promise<void | Message<true>>;
   public UpdateQueueMsg!: (player: WacelinkPlayer) => Promise<void | Message<true>>;
   public enSwitch!: ActionRowBuilder<ButtonBuilder>;
@@ -141,7 +141,7 @@ export class Manager extends Client {
     this.plButton = new Collection<PlayerButton>();
     this.leaveDelay = new Collection<NodeJS.Timeout>();
     this.nowPlaying = new Collection<{ interval: NodeJS.Timeout; msg: GlobalMsg }>();
-    this.wsl = new Collection<{ send: (data: Record<string, unknown>) => void }>();
+    this.wsl = new Collection<{ send: (data: Record<string, unknown>) => void; auth?: string; guildId?: string }>();
     this.isDatabaseConnected = false;
 
     // Icons setup

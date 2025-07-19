@@ -6,6 +6,150 @@ This directory contains the web API for the Wace Discord bot.
 
 All API endpoints require authentication via the `Authorization` header. The value should match your bot's `app.yml | WEB_SERVER` configuration.
 
+## WebSocket
+
+The WebSocket endpoint has been refactored to require authentication for each event request. The WebSocket now accepts connections without authentication but requires authentication for all event requests. This provides better security and flexibility.
+
+### Connection Flow
+
+#### 1. Establish Connection
+Connect to the WebSocket endpoint without any authentication headers:
+```
+ws://your-server:3001/v1/websocket
+```
+
+#### 2. Authenticate
+Send an authentication message immediately after connection:
+```json
+{
+  "type": "auth",
+  "auth": "your-auth-token"
+}
+```
+
+**Response:**
+```json
+{
+  "type": "auth_success",
+  "message": "Authentication successful"
+}
+```
+
+#### 3. Subscribe to Guild Events
+After successful authentication, subscribe to a specific guild:
+```json
+{
+  "type": "subscribe",
+  "guildId": "123456789012345678"
+}
+```
+
+**Response:**
+```json
+{
+  "type": "subscribe_success",
+  "guildId": "123456789012345678",
+  "message": "Successfully subscribed to guild events"
+}
+```
+
+### Message Types
+
+#### Authentication
+- **type**: `"auth"`
+- **auth**: Your authentication token
+- **Required**: Yes, for all other operations
+
+#### Subscription
+- **type**: `"subscribe"`
+- **guildId**: Discord guild ID to subscribe to
+- **Required**: Yes, to receive guild-specific events
+
+#### Unsubscription
+- **type**: `"unsubscribe"`
+- **Required**: No parameters (unsubscribes from current guild)
+
+#### Ping/Pong
+- **type**: `"ping"`
+- **Response**: `{"type": "pong", "timestamp": 1234567890}`
+
+### Error Responses
+
+All error responses follow this format:
+```json
+{
+  "error": "Error description",
+  "type": "error"
+}
+```
+
+#### Common Errors
+- `"Authentication required. Send auth message first."` - Send auth message before other operations
+- `"Invalid auth token"` - Authentication token is incorrect
+- `"Missing guildId"` - Required guildId parameter is missing
+- `"Already have connection on this guild"` - Another connection is already subscribed to this guild
+- `"Not subscribed to any guild"` - Trying to unsubscribe when not subscribed
+
+### Example JavaScript Client
+
+```javascript
+const ws = new WebSocket('ws://your-server:3001/v1/websocket');
+
+ws.onopen = function() {
+  console.log('Connected to WebSocket');
+  
+  ws.send(JSON.stringify({
+    type: 'auth',
+    auth: 'your-auth-token'
+  }));
+};
+
+ws.onmessage = function(event) {
+  const data = JSON.parse(event.data);
+  
+  switch(data.type) {
+    case 'auth_success':
+      console.log('Authentication successful');
+      ws.send(JSON.stringify({
+        type: 'subscribe',
+        guildId: '123456789012345678'
+      }));
+      break;
+      
+    case 'subscribe_success':
+      console.log('Subscribed to guild events');
+      break;
+      
+    case 'error':
+      console.error('WebSocket error:', data.error);
+      break;
+      
+    default:
+      console.log('Received event:', data);
+  }
+};
+
+ws.onclose = function() {
+  console.log('WebSocket connection closed');
+};
+```
+
+### Security Notes
+
+1. **Authentication is required for all operations** except the initial auth message
+2. **Each message is validated** against the stored authentication token
+3. **Connections are cleaned up** automatically when the socket closes
+4. **Only one connection per guild** is allowed to prevent conflicts
+5. **Invalid JSON messages** are rejected with an error response
+
+### Migration from Old System
+
+If you were using the old WebSocket system with headers:
+- Remove `guild-id` and `authorization` headers from connection
+- Send authentication message after connection
+- Send subscription message after authentication
+- All other functionality remains the same
+
 ## Endpoints
 
 ### Player Management
@@ -583,7 +727,7 @@ All API endpoints require authentication via the `Authorization` header. The val
 
 <table border="1">
 <tr><th>Path</th><th>Description</th></tr>
-<tr><td>ws://localhost:3000/v1/ws/:guildId</td><td>WebSocket connection for guild updates</td></tr>
+<tr><td>ws://localhost:3001/v1/websocket</td><td>WebSocket connection for guild updates</td></tr>
 </table>
 
 ## Error Responses
