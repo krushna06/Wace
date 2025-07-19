@@ -8,14 +8,14 @@ All API endpoints require authentication via the `Authorization` header. The val
 
 ## WebSocket
 
-The WebSocket endpoint has been refactored to require authentication for each event request. The WebSocket now accepts connections without authentication but requires authentication for all event requests. This provides better security and flexibility.
+The WebSocket accepts connections without authentication but requires authentication for all event requests. This provides better security and flexibility.
 
 ### Connection Flow
 
 #### 1. Establish Connection
 Connect to the WebSocket endpoint without any authentication headers:
 ```
-ws://your-server:3001/v1/websocket
+ws://localhost:3001/v1/websocket
 ```
 
 #### 2. Authenticate
