@@ -123,6 +123,13 @@ export default class implements Command {
       });
     }
 
+    if (lyricsRes) {
+      const match = lyricsRes.match(/(\[[A-Za-z0-9'’\- ]+\][\s\S]*)/);
+      if (match && match[1]) {
+        lyricsRes = match[1].trim();
+      }
+    }
+
     const embed = new EmbedBuilder()
       .setColor(client.color)
       .setTitle(

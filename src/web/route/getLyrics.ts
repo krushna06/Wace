@@ -68,6 +68,13 @@ export const getLyricsRoute = (client: Manager) => {
         return reply.code(413).send({ error: "Lyrics too long to display." });
       }
 
+      if (lyricsRes) {
+        const match = lyricsRes.match(/(\[[A-Za-z0-9'’\- ]+\][\s\S]*)/);
+        if (match && match[1]) {
+          lyricsRes = match[1].trim();
+        }
+      }
+
       return reply.send({
         title,
         artist,
