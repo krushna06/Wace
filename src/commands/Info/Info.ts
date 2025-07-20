@@ -21,6 +21,12 @@ export default class implements Command {
   public async execute(client: Manager, handler: CommandHandler) {
     await handler.deferReply();
 
+    const voiceConnections = client.wacelink.players.values.filter(
+      (player) =>
+        player.state === 0 && // WacelinkPlayerState.CONNECTED
+        player.voiceId !== null
+    ).length;
+
     const botInfo = stripIndents`\`\`\`
     Codename        | ${client.metadata.codename}
     Bot Version     | ${client.metadata.version}
@@ -29,6 +35,7 @@ export default class implements Command {
     Autofix Version | ${client.metadata.autofix}
     Guild Count     | ${client.guilds.cache.size}
     User Count      | ${client.guilds.cache.reduce((a, b) => a + b.memberCount, 0)}
+    Active Voices   | ${voiceConnections}
     \`\`\``;
 
     const embed = new EmbedBuilder()
