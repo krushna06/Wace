@@ -20,7 +20,7 @@ export default class implements Command {
       name: "type",
       description: "Stats type (user, guild, top_songs, top_users, last_played)",
       type: ApplicationCommandOptionType.String,
-      required: true,
+      required: false,
       choices: [
         { name: "User", value: "user" },
         { name: "Guild", value: "guild" },
@@ -35,7 +35,23 @@ export default class implements Command {
     await handler.deferReply();
     const type = handler.args[0];
     let embed;
-    if (type === "user") {
+    if (!type) {
+      const key = `${handler.user?.id}:${handler.guild?.id}`;
+      const userStats = await client.db.userStats.get(key);
+      const { getTopSongsForGuild, getLastPlayedSongForGuild } = await import("../../database/handler.js");
+      const topSongs = await getTopSongsForGuild(client.db, handler.guild?.id);
+      const lastPlayed = await getLastPlayedSongForGuild(client.db, handler.guild?.id);
+      embed = new EmbedBuilder()
+        .setTitle(`Stats Summary for ${handler.user?.username}`)
+        .setColor(client.color)
+        .addFields(
+          { name: "Songs Played", value: String(userStats?.songsPlayed ?? 0), inline: true },
+          { name: "Commands Executed", value: String(userStats?.commandsExecuted ?? 0), inline: true },
+          { name: "\u200B", value: "\u200B" },
+          { name: "Top 3 Songs", value: topSongs.length ? topSongs.slice(0, 3).map((s, i) => `**${i + 1}.** [${s.title}](${s.uri}) by ${s.author} — ${s.playCount} plays`).join("\n") : "No song stats available.", inline: false },
+          { name: "Last Played", value: lastPlayed ? `[${lastPlayed.title}](${lastPlayed.uri}) by ${lastPlayed.author}\nPlayed at: <t:${Math.floor((lastPlayed.playedAt || 0) / 1000)}:F>` : "No last played song available.", inline: false }
+        );
+    } else if (type === "user") {
       const key = `${handler.user?.id}:${handler.guild?.id}`;
       const stats = await client.db.userStats.get(key);
       embed = new EmbedBuilder()
