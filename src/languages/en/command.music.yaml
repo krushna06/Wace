@@ -97,3 +97,10 @@ volume_invalid: "`⚠️` | Invalid Volume. Please use a number between **1** an
 insert_desc: "`➕` | Inserted **%{name}** `%{duration}` • %{request}"
 insert_already: "`⚠️` | I can not insert a song that is already playing!"
 insert_notfound: "`⚠️` | Song not found!"
+
+### LastPlayed command!
+lastplayed_guild: "`🎵` | Playing last played song in this guild: **%{title}** `%{duration}` • %{request}"
+lastplayed_user: "`🎵` | Playing your last played song: **%{title}** `%{duration}` • %{request}"
+lastplayed_notfound_guild: "`⚠️` | No last played song found for this guild!"
+lastplayed_notfound_user: "`⚠️` | No last played song found for you!"
+lastplayed_invalid_type: "`⚠️` | Invalid type. Please use 'guild' or 'user'!"
