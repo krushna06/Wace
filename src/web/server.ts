@@ -22,6 +22,7 @@ import { deleteQueueTrack } from "./route/deleteQueueTrack.js";
 import { getGuildChecker } from "./route/getGuildChecker.js";
 import { createPlaylist, deletePlaylist, editPlaylist } from "./route/playlist.js";
 import { getUserStats, getGuildStats, getTopSongs, getTopUsers, getLastPlayed, getTopSongsUser, getLastPlayedUser } from "./route/getStats.js";
+import { getLyricsRoute } from "./route/getLyrics.js";
 
 export class WebServer {
   app: Fastify.FastifyInstance;
@@ -111,6 +112,7 @@ export class WebServer {
         fastify.get("/stats/last-played/:guildId", getLastPlayed(client));
         fastify.get("/stats/top-songs-user/:userId", getTopSongsUser(client));
         fastify.get("/stats/last-played-user/:userId", getLastPlayedUser(client));
+        fastify.get("/lyrics/:guildId", getLyricsRoute(client));
 
         done();
       },
