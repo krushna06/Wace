@@ -65,9 +65,13 @@ export async function incrementGuildSongStats(db, guildId, song, userId) {
       author: song.author,
       uri: song.uri,
       playCount: 1,
+      artworkUrl: song.artworkUrl || undefined,
     };
   } else {
     stats.playCount = (stats.playCount || 0) + 1;
+    if (!stats.artworkUrl && song.artworkUrl) {
+      stats.artworkUrl = song.artworkUrl;
+    }
   }
   await db.songStats.set(key, stats);
 }

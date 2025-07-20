@@ -6,4 +6,5 @@ export interface SongStats {
   author: string;
   uri: string;
   playCount: number;
+  artworkUrl?: string;
 } 

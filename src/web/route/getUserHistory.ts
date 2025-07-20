@@ -22,6 +22,7 @@ export const getUserHistory = (client: Manager) => {
         author: entry.value.author,
         uri: entry.value.uri,
         playCount: entry.value.playCount,
+        image: entry.value.artworkUrl || null,
       }));
     if (!userSongs.length) {
       return reply.code(404).send({ error: "No song history found for this user." });
