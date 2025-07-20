@@ -53,6 +53,7 @@ export class TableSetup {
       songStats: await baseDB.table("songStats"),
       guildLastPlayed: await baseDB.table("guildLastPlayed"),
       userLastPlayed: await baseDB.table("userLastPlayed"),
+      userPlayHistory: await baseDB.table("userPlayHistory"),
     };
 
     this.client.isDatabaseConnected = true;

@@ -131,6 +131,28 @@ export async function setUserLastPlayed(db, userId, song) {
   await db.userLastPlayed.set(userId, data);
 }
 
+export async function logUserPlayHistory(db, userId, guildId, song) {
+  const entry = {
+    userId,
+    guildId,
+    songId: song.identifier || song.uri,
+    title: song.title,
+    author: song.author,
+    uri: song.uri,
+    playedAt: Date.now(),
+    artworkUrl: song.artworkUrl || undefined,
+  };
+  await db.userPlayHistory.set(`${userId}:${guildId}:${Date.now()}`, entry);
+}
+
 export async function getLastPlayedSongForUser(db, userId) {
   return await db.userLastPlayed.get(userId);
+}
+
+export async function getUserPlayHistory(db, userId, guildId) {
+  const all = await db.userPlayHistory.all();
+  return all
+    .filter((entry) => entry.value.userId === userId && entry.value.guildId === guildId)
+    .sort((a, b) => (a.value.playedAt || 0) - (b.value.playedAt || 0))
+    .map((entry) => entry.value);
 }

@@ -13,6 +13,7 @@ import { UserStats } from "./schema/UserStats.js";
 import { SongStats } from "./schema/SongStats.js";
 import { GuildLastPlayed } from "./schema/GuildLastPlayed.js";
 import { UserLastPlayed } from "./schema/UserLastPlayed.js";
+import { UserPlayHistory } from "./schema/UserPlayHistory.js";
 
 export interface LastfmSession {
   discord_id: string;
@@ -37,4 +38,5 @@ export interface DatabaseTable {
   songStats: QuickDatabasePlus<SongStats>;
   guildLastPlayed: QuickDatabasePlus<GuildLastPlayed>;
   userLastPlayed: QuickDatabasePlus<UserLastPlayed>;
+  userPlayHistory: QuickDatabasePlus<UserPlayHistory>;
 }
