@@ -52,6 +52,13 @@ export class PlayerUpdateLoader {
       let cSong = player.queue.current;
       let qDuration = `${formatDuration(TotalDuration + Number(player.queue.current?.duration))}`;
 
+      let dashboardUrl = client.config.utilities.DASHBOARD_URL;
+      let dashboardGuildUrl = "";
+      if (dashboardUrl && dashboardUrl.trim() !== "") {
+        dashboardUrl = dashboardUrl.replace(/\/$/, "");
+        dashboardGuildUrl = `${dashboardUrl}/guild/${player.guildId}`;
+      }
+
       let embed = new EmbedBuilder()
         .setAuthor({
           name: `${client.i18n.get(language, "event.setup", "setup_author")}`,
@@ -77,7 +84,14 @@ export class PlayerUpdateLoader {
             volume: `${player.volume}`,
             duration: qDuration,
           })}`,
-        }); //Volume • ${player.volume}% | Total Duration • ${qDuration}
+        });
+      if (dashboardGuildUrl) {
+        embed.addFields({
+          name: `Dashboard`,
+          value: `[Music Controller](${dashboardGuildUrl})`,
+          inline: false,
+        });
+      }
 
       const queueString = `${client.i18n.get(language, "event.setup", "setup_content")}\n${
         Str == "" ? " " : "\n" + Str

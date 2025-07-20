@@ -95,6 +95,8 @@ utilities:
   DELETE_MSG_TIMEOUT: 3000
   # Auto resume when bot restarted suddenly
   AUTO_RESUME: false
+  # Set your dashboard controller URL here, leave blank to disable link
+  DASHBOARD_URL: "https://localhost:3001"
 
   # Database services config
   DATABASE:

@@ -92,12 +92,32 @@ export default class implements Command {
       .setColor(client.color);
 
     const row = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(selectMenu);
-    const buttons = new ActionRowBuilder<ButtonBuilder>().addComponents(
-      buttonsourcecode,
-      buttonInvite,
-      buttonSupport,
-      buttonDonate
-    );
+    let dashboardButton = null;
+    const dashboardUrl = client.config.utilities.DASHBOARD_URL;
+    if (dashboardUrl && dashboardUrl.trim() !== "") {
+      const url = dashboardUrl.replace(/\/$/, "") + `/guild/${handler.guild?.id ?? ""}`;
+      dashboardButton = new ButtonBuilder()
+        .setLabel("Music Controller")
+        .setStyle(ButtonStyle.Link)
+        .setURL(url);
+    }
+    let buttons;
+    if (dashboardButton) {
+      buttons = new ActionRowBuilder<ButtonBuilder>().addComponents(
+        dashboardButton,
+        buttonsourcecode,
+        buttonInvite,
+        buttonSupport,
+        buttonDonate
+      );
+    } else {
+      buttons = new ActionRowBuilder<ButtonBuilder>().addComponents(
+        buttonsourcecode,
+        buttonInvite,
+        buttonSupport,
+        buttonDonate
+      );
+    }
 
     const initialMessage = await handler.editReply({
       embeds: [initialEmbed],

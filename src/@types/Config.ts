@@ -28,6 +28,7 @@ export interface Utilities {
   PREMIUM_LOG_CHANNEL: string;
   GUILD_LOG_CHANNEL: string;
   LOG_CHANNEL: string;
+  DASHBOARD_URL?: string;
 }
 
 export interface AutofixLavalink {

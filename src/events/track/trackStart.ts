@@ -103,34 +103,48 @@ export default class {
 
     if (SongNoti == SongNotiEnum.Disable) return;
 
+    let dashboardUrl = client.config.utilities.DASHBOARD_URL;
+    let dashboardGuildUrl = "";
+    if (dashboardUrl && dashboardUrl.trim() !== "") {
+      dashboardUrl = dashboardUrl.replace(/\/$/, "");
+      dashboardGuildUrl = `${dashboardUrl}/guild/${player.guildId}`;
+    }
+    const embedFields = [
+      {
+        name: `${client.i18n.get(language, "event.player", "author_title")}`,
+        value: `${song!.author}`,
+        inline: true,
+      },
+      {
+        name: `${client.i18n.get(language, "event.player", "duration_title")}`,
+        value: `${formatDuration(song!.duration)}`,
+        inline: true,
+      },
+      {
+        name: `${client.i18n.get(language, "event.player", "request_title")}`,
+        value: `${song!.requester}`,
+        inline: true,
+      },
+      {
+        name: `${client.i18n.get(language, "event.player", "download_title")}`,
+        value: `**[${song!.title} - 000tube.com](https://www.000tube.com/watch?v=${song?.identifier})**`,
+        inline: false,
+      },
+    ];
+    if (dashboardGuildUrl) {
+      embedFields.push({
+        name: `Dashboard`,
+        value: `[Music Controller](${dashboardGuildUrl})`,
+        inline: false,
+      });
+    }
     const embeded = new EmbedBuilder()
       .setAuthor({
         name: `${client.i18n.get(language, "event.player", "track_title")}`,
         iconURL: `${client.i18n.get(language, "event.player", "track_icon")}`,
       })
       .setDescription(`**${getTitle(client, track)}**`)
-      .addFields([
-        {
-          name: `${client.i18n.get(language, "event.player", "author_title")}`,
-          value: `${song!.author}`,
-          inline: true,
-        },
-        {
-          name: `${client.i18n.get(language, "event.player", "duration_title")}`,
-          value: `${formatDuration(song!.duration)}`,
-          inline: true,
-        },
-        {
-          name: `${client.i18n.get(language, "event.player", "request_title")}`,
-          value: `${song!.requester}`,
-          inline: true,
-        },
-        {
-          name: `${client.i18n.get(language, "event.player", "download_title")}`,
-          value: `**[${song!.title} - 000tube.com](https://www.000tube.com/watch?v=${song?.identifier})**`,
-          inline: false,
-        },
-      ])
+      .addFields(embedFields)
       .setColor(client.color)
       .setThumbnail(
         track.artworkUrl ?? `https://img.youtube.com/vi/${track.identifier}/hqdefault.jpg`
