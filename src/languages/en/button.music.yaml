@@ -8,7 +8,7 @@ resume_msg: "`▶️` | Resumed the **Player**!"
 skip_msg: "`⏭️` | Skipped the **Song**!"
 skip_notfound: "`⚠️` | No song was found to Skip to!"
 # Stop
-stop_msg: "`⏹️` | Stopped the **Player**!\n\n **Loving the bot?**\n Consider becoming a **[patreon](https://www.patreon.com/wacebot/membership)** to support our hard work and the future development of the bot, even just a dollar if you can :heart:"
+stop_msg: "`⏹️` | Stopped the **Player**!\n\n **Loving the bot?**\n Consider becoming a **[patreon](https://www.patreon.com/wacebot/membership)** to support our hard work and the future development of the bot :heart:"
 # Volume
 volup_msg: "`🔊` | Changed Volume to **%{volume}%**"
 voldown_msg: "`🔉` | Changed Volume to **%{volume}%**"

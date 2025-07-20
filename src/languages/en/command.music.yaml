@@ -16,7 +16,7 @@ join_voice: "`⚠️` | You need to be in a voice channel to use this command!"
 join_already: "`⚠️` | I am already in %{channel}"
 
 ### Stop command!
-stop_msg: "`⏹️` | Stopped the **Player**!\n\n **Loving the bot?**\n Consider becoming a [patreon](https://www.patreon.com/wacebot/membership) to support our hard work and the future development of the bot, even just a dollar if you can :heart:"
+stop_msg: "`⏹️` | Stopped the **Player**!\n\n **Loving the bot?**\n Consider becoming a [patreon](https://www.patreon.com/wacebot/membership) to support our hard work and the future development of the bot :heart:"
 
 ### Loop command!
 loop_current: "`🔁` | Looping current **Song**!"
