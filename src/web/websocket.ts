@@ -77,6 +77,12 @@ export class WebsocketRoute {
       case "unsubscribe":
         this.handleUnsubscribe(socket, connection, data);
         break;
+      case "pause":
+        this.handlePause(socket, connection, data);
+        break;
+      case "resume":
+        this.handleResume(socket, connection, data);
+        break;
       case "ping":
         socket.send(JSON.stringify({ 
           type: "pong",
@@ -170,5 +176,65 @@ export class WebsocketRoute {
       WebsocketRoute.name,
       `Websocket unsubscribed from guildId: ${guildId}`
     );
+  }
+
+  private async handlePause(socket: WebSocket, connection: WebsocketConnection, data: any) {
+    if (!connection.guildId) {
+      socket.send(JSON.stringify({
+        error: "Not subscribed to any guild",
+        type: "error"
+      }));
+      return;
+    }
+    const player = this.client.wacelink.players.get(connection.guildId);
+    if (!player) {
+      socket.send(JSON.stringify({
+        error: "Player not found for this guild",
+        type: "error"
+      }));
+      return;
+    }
+    try {
+      await player.setPause(true);
+      socket.send(JSON.stringify({
+        type: "pause_success",
+        guildId: connection.guildId
+      }));
+    } catch (err) {
+      socket.send(JSON.stringify({
+        error: "Failed to pause player",
+        type: "error"
+      }));
+    }
+  }
+
+  private async handleResume(socket: WebSocket, connection: WebsocketConnection, data: any) {
+    if (!connection.guildId) {
+      socket.send(JSON.stringify({
+        error: "Not subscribed to any guild",
+        type: "error"
+      }));
+      return;
+    }
+    const player = this.client.wacelink.players.get(connection.guildId);
+    if (!player) {
+      socket.send(JSON.stringify({
+        error: "Player not found for this guild",
+        type: "error"
+      }));
+      return;
+    }
+    try {
+      await player.setPause(false);
+      socket.send(JSON.stringify({
+        type: "resume_success",
+        guildId: connection.guildId
+      }));
+    } catch (err) {
+      socket.send(JSON.stringify({
+        error: "Failed to resume player",
+        type: "error"
+      }));
+    }
   }
 }
