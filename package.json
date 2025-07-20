@@ -43,6 +43,7 @@
     "discord.js": "^14.14.1",
     "fast-xml-parser": "^4.3.6",
     "fastify": "^4.26.2",
+    "genius-lyrics-api": "^3.2.1",
     "humanize-duration": "^3.31.0",
     "jimp": "^1.6.0",
     "js-yaml": "^4.1.0",

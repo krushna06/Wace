@@ -63,6 +63,7 @@ export interface WebServer {
 export interface Player {
   SPOTIFY: Spotify;
   LASTFM: Lastfm;
+  GENIUS: Genius;
   AUTOCOMPLETE_SEARCH: string[];
   NP_REALTIME: boolean;
   LEAVE_TIMEOUT: number;
@@ -84,6 +85,11 @@ export interface Spotify {
   enable: boolean;
   id: string;
   secret: string;
+}
+
+export interface Genius {
+  enable: boolean;
+  api_key: string;
 }
 
 export interface Emojis {

@@ -3,6 +3,8 @@ import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
 import { Lyricist } from "@execaman/lyricist";
+import { getLyrics } from "genius-lyrics-api";
+import { ConfigDataService } from "../../services/ConfigDataService.js";
 
 // Main code
 export default class implements Command {
@@ -28,35 +30,88 @@ export default class implements Command {
 
   public async execute(client: Manager, handler: CommandHandler) {
     await handler.deferReply();
-    const lyrics = new Lyricist({
-      plugins: [],
-      saveLastResult: false,
-    });
+    const configService = new ConfigDataService();
+    const config = configService.data;
+    const geniusConfig = config.player.GENIUS;
 
-    // Keep it short, around 30
-    // characters in length
     let lyricsRes = null;
     let query = handler.args.join(" ");
+    let title = "";
+    let artist = "";
+
     if (query.length == 0) {
       const player = client.wacelink.players.get(String(handler.guild?.id));
-      if (player)
-        query = player.queue.current ? player.queue.current.title : handler.args.join(" ");
-    }
-
-    try {
-      const result = await lyrics.fetch(query, 3);
-      lyricsRes = result.lyrics;
-      if (!lyricsRes)
+      if (player && player.queue.current) {
+        title = player.queue.current.title || "";
+        artist = player.queue.current.author || "";
+      }
+      if (!title || !artist) {
         return handler.editReply({
           embeds: [
             new EmbedBuilder()
               .setDescription(
-                `${client.i18n.get(handler.language, "command.music", "lyrics_notfound")}`
+                `No song is currently playing, or missing title/artist info. Please use /lyrics search <title> <artist>.`
               )
               .setColor(client.color),
           ],
         });
-    } catch (err) {
+      }
+    } else {
+      const split = query.split(" - ");
+      if (split.length < 2) {
+        return handler.editReply({
+          embeds: [
+            new EmbedBuilder()
+              .setDescription(
+                `Please provide both the song title and artist, separated by a dash. Example: /lyrics search Shape of You - Ed Sheeran`
+              )
+              .setColor(client.color),
+          ],
+        });
+      }
+      title = split[0].trim();
+      artist = split.slice(1).join("-").trim();
+      if (!title || !artist) {
+        return handler.editReply({
+          embeds: [
+            new EmbedBuilder()
+              .setDescription(
+                `Please provide both the song title and artist. Example: /lyrics search Shape of You - Ed Sheeran`
+              )
+              .setColor(client.color),
+          ],
+        });
+      }
+    }
+
+    if (geniusConfig && geniusConfig.enable && geniusConfig.api_key) {
+      try {
+        const options = {
+          apiKey: geniusConfig.api_key,
+          title: title,
+          artist: artist,
+          optimizeQuery: true,
+        };
+        lyricsRes = await getLyrics(options);
+      } catch (err) {
+        lyricsRes = null;
+      }
+    }
+
+    if (!lyricsRes) {
+      try {
+        const lyrics = new Lyricist({
+          plugins: [],
+          saveLastResult: false,
+        });
+        const result = await lyrics.fetch(query, 3);
+        lyricsRes = result.lyrics;
+      } catch (err) {
+        lyricsRes = null;
+      }
+    }
+
+    if (!lyricsRes) {
       return handler.editReply({
         embeds: [
           new EmbedBuilder()

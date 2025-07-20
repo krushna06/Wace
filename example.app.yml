@@ -35,6 +35,11 @@ player:
     id: ""
     secret: ""
 
+  GENIUS:
+    # Your Genius API key, get it from https://genius.com/developers
+    enable: false
+    api_key: ""
+
   # Default search suggestion for auto complete, leave it empty will use default
   AUTOCOMPLETE_SEARCH: ["yorushika", "yoasobi", "tuyu", "hinkik"]
 

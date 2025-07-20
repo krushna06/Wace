@@ -111,6 +111,10 @@ export class ConfigDataService {
           shared_secret: "",
           callback_url: "http://localhost:3001/api/lastfm/callback",
         },
+        GENIUS: {
+          enable: false,
+          api_key: "",
+        },
         AUTOCOMPLETE_SEARCH: ["yorushika", "yoasobi", "tuyu", "hinkik"],
         NP_REALTIME: false,
         LEAVE_TIMEOUT: 30000,
