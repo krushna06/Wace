@@ -1,7 +1,6 @@
 import { Manager } from "../../manager.js";
 import { TopggService } from "../../services/TopggService.js";
 import { VoiceChannel } from "discord.js";
-import { joinVoiceChannel } from "@discordjs/voice";
 
 export default class {
   async execute(client: Manager) {
@@ -37,14 +36,15 @@ export default class {
         if (!voiceChannel || voiceChannel.type !== 2) continue;
         if (!guild.members.me.voice.channelId || guild.members.me.voice.channelId !== data.voice) {
           try {
-            joinVoiceChannel({
-              channelId: data.voice,
+            await client.wacelink.create({
               guildId: guild.id,
-              adapterCreator: guild.voiceAdapterCreator,
-              selfDeaf: true,
-              selfMute: false,
+              voiceId: data.voice,
+              textId: data.text || null,
+              shardId: guild.shardId ?? 0,
+              deaf: true,
+              volume: client.config.player.DEFAULT_VOLUME,
             });
-            client.logger.info("247Startup", `Joined VC for 24/7 in guild ${guild.id}`);
+            client.logger.info("247Startup", `Joined VC for 24/7 in guild ${guild.id} using Wacelink`);
           } catch (e) {
             client.logger.error("247Startup", `Failed to join VC for guild ${guild.id}: ${e}`);
           }
