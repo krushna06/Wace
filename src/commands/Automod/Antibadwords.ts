@@ -87,6 +87,7 @@ export default class implements Command {
   public async execute(client: Manager, handler: CommandHandler) {
     await handler.deferReply();
 
+    // @ts-ignore
     const options = handler.interaction.options as CommandInteractionOptionResolver;
     const type = options.getString("type");
     const exemptRoles = options.getRole("exempt-roles") as Role | null;

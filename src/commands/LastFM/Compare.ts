@@ -34,6 +34,7 @@ export default class implements Command {
 
     let targetUser: DiscordUser | undefined = undefined;
     if (handler.interaction) {
+      // @ts-ignore
       const userOption = handler.interaction.options?.get('user');
       if (userOption && userOption.user) targetUser = userOption.user as DiscordUser;
     } else if (handler.args[0]) {

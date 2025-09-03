@@ -27,6 +27,7 @@ export default class implements Command {
   public async execute(client: Manager, handler: CommandHandler) {
     await handler.deferReply();
 
+    // @ts-ignore
     const roleOption = handler.interaction?.options.get('role');
     if (!roleOption || roleOption.role === null) {
       return handler.editReply({

@@ -320,6 +320,7 @@ export default class implements Command {
         new ActionRowBuilder<TextInputBuilder>().addComponents(playlistPrivate)
       );
 
+      // @ts-ignore
     const value = (interaction.options as CommandInteractionOptionResolver).getString("id");
 
     const playlist = await client.db.playlist.get(value!);

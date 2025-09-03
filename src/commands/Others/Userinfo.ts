@@ -40,6 +40,7 @@ export default class implements Command {
     await handler.deferReply();
 
     const interaction = handler.interaction as CommandInteraction;
+    // @ts-ignore
     const options = interaction.options as CommandInteractionOptionResolver;
 
     const targetUser = options.getUser("user") || interaction.user || handler.message?.author;

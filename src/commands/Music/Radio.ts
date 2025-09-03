@@ -202,6 +202,7 @@ export default class implements Command {
   // Autocomplete function
   async autocomplete(client: Manager, interaction: GlobalInteraction, language: string) {
     let choice: AutocompleteInteractionChoices[] = [];
+    // @ts-ignore
     const url = String((interaction as CommandInteraction).options.get("search")!.value);
 
     const Random =

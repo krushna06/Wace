@@ -42,6 +42,7 @@ export default class implements Command {
     await handler.deferReply();
 
     const interaction = handler.interaction as CommandInteraction;
+    // @ts-ignore
     const query = (interaction.options as CommandInteractionOptionResolver).getString("query");
 
     if (!query) {
