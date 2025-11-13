@@ -9,7 +9,7 @@ export default class implements Command {
   public name = ["forcereset"];
   public description = "Force reset the music player and settings (Admin only)";
   public category = "Admin";
-  public accessableby = [Accessableby.Admin];
+  public accessableby = [Accessableby.Manager];
   public usage = "";
   public aliases = ["freset"];
   public lavalink = true;
