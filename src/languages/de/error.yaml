@@ -39,3 +39,12 @@ topgg_error_desc: "Beim Überprüfen deiner Abstimmung auf top.gg ist ein Fehler
 topgg_vote_author: "❌ | Du hast noch nicht abgestimmt"
 topgg_vote_desc: "Um diesen Befehl zu verwenden, musst du für diesen Bot abstimmen!"
 topgg_vote_button: "Klicke hier, um abzustimmen!"
+
+# DJ Role error
+dj_role_required: "`⚠️` | Du musst die DJ-Rolle haben, um diesen Befehl zu verwenden!"
+dj_role_not_set: "`⚠️` | Es wurde keine DJ-Rolle auf diesem Server eingerichtet. Bitte frage einen Server-Manager, um eine einzurichten mit `/setup-dj`."
+
+# Role error
+no_role: "`⚠️` | Bitte gib eine gültige Rolle an!"
+role_not_editable: "`⚠️` | Ich kann diese Rolle nicht verwalten. Bitte stelle sicher, dass ich die Berechtigung **Rollen verwalten** habe und die Rolle unter meiner höchsten Rolle liegt!"
+user_no_perms: "`⚠️` | Du hast nicht die Berechtigung **%{perm}**, um diesen Befehl auszuführen!"

@@ -1,25 +1,25 @@
-help_menu: "## **[[{botName}] Help Menu](https://wace.live)**"
-categories: "**Available Categories: [7]**"
+help_menu: "## **[[{botName}] Menú de Ayuda](https://wace.live)**"
+categories: "**Categorías Disponibles: [7]**"
 categories_list: "```Automod\n Filtro\n Información\n Música\n Lista de reproducción\n Premium\n Spotify\n Utilidades```"
-information_title: "📰 Information:"
-information_content: "[{botName}] is a simple music bot. It leads to a comfortable experience which is user-friendly, It supports YouTube, Soundcloud, Spotify, Twitch and more!"
-get_started_title: "Get Started"
-get_started_content: "```Join a voice channel and /play {Song/URL} a song. (Names, Youtube Video Links or Playlist links or Spotify links are supported on [{botName}])```"
-didnt_select: "Error | You didn't select a category."
-choose_category: "Choose a command category."
+information_title: "📰 Información:"
+information_content: "[{botName}] es un bot de música simple. Ofrece una experiencia cómoda y fácil de usar. ¡Soporta YouTube, Soundcloud, Spotify, Twitch y más!"
+get_started_title: "Comenzar"
+get_started_content: "```Únete a un canal de voz y usa /play {Canción/URL} para reproducir una canción. (Se admiten nombres, enlaces de videos de YouTube, enlaces de listas de reproducción o enlaces de Spotify en [{botName}])```"
+didnt_select: "Error | No seleccionaste una categoría."
+choose_category: "Elige una categoría de comando."
 
-# Buttons
-source_code_label: "Source Code"
-invite_label: "Invite"
-support_label: "Support"
-donate_label: "Donate"
+# Botones
+source_code_label: "Código Fuente"
+invite_label: "Invitar"
+support_label: "Soporte"
+donate_label: "Donar"
 
-# Donate Modal
-donate_amount_title: "Donate"
-donate_amount_description: "Enter the amount you want to donate."
-invalid_amount: "Invalid amount. Please enter a valid number."
-donate_amount_invalid: "The donate amount is invalid."
+# Modal de Donación
+donate_amount_title: "Donar"
+donate_amount_description: "Ingresa la cantidad que deseas donar."
+invalid_amount: "Cantidad inválida. Por favor ingresa un número válido."
+donate_amount_invalid: "La cantidad de donación es inválida."
 
-# Links
+# Enlaces
 invite_link: "https://discord.com/oauth2/authorize?client_id={clientId}"
 support_link: "{supportLink}"
