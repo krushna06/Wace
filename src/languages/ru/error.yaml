@@ -9,6 +9,7 @@ no_player: "`⚠️` | В данный момент песня не воспро
 
 # Need to join voice & same voice to use command!
 no_in_voice: "`⚠️` | Вы не находитесь в голосовом канале!"
+no_voice: "`⚠️` | Вы не находитесь в голосовом канале!"
 no_same_voice: "`⚠️` | Вы не находитесь в одном голосовом канале со мной!"
 
 # No permission!

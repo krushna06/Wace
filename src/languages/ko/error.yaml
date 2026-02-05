@@ -9,6 +9,7 @@ no_player: "`⚠️` | 현재 재생 중인 곡이 없습니다!"
 
 # Need to join voice & same voice to use command!
 no_in_voice: "`⚠️` | 음성 채널에 접속해주세요!"
+no_voice: "`⚠️` | 음성 채널에 접속해주세요!"
 no_same_voice: "`⚠️` | 저와 같은 음성 채널에 접속해주세요!"
 
 # No permission!

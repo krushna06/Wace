@@ -9,6 +9,7 @@ no_player: "`⚠️` | Aucune chanson n'est actuellement en cours de lecture !"
 
 # Need to join voice & same voice to use command!
 no_in_voice: "`⚠️` | Vous n'êtes pas dans un salon vocal !"
+no_voice: "`⚠️` | Vous n'êtes pas dans un salon vocal !"
 no_same_voice: "`⚠️` | Vous n'êtes pas dans le même salon vocal que moi !"
 
 # No permission!

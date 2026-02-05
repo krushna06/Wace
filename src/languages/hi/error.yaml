@@ -9,6 +9,7 @@ no_player: "`⚠️` | वर्तमान में कोई गाना �
 
 # Need to join voice & same voice to use command!
 no_in_voice: "`⚠️` | आप एक वॉयस चैनल में नहीं हैं!"
+no_voice: "`⚠️` | आप एक वॉयस चैनल में नहीं हैं!"
 no_same_voice: "`⚠️` | आप मुझसे वही वॉयस चैनल में नहीं हैं!"
 
 # No permission!

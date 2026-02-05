@@ -9,6 +9,7 @@ no_player: "`⚠️` | Şu anda hiçbir şarkı çalmıyor!"
 
 # Need to join voice & same voice to use command!
 no_in_voice: "`⚠️` | Bir ses kanalına bağlanmalısınız!"
+no_voice: "`⚠️` | Bir ses kanalına bağlanmalısınız!"
 no_same_voice: "`⚠️` | Benimle aynı ses kanalında değilsiniz!"
 
 # No permission!
