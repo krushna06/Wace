@@ -19,6 +19,13 @@ export interface Bot {
   INVITE_LINK: string;
   SOURCE_CODE_LINK: string;
   SUPPORT_LINK: string;
+  PRESENCE: BotPresence;
+}
+
+export interface BotPresence {
+  status: "online" | "idle" | "dnd" | "invisible";
+  activity_name: string;
+  activity_type: 0 | 1 | 2 | 3 | 4 | 5;
 }
 
 export interface Utilities {

@@ -1,19 +1,20 @@
 import { Manager } from "../../manager.js";
 import { TopggService } from "../../services/TopggService.js";
-import { VoiceChannel } from "discord.js";
 
 export default class {
   async execute(client: Manager) {
     client.logger.info("ClientReady", `Logged in ${client.user!.tag}`);
 
+    const activityName = client.config.bot.PRESENCE.activity_name.replace("${version}", client.metadata.version);
+
     client.user!.setPresence({
       activities: [
         {
-          name: `v${client.metadata.version} | /play`,
-          type: 2,
+          name: activityName,
+          type: client.config.bot.PRESENCE.activity_type,
         },
       ],
-      status: "online",
+      status: client.config.bot.PRESENCE.status,
     });
 
     if (client.config.utilities.TOPGG_TOKEN && client.config.utilities.TOPGG_TOKEN.length !== 0) {

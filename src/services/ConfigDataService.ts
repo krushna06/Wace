@@ -102,6 +102,11 @@ export class ConfigDataService {
         INVITE_LINK: "https://discord.gg/ReA5JyJCR6",
         SOURCE_CODE_LINK: "https://discord.gg/m5Y3rRPuFT",
         SUPPORT_LINK: "https://discord.gg/ReA5JyJCR6",
+        PRESENCE: {
+          status: "online",
+          activity_name: "v${version} | /play",
+          activity_type: 2,
+        },
       },
       player: {
         SPOTIFY: {

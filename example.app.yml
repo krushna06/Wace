@@ -20,6 +20,13 @@ bot:
   INVITE_LINK: "https://discord.gg/ReA5JyJCR6"
   SOURCE_CODE_LINK: "https://discord.gg/m5Y3rRPuFT"
   SUPPORT_LINK: "https://discord.gg/ReA5JyJCR6"
+  # Bot presence/status configuration
+  # status: online, idle, dnd, invisible
+  # activity_type: 0 = Playing, 1 = Streaming, 2 = Listening, 3 = Watching, 4 = Custom, 5 = Competing
+  PRESENCE:
+    status: "online"
+    activity_name: "v${version} | /play"
+    activity_type: 2
 
 player:
   # Your Last.fm API key and Shared Secret, get them from https://www.last.fm/api/account/create
