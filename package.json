@@ -41,7 +41,7 @@
     "discord-hybrid-sharding": "^2.1.4",
     "discord.js": "^14.14.1",
     "fast-xml-parser": "^5.3.4",
-    "fastify": "^4.26.2",
+    "fastify": "^5.7.4",
     "genius-lyrics-api": "^3.2.1",
     "humanize-duration": "^3.31.0",
     "jimp": "^1.6.0",
