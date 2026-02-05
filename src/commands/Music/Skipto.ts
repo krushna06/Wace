@@ -50,10 +50,21 @@ export default class implements Command {
     } else {
       const cuttedQueue = player.queue.splice(0, getPosition);
       const nowCurrentTrack = cuttedQueue.splice(-1)[0];
+      
+      if (!nowCurrentTrack) {
+        const skipped = new EmbedBuilder()
+          .setDescription(`${client.i18n.get(handler.language, "command.music", "skip_notfound")}`)
+          .setColor(client.color);
+        return handler.editReply({ content: " ", embeds: [skipped] });
+      }
+      
       player.queue.previous.push(...cuttedQueue);
       player.queue.current ? player.queue.previous.unshift(player.queue.current) : true;
-      await player.play(nowCurrentTrack);
-      player.queue.shift();
+      
+      await player.play(nowCurrentTrack).catch((err) => {
+        client.logger.error("Skipto play error:", err);
+      });
+      
       client.wsl.get(handler.guild!.id)?.send({
         op: "playerQueueSkip",
         guild: handler.guild!.id,

@@ -28,10 +28,15 @@ export default class {
     if (channel) {
       if (data && data.twentyfourseven) return;
 
-      if (player.queue.length || player!.queue!.current)
-        return new ClearMessageService(client, channel, player);
+      if (player.queue.length || player!.queue!.current) {
+        await new ClearMessageService(client, channel, player);
+        return;
+      }
 
-      if (player.loop !== "none") return new ClearMessageService(client, channel, player);
+      if (player.loop !== "none") {
+        await new ClearMessageService(client, channel, player);
+        return;
+      }
     }
 
     const currentPlayer = client.wacelink.players.get(player.guildId) as WacelinkPlayer;

@@ -261,8 +261,15 @@ export class WacelinkPlayer extends EventEmitter {
       this.manager.emit(WacelinkEvents.TrackResolveError, this, current, errorMessage);
       this.debug(`Player ${this.guildId} resolve error: ${errorMessage}`);
       this.queue.current = null;
+      
+      if (this.queue.size > 0) {
+        const nextTrack = this.queue.shift();
+        if (nextTrack) {
+          return await this.play(nextTrack, options);
+        }
+      }
       // @ts-ignore
-      this.queue.size ? await this.play() : this.manager.emit(WacelinkEvents.QueueEmpty, this);
+      this.manager.emit(WacelinkEvents.QueueEmpty, this);
       return this;
     }
 

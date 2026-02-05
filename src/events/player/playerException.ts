@@ -37,7 +37,10 @@ export default class {
 
     const currentPlayer = client.wacelink.players.get(player.guildId) as WacelinkPlayer;
     if (!currentPlayer) return;
-    if (currentPlayer.queue.length > 0) return await player.skip().catch(() => {});
+    if (currentPlayer.queue.length > 0) {
+      await player.skip().catch(() => {});
+      return;
+    }
     if (!currentPlayer.sudoDestroy) await player.destroy().catch(() => {});
   }
 }

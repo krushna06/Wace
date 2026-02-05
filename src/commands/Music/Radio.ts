@@ -128,7 +128,9 @@ export default class implements Command {
 
     if (handler.message) await handler.message.delete().catch(() => null);
 
-    if (!player.playing) player.play();
+    if (!player.playing) await player.play().catch((err) => {
+      client.logger.error("Radio command error:", err);
+    });
 
     if (result.type === "TRACK") {
       const embed = new EmbedBuilder()
@@ -227,18 +229,24 @@ export default class implements Command {
       });
       return;
     }
-    const searchRes = await client.wacelink.search(url || Random);
+    
+    try {
+      const searchRes = await client.wacelink.search(url || Random);
 
-    if (searchRes.tracks.length == 0 || !searchRes.tracks) {
-      return choice.push({ name: "Error song not matches", value: url });
-    }
+      if (!searchRes || !searchRes.tracks || searchRes.tracks.length == 0) {
+        return choice.push({ name: "Error song not matches", value: url });
+      }
 
-    for (let i = 0; i < 10; i++) {
-      const x = searchRes.tracks[i];
-      choice.push({
-        name: x && x.title ? x.title : "Unknown track name",
-        value: x && x.uri ? x.uri : url,
-      });
+      for (let i = 0; i < 10; i++) {
+        const x = searchRes.tracks[i];
+        choice.push({
+          name: x && x.title ? x.title : "Unknown track name",
+          value: x && x.uri ? x.uri : url,
+        });
+      }
+    } catch (error) {
+      client.logger.error("Autocomplete search error:", error);
+      choice.push({ name: "Search error - try again", value: url });
     }
 
     await (interaction as AutocompleteInteraction).respond(choice).catch(() => {});

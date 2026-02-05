@@ -4,7 +4,9 @@ import { AutoReconnectBuilderService } from "../../services/AutoReconnectBuilder
 
 export default class {
   async execute(client: Manager, node: WacelinkNode, code: number, reason: Buffer) {
-    client.wacelink.players.forEach(async (player, guildId) => {
+    const players = Array.from(client.wacelink.players.entries());
+    
+    for (const [guildId, player] of players) {
       if (player.node.options.name == node.options.name) {
         const data = await new AutoReconnectBuilderService(client, player).get(guildId);
         const p: any = player;
@@ -38,7 +40,7 @@ export default class {
           player.destroy().catch(() => {});
         }
       }
-    });
+    }
     client.logger.debug(
       "NodeDisconnect",
       `Lavalink ${node.options.name}: Disconnected, Code: ${code}, Reason: ${reason}`
