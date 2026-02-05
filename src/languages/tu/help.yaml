@@ -1,10 +1,10 @@
-help_menu: "## **[Wace Yardım Menüsü](https://wace.live)**"
+help_menu: "## **[[{botName}] Yardım Menüsü](https://wace.live)**"
 categories: "**Mevcut Kategoriler: [7]**"
 categories_list: "```Otomod\n Filtre\n Bilgi\n Müzik\n Çalma Listesi\n Premium\n Spotify\n Araçlar```"
 information_title: "📰 Bilgi:"
-information_content: "Wace basit bir müzik botudur. Kullanıcı dostu bir deneyim sunar, YouTube, Soundcloud, Spotify, Twitch ve daha fazlasını destekler!"
+information_content: "[{botName}] basit bir müzik botudur. Kullanıcı dostu bir deneyim sunar, YouTube, Soundcloud, Spotify, Twitch ve daha fazlasını destekler!"
 get_started_title: "Başlangıç"
-get_started_content: "```Bir ses kanalına katılın ve /play {Şarkı/URL} komutunu kullanarak bir şarkı çalın. (Wace üzerinde isimler, YouTube video bağlantıları, çalma listesi bağlantıları veya Spotify bağlantıları desteklenir)```"
+get_started_content: "```Bir ses kanalına katılın ve /play {Şarkı/URL} komutunu kullanarak bir şarkı çalın. ([{botName}] üzerinde isimler, YouTube video bağlantıları, çalma listesi bağlantıları veya Spotify bağlantıları desteklenir)```"
 didnt_select: "Hata | Bir kategori seçmediniz."
 choose_category: "Bir komut kategorisi seçin."
 
@@ -21,5 +21,5 @@ invalid_amount: "Geçersiz miktar. Lütfen geçerli bir sayı girin."
 donate_amount_invalid: "Bağış miktarı geçersiz."
 
 # Bağlantılar
-invite_link: "https://discord.com/oauth2/authorize?client_id=1221392528566386768"
-support_link: "https://discord.gg/wacebot"
+invite_link: "https://discord.com/oauth2/authorize?client_id={clientId}"
+support_link: "{supportLink}"

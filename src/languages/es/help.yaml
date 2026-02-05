@@ -1,10 +1,10 @@
-help_menu: "## **[Wace Help Menu](https://wace.live)**"
+help_menu: "## **[[{botName}] Help Menu](https://wace.live)**"
 categories: "**Available Categories: [7]**"
 categories_list: "```Automod\n Filtro\n Información\n Música\n Lista de reproducción\n Premium\n Spotify\n Utilidades```"
 information_title: "📰 Information:"
-information_content: "Wace is a simple music bot. It leads to a comfortable experience which is user-friendly, It supports YouTube, Soundcloud, Spotify, Twitch and more!"
+information_content: "[{botName}] is a simple music bot. It leads to a comfortable experience which is user-friendly, It supports YouTube, Soundcloud, Spotify, Twitch and more!"
 get_started_title: "Get Started"
-get_started_content: "```Join a voice channel and /play {Song/URL} a song. (Names, Youtube Video Links or Playlist links or Spotify links are supported on Wace)```"
+get_started_content: "```Join a voice channel and /play {Song/URL} a song. (Names, Youtube Video Links or Playlist links or Spotify links are supported on [{botName}])```"
 didnt_select: "Error | You didn't select a category."
 choose_category: "Choose a command category."
 
@@ -21,5 +21,5 @@ invalid_amount: "Invalid amount. Please enter a valid number."
 donate_amount_invalid: "The donate amount is invalid."
 
 # Links
-invite_link: "https://discord.com/oauth2/authorize?client_id=1221392528566386768"
-support_link: "https://discord.gg/wacebot"
+invite_link: "https://discord.com/oauth2/authorize?client_id={clientId}"
+support_link: "{supportLink}"

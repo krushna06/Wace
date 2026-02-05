@@ -32,8 +32,8 @@ export default class implements Command {
       )
       .addFields([
         {
-          name: "Wace",
-          value: "https://discord.gg/ReA5JyJCR6",
+          name: client.config.bot.BOT_NAME,
+          value: client.config.bot.INVITE_LINK,
           inline: false,
         },
       ])

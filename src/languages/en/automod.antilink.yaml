@@ -1,6 +1,6 @@
       specify_enable_disable: "Please specify whether to enable or disable the anti-link system."
       max_keyword_rules: "You have reached the maximum number of keyword rules (6)."
-      rule_name: "Anti-Links [Wace]"
+      rule_name: "Anti-Links [{botName}]"
       system_already_enabled: "The anti-link system is already enabled."
       block_message: "Links are not allowed in this channel."
       requested_by: "Requested by {username}"

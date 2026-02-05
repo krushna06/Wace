@@ -2,7 +2,7 @@
   enable_at_least_one_filter: "Please enable at least one filter option."
   system_already_enabled: "The anti-bad-words system is already enabled."
   new_rule_created: "A new rule will be created."
-  rule_name: "Anti-Bad-Words [Wace]"
+  rule_name: "Anti-Bad-Words [{botName}]"
   block_message: "Your message was blocked due to inappropriate content."
   requested_by: "Requested by {username}."
   no_view_permission: "I don't have permission to view the channel <#{channelId}>."

@@ -128,13 +128,13 @@ export class WebServer {
         "This ain't rule 34...",
         "💀",
         "Can you do something better please -_-",
-        "Don't be like nostep ._.",
+        `Don't be like ${this.client.config.utilities.WEB_SERVER.EASTER_EGG_REFERENCE} ._.,`,
         "Why you still here >:v",
         "I know catgirls do nothing wrong but why you still here...",
         "Bro, I don't have any catgirls collection (or cosplay collection) so please leave...",
       ];
       client.logger.info("HealthRouterService", `${request.method} ${request.routeOptions.url}`);
-      reply.send({ wace: response[Math.floor(Math.random() * response.length)] });
+      reply.send({ [this.client.config.bot.BOT_NAME.toLowerCase()]: response[Math.floor(Math.random() * response.length)] });
     });
 
     const port = this.client.config.utilities.WEB_SERVER.port;

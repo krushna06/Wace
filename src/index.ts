@@ -8,9 +8,9 @@ configData.bot.TOKEN.forEach((token, index) => {
     .on("unhandledRejection", (error) => wace.logger.unhandled("AntiCrash", error))
     .on("uncaughtException", (error) => wace.logger.unhandled("AntiCrash", error))
     .on("uncaughtExceptionMonitor", (error) => wace.logger.unhandled("AntiCrash", error))
-    .on("exit", () => wace.logger.info("ClientManager", `Successfully Powered Off Wace, Good Bye!`))
+    .on("exit", () => wace.logger.info("ClientManager", `Successfully Powered Off ${configData.bot.BOT_NAME}, Good Bye!`))
     .on("SIGINT", () => {
-      wace.logger.info("ClientManager", `Powering Down Wace...`);
+      wace.logger.info("ClientManager", `Powering Down ${configData.bot.BOT_NAME}...`);
       process.exit(0);
     });
   wace.start();

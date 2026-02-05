@@ -1,6 +1,6 @@
 specify_enable_disable: "Veuillez spécifier si vous souhaitez activer ou désactiver le système anti-liens."
 max_keyword_rules: "Vous avez atteint le nombre maximal de règles de mots-clés (6)."
-rule_name: "Anti-Liens [Wace]"
+rule_name: "Anti-Liens [{botName}]"
 system_already_enabled: "Le système anti-liens est déjà activé."
 block_message: "Les liens ne sont pas autorisés dans ce canal."
 requested_by: "Demandé par {username}"

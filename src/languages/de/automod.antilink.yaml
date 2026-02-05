@@ -1,6 +1,6 @@
 specify_enable_disable: "Bitte geben Sie an, ob das Anti-Link-System aktiviert oder deaktiviert werden soll."
 max_keyword_rules: "Sie haben die maximale Anzahl von Stichwortregeln (6) erreicht."
-rule_name: "Anti-Links [Wace]"
+rule_name: "Anti-Links [[{botName}]]"
 system_already_enabled: "Das Anti-Link-System ist bereits aktiviert."
 block_message: "Links sind in diesem Kanal nicht erlaubt."
 requested_by: "Angefordert von {username}"

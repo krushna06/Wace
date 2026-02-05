@@ -1,10 +1,10 @@
-help_menu: "## **[Wace मदद मेन्यू](https://wace.live)**"
+help_menu: "## **[[{botName}] मदद मेन्यू](https://wace.live)**"
 categories: "**उपलब्ध श्रेणियां: [7]**"
 categories_list: "```ऑटोमॉड\n फ़िल्टर\n जानकारी\n संगीत\n प्लेलिस्ट\n प्रीमियम\n स्पॉटिफ़ाई\n उपयोगिताएँ````"
 information_title: "📰 सूचना:"
-information_content: "Wace एक सरल संगीत बॉट है। यह एक आरामदायक अनुभव के लिए नेविगेट करता है जो उपयोगकर्ता-मित्र है, यह YouTube, Soundcloud, Spotify, Twitch और अधिक का समर्थन करता है!"
+information_content: "[{botName}] एक सरल संगीत बॉट है। यह एक आरामदायक अनुभव के लिए नेविगेट करता है जो उपयोगकर्ता-मित्र है, यह YouTube, Soundcloud, Spotify, Twitch और अधिक का समर्थन करता है!"
 get_started_title: "शुरू हो जाओ"
-get_started_content: "```एक वॉयस चैनल में शामिल हो जाएं और /play {गाना/URL} एक गाना चलाएं। (नाम, Youtube वीडियो लिंक्स या प्लेलिस्ट लिंक्स या Spotify लिंक्स Wace पर समर्थित हैं)```"
+get_started_content: "```एक वॉयस चैनल में शामिल हो जाएं और /play {गाना/URL} एक गाना चलाएं। (नाम, Youtube वीडियो लिंक्स या प्लेलिस्ट लिंक्स या Spotify लिंक्स [{botName}] पर समर्थित हैं)```"
 didnt_select: "त्रुटि | आपने कोई श्रेणी चुनी नहीं।"
 choose_category: "एक कमांड श्रेणी चुनें।"
 
@@ -21,5 +21,5 @@ invalid_amount: "अमान्य राशि। कृपया एक व�
 donate_amount_invalid: "दान राशि अमान्य है।"
 
 # Links
-invite_link: "https://discord.com/oauth2/authorize?client_id=1221392528566386768"
-support_link: "https://discord.gg/wacebot"
+invite_link: "https://discord.com/oauth2/authorize?client_id={clientId}"
+support_link: "{supportLink}"

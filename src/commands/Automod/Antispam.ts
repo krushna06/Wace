@@ -106,7 +106,7 @@ export default class implements Command {
       }
 
       const ruleToCreate: any = {
-        name: "Anti-spam [Wace]",
+        name: `Anti-spam [${client.config.bot.BOT_NAME}]`,
         creatorId: client.user!.id,
         enabled: true,
         eventType: AutoModerationRuleEventType.MessageSend,
@@ -117,7 +117,7 @@ export default class implements Command {
           {
             type: AutoModerationActionType.BlockMessage,
             metadata: {
-              customMessage: "Message blocked due to detected spam. Rule added by Wace",
+              customMessage: `Message blocked due to detected spam. Rule added by ${client.config.bot.BOT_NAME}`,
             },
           },
         ],
@@ -175,7 +175,7 @@ export default class implements Command {
           type: AutoModerationActionType.SendAlertMessage,
           metadata: {
             channelId: logChannel.id,
-            customMessage: "Message blocked due to detected spam. Rule added by Wace",
+            customMessage: `Message blocked due to detected spam. Rule added by ${client.config.bot.BOT_NAME}`,
           },
         });
       }

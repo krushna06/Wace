@@ -1,6 +1,6 @@
 specify_enable_disable: "Lütfen anti-link sistemi'nin etkinleştirilip devre dışı bırakılacağını belirtin."
 max_keyword_rules: "Maksimum anahtar kelime kuralı sayısına (6) ulaştınız."
-rule_name: "Link Engelleme [Wace]"
+rule_name: "Link Engelleme [[{botName}]]"
 system_already_enabled: "Link engelleme sistemi zaten etkin."
 block_message: "Bağlantılar bu kanalda izin verilmiyor."
 requested_by: "{username} tarafından istendi."

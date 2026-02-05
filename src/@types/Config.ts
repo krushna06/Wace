@@ -15,6 +15,10 @@ export interface Bot {
   ADMIN: string[];
   LANGUAGE: string;
   DEBUG_MODE: boolean;
+  BOT_NAME: string;
+  INVITE_LINK: string;
+  SOURCE_CODE_LINK: string;
+  SUPPORT_LINK: string;
 }
 
 export interface Utilities {
@@ -59,6 +63,8 @@ export interface WebServer {
   port: number;
   auth: string;
   whitelist: string[];
+  BOT_NAME: string;
+  EASTER_EGG_REFERENCE: string;
 }
 
 export interface Player {

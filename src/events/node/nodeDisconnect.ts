@@ -4,7 +4,7 @@ import { AutoReconnectBuilderService } from "../../services/AutoReconnectBuilder
 
 export default class {
   async execute(client: Manager, node: WacelinkNode, code: number, reason: Buffer) {
-    const players = Array.from(client.wacelink.players.entries());
+    const players = client.wacelink.players.full;
     
     for (const [guildId, player] of players) {
       if (player.node.options.name == node.options.name) {

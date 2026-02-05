@@ -1,5 +1,5 @@
 # Wace config file via .yml
-# Version 1.1.1
+# Version 1.1.2
 # You can use ${} to pass an enviroment varible from .env file
 # Eg:
 # something: ${DATA}
@@ -15,6 +15,11 @@ bot:
   # You can set it to en, fr, de, hi, ko, ru, es and tu. More will come soon.
   LANGUAGE: "en"
   DEBUG_MODE: false
+  # Bot branding
+  BOT_NAME: "Wace"
+  INVITE_LINK: "https://discord.gg/ReA5JyJCR6"
+  SOURCE_CODE_LINK: "https://discord.gg/m5Y3rRPuFT"
+  SUPPORT_LINK: "https://discord.gg/ReA5JyJCR6"
 
 player:
   # Your Last.fm API key and Shared Secret, get them from https://www.last.fm/api/account/create
@@ -131,6 +136,7 @@ utilities:
     port: 3001
     whitelist: [] # Example: ["lavalink.dev"]
     auth: "youshallnotpass"
+    EASTER_EGG_REFERENCE: "nostep"
 
 # You can custom your emoji here!
 emojis:

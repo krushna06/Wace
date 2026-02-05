@@ -98,6 +98,10 @@ export class ConfigDataService {
         LANGUAGE: "en",
         DEBUG_MODE: false,
         ADMIN: [],
+        BOT_NAME: "Wace",
+        INVITE_LINK: "https://discord.gg/ReA5JyJCR6",
+        SOURCE_CODE_LINK: "https://discord.gg/m5Y3rRPuFT",
+        SUPPORT_LINK: "https://discord.gg/ReA5JyJCR6",
       },
       player: {
         SPOTIFY: {
@@ -151,6 +155,8 @@ export class ConfigDataService {
           port: 2880,
           auth: "youshallnotpass",
           whitelist: [],
+          BOT_NAME: "[{botName}]",
+          EASTER_EGG_REFERENCE: "nostep",
         },
         PREMIUM_LOG_CHANNEL: "",
         GUILD_LOG_CHANNEL: "",

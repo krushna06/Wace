@@ -1,6 +1,6 @@
 specify_enable_disable: "반드시 '활성화' 또는 '비활성화'를 지정해주세요."
 max_keyword_rules: "키워드 규칙의 최대 개수(6개)에 도달하였습니다."
-rule_name: "링크 차단 [Wace]"
+rule_name: "링크 차단 [[{botName}]]"
 system_already_enabled: "링크 차단 시스템은 이미 활성화되어 있습니다."
 block_message: "이 채널에서는 링크를 허용하지 않습니다."
 requested_by: "{username} 님 요청"

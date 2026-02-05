@@ -1,4 +1,4 @@
-help_menu: "## **[Wace 도움말 메뉴](https://wace.live)**"
+help_menu: "## **[[{botName}] 도움말 메뉴](https://wace.live)**"
 categories: "**사용 가능한 카테고리: [7]**"
 categories_list: "```자동 모드\n 필터\n 정보\n 음악\n 재생 목록\n 프리미엄\n 스포티파이\n 유틸리티```"
 information_title: "📰 정보:"
@@ -21,5 +21,5 @@ invalid_amount: "유효하지 않은 금액입니다. 유효한 숫자를 입력
 donate_amount_invalid: "기부 금액이 유효하지 않습니다."
 
 # 링크
-invite_link: "https://discord.com/oauth2/authorize?client_id=1221392528566386768"
-support_link: "https://discord.gg/wacebot"
+invite_link: "https://discord.com/oauth2/authorize?client_id={clientId}"
+support_link: "{supportLink}"

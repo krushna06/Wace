@@ -1,6 +1,6 @@
 specify_enable_disable: "Por favor especifica si deseas habilitar o deshabilitar el sistema anti-enlaces."
 max_keyword_rules: "Has alcanzado el número máximo de reglas de palabras clave (6)."
-rule_name: "Anti-Enlaces [Wace]"
+rule_name: "Anti-Enlaces [[{botName}]]"
 system_already_enabled: "El sistema anti-enlaces ya está habilitado."
 block_message: "No se permiten enlaces en este canal."
 requested_by: "Solicitado por {username}"

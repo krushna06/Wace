@@ -1,5 +1,5 @@
 ### Help command!
-intro1: "・I'm Wace, a music bot with wide-range of commands."
+intro1: "・I'm [{botName}], a music bot with wide-range of commands."
 intro2: "・Developed by **n0step_**"
 intro3: "・Partnered with **[Academy Gaming](https://www.academy-hosting.com/aff.php?aff=10)**"
 prefix: "・**Bot Prefix:** %{prefix}"

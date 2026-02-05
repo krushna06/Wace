@@ -109,7 +109,7 @@ export class Manager extends Client {
     this.i18n = new Localization({
       defaultLocale: this.config.bot.LANGUAGE || "en",
       directory: resolve(join(__dirname, "languages")),
-    });
+    }, this.config, undefined);
     this.prefix = this.config.utilities.MESSAGE_CONTENT.commands.prefix || "d!";
     this.REGEX = [
       /(?:https?:\/\/)?(?:www\.)?youtu(?:\.be\/|be.com\/\S*(?:watch|embed)(?:(?:(?=\/[-a-zA-Z0-9_]{11,}(?!\S))\/)|(?:\S*v=|v\/)))([-a-zA-Z0-9_]{11,})/,

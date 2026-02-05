@@ -2,7 +2,7 @@ specify_enable_disable: "Bitte geben Sie entweder 'aktivieren' oder 'deaktiviere
 enable_at_least_one_filter: "Bitte aktivieren Sie mindestens eine Filteroption."
 system_already_enabled: "Das Anti-Schlechte-Wörter-System ist bereits aktiviert."
 new_rule_created: "Es wird eine neue Regel erstellt."
-rule_name: "Anti-Schlechte-Wörter [Wace]"
+rule_name: "Anti-Schlechte-Wörter [[{botName}]]"
 block_message: "Ihre Nachricht wurde aufgrund von unangemessenem Inhalt blockiert."
 requested_by: "Angefordert von {username}."
 no_view_permission: "Ich habe keine Berechtigung, den Kanal <#{channelId}> einzusehen."

@@ -52,21 +52,20 @@ export default class implements Command {
 
     const buttonsourcecode = new ButtonBuilder()
       .setLabel(client.i18n.get(handler.language, "help", "source_code_label"))
-      .setURL("https://discord.gg/m5Y3rRPuFT")
+      .setURL(client.config.bot.SOURCE_CODE_LINK)
       .setStyle(ButtonStyle.Link);
 
     const buttonInvite = new ButtonBuilder()
       .setLabel(client.i18n.get(handler.language, "help", "invite_label"))
       .setStyle(ButtonStyle.Link)
-      .setURL("https://discord.com/oauth2/authorize?client_id=1221392528566386768");
+      .setURL(`https://discord.com/oauth2/authorize?client_id=${client.user?.id}`);
 
     const buttonSupport = new ButtonBuilder()
       .setLabel(client.i18n.get(handler.language, "help", "support_label"))
       .setStyle(ButtonStyle.Link)
-      .setURL("https://discord.gg/ReA5JyJCR6");
+      .setURL(client.config.bot.SUPPORT_LINK);
 
     const buttonDonate = new ButtonBuilder()
-      .setEmoji("<:__paypal:996085845423562762>")
       .setStyle(ButtonStyle.Secondary)
       .setLabel(client.i18n.get(handler.language, "help", "donate_label"))
       .setCustomId("donate");

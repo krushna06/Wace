@@ -2,7 +2,7 @@ specify_enable_disable: "'활성화' 또는 '비활성화'를 지정해주세요
 enable_at_least_one_filter: "적어도 하나의 필터 옵션을 활성화해주세요."
 system_already_enabled: "금지어 방지 시스템은 이미 활성화되어 있습니다."
 new_rule_created: "새로운 규칙이 생성될 것입니다."
-rule_name: "금지어 방지 [Wace]"
+rule_name: "금지어 방지 [[{botName}]]"
 block_message: "부적절한 내용으로 인해 메시지가 차단되었습니다."
 requested_by: "{username} 님 요청."
 no_view_permission: "채널 <#{channelId}>을(를) 보기 위한 권한이 없습니다."
