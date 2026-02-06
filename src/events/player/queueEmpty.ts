@@ -56,6 +56,12 @@ export default class {
     if (data !== null && data && data.twentyfourseven && channel)
       return new ClearMessageService(client, channel, player);
 
+    const skipTriggered = player.data.get("skipTriggered");
+    if (skipTriggered) {
+      player.data.set("skipTriggered", false);
+      return;
+    }
+
     if (player.state !== WacelinkPlayerState.DESTROYED) await player.destroy().catch(() => {});
   }
 }

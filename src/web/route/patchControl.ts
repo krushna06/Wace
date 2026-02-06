@@ -64,10 +64,12 @@ export class PatchControl {
     }
     if (player.queue.length == 0) return true;
     if (mode == "skip") {
+      player.data.set("skipTriggered", true);
       await player.skip();
       this.skiped = true;
       return true;
     }
+    player.data.set("skipTriggered", true);
     await player.previous();
     this.isPrevious = true;
     return true;

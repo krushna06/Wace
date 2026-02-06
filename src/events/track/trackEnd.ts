@@ -41,6 +41,13 @@ export default class {
 
     const currentPlayer = client.wacelink.players.get(player.guildId) as WacelinkPlayer;
     if (!currentPlayer) return;
+    
+    const skipTriggered = player.data.get("skipTriggered");
+    if (skipTriggered) {
+      player.data.set("skipTriggered", false);
+      return;
+    }
+    
     if (!currentPlayer.sudoDestroy) await player.destroy().catch(() => {});
   }
 }
