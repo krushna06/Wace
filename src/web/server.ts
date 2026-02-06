@@ -51,7 +51,9 @@ export class WebServer {
         });
 
         fastify.addHook("preValidation", function hook(req, reply, done) {
-          client.logger.info("WebServer", `Route URL: ${req.routeOptions.url}`);
+          if (req.routeOptions.url !== "/v1/websocket") {
+            client.logger.info("WebServer", `Route URL: ${req.routeOptions.url}`);
+          }
           
           if (req.routeOptions.url === "/v1/websocket") {
             return done();

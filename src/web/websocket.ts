@@ -13,17 +13,11 @@ export class WebsocketRoute {
 
   main(fastify: Fastify.FastifyInstance) {
     fastify.get("/websocket", { websocket: true }, (socket, req) => {
-      this.client.logger.info(WebsocketRoute.name, `WebSocket connection attempt: ${req.method} ${req.routeOptions.url}`);
-      
       const connection: WebsocketConnection = {
         send: (data) => socket.send(JSON.stringify(data)),
       };
 
       socket.on("close", (code, reason) => {
-        this.client.logger.info(
-          WebsocketRoute.name,
-          `Closed with code: ${code}, reason: ${reason}`
-        );
         if (connection.guildId) {
           this.client.wsl.delete(connection.guildId);
         }
@@ -40,11 +34,6 @@ export class WebsocketRoute {
           }));
         }
       });
-
-      this.client.logger.info(
-        WebsocketRoute.name,
-        `Websocket connection established`
-      );
     });
   }
 
@@ -146,11 +135,6 @@ export class WebsocketRoute {
       guildId: data.guildId,
       message: "Successfully subscribed to guild events"
     }));
-
-    this.client.logger.info(
-      WebsocketRoute.name,
-      `Websocket subscribed for guildId: ${data.guildId}`
-    );
   }
 
   private handleUnsubscribe(socket: WebSocket, connection: WebsocketConnection, data: any) {
@@ -171,11 +155,6 @@ export class WebsocketRoute {
       guildId: guildId,
       message: "Successfully unsubscribed from guild events"
     }));
-
-    this.client.logger.info(
-      WebsocketRoute.name,
-      `Websocket unsubscribed from guildId: ${guildId}`
-    );
   }
 
   private async handlePause(socket: WebSocket, connection: WebsocketConnection, data: any) {
