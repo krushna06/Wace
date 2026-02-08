@@ -29,8 +29,8 @@
   },
   "dependencies": {
     "@execaman/lyricist": "^2.0.2",
-    "@fastify/cors": "^8.5.0",
-    "@fastify/websocket": "^10.0.1",
+    "@fastify/cors": "^11.2.0",
+    "@fastify/websocket": "^12.0.1",
     "@hammerhq/localization": "^2.2.0",
     "@sapphire/ratelimits": "^2.4.9",
     "base-64": "^1.0.0",
