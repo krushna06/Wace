@@ -187,6 +187,13 @@ export class PlayerContentLoader {
         .catch(() => null);
       return;
     }
+    
+    for (let track of tracks) {
+      if (!track.requester) {
+        track.requester = message.author;
+      }
+    }
+    
     if (result.type === "PLAYLIST") for (let track of tracks) player.queue.add(track);
     else if (player.playing && result.type === "SEARCH") player.queue.add(tracks[0]);
     else if (player.playing && result.type !== "SEARCH")

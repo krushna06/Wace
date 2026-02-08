@@ -41,6 +41,13 @@ export class PostPlay {
       this.clean();
       return;
     }
+    
+    for (let track of tracks) {
+      if (!track.requester) {
+        track.requester = this.member!.user;
+      }
+    }
+    
     if (result.type === "PLAYLIST") {
       for (let track of tracks) player.queue.add(track);
     } else if (player.playing && result.type === "SEARCH") {
@@ -51,6 +58,9 @@ export class PostPlay {
       player.queue.add(tracks[0]);
     }
     if (!player.playing) await player.play();
+    
+    await this.client.UpdateQueueMsg(player);
+    
     res.send({
       success: true,
       type: result.type,

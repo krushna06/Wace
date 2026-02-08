@@ -140,7 +140,7 @@ export class WacelinkNode {
     this.manager.emit(WacelinkEvents.NodeDisconnect, this, code, reason);
     if (
       !this.sudoDisconnect &&
-      this.retryCounter !== this.manager.wacelinkOptions.options!.retryCount
+      this.retryCounter < this.manager.wacelinkOptions.options!.retryCount
     ) {
       await setTimeout(this.manager.wacelinkOptions.options!.retryTimeout);
       this.retryCounter = this.retryCounter + 1;

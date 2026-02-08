@@ -68,6 +68,26 @@ export default class {
       }
     }
 
+    const song = player.queue.current;
+
+    if (song && song.requester && player.guildId) {
+      let userId: string;
+      if (typeof song.requester === 'object' && song.requester !== null) {
+        userId = (song.requester as any).id || String(song.requester);
+      } else {
+        userId = String(song.requester);
+      }
+      
+      if (userId && userId !== '[object Object]' && userId.length > 0) {
+        await incrementUserSongPlay(client.db, userId, player.guildId);
+        await incrementGuildSongPlay(client.db, player.guildId);
+        await incrementGuildSongStats(client.db, player.guildId, song, userId);
+        await setGuildLastPlayed(client.db, player.guildId, song);
+        await setUserLastPlayed(client.db, userId, song);
+        await logUserPlayHistory(client.db, userId, player.guildId, song);
+      }
+    }
+
     let data = await client.db.setup.get(`${channel.guild.id}`);
     if (data && player.textId === data.channel) return;
 
@@ -77,23 +97,6 @@ export default class {
     }
 
     const language = guildModel;
-
-    const song = player.queue.current;
-
-    if (song && song.requester && player.guildId) {
-      let userId: string;
-      if (typeof song.requester === 'object' && song.requester !== null && 'id' in song.requester) {
-        userId = (song.requester as any).id;
-      } else {
-        userId = String(song.requester);
-      }
-      await incrementUserSongPlay(client.db, userId, player.guildId);
-      await incrementGuildSongPlay(client.db, player.guildId);
-      await incrementGuildSongStats(client.db, player.guildId, song, userId);
-      await setGuildLastPlayed(client.db, player.guildId, song);
-      await setUserLastPlayed(client.db, userId, song);
-      await logUserPlayHistory(client.db, userId, player.guildId, song);
-    }
 
     if (song) {
       Object.keys(player.data.full).forEach(([key]) => {
