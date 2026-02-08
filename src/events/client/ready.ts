@@ -5,7 +5,7 @@ export default class {
   async execute(client: Manager) {
     client.logger.info("ClientReady", `Logged in ${client.user!.tag}`);
 
-    const activityName = client.config.bot.PRESENCE.activity_name.replace("${version}", client.metadata.version);
+    const activityName = client.config.bot.PRESENCE.activity_name.replace("${version}", client.metadata?.version || "unknown");
 
     client.user!.setPresence({
       activities: [

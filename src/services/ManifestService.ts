@@ -7,9 +7,20 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export class ManifestService {
   get data() {
-    const data = fs.readFileSync(join(__dirname, "..", "manifest.xml"), "utf-8");
+    const distPath = join(__dirname, "..", "manifest.xml");
+    const srcPath = join(__dirname, "..", "..", "src", "manifest.xml");
+    
+    let manifestPath = distPath;
+    if (!fs.existsSync(distPath) && fs.existsSync(srcPath)) {
+      manifestPath = srcPath;
+    }
 
-    const parser = new XMLParser();
+    const data = fs.readFileSync(manifestPath, "utf-8");
+
+    const parser = new XMLParser({
+      ignoreAttributes: false,
+      parseTagValue: true,
+    });
     let jObj: ManifestInterface = parser.parse(data);
 
     return jObj;
