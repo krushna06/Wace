@@ -26,6 +26,26 @@ export default class {
 
     if (!player) return;
 
+    client.logger.debug("TrackStart", `Track parameter: ${track?.title}, requester: ${JSON.stringify(track?.requester)}`);
+    
+    if (track && track.requester && player.guildId) {
+      let userId: string;
+      if (typeof track.requester === 'object' && track.requester !== null) {
+        userId = (track.requester as any).id || String(track.requester);
+      } else {
+        userId = String(track.requester);
+      }
+      
+      if (userId && userId !== '[object Object]' && userId.length > 0) {
+        await incrementUserSongPlay(client.db, userId, player.guildId);
+        await incrementGuildSongPlay(client.db, player.guildId);
+        await incrementGuildSongStats(client.db, player.guildId, track, userId);
+        await setGuildLastPlayed(client.db, player.guildId, track);
+        await setUserLastPlayed(client.db, userId, track);
+        await logUserPlayHistory(client.db, userId, player.guildId, track);
+      }
+    }
+
     /////////// Update Music Setup ///////////
 
     await client.UpdateQueueMsg(player);
@@ -69,24 +89,6 @@ export default class {
     }
 
     const song = player.queue.current;
-
-    if (song && song.requester && player.guildId) {
-      let userId: string;
-      if (typeof song.requester === 'object' && song.requester !== null) {
-        userId = (song.requester as any).id || String(song.requester);
-      } else {
-        userId = String(song.requester);
-      }
-      
-      if (userId && userId !== '[object Object]' && userId.length > 0) {
-        await incrementUserSongPlay(client.db, userId, player.guildId);
-        await incrementGuildSongPlay(client.db, player.guildId);
-        await incrementGuildSongStats(client.db, player.guildId, song, userId);
-        await setGuildLastPlayed(client.db, player.guildId, song);
-        await setUserLastPlayed(client.db, userId, song);
-        await logUserPlayHistory(client.db, userId, player.guildId, song);
-      }
-    }
 
     let data = await client.db.setup.get(`${channel.guild.id}`);
     if (data && player.textId === data.channel) return;

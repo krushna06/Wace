@@ -189,9 +189,7 @@ export class PlayerContentLoader {
     }
     
     for (let track of tracks) {
-      if (!track.requester) {
-        track.requester = message.author;
-      }
+      track.requester = message.author;
     }
     
     if (result.type === "PLAYLIST") for (let track of tracks) player.queue.add(track);

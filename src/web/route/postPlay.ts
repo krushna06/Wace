@@ -43,9 +43,7 @@ export class PostPlay {
     }
     
     for (let track of tracks) {
-      if (!track.requester) {
-        track.requester = this.member!.user;
-      }
+      track.requester = this.member!.user;
     }
     
     if (result.type === "PLAYLIST") {
@@ -57,6 +55,7 @@ export class PostPlay {
     } else {
       player.queue.add(tracks[0]);
     }
+    
     if (!player.playing) await player.play();
     
     await this.client.UpdateQueueMsg(player);
