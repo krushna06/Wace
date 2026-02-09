@@ -10,6 +10,7 @@ import { Accessableby, Command } from "../../structures/Command.js";
 import { AutocompleteInteractionChoices, GlobalInteraction } from "../../@types/Interaction.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
 import { WacelinkPlayer, WacelinkSearchResultType, WacelinkTrack } from "../../wacelink/main.js";
+import { AutoFixSearch } from "../../autofix/AutoFixSearch.js";
 
 export default class implements Command {
   public name = ["play"];
@@ -85,10 +86,23 @@ export default class implements Command {
 
     player.textId = handler.channel!.id;
 
-    const result = await player.search(value, { requester: handler.user });
+    let result = await player.search(value, { requester: handler.user });
     const tracks = result.tracks;
 
-    if (!result.tracks.length)
+    if (!result.tracks.length && client.config.utilities.AUTOFIX_LAVALINK.enable) {
+      const autoFixSearch = new AutoFixSearch(client, player, value, handler.user);
+      result = await autoFixSearch.execute();
+
+      if (!result || !result.tracks.length) {
+        return handler.editReply({
+          embeds: [
+            new EmbedBuilder()
+              .setDescription(`${client.i18n.get(handler.language, "command.music", "play_match")}`)
+              .setColor(client.color),
+          ],
+        });
+      }
+    } else if (!result.tracks.length) {
       return handler.editReply({
         embeds: [
           new EmbedBuilder()
@@ -96,6 +110,7 @@ export default class implements Command {
             .setColor(client.color),
         ],
       });
+    }
     if (result.type === "PLAYLIST") for (let track of tracks) player.queue.add(track);
     else if (player.playing && result.type === "SEARCH") player.queue.add(tracks[0]);
     else if (player.playing && result.type !== "SEARCH")

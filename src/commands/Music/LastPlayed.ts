@@ -8,6 +8,7 @@ import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
 import { WacelinkPlayer, WacelinkSearchResultType, WacelinkTrack } from "../../wacelink/main.js";
 import { getLastPlayedSongForGuild, getLastPlayedSongForUser } from "../../database/handler.js";
+import { AutoFixSearch } from "../../autofix/AutoFixSearch.js";
 
 export default class implements Command {
   public name = ["lastplayed"];
@@ -107,7 +108,20 @@ export default class implements Command {
     const result = await player.search(lastPlayed.uri, { requester: handler.user });
     const tracks = result.tracks;
 
-    if (!result.tracks.length)
+    if (!result.tracks.length && client.config.utilities.AUTOFIX_LAVALINK.enable) {
+      const autoFixSearch = new AutoFixSearch(client, player, lastPlayed.uri, handler.user);
+      const autoFixResult = await autoFixSearch.execute();
+
+      if (!autoFixResult || !autoFixResult.tracks.length) {
+        return handler.editReply({
+          embeds: [
+            new EmbedBuilder()
+              .setDescription(`${client.i18n.get(handler.language, "command.music", "play_match")}`)
+              .setColor(client.color),
+          ],
+        });
+      }
+    } else if (!result.tracks.length) {
       return handler.editReply({
         embeds: [
           new EmbedBuilder()
@@ -115,6 +129,7 @@ export default class implements Command {
             .setColor(client.color),
         ],
       });
+    }
 
     if (result.type === "PLAYLIST") for (let track of tracks) player.queue.add(track);
     else if (player.playing && result.type === "SEARCH") player.queue.add(tracks[0]);

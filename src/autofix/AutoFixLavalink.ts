@@ -1,6 +1,5 @@
 import { Manager } from "../manager.js";
 import { LavalinkDataType } from "../@types/Lavalink.js";
-import { CheckLavalinkServer } from "./CheckLavalinkServer.js";
 import chalk from "chalk";
 
 export class AutoFixLavalink {
@@ -14,19 +13,30 @@ export class AutoFixLavalink {
 
   async execute() {
     this.client.logger.info(AutoFixLavalink.name, "----- Starting autofix lavalink... -----");
-    if (this.client.lavalinkList.length == 0) {
-      new CheckLavalinkServer(this.client);
-      return this.fixLavalink();
-    } else return this.fixLavalink();
-  }
-
-  async fixLavalink() {
-    const autofixError = chalk.hex("#e12885");
-    const autofixErrorMess = autofixError("Error: ");
+    
+    let hasOnlineNodes = false;
+    this.client.wacelink.nodes.forEach((node) => {
+      if (node.online) {
+        hasOnlineNodes = true;
+      }
+    });
+    
+    if (hasOnlineNodes) {
+      this.client.logger.info(
+        AutoFixLavalink.name,
+        `Found online node(s), skipping autofix.`
+      );
+      this.client.logger.info(AutoFixLavalink.name, "----- Terminated autofix lavalink. -----");
+      return;
+    }
 
     this.checkLavalink();
     await this.removeCurrentLavalink();
+    
     if (this.client.lavalinkList.filter((i) => i.online).length == 0) {
+      const autofixError = chalk.hex("#e12885");
+      const autofixErrorMess = autofixError("Error: ");
+      
       this.client.logger.info(
         AutoFixLavalink.name,
         autofixErrorMess + "No lavalink online or avalible for this bot."
@@ -67,6 +77,11 @@ export class AutoFixLavalink {
     const lavalinkIndex = this.client.lavalinkUsing.findIndex(
       (data) => data.name == this.lavalinkName
     );
+
+    if (lavalinkIndex === -1) {
+      return;
+    }
+
     const targetLavalink = this.client.lavalinkUsing[lavalinkIndex];
     if (this.client.wacelink.nodes.size == 0 && this.client.lavalinkUsing.length != 0) {
       this.client.lavalinkUsing.splice(lavalinkIndex, 1);

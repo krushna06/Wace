@@ -15,6 +15,20 @@ export default class {
     const guild = await client.guilds.fetch(player.guildId).catch(() => undefined);
     client.logger.info("TrackEnd", `Track ended in @ ${guild!.name} / ${player.guildId}`);
 
+    const tempLavalinkNode = player.data.get("tempLavalinkNode");
+    if (tempLavalinkNode) {
+      try {
+        const tempNode = client.wacelink.nodes.get(tempLavalinkNode);
+        if (tempNode) {
+          client.wacelink.nodes.remove(tempLavalinkNode);
+          client.logger.info("TrackEnd", `Removed temporary lavalink node: ${tempLavalinkNode}`);
+        }
+        player.data.delete("tempLavalinkNode");
+      } catch (error) {
+        client.logger.error("TrackEnd", `Error removing temporary node: ${error}`);
+      }
+    }
+
     /////////// Update Music Setup //////////
     await client.UpdateMusic(player);
     /////////// Update Music Setup ///////////
