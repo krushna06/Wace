@@ -50,25 +50,39 @@ export default class implements Command {
       .setPlaceholder(client.i18n.get(handler.language, "help", "choose_category"))
       .addOptions(menuOptions);
 
-    const buttonsourcecode = new ButtonBuilder()
-      .setLabel(client.i18n.get(handler.language, "help", "source_code_label"))
-      .setURL(client.config.bot.SOURCE_CODE_LINK)
-      .setStyle(ButtonStyle.Link);
+    const buttons: ButtonBuilder[] = [];
 
-    const buttonInvite = new ButtonBuilder()
-      .setLabel(client.i18n.get(handler.language, "help", "invite_label"))
-      .setStyle(ButtonStyle.Link)
-      .setURL(`https://discord.com/oauth2/authorize?client_id=${client.user?.id}`);
+    if (client.config.bot.SOURCE_CODE_LINK && client.config.bot.SOURCE_CODE_LINK.trim() !== "") {
+      buttons.push(
+        new ButtonBuilder()
+          .setLabel(client.i18n.get(handler.language, "help", "source_code_label"))
+          .setURL(client.config.bot.SOURCE_CODE_LINK)
+          .setStyle(ButtonStyle.Link)
+      );
+    }
 
-    const buttonSupport = new ButtonBuilder()
-      .setLabel(client.i18n.get(handler.language, "help", "support_label"))
-      .setStyle(ButtonStyle.Link)
-      .setURL(client.config.bot.SUPPORT_LINK);
+    buttons.push(
+      new ButtonBuilder()
+        .setLabel(client.i18n.get(handler.language, "help", "invite_label"))
+        .setStyle(ButtonStyle.Link)
+        .setURL(`https://discord.com/oauth2/authorize?client_id=${client.user?.id}`)
+    );
 
-    const buttonDonate = new ButtonBuilder()
-      .setStyle(ButtonStyle.Secondary)
-      .setLabel(client.i18n.get(handler.language, "help", "donate_label"))
-      .setCustomId("donate");
+    if (client.config.bot.SUPPORT_LINK && client.config.bot.SUPPORT_LINK.trim() !== "") {
+      buttons.push(
+        new ButtonBuilder()
+          .setLabel(client.i18n.get(handler.language, "help", "support_label"))
+          .setStyle(ButtonStyle.Link)
+          .setURL(client.config.bot.SUPPORT_LINK)
+      );
+    }
+
+    buttons.push(
+      new ButtonBuilder()
+        .setStyle(ButtonStyle.Secondary)
+        .setLabel(client.i18n.get(handler.language, "help", "donate_label"))
+        .setCustomId("donate")
+    );
 
     const initialEmbed = new EmbedBuilder()
       .setDescription(client.i18n.get(handler.language, "help", "help_menu"))
@@ -100,27 +114,15 @@ export default class implements Command {
         .setStyle(ButtonStyle.Link)
         .setURL(url);
     }
-    let buttons;
+
+    const buttonRow = new ActionRowBuilder<ButtonBuilder>().addComponents(buttons);
     if (dashboardButton) {
-      buttons = new ActionRowBuilder<ButtonBuilder>().addComponents(
-        dashboardButton,
-        buttonsourcecode,
-        buttonInvite,
-        buttonSupport,
-        buttonDonate
-      );
-    } else {
-      buttons = new ActionRowBuilder<ButtonBuilder>().addComponents(
-        buttonsourcecode,
-        buttonInvite,
-        buttonSupport,
-        buttonDonate
-      );
+      buttonRow.addComponents(dashboardButton);
     }
 
     const initialMessage = await handler.editReply({
       embeds: [initialEmbed],
-      components: [row, buttons],
+      components: [row, buttonRow],
     });
 
     const filter = (i) => i.customId === "select-category" && i.user.id === handler.user.id;
@@ -134,7 +136,7 @@ export default class implements Command {
       embed.setTitle(`Commands in ${selectedCategory.toUpperCase()}`);
       await i.update({
         embeds: [embed],
-        components: [row, buttons],
+        components: [row, buttonRow],
       });
     });
 

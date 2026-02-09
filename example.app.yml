@@ -136,6 +136,10 @@ utilities:
     retryCount: 10
     retryTimeout: 3000
 
+  GUILD_JOIN_MESSAGE:
+    enable: false
+    dm_owner: false
+
   # WS/REST server for using web player
   WEB_SERVER:
     enable: true

@@ -25,11 +25,11 @@ export class CheckLavalinkServer {
 
     lavalink_data.forEach((config) => {
       let headers = {
-        "Client-Name": "wacelink/1.0.0 (https://github.com/krushna06/wacelink)",
-        "User-Agent": "wacelink/1.0.0 (https://github.com/krushna06/wacelink)",
+        "Client-Name": "wacelink/1.0.0",
+        "User-Agent": "wacelink/1.0.0",
         Authorization: config.pass,
         "User-Id": "853620650592567304",
-        "Resume-Key": "wacelink@1.0.0(https://github.com/krushna06/wacelink)",
+        "Resume-Key": "wacelink@1.0.0",
       };
 
       const url = `ws://${config.host}:${config.port}/v4/websocket`;

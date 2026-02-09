@@ -40,12 +40,18 @@ export interface Utilities {
   GUILD_LOG_CHANNEL: string;
   LOG_CHANNEL: string;
   DASHBOARD_URL?: string;
+  GUILD_JOIN_MESSAGE: GuildJoinMessage;
 }
 
 export interface AutofixLavalink {
   enable: boolean;
   retryCount: number;
   retryTimeout: number;
+}
+
+export interface GuildJoinMessage {
+  enable: boolean;
+  dm_owner: boolean;
 }
 
 export interface Database {

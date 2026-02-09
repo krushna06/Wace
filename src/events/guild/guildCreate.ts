@@ -17,23 +17,27 @@ export default class {
     else if (!GuildPrefix)
       PREFIX = String(await client.db.prefix.set(`${guild!.id}`, client.prefix));
 
-    const userDm = await owner.createDM(true).catch(() => null);
-    const dmEmbed = new EmbedBuilder()
-      .setTitle(
-        `${client.i18n.get(language, "event.guild", "join_dm_title", {
-          username: String(client.user?.username),
-        })}`
-      )
-      .setDescription(
-        stripIndents`
-          ${client.i18n.get(language, "event.message", "intro1", {
-            bot: String(client.user?.displayName),
-          })}
-          ${client.i18n.get(language, "event.message", "intro")}
-        `
-      )
-      .setColor(client.color);
-    if (userDm) userDm.send({ embeds: [dmEmbed] }).catch(() => {});
+    if (client.config.utilities.GUILD_JOIN_MESSAGE.enable) {
+      if (client.config.utilities.GUILD_JOIN_MESSAGE.dm_owner) {
+        const userDm = await owner.createDM(true).catch(() => null);
+        const dmEmbed = new EmbedBuilder()
+          .setTitle(
+            `${client.i18n.get(language, "event.guild", "join_dm_title", {
+              username: String(client.user?.username),
+            })}`
+          )
+          .setDescription(
+            stripIndents`
+              ${client.i18n.get(language, "event.message", "intro1", {
+                bot: String(client.user?.displayName),
+              })}
+              ${client.i18n.get(language, "event.message", "intro")}
+            `
+          )
+          .setColor(client.color);
+        if (userDm) userDm.send({ embeds: [dmEmbed] }).catch(() => {});
+      }
+    }
 
     if (!client.config.utilities.GUILD_LOG_CHANNEL) return;
     const eventChannel = await client.channels
