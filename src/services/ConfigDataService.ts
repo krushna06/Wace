@@ -167,6 +167,10 @@ export class ConfigDataService {
         GUILD_LOG_CHANNEL: "",
         LOG_CHANNEL: "",
         DASHBOARD_URL: "",
+        GUILD_JOIN_MESSAGE: {
+          enable: false,
+          dm_owner: false,
+        },
       },
       emojis: {
         PLAYER: {

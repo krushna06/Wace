@@ -30,7 +30,7 @@
   "dependencies": {
     "@execaman/lyricist": "^2.0.2",
     "@fastify/cors": "^11.2.0",
-    "@fastify/websocket": "^12.0.1",
+    "@fastify/websocket": "^11.0.0",
     "@hammerhq/localization": "^2.2.0",
     "@sapphire/ratelimits": "^2.4.9",
     "base-64": "^1.0.0",

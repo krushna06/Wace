@@ -15,7 +15,7 @@ export default class {
     const guild = await client.guilds.fetch(player.guildId).catch(() => undefined);
     client.logger.info("TrackEnd", `Track ended in @ ${guild!.name} / ${player.guildId}`);
 
-    const tempLavalinkNode = player.data.get("tempLavalinkNode");
+    const tempLavalinkNode = player.data.get("tempLavalinkNode") as string | undefined;
     if (tempLavalinkNode) {
       try {
         const tempNode = client.wacelink.nodes.get(tempLavalinkNode);
