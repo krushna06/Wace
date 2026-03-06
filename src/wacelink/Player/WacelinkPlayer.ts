@@ -184,6 +184,7 @@ export class WacelinkPlayer extends EventEmitter {
           token: this.serverUpdate!.token,
           endpoint: this.serverUpdate!.endpoint,
           sessionId: this.sessionId!,
+          channelId: this.voiceId!,
         },
       },
     };
