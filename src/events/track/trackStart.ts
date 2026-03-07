@@ -28,6 +28,9 @@ export default class {
 
     client.logger.debug("TrackStart", `Track parameter: ${track?.title}, requester: ${JSON.stringify(track?.requester)}`);
     
+    const playlistUri = player.data.get("playlist-uri");
+    const isFirstTrackOfPlaylist = player.data.get("playlist-first-track");
+    
     if (track && track.requester && player.guildId) {
       let userId: string;
       if (typeof track.requester === 'object' && track.requester !== null) {
@@ -40,9 +43,19 @@ export default class {
         await incrementUserSongPlay(client.db, userId, player.guildId);
         await incrementGuildSongPlay(client.db, player.guildId);
         await incrementGuildSongStats(client.db, player.guildId, track, userId);
-        await setGuildLastPlayed(client.db, player.guildId, track);
-        await setUserLastPlayed(client.db, userId, track);
+        
+        const uriToSave = (playlistUri && isFirstTrackOfPlaylist) ? playlistUri : track.uri;
+        const trackToSave = (playlistUri && isFirstTrackOfPlaylist) 
+          ? { ...track, uri: playlistUri } 
+          : track;
+        
+        await setGuildLastPlayed(client.db, player.guildId, trackToSave);
+        await setUserLastPlayed(client.db, userId, trackToSave);
         await logUserPlayHistory(client.db, userId, player.guildId, track);
+        
+        if (isFirstTrackOfPlaylist) {
+          player.data.delete("playlist-first-track");
+        }
       }
     }
 

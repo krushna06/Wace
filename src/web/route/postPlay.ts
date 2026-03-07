@@ -47,6 +47,8 @@ export class PostPlay {
     }
     
     if (result.type === "PLAYLIST") {
+      player.data.set("playlist-uri", data["search"]);
+      player.data.set("playlist-first-track", true);
       for (let track of tracks) player.queue.add(track);
     } else if (player.playing && result.type === "SEARCH") {
       player.queue.add(tracks[0]);

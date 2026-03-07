@@ -111,7 +111,11 @@ export default class implements Command {
         ],
       });
     }
-    if (result.type === "PLAYLIST") for (let track of tracks) player.queue.add(track);
+    if (result.type === "PLAYLIST") {
+      player.data.set("playlist-uri", value);
+      player.data.set("playlist-first-track", true);
+      for (let track of tracks) player.queue.add(track);
+    }
     else if (player.playing && result.type === "SEARCH") player.queue.add(tracks[0]);
     else if (player.playing && result.type !== "SEARCH")
       for (let track of tracks) player.queue.add(track);
