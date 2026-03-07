@@ -54,7 +54,6 @@ export class PlayerContentLoader {
 
     const language = guildModel;
 
-    // Handle filter select menu
     if (interaction.isStringSelectMenu() && customId === "filter") {
       const filterMode = interaction.values[0];
       
