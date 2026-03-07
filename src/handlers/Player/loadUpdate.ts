@@ -3,6 +3,7 @@ import { EmbedBuilder, TextChannel } from "discord.js";
 import { formatDuration } from "../../utilities/FormatDuration.js";
 import { WacelinkPlayer } from "../../wacelink/main.js";
 import { getTitle } from "../../utilities/GetTitle.js";
+import { filterSelect } from "../../utilities/PlayerControlButton.js";
 
 export class PlayerUpdateLoader {
   client: Manager;
@@ -101,7 +102,7 @@ export class PlayerUpdateLoader {
         .edit({
           content: player.queue.current && player.queue.size == 0 ? " " : queueString,
           embeds: [embed],
-          components: [client.enSwitchMod],
+          components: [client.enSwitchMod, filterSelect(client)],
         })
         .catch(() => {});
     };

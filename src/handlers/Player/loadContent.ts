@@ -34,7 +34,7 @@ export class PlayerContentLoader {
 
   async interaction(client: Manager, interaction: GlobalInteraction): Promise<void> {
     if (!interaction.guild || interaction.user.bot) return;
-    if (!interaction.isButton()) return;
+    if (!interaction.isButton() && !interaction.isStringSelectMenu()) return;
     const { customId, member } = interaction;
     let voiceMember = await interaction.guild.members
       .fetch((member as GuildMember)!.id)
@@ -53,6 +53,62 @@ export class PlayerContentLoader {
     }
 
     const language = guildModel;
+
+    // Handle filter select menu
+    if (interaction.isStringSelectMenu() && customId === "filter") {
+      const filterMode = interaction.values[0];
+      
+      if (!channel) {
+        await interaction.reply({
+          content: `${client.i18n.get(language, "event.player", "join_voice")}`,
+          ephemeral: true,
+        });
+        return;
+      }
+
+      if (player.data.get("filter-mode") == filterMode) {
+        const embed = new EmbedBuilder()
+          .setDescription(
+            `${client.i18n.get(language, "button.music", "filter_already", { name: filterMode })}`
+          )
+          .setColor(client.color);
+        await interaction.reply({
+          embeds: [embed],
+          ephemeral: true,
+        });
+        return;
+      }
+
+      if (filterMode == "clear" && !player.data.get("filter-mode")) {
+        const embed = new EmbedBuilder()
+          .setDescription(`${client.i18n.get(language, "button.music", "reset_already")}`)
+          .setColor(client.color);
+        await interaction.reply({
+          embeds: [embed],
+          ephemeral: true,
+        });
+        return;
+      }
+
+      filterMode == "clear"
+        ? player.data.delete("filter-mode")
+        : player.data.set("filter-mode", filterMode);
+      filterMode == "clear" ? await player.filter.clear() : await player.filter.set(filterMode);
+
+      const embed = new EmbedBuilder()
+        .setDescription(
+          filterMode == "clear"
+            ? `${client.i18n.get(language, "button.music", "reset_on")}`
+            : `${client.i18n.get(language, "button.music", "filter_on", { name: filterMode })}`
+        )
+        .setColor(client.color);
+
+      await interaction.reply({
+        embeds: [embed],
+        ephemeral: true,
+      });
+      return;
+    }
 
     switch (customId) {
       case "sprevious":
