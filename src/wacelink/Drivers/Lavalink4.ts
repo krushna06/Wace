@@ -131,8 +131,13 @@ export class Lavalink4 extends AbstractDriver {
 
   protected wsMessageEvent(data: string) {
     if (!this.isRegistered) throw new Error(`Driver ${this.id} not registered by using initial()`);
-    const wsData = JSON.parse(data.toString());
-    this.node!.wsMessageEvent(wsData);
+    try {
+      const wsData = JSON.parse(data.toString());
+      this.node!.wsMessageEvent(wsData);
+    } catch (err) {
+      this.debug(`Failed to parse WebSocket message: ${err instanceof Error ? err.message : String(err)}`);
+      this.debug(`Raw data (first 500 chars): ${data.toString().substring(0, 500)}`);
+    }
   }
 
   protected debug(logs: string) {

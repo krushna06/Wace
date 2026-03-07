@@ -41,7 +41,8 @@ export class PatchControl {
       volume: jsonBody.volume,
       added: this.addedTrack,
       paused: jsonBody.paused,
-      shuffled: jsonBody.shuffle
+      shuffled: jsonBody.shuffle,
+      skippedTo: jsonBody.skipTo
     });
     this.resetData();
   }
@@ -135,7 +136,7 @@ export class PatchControl {
   }
 
   async checker(req: Fastify.FastifyRequest, res: Fastify.FastifyReply): Promise<boolean> {
-    const accpetKey: string[] = ["loop", "skipMode", "position", "volume", "add", "paused", "shuffle"];
+    const accpetKey: string[] = ["loop", "skipMode", "position", "volume", "add", "paused", "shuffle", "skipTo"];
     const guildId = (req.params as Record<string, string>)["guildId"];
     const player = this.client.wacelink.players.get(guildId);
     if (!player) {
@@ -191,6 +192,26 @@ export class PatchControl {
     if (shuffle) {
       player.queue.shuffle();
     }
+    return true;
+  }
+
+  async skipTo(res: Fastify.FastifyReply, player: WacelinkPlayer, pos: string | number) {
+    const position = Number(pos);
+    if (isNaN(position)) {
+      res.code(400);
+      res.send({ error: `skipTo position must be a number!` });
+      return false;
+    }
+    if (position < 0 || position >= player.queue.length) {
+      res.code(400);
+      res.send({ error: `Invalid position. Must be between 0 and ${player.queue.length - 1}` });
+      return false;
+    }
+    const targetTrack = player.queue[position];
+    player.queue.splice(0, position);
+    player.data.set("skipTriggered", true);
+    await player.skip();
+    this.skiped = true;
     return true;
   }
 }
