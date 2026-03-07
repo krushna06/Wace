@@ -40,21 +40,28 @@ export default class {
       }
       
       if (userId && userId !== '[object Object]' && userId.length > 0) {
-        await incrementUserSongPlay(client.db, userId, player.guildId);
-        await incrementGuildSongPlay(client.db, player.guildId);
-        await incrementGuildSongStats(client.db, player.guildId, track, userId);
-        
-        const uriToSave = (playlistUri && isFirstTrackOfPlaylist) ? playlistUri : track.uri;
-        const trackToSave = (playlistUri && isFirstTrackOfPlaylist) 
-          ? { ...track, uri: playlistUri } 
-          : track;
-        
-        await setGuildLastPlayed(client.db, player.guildId, trackToSave);
-        await setUserLastPlayed(client.db, userId, trackToSave);
-        await logUserPlayHistory(client.db, userId, player.guildId, track);
-        
-        if (isFirstTrackOfPlaylist) {
-          player.data.delete("playlist-first-track");
+        try {
+          await incrementUserSongPlay(client.db, userId, player.guildId);
+          await incrementGuildSongPlay(client.db, player.guildId);
+          await incrementGuildSongStats(client.db, player.guildId, track, userId);
+          
+          const uriToSave = (playlistUri && isFirstTrackOfPlaylist) ? playlistUri : track.uri;
+          const trackToSave = (playlistUri && isFirstTrackOfPlaylist) 
+            ? { ...track, uri: playlistUri } 
+            : track;
+          
+          await setGuildLastPlayed(client.db, player.guildId, trackToSave);
+          await setUserLastPlayed(client.db, userId, trackToSave);
+          await logUserPlayHistory(client.db, userId, player.guildId, track);
+          
+          if (isFirstTrackOfPlaylist) {
+            player.data.delete("playlist-first-track");
+          }
+        } catch (error) {
+          client.logger.error("TrackStart", `Failed to save track stats: ${error instanceof Error ? error.message : String(error)}`);
+          if (error instanceof Error && error.message.includes('EPERM')) {
+            client.logger.warn("TrackStart", "Database file is locked. This can happen on Windows. The track will still play normally.");
+          }
         }
       }
     }
