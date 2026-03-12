@@ -184,13 +184,34 @@ export default class {
       .fetch(player.textId)
       .catch(() => undefined)) as TextChannel;
 
-    const nplaying = playing_channel
-      ? await playing_channel.send({
+    const existingNplaying = client.nplayingMsg.get(player.guildId);
+    let nplaying;
+
+    if (existingNplaying && existingNplaying.msg) {
+      try {
+        nplaying = await existingNplaying.msg.edit({
           embeds: [embeded],
           components: [filterSelect(client), playerRowOne(client), playerRowTwo(client)],
-
-        })
-      : undefined;
+        });
+        
+        if (existingNplaying.coll) existingNplaying.coll.stop();
+        if (existingNplaying.filterColl) existingNplaying.filterColl.stop();
+      } catch (error) {
+        nplaying = playing_channel
+          ? await playing_channel.send({
+              embeds: [embeded],
+              components: [filterSelect(client), playerRowOne(client), playerRowTwo(client)],
+            })
+          : undefined;
+      }
+    } else {
+      nplaying = playing_channel
+        ? await playing_channel.send({
+            embeds: [embeded],
+            components: [filterSelect(client), playerRowOne(client), playerRowTwo(client)],
+          })
+        : undefined;
+    }
 
     if (!nplaying) return;
 

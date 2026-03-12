@@ -68,7 +68,11 @@ export class PageQueue {
     });
 
     collector.on("collect", async (interaction) => {
-      if (!interaction.deferred) await interaction.deferUpdate();
+      try {
+        if (!interaction.deferred) await interaction.deferUpdate();
+      } catch (error) {
+        return;
+      }
 
       if (interaction.customId === "back") {
         page = page > 0 ? --page : this.pages.length - 1;
@@ -156,7 +160,11 @@ export class PageQueue {
     });
 
     collector.on("collect", async (interaction) => {
-      if (!interaction.deferred) await interaction.deferUpdate();
+      try {
+        if (!interaction.deferred) await interaction.deferUpdate();
+      } catch (error) {
+        return;
+      }
       if (interaction.customId === "back") {
         page = page > 0 ? --page : this.pages.length - 1;
       } else if (interaction.customId === "next") {
@@ -250,7 +258,11 @@ export class PageQueue {
     });
 
     collector.on("collect", async (interaction) => {
-      if (!interaction.deferred) await interaction.deferUpdate();
+      try {
+        if (!interaction.deferred) await interaction.deferUpdate();
+      } catch (error) {
+        return;
+      }
       if (interaction.customId === "back") {
         page = page > 0 ? --page : this.pages.length - 1;
       } else if (interaction.customId === "next") {
@@ -335,7 +347,11 @@ export class PageQueue {
     });
 
     collector.on("collect", async (interaction) => {
-      if (!interaction.deferred) await interaction.deferUpdate();
+      try {
+        if (!interaction.deferred) await interaction.deferUpdate();
+      } catch (error) {
+        return;
+      }
       if (interaction.customId === "back") {
         page = page > 0 ? --page : this.pages.length - 1;
       } else if (interaction.customId === "next") {
@@ -430,7 +446,11 @@ export class PageQueue {
     });
 
     collector.on("collect", async (interaction) => {
-      if (!interaction.deferred) await interaction.deferUpdate();
+      try {
+        if (!interaction.deferred) await interaction.deferUpdate();
+      } catch (error) {
+        return;
+      }
 
       if (interaction.customId === "back") {
         page = page > 0 ? --page : this.pages.length - 1;
