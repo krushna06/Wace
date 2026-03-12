@@ -13,7 +13,7 @@ export class AutoFixLavalink {
     this.client.logger.info(AutoFixLavalink.name, "----- Starting autofix lavalink... -----");
     let hasOnlineNodes = false;
     this.client.shoukaku.nodes.forEach((node) => {
-      if (node.online) {
+      if (node.state === 2) {
         hasOnlineNodes = true;
       }
     });
@@ -52,13 +52,16 @@ export class AutoFixLavalink {
   checkLavalink() {
     if (this.client.shoukaku.nodes.size !== 0 && this.client.lavalinkUsing.length == 0) {
       this.client.shoukaku.nodes.forEach((data, index) => {
-        this.client.lavalinkUsing.push({
-          host: data.options.host,
-          port: data.options.port,
-          pass: data.options.auth,
-          secure: data.options.secure,
-          name: index,
-        });
+        const configNode = this.client.config.player.NODES.find(n => n.name === index);
+        if (configNode) {
+          this.client.lavalinkUsing.push({
+            host: configNode.host,
+            port: configNode.port,
+            pass: configNode.auth,
+            secure: configNode.secure || false,
+            name: index,
+          });
+        }
       });
     }
   }
@@ -74,7 +77,7 @@ export class AutoFixLavalink {
       this.client.lavalinkUsing.splice(lavalinkIndex, 1);
     } else if (this.client.shoukaku.nodes.size !== 0 && this.client.lavalinkUsing.length !== 0) {
       const isLavalinkExist = this.client.shoukaku.nodes.get(targetLavalink.name);
-      if (isLavalinkExist) this.client.shoukaku.nodes.remove(targetLavalink.name);
+      if (isLavalinkExist) this.client.shoukaku.removeNode(targetLavalink.name);
       this.client.lavalinkUsing.splice(lavalinkIndex, 1);
     }
   }
@@ -84,11 +87,10 @@ export class AutoFixLavalink {
       if (data.online == true) return onlineList.push(data);
     });
     const nodeInfo = onlineList[Math.floor(Math.random() * onlineList.length)];
-    this.client.shoukaku.nodes.add({
-      port: nodeInfo.port,
-      host: nodeInfo.host,
-      auth: nodeInfo.pass,
+    this.client.shoukaku.addNode({
       name: nodeInfo.name,
+      url: `${nodeInfo.host}:${nodeInfo.port}`,
+      auth: nodeInfo.pass,
       secure: nodeInfo.secure,
     });
     return nodeInfo;

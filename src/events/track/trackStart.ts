@@ -27,7 +27,9 @@ export default class {
 
     if (!player) return;
 
-    client.logger.debug("TrackStart", `Track parameter: ${track?.info.title}, requester: ${JSON.stringify(track?.requester)}`);
+    if (client.config.bot.DEBUG_MODE) {
+      client.logger.debug("TrackStart", `Track parameter: ${track?.info.title}, requester: ${JSON.stringify(track?.requester)}`);
+    }
 
     const playlistUri = player.data.get("playlist-uri");
     const isFirstTrackOfPlaylist = player.data.get("playlist-first-track");

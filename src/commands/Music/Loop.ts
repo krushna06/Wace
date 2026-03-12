@@ -78,7 +78,7 @@ export default class implements Command {
     if (mode == "track") {
       player.setLoop("track");
       if (client.config.utilities.AUTO_RESUME)
-        this.setLoop247(client, player, SONG);
+        this.setLoop247(client, player, "track");
 
       const looped = new EmbedBuilder()
         .setDescription(`${client.i18n.get(handler.language, "command.music", "loop_current")}`)
@@ -87,7 +87,7 @@ export default class implements Command {
     } else if (mode == "queue") {
       player.setLoop("queue");
       if (client.config.utilities.AUTO_RESUME)
-        this.setLoop247(client, player, QUEUE);
+        this.setLoop247(client, player, "queue");
 
       const looped_queue = new EmbedBuilder()
         .setDescription(`${client.i18n.get(handler.language, "command.music", "loop_all")}`)
@@ -96,7 +96,7 @@ export default class implements Command {
     } else if (mode === "none") {
       player.setLoop("none");
       if (client.config.utilities.AUTO_RESUME)
-        this.setLoop247(client, player, NONE);
+        this.setLoop247(client, player, "none");
 
       const looped = new EmbedBuilder()
         .setDescription(`${client.i18n.get(handler.language, "command.music", "unloop_all")}`)

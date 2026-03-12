@@ -20,7 +20,7 @@ export default class {
       try {
         const tempNode = client.shoukaku.nodes.get(tempLavalinkNode);
         if (tempNode) {
-          client.shoukaku.nodes.remove(tempLavalinkNode);
+          client.shoukaku.removeNode(tempLavalinkNode);
           client.logger.info("TrackEnd", `Removed temporary lavalink node: ${tempLavalinkNode}`);
         }
         player.data.delete("tempLavalinkNode");

@@ -12,6 +12,8 @@ import { AutocompleteInteractionChoices, GlobalInteraction } from "../../@types/
 import { ExtendedTrack } from "../../structures/Player.js";
 import { getNode } from "../../utilities/GetNode.js";
 
+type SearchResultType = "TRACK" | "PLAYLIST" | "SEARCH";
+
 const TrackAdd: ExtendedTrack[] = [];
 
 export default class implements Command {
@@ -69,12 +71,9 @@ export default class implements Command {
         ],
       });
 
-    const result = await getNode(client)?.rest.resolve(input, {
-      requester: handler.user,
-    });
-    const tracks = result.tracks;
-
-    if (!result.tracks.length)
+    const result = await getNode(client)?.rest.resolve(input);
+    
+    if (!result) {
       return handler.editReply({
         embeds: [
           new EmbedBuilder()
@@ -82,20 +81,76 @@ export default class implements Command {
             .setColor(client.color),
         ],
       });
-    if (result.type === "PLAYLIST") for (let track of tracks) TrackAdd.push(track);
+    }
+
+    let tracks: ExtendedTrack[] = [];
+    let resultType: SearchResultType = "SEARCH";
+
+    switch (result.loadType) {
+      case "track":
+        tracks = [result.data as any];
+        resultType = "TRACK";
+        break;
+      case "playlist":
+        const playlistData = result.data as any;
+        tracks = (playlistData.tracks || []).map((track: any) => ({
+          ...track,
+          requester: handler.user,
+          duration: track.info?.length || track.length,
+          title: track.info?.title || track.title,
+          uri: track.info?.uri || track.uri,
+          author: track.info?.author || track.author,
+          artworkUrl: track.info?.artworkUrl || track.artworkUrl,
+          identifier: track.info?.identifier || track.identifier,
+        }));
+        resultType = "PLAYLIST";
+        break;
+      case "search":
+        tracks = (result.data as any[]).map((track: any) => ({
+          ...track,
+          requester: handler.user,
+          duration: track.info?.length || track.length,
+          title: track.info?.title || track.title,
+          uri: track.info?.uri || track.uri,
+          author: track.info?.author || track.author,
+          artworkUrl: track.info?.artworkUrl || track.artworkUrl,
+          identifier: track.info?.identifier || track.identifier,
+        }));
+        resultType = "SEARCH";
+        break;
+      case "empty":
+      case "error":
+        return handler.editReply({
+          embeds: [
+            new EmbedBuilder()
+              .setDescription(`${client.i18n.get(handler.language, "command.playlist", "add_match")}`)
+              .setColor(client.color),
+          ],
+        });
+    }
+
+    if (!tracks || tracks.length === 0)
+      return handler.editReply({
+        embeds: [
+          new EmbedBuilder()
+            .setDescription(`${client.i18n.get(handler.language, "command.playlist", "add_match")}`)
+            .setColor(client.color),
+        ],
+      });
+    if (resultType === "PLAYLIST") for (let track of tracks) TrackAdd.push(track);
     else TrackAdd.push(tracks[0]);
 
     const Duration = convertTime(tracks[0].duration as number);
     const TotalDuration = tracks.reduce(
       (acc, cur) => acc + (cur.duration || 0),
-      tracks[0].duration ?? 0
+      0
     );
 
-    if (result.type === "PLAYLIST") {
+    if (resultType === "PLAYLIST") {
       const embed = new EmbedBuilder()
         .setDescription(
           `${client.i18n.get(handler.language, "command.playlist", "add_playlist", {
-            title: this.getTitle(client, result.type, tracks, Inputed),
+            title: this.getTitle(client, resultType, tracks, Inputed),
             duration: convertTime(TotalDuration),
             track: String(tracks.length),
             user: String(handler.user),
@@ -103,22 +158,22 @@ export default class implements Command {
         )
         .setColor(client.color);
       handler.editReply({ content: " ", embeds: [embed] });
-    } else if (result.type === "TRACK") {
+    } else if (resultType === "TRACK") {
       const embed = new EmbedBuilder()
         .setDescription(
           `${client.i18n.get(handler.language, "command.playlist", "add_track", {
-            title: this.getTitle(client, result.type, tracks),
+            title: this.getTitle(client, resultType, tracks),
             duration: Duration,
             user: String(handler.user),
           })}`
         )
         .setColor(client.color);
       handler.editReply({ content: " ", embeds: [embed] });
-    } else if (result.type === "SEARCH") {
+    } else if (resultType === "SEARCH") {
       const embed = new EmbedBuilder()
         .setDescription(
           `${client.i18n.get(handler.language, "command.playlist", "add_search", {
-            title: this.getTitle(client, result.type, tracks),
+            title: this.getTitle(client, resultType, tracks),
             duration: Duration,
             user: String(handler.user),
           })}`

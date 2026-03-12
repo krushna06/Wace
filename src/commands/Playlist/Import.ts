@@ -126,7 +126,7 @@ export default class implements Command {
         SongLoad++;
       }
       if (SongLoad == playlist.tracks!.length) {
-        player.queue.push(SongAdd);
+        player.queue.push(...SongAdd);
         const embed = new EmbedBuilder()
           .setDescription(
             `${client.i18n.get(handler.language, "command.playlist", "import_imported", {

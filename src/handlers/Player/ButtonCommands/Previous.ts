@@ -57,7 +57,7 @@ export class ButtonPrevious {
       });
       return;
     } else {
-      this.player.previous();
+      await this.player.previous();
 
       this.player.data.set("endMode", "previous");
 

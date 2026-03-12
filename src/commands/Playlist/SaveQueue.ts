@@ -68,10 +68,10 @@ export default class implements Command {
 
     const player = client.players.get(handler.guild!.id);
 
-    const queue = player?.queue.map((track) => track);
-    const current = player?.queue.current;
+    const queue = player?.queue || [];
+    const current = player?.current;
 
-    if (queue?.length == 0 && !current)
+    if (queue.length == 0 && !current)
       return handler.editReply({
         embeds: [
           new EmbedBuilder()
@@ -83,7 +83,7 @@ export default class implements Command {
       });
 
     TrackAdd.push(current as ExtendedTrack);
-    TrackAdd.push(...queue!);
+    TrackAdd.push(...queue);
 
     if (!playlist) Result = TrackAdd;
 
@@ -110,7 +110,7 @@ export default class implements Command {
       .setDescription(
         `${client.i18n.get(handler.language, "command.playlist", "savequeue_saved", {
           name: value,
-          tracks: String(queue?.length! + 1),
+          tracks: String(queue.length + 1),
         })}`
       )
       .setColor(client.color);

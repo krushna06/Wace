@@ -142,7 +142,7 @@ export class AutoReconnectLavalinkService {
         SongLoad++;
       }
       if (SongLoad == query.length) {
-        player.queue.push(SongAdd);
+        player.queue.push(...SongAdd);
       }
     }
   }

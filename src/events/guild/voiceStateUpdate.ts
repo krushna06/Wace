@@ -101,7 +101,7 @@ export default class {
       const currentPause = player.paused;
 
       player.paused == false ? true : player.setPause(false);
-      if (currentPause !== false && player.track !== null) {
+      if (currentPause !== false && player.current !== null) {
         const msg = leaveEmbed
           ? await leaveEmbed.send({
               embeds: [
@@ -131,7 +131,7 @@ export default class {
       const currentPause = player.paused;
       player.paused == true ? true : player.setPause(true);
 
-      if (currentPause !== true && player.track !== null) {
+      if (currentPause !== true && player.current !== null) {
         const msg = await leaveEmbed.send({
           embeds: [
             new EmbedBuilder()

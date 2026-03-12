@@ -108,6 +108,8 @@ export class PlayerContentLoader {
       return;
     }
 
+    if (!interaction.isButton()) return;
+
     switch (customId) {
       case "sprevious":
         new ButtonPrevious(client, interaction, channel, language, player);

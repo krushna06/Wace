@@ -40,11 +40,10 @@ export class AutoFixSearch {
       try {
         let nodeExists = this.client.shoukaku.nodes.get(server.name);
         if (!nodeExists) {
-          this.client.shoukaku.nodes.add({
-            host: server.host,
-            port: server.port,
-            auth: server.pass,
+          this.client.shoukaku.addNode({
             name: server.name,
+            url: `${server.host}:${server.port}`,
+            auth: server.pass,
             secure: server.secure,
           });
           const connected = await this.waitForNodeConnection(server.name, 5000);
@@ -53,7 +52,7 @@ export class AutoFixSearch {
               AutoFixSearch.name,
               `Server ${server.name} failed to connect, removing and trying next...`
             );
-            this.client.shoukaku.nodes.remove(server.name);
+            this.client.shoukaku.removeNode(server.name);
             continue;
           }
         }
@@ -80,7 +79,7 @@ export class AutoFixSearch {
             AutoFixSearch.name,
             `Server ${server.name} returned no results, trying next...`
           );
-          this.client.shoukaku.nodes.remove(server.name);
+          this.client.shoukaku.removeNode(server.name);
           continue;
         }
       } catch (error) {
@@ -89,7 +88,7 @@ export class AutoFixSearch {
           `Server ${server.name} failed: ${error instanceof Error ? error.message : String(error)}`
         );
         try {
-          this.client.shoukaku.nodes.remove(server.name);
+          this.client.shoukaku.removeNode(server.name);
         } catch (e) {
         }
         continue;
@@ -108,7 +107,7 @@ export class AutoFixSearch {
       const startTime = Date.now();
       const checkInterval = setInterval(() => {
         const node = this.client.shoukaku.nodes.get(nodeName);
-        if (node && node.online) {
+        if (node && node.state === 2) {
           clearInterval(checkInterval);
           resolve(true);
         } else if (Date.now() - startTime > timeout) {

@@ -2,7 +2,7 @@ import { Manager } from "../../manager.js";
 import { TextChannel, EmbedBuilder } from "discord.js";
 import { AutoReconnectBuilderService } from "../../services/AutoReconnectBuilderService.js";
 import { ClearMessageService } from "../../services/ClearMessageService.js";
-import { Player } from "../../structures/Player.js";
+import { Player, ExtendedTrack } from "../../structures/Player.js";
 
 export default class {
   async execute(client: Manager, player: Player, track: ExtendedTrack, message: string) {

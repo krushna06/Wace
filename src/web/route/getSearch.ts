@@ -16,10 +16,10 @@ export async function getSearch(
   const query = (req.query as Record<string, string>)["identifier"];
   const requester = (req.query as Record<string, string>)["requester"];
   const source = (req.query as Record<string, string>)["source"];
-  let validSource = "youtube";
+  let validSource = "ytsearch";
   if (source) {
-    const isSourceExist = getNode(client)?.rest.resolveEngines.get(source);
-    if (isSourceExist) validSource = source;
+    const validSources = ["ytsearch", "ytmsearch", "scsearch", "spsearch", "amsearch", "dzsearch"];
+    if (validSources.includes(source)) validSource = source;
   }
   const user = await client.users.fetch(requester).catch(() => undefined);
   if (!query) {

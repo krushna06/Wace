@@ -6,9 +6,11 @@ import { convertTime } from "../../utilities/ConvertTime.js";
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
-import { Player } from "../../structures/Player.js";
+import { Player, SearchResult, ExtendedTrack } from "../../structures/Player.js";
 import { getLastPlayedSongForGuild, getLastPlayedSongForUser } from "../../database/handler.js";
 import { AutoFixSearch } from "../../autofix/AutoFixSearch.js";
+
+type SearchResultType = "TRACK" | "PLAYLIST" | "SEARCH";
 
 export default class implements Command {
   public name = ["lastplayed"];

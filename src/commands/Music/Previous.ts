@@ -39,7 +39,7 @@ export default class implements Command {
         ],
       });
 
-    player.previous();
+    await player.previous();
 
     player.data.set("endMode", "previous");
 

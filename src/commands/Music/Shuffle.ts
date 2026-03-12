@@ -26,20 +26,20 @@ export default class implements Command {
 
     const player = client.players.get(handler.guild!.id) as Player;
 
-    const newQueue = await player.shuffle();
+    await player.shuffle();
 
-    const song = newQueue.current;
+    const song = player.current;
 
-    const qduration = `${formatDuration(song!.duration + player.queue.reduce((acc, t) => acc + (t.duration || t.info?.length || 0), 0))}`;
+    const qduration = `${formatDuration((song?.duration || 0) + player.queue.reduce((acc, t) => acc + (t.duration || t.info?.length || 0), 0))}`;
     const thumbnail =
-      song!.artworkUrl ?? `https://img.youtube.com/vi/${song!.identifier}/hqdefault.jpg`;
+      song?.artworkUrl ?? `https://img.youtube.com/vi/${song?.identifier}/hqdefault.jpg`;
 
-    let pagesNum = Math.ceil(newQueue.length / 10);
+    let pagesNum = Math.ceil(player.queue.length / 10);
     if (pagesNum === 0) pagesNum = 1;
 
     const songStrings = [];
-    for (let i = 0; i < newQueue.length; i++) {
-      const song = newQueue[i];
+    for (let i = 0; i < player.queue.length; i++) {
+      const song = player.queue[i];
       songStrings.push(
         `**${i + 1}.** ${getTitle(client, song)} \`[${formatDuration(song.duration)}]\`
                     `
@@ -68,7 +68,7 @@ export default class implements Command {
           text: `${client.i18n.get(handler.language, "command.music", "queue_footer", {
             page: String(i + 1),
             pages: String(pagesNum),
-            queue_lang: String(newQueue.length),
+            queue_lang: String(player.queue.length),
             duration: qduration,
           })}`,
         });
@@ -99,14 +99,14 @@ export default class implements Command {
       }),
     });
 
-    if (pages.length == pagesNum && newQueue.length > 10) {
+    if (pages.length == pagesNum && player.queue.length > 10) {
       if (handler.message) {
-        await new PageQueue(client, pages, 60000, newQueue.length, handler.language).prefixPage(
+        await new PageQueue(client, pages, 60000, player.queue.length, handler.language).prefixPage(
           handler.message,
           qduration
         );
       } else if (handler.interaction) {
-        await new PageQueue(client, pages, 60000, newQueue.length, handler.language).slashPage(
+        await new PageQueue(client, pages, 60000, player.queue.length, handler.language).slashPage(
           handler.interaction,
           qduration
         );

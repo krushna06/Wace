@@ -9,9 +9,11 @@ import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { AutocompleteInteractionChoices, GlobalInteraction } from "../../@types/Interaction.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
-import { Player } from "../../structures/Player.js";
+import { Player, ExtendedTrack } from "../../structures/Player.js";
 import { AutoFixSearch } from "../../autofix/AutoFixSearch.js";
 import { getNode } from "../../utilities/GetNode.js";
+
+type SearchResultType = "TRACK" | "PLAYLIST" | "SEARCH";
 
 export default class implements Command {
   public name = ["radio"];

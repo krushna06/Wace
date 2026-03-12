@@ -44,7 +44,6 @@ export default class implements Command {
       player.data.set("autoplay", true);
       player.data.set("identifier", identifier);
       player.data.set("requester", handler.user);
-      player.data.set("source", player.current?.sourceName);
       player.data.set("author", player.current?.author);
       player.data.set("title", player.current?.title);
 

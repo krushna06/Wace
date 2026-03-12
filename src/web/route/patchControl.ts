@@ -116,7 +116,7 @@ export class PatchControl {
         res.send({ error: `add property must have a link!` });
         return false;
       }
-      const result = await this.getNode(client)?.rest.resolve(uri);
+      const result = await player.search(uri);
       if (result.tracks.length == 0) {
         res.code(400);
         res.send({ error: `Track not found!` });
@@ -125,9 +125,9 @@ export class PatchControl {
       const song = result.tracks[0];
       player.queue.push(song);
       this.addedTrack.push({
-        title: song.title,
+        title: song.title || "",
         uri: song.uri || "",
-        length: song.duration,
+        length: song.duration || 0,
         thumbnail: song.artworkUrl || "",
         author: song.author,
         requester: null,

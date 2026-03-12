@@ -36,7 +36,7 @@ export class Player {
   public shardId: number;
   public queue: ExtendedTrack[] = [];
   public current: ExtendedTrack | null = null;
-  public previous: ExtendedTrack | null = null;
+  public previousTrack: ExtendedTrack | null = null;
   public previousQueue: ExtendedTrack[] = [];
   public playing: boolean = false;
   public paused: boolean = false;
@@ -166,9 +166,13 @@ export class Player {
       searchQuery = `${defaultEngine}:${query}`;
     }
 
-    this.client.logger.debug("Player.search", `Searching for: ${searchQuery}`);
+    if (this.client.config.bot.DEBUG_MODE) {
+      this.client.logger.debug("Player.search", `Searching for: ${searchQuery}`);
+    }
     const result = await node.rest.resolve(searchQuery);
-    this.client.logger.debug("Player.search", `Result loadType: ${result?.loadType}`);
+    if (this.client.config.bot.DEBUG_MODE) {
+      this.client.logger.debug("Player.search", `Result loadType: ${result?.loadType}`);
+    }
 
     if (!result) {
       this.client.logger.warn("Player.search", `No result for query: ${searchQuery}`);
@@ -236,14 +240,14 @@ export class Player {
       if (this.current) {
         this.previousQueue.push(this.current);
       }
-      this.previous = this.current;
+      this.previousTrack = this.current;
       this.current = track;
     } else if (this.queue.length > 0) {
 
       if (this.current) {
         this.previousQueue.push(this.current);
       }
-      this.previous = this.current;
+      this.previousTrack = this.current;
       this.current = this.queue.shift()!;
     } else if (this.current) {
 

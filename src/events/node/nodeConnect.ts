@@ -3,32 +3,25 @@ import { Node } from "shoukaku";
 
 export default class {
   async execute(client: Manager, node: Node) {
-
-
     const nodeName = node.name;
-    const nodeInfo = client.shoukaku.nodes.get(nodeName);
-
-    if (!nodeInfo) {
-      client.logger.warn("NodeConnect", `Node ${nodeName} not found in Shoukaku nodes map`);
+    
+    const configNode = client.config.player.NODES.find(n => n.name === nodeName);
+    if (!configNode) {
+      client.logger.warn("NodeConnect", `Node ${nodeName} not found in config`);
       return;
     }
 
-
     const existingIndex = client.lavalinkUsing.findIndex(n => n.name === nodeName);
     if (existingIndex === -1) {
-
-      const [host, portStr] = nodeInfo.url.split(':');
-      const port = parseInt(portStr) || 2333;
-
       client.lavalinkUsing.push({
-        host: host,
-        port: port,
-        pass: nodeInfo.auth || '',
-        secure: nodeInfo.secure || false,
+        host: configNode.host,
+        port: configNode.port,
+        pass: configNode.auth || '',
+        secure: configNode.secure || false,
         name: nodeName,
       });
 
-      client.logger.info("NodeConnect", `Added node to lavalinkUsing: ${host}:${port} (secure: ${nodeInfo.secure})`);
+      client.logger.info("NodeConnect", `Added node to lavalinkUsing: ${configNode.host}:${configNode.port} (secure: ${configNode.secure})`);
     }
 
     client.players.forEach(async (player, guildId) => {

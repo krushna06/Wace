@@ -66,9 +66,9 @@ export class ButtonPause {
         .catch(() => undefined);
       if (!playMsg) return;
 
-      const newPlayer = await this.player.setPause(!this.player.paused);
+      await this.player.setPause(!this.player.paused);
 
-      newPlayer.paused
+      this.player.paused
         ? playMsg
             .edit({
 
@@ -86,7 +86,7 @@ export class ButtonPause {
 
       const embed = new EmbedBuilder()
         .setDescription(
-          `${this.client.i18n.get(this.language, "button.music", newPlayer.paused ? "pause_msg" : "resume_msg")}`
+          `${this.client.i18n.get(this.language, "button.music", this.player.paused ? "pause_msg" : "resume_msg")}`
         )
         .setColor(this.client.color);
 

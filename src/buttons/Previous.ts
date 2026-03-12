@@ -16,13 +16,13 @@ export default class implements PlayerButton {
     if (!player) {
       collector.stop();
     }
-    if (!player.previous)
+    if (!player.previousQueue || player.previousQueue.length === 0)
       return new ReplyInteractionService(
         client,
         message,
         `${client.i18n.get(language, "button.music", "previous_notfound")}`
       );
-    await player.play(player.previous);
+    await player.previous();
     player.data.set("endMode", "previous");
     new ReplyInteractionService(
       client,
