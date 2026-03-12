@@ -133,8 +133,6 @@ export class Player {
   }
 
   private async handleTrackEnd(): Promise<void> {
-    this.client.logger.debug("Player.handleTrackEnd", `Queue length: ${this.queue.length}, Loop: ${this.loop}, Current: ${this.current?.title}`);
-    
     if (this.loop === "track" && this.current) {
       await this.play();
       return;
@@ -145,14 +143,11 @@ export class Player {
     }
 
     if (this.queue.length > 0) {
-      this.client.logger.debug("Player.handleTrackEnd", `Playing next track from queue`);
       await this.play();
     } else if (this.data.get("autoplay")) {
-      this.client.logger.debug("Player.handleTrackEnd", `Queue empty, autoplay enabled`);
       this.client.emit("queueEmpty", this);
       this.playing = false;
     } else {
-      this.client.logger.debug("Player.handleTrackEnd", `Queue empty, no autoplay`);
       this.client.emit("queueEmpty", this);
       this.playing = false;
       this.current = null;
