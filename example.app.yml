@@ -80,16 +80,7 @@ player:
       name: "Name" #only a-z A-Z 0-9 and _
       auth: "Password"
       secure: false
-      # Wacelink supports lavalink v3, lavalink v4 and nodelink v2 as a driver.
-      # If you put the wrong driver identifier here or if you keep it blank,
-      # it will fallback to lavalink v4 driver by default.
-      # Driver identifiers and support range:
-      # | Type     | Support versions | Driver Name       |
-      # | -------- | ---------------- | ----------------- |
-      # | Lavalink | v4.0.0 - v4.x.x  | lavalink/v4/koinu |
-      # | Lavalink | v3.0.0 - v3.7.x  | lavalink/v3/koto  |
-      # | Nodelink | v2.0.0 - v2.x.x  | lavalink/v3/koto  |
-      driver: "lavalink@4"
+      driver: "lavalink/v4/koinu"
 
 utilities:
   # Enable debug tools for execute code from bot

@@ -2,7 +2,7 @@ import { ButtonInteraction, CacheType, InteractionCollector, Message } from "dis
 import { PlayerButton } from "../@types/Button.js";
 import { Manager } from "../manager.js";
 import { ReplyInteractionService } from "../services/ReplyInteractionService.js";
-import { WacelinkPlayer } from "../wacelink/main.js";
+import { Player } from "../structures/Player.js";
 
 export default class implements PlayerButton {
   name = "volup";
@@ -10,7 +10,7 @@ export default class implements PlayerButton {
     client: Manager,
     message: ButtonInteraction<CacheType>,
     language: string,
-    player: WacelinkPlayer,
+    player: Player,
     nplaying: Message<boolean>,
     collector: InteractionCollector<ButtonInteraction<"cached">>
   ): Promise<any> {

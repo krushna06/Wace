@@ -39,7 +39,7 @@ export default class implements Command {
   public async execute(client: Manager, handler: CommandHandler) {
     await handler.deferReply();
 
-    let player = client.wacelink.players.get(handler.guild!.id);
+    let player = client.players.get(handler.guild!.id);
 
     const value = handler.args[0];
 
@@ -93,7 +93,7 @@ export default class implements Command {
       }
 
       if (!player)
-        player = await client.wacelink.create({
+        player = await client.playerManager.create({
           guildId: handler.guild!.id,
           voiceId: handler.member!.voice.channel!.id,
           textId: String(handler.channel?.id),

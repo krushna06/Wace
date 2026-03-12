@@ -41,7 +41,7 @@ export class PlayerContentLoader {
       .catch(() => undefined);
     let channel = voiceMember!.voice.channel;
 
-    let player = client.wacelink.players.get(interaction.guild.id);
+    let player = client.players.get(interaction.guild.id);
     if (!player) return;
 
     const playChannel = await client.channels.fetch(player.textId).catch(() => undefined);
@@ -92,7 +92,7 @@ export class PlayerContentLoader {
       filterMode == "clear"
         ? player.data.delete("filter-mode")
         : player.data.set("filter-mode", filterMode);
-      filterMode == "clear" ? await player.filter.clear() : await player.filter.set(filterMode);
+      filterMode == "clear" ? await player.filters.clear() : await player.filters.set(filterMode);
 
       const embed = new EmbedBuilder()
         .setDescription(
@@ -133,7 +133,7 @@ export class PlayerContentLoader {
   async message(client: Manager, message: Message): Promise<any> {
     if (!message.guild || !message.guild.available || !message.channel.isTextBased()) return;
     let database = await client.db.setup.get(`${message.guild.id}`);
-    let player = client.wacelink.players.get(`${message.guild.id}`);
+    let player = client.players.get(`${message.guild.id}`);
 
     if (!database) return;
 
@@ -206,7 +206,7 @@ export class PlayerContentLoader {
     }
 
     if (!player)
-      player = await client.wacelink.create({
+      player = await client.playerManager.create({
         guildId: message.guild.id,
         voiceId: message.member!.voice.channel!.id,
         textId: message.channel.id,
@@ -247,13 +247,13 @@ export class PlayerContentLoader {
       track.requester = message.author;
     }
     
-    if (result.type === "PLAYLIST") for (let track of tracks) player.queue.add(track);
-    else if (player.playing && result.type === "SEARCH") player.queue.add(tracks[0]);
+    if (result.type === "PLAYLIST") for (let track of tracks) player.queue.push(track);
+    else if (player.playing && result.type === "SEARCH") player.queue.push(tracks[0]);
     else if (player.playing && result.type !== "SEARCH")
-      for (let track of tracks) player.queue.add(track);
-    else player.queue.add(tracks[0]);
+      for (let track of tracks) player.queue.push(track);
+    else player.queue.push(tracks[0]);
 
-    const TotalDuration = player.queue.duration;
+    const TotalDuration = player.queue.reduce((acc, t) => acc + (t.duration || t.info?.length || 0), 0);
 
     if (!player.playing) player.play();
 

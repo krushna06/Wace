@@ -5,12 +5,13 @@ import { formatDuration } from "../../utilities/FormatDuration.js";
 import { filterSelect, playerRowOne, playerRowTwo } from "../../utilities/PlayerControlButton.js";
 import { AutoReconnectBuilderService } from "../../services/AutoReconnectBuilderService.js";
 import { SongNotiEnum } from "../../database/schema/SongNoti.js";
-import { WacelinkFilterMode, WacelinkPlayer, WacelinkTrack } from "../../wacelink/main.js";
+import { Player, ExtendedTrack } from "../../structures/Player.js";
+import { FilterName } from "../../structures/Filters.js";
 import { getTitle } from "../../utilities/GetTitle.js";
 import { incrementUserSongPlay, incrementGuildSongPlay, incrementGuildSongStats, setGuildLastPlayed, setUserLastPlayed, logUserPlayHistory } from "../../database/handler.js";
 
 export default class {
-  async execute(client: Manager, player: WacelinkPlayer, track: WacelinkTrack) {
+  async execute(client: Manager, player: Player, track: ExtendedTrack) {
     if (!client.isDatabaseConnected)
       return client.logger.warn(
         "DatabaseService",
@@ -26,7 +27,7 @@ export default class {
 
     if (!player) return;
 
-    client.logger.debug("TrackStart", `Track parameter: ${track?.title}, requester: ${JSON.stringify(track?.requester)}`);
+    client.logger.debug("TrackStart", `Track parameter: ${track?.info.title}, requester: ${JSON.stringify(track?.requester)}`);
     
     const playlistUri = player.data.get("playlist-uri");
     const isFirstTrackOfPlaylist = player.data.get("playlist-first-track");
@@ -45,7 +46,7 @@ export default class {
           await incrementGuildSongPlay(client.db, player.guildId);
           await incrementGuildSongStats(client.db, player.guildId, track, userId);
           
-          const uriToSave = (playlistUri && isFirstTrackOfPlaylist) ? playlistUri : track.uri;
+          const uriToSave = (playlistUri && isFirstTrackOfPlaylist) ? playlistUri : track.info.uri;
           const trackToSave = (playlistUri && isFirstTrackOfPlaylist) 
             ? { ...track, uri: playlistUri } 
             : track;
@@ -77,14 +78,12 @@ export default class {
       .catch(() => undefined)) as TextChannel;
     if (!channel) return;
 
-    client.emit("trackStart", player);
-
     if (client.config.utilities.AUTO_RESUME) {
       const autoreconnect = new AutoReconnectBuilderService(client, player);
       const getData = await autoreconnect.get(player.guildId);
       if (!getData) await autoreconnect.playerBuild(player.guildId);
       else {
-        await client.db.autoreconnect.set(`${player.guildId}.current`, player.queue.current?.uri);
+        await client.db.autoreconnect.set(`${player.guildId}.current`, player.current?.uri);
         await client.db.autoreconnect.set(`${player.guildId}.config.loop`, player.loop);
 
         function queueUri() {
@@ -97,8 +96,10 @@ export default class {
 
         function previousUri() {
           const res = [];
-          for (let data of player.queue.previous) {
-            res.push(data.uri);
+          if (player.previousQueue) {
+            for (let data of player.previousQueue) {
+              res.push(data.uri);
+            }
           }
           return res.length !== 0 ? res : [];
         }
@@ -108,7 +109,7 @@ export default class {
       }
     }
 
-    const song = player.queue.current;
+    const song = player.current;
 
     let data = await client.db.setup.get(`${channel.guild.id}`);
     if (data && player.textId === data.channel) return;
@@ -121,9 +122,12 @@ export default class {
     const language = guildModel;
 
     if (song) {
-      Object.keys(player.data.full).forEach(([key]) => {
-        if (key.startsWith("voteskip_")) player.data.delete(key);
-      });
+      // Clear voteskip data for the new song
+      for (const [key] of player.data.entries()) {
+        if (key.startsWith("voteskip_")) {
+          player.data.delete(key);
+        }
+      }
     }
 
     if (SongNoti == SongNotiEnum.Disable) return;
@@ -172,7 +176,7 @@ export default class {
       .addFields(embedFields)
       .setColor(client.color)
       .setThumbnail(
-        track.artworkUrl ?? `https://img.youtube.com/vi/${track.identifier}/hqdefault.jpg`
+        track.info.artworkUrl ?? `https://img.youtube.com/vi/${track.identifier}/hqdefault.jpg`
       )
       .setTimestamp();
 
@@ -233,7 +237,7 @@ export default class {
     });
 
     collectorFilter.on("collect", async (message): Promise<void> => {
-      const filterMode = message.values[0] as WacelinkFilterMode;
+      const filterMode = message.values[0] as FilterName;
 
       if (player.data.get("filter-mode") == filterMode) {
         const embed = new EmbedBuilder()
@@ -274,7 +278,7 @@ export default class {
       filterMode == "clear"
         ? player.data.delete("filter-mode")
         : player.data.set("filter-mode", filterMode);
-      filterMode == "clear" ? await player.filter.clear() : await player.filter.set(filterMode);
+      filterMode == "clear" ? await player.filters.clear() : await player.filters.set(filterMode);
 
       const embed = new EmbedBuilder()
         .setDescription(

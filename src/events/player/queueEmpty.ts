@@ -2,10 +2,10 @@ import { TextChannel } from "discord.js";
 import { Manager } from "../../manager.js";
 import { AutoReconnectBuilderService } from "../../services/AutoReconnectBuilderService.js";
 import { ClearMessageService } from "../../services/ClearMessageService.js";
-import { WacelinkPlayer, WacelinkPlayerState } from "../../wacelink/main.js";
+import { Player } from "../../structures/Player.js";
 
 export default class {
-  async execute(client: Manager, player: WacelinkPlayer) {
+  async execute(client: Manager, player: Player) {
     if (!client.isDatabaseConnected)
       return client.logger.warn(
         "DatabaseService",
@@ -34,7 +34,7 @@ export default class {
       let res = await player.search(search, { requester: requester });
       const finalRes = res.tracks.filter((track) => {
         const req1 = !player.queue.some((s) => s.encoded === track.encoded);
-        const req2 = !player.queue.previous.some((s) => s.encoded === track.encoded);
+        const req2 = !player.previousQueue.some((s) => s.encoded === track.encoded);
         return req1 && req2;
       });
       if (finalRes.length !== 0) {
@@ -62,6 +62,9 @@ export default class {
       return;
     }
 
-    if (player.state !== WacelinkPlayerState.DESTROYED) await player.destroy().catch(() => {});
+    // Destroy player if not already destroyed
+    if (player.shoukaku) {
+      await player.destroy().catch(() => {});
+    }
   }
 }

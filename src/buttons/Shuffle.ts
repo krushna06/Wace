@@ -10,7 +10,7 @@ import { PlayerButton } from "../@types/Button.js";
 import { Manager } from "../manager.js";
 import { formatDuration } from "../utilities/FormatDuration.js";
 import { PageQueue } from "../structures/PageQueue.js";
-import { WacelinkPlayer } from "../wacelink/main.js";
+import { Player } from "../structures/Player.js";
 import { getTitle } from "../utilities/GetTitle.js";
 
 export default class implements PlayerButton {
@@ -19,7 +19,7 @@ export default class implements PlayerButton {
     client: Manager,
     message: ButtonInteraction<CacheType>,
     language: string,
-    player: WacelinkPlayer,
+    player: Player,
     nplaying: Message<boolean>,
     collector: InteractionCollector<ButtonInteraction<"cached">>
   ): Promise<any> {
@@ -27,21 +27,21 @@ export default class implements PlayerButton {
       collector.stop();
     }
 
-    const newQueue = player.queue.shuffle();
+    await player.shuffle();
 
-    const song = newQueue.current;
-    const qduration = `${formatDuration(song!.duration + player.queue.duration)}`;
+    const song = player.current;
+    const qduration = `${formatDuration((song?.info.length || 0) + player.queue.reduce((acc, t) => acc + (t.duration || t.info?.length || 0), 0))}`;
     const thumbnail =
-      song?.artworkUrl ?? `https://img.youtube.com/vi/${song!.identifier}/hqdefault.jpg`;
+      song?.info.artworkUrl ?? `https://img.youtube.com/vi/${song?.info.identifier}/hqdefault.jpg`;
 
-    let pagesNum = Math.ceil(newQueue.length / 10);
+    let pagesNum = Math.ceil(player.queue.length / 10);
     if (pagesNum === 0) pagesNum = 1;
 
     const songStrings = [];
-    for (let i = 0; i < newQueue.length; i++) {
-      const song = newQueue[i];
+    for (let i = 0; i < player.queue.length; i++) {
+      const song = player.queue[i];
       songStrings.push(
-        `**${i + 1}.** ${getTitle(client, song)} \`[${formatDuration(song.duration)}]\`
+        `**${i + 1}.** ${getTitle(client, song)} \`[${formatDuration(song.duration || song.info?.length)}]\`
         `
       );
     }
@@ -68,7 +68,7 @@ export default class implements PlayerButton {
           text: `${client.i18n.get(language, "button.music", "queue_footer", {
             page: `${i + 1}`,
             pages: `${pagesNum}`,
-            queue_lang: `${newQueue.length}`,
+            queue_lang: `${player.queue.length}`,
             total_duration: qduration,
           })}`,
         });
@@ -82,11 +82,11 @@ export default class implements PlayerButton {
       queue: player.queue.map((track) => {
         const requesterQueue = track.requester as User;
         return {
-          title: track.title,
-          uri: track.uri,
-          length: track.duration,
-          thumbnail: track.artworkUrl,
-          author: track.author,
+          title: track.info.title,
+          uri: track.info.uri,
+          length: track.duration || track.info?.length,
+          thumbnail: track.info.artworkUrl,
+          author: track.info.author,
           requester: requesterQueue
             ? {
                 id: requesterQueue.id,
@@ -99,8 +99,8 @@ export default class implements PlayerButton {
       }),
     });
 
-    if (pages.length == pagesNum && newQueue.length > 10) {
-      await new PageQueue(client, pages, 60000, newQueue.length, language).buttonPage(
+    if (pages.length == pagesNum && player.queue.length > 10) {
+      await new PageQueue(client, pages, 60000, player.queue.length, language).buttonPage(
         message,
         qduration
       );

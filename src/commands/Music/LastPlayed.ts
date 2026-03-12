@@ -6,7 +6,7 @@ import { convertTime } from "../../utilities/ConvertTime.js";
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
-import { WacelinkPlayer, WacelinkSearchResultType, WacelinkTrack } from "../../wacelink/main.js";
+import { Player } from "../../structures/Player.js";
 import { getLastPlayedSongForGuild, getLastPlayedSongForUser } from "../../database/handler.js";
 import { AutoFixSearch } from "../../autofix/AutoFixSearch.js";
 
@@ -65,10 +65,10 @@ export default class implements Command {
         ],
       });
 
-    let player = client.wacelink.players.get(handler.guild!.id);
+    let player = client.players.get(handler.guild!.id);
 
     if (!player)
-      player = await client.wacelink.create({
+      player = await client.playerManager.create({
         guildId: handler.guild!.id,
         voiceId: handler.member!.voice.channel!.id,
         textId: handler.channel!.id,
@@ -131,11 +131,11 @@ export default class implements Command {
       });
     }
 
-    if (result.type === "PLAYLIST") for (let track of tracks) player.queue.add(track);
-    else if (player.playing && result.type === "SEARCH") player.queue.add(tracks[0]);
+    if (result.type === "PLAYLIST") for (let track of tracks) player.queue.push(track);
+    else if (player.playing && result.type === "SEARCH") player.queue.push(tracks[0]);
     else if (player.playing && result.type !== "SEARCH")
-      for (let track of tracks) player.queue.add(track);
-    else player.queue.add(tracks[0]);
+      for (let track of tracks) player.queue.push(track);
+    else player.queue.push(tracks[0]);
 
     if (handler.message) await handler.message.delete().catch(() => null);
 
@@ -177,8 +177,8 @@ export default class implements Command {
 
   getTitle(
     client: Manager,
-    type: WacelinkSearchResultType,
-    tracks: WacelinkTrack[],
+    type: SearchResultType,
+    tracks: ExtendedTrack[],
     value?: string
   ): string {
     if (client.config.player.AVOID_SUSPEND) return tracks[0].title;

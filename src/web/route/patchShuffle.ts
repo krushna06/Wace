@@ -12,7 +12,7 @@ export async function patchShuffle(
     `${req.method} ${req.routeOptions.url} params=${req.params ? util.inspect(req.params) : "{}"}`
   );
   const guildId = (req.params as Record<string, string>)["guildId"];
-  const player = client.wacelink.players.get(guildId);
+  const player = client.players.get(guildId);
   if (!player) {
     res.code(400);
     res.send({ error: "Current player not found!" });
@@ -26,7 +26,7 @@ export async function patchShuffle(
   }
   player.data.set("shuffle", shuffle);
   if (shuffle) {
-    player.queue.shuffle();
+    player.shuffle();
   }
   res.send({ data: shuffle });
 }

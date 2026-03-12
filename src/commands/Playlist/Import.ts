@@ -33,7 +33,7 @@ export default class implements Command {
 
     const value = handler.args[0] ? handler.args[0] : null;
 
-    let player = client.wacelink.players.get(handler.guild!.id);
+    let player = client.players.get(handler.guild!.id);
 
     if (value == null)
       return handler.editReply({
@@ -98,7 +98,7 @@ export default class implements Command {
       });
 
     if (!player)
-      player = await client.wacelink.create({
+      player = await client.playerManager.create({
         guildId: handler.guild!.id,
         voiceId: handler.member!.voice.channel!.id,
         textId: handler.channel!.id,
@@ -126,7 +126,7 @@ export default class implements Command {
         SongLoad++;
       }
       if (SongLoad == playlist.tracks!.length) {
-        player.queue.add(SongAdd);
+        player.queue.push(SongAdd);
         const embed = new EmbedBuilder() // **Imported • \`${Plist}\`** (${playlist.tracks.length} tracks) • ${message.author}
           .setDescription(
             `${client.i18n.get(handler.language, "command.playlist", "import_imported", {

@@ -1,11 +1,11 @@
 import { User } from "discord.js";
 import { Manager } from "../../manager.js";
-import { WacelinkPlayer } from "../../wacelink/main.js";
+import { Player } from "../../structures/Player.js";
 
 export default class {
-  async execute(client: Manager, player: WacelinkPlayer) {
-    const song = player.queue.previous.at(-1);
-    const requesterQueue = song!.requester as User;
+  async execute(client: Manager, player: Player) {
+    const song = player.previousQueue.at(-1);
+    const requesterQueue = song?.requester as User;
 
     const currentData = song
       ? {

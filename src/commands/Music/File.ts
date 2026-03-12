@@ -30,7 +30,7 @@ export default class implements Command {
   public async execute(client: Manager, handler: CommandHandler) {
     await handler.deferReply();
 
-    let player = client.wacelink.players.get(handler.guild!.id);
+    let player = client.players.get(handler.guild!.id);
 
     const file: Attachment = handler.attactments[0];
 
@@ -77,7 +77,7 @@ export default class implements Command {
       });
 
     if (!player)
-      player = await client.wacelink.create({
+      player = await client.playerManager.create({
         guildId: handler.guild!.id,
         voiceId: handler.member!.voice.channel!.id,
         textId: handler.channel!.id,
@@ -113,13 +113,13 @@ export default class implements Command {
         ],
       });
     }
-    if (result.type === "PLAYLIST") for (let track of tracks) player.queue.add(track);
-    else if (player.playing && result.type === "SEARCH") player.queue.add(tracks[0]);
+    if (result.type === "PLAYLIST") for (let track of tracks) player.queue.push(track);
+    else if (player.playing && result.type === "SEARCH") player.queue.push(tracks[0]);
     else if (player.playing && result.type !== "SEARCH")
-      for (let track of tracks) player.queue.add(track);
-    else player.queue.add(tracks[0]);
+      for (let track of tracks) player.queue.push(track);
+    else player.queue.push(tracks[0]);
 
-    const TotalDuration = player.queue.duration;
+    const TotalDuration = player.queue.reduce((acc, t) => acc + (t.duration || t.info?.length || 0), 0);
 
     if (handler.message) await handler.message.delete().catch(() => null);
 

@@ -165,7 +165,7 @@ export class WebsocketRoute {
       }));
       return;
     }
-    const player = this.client.wacelink.players.get(connection.guildId);
+    const player = this.client.players.get(connection.guildId);
     if (!player) {
       socket.send(JSON.stringify({
         error: "Player not found for this guild",
@@ -195,7 +195,7 @@ export class WebsocketRoute {
       }));
       return;
     }
-    const player = this.client.wacelink.players.get(connection.guildId);
+    const player = this.client.players.get(connection.guildId);
     if (!player) {
       socket.send(JSON.stringify({
         error: "Player not found for this guild",

@@ -2,10 +2,10 @@ import { Manager } from "../../manager.js";
 import { EmbedBuilder, TextChannel } from "discord.js";
 import { ClearMessageService } from "../../services/ClearMessageService.js";
 import { AutoReconnectBuilderService } from "../../services/AutoReconnectBuilderService.js";
-import { WacelinkPlayer } from "../../wacelink/main.js";
+import { Player } from "../../structures/Player.js";
 
 export default class {
-  async execute(client: Manager, player: WacelinkPlayer) {
+  async execute(client: Manager, player: Player) {
     if (!client.isDatabaseConnected)
       return client.logger.warn(
         "DatabaseService",

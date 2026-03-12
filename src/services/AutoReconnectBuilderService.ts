@@ -1,10 +1,10 @@
 import { Manager } from "../manager.js";
-import { WacelinkPlayer } from "../wacelink/main.js";
+import { Player } from "../structures/Player.js";
 
 export class AutoReconnectBuilderService {
   client: Manager;
-  player?: WacelinkPlayer;
-  constructor(client: Manager, player?: WacelinkPlayer) {
+  player?: Player;
+  constructor(client: Manager, player?: Player) {
     this.client = client;
     this.player = player;
   }
@@ -41,12 +41,12 @@ export class AutoReconnectBuilderService {
       guild: this.player?.guildId,
       text: this.player?.textId,
       voice: this.player?.voiceId,
-      current: this.player?.queue.current?.uri ?? "",
+      current: this.player?.current?.uri ?? "",
       config: {
         loop: this.player?.loop,
       },
-      queue: this.player?.queue.length !== 0 ? this.queueUri() : [],
-      previous: this.player?.queue.previous.length !== 0 ? this.previousUri() : [],
+      queue: this.player?.queue && this.player.queue.length !== 0 ? this.queueUri() : [],
+      previous: this.player?.previousQueue && this.player.previousQueue.length !== 0 ? this.previousUri() : [],
       twentyfourseven: two47mode,
     });
   }
@@ -67,16 +67,20 @@ export class AutoReconnectBuilderService {
 
   queueUri() {
     const res = [];
-    for (let data of this.player?.queue!) {
-      res.push(data.uri);
+    if (this.player?.queue) {
+      for (let data of this.player.queue) {
+        res.push(data.uri);
+      }
     }
     return res;
   }
 
   previousUri() {
     const res = [];
-    for (let data of this.player?.queue.previous!) {
-      res.push(data.uri);
+    if (this.player?.previousQueue) {
+      for (let data of this.player.previousQueue) {
+        res.push(data.uri);
+      }
     }
     return res;
   }

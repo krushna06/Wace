@@ -1,10 +1,10 @@
 import { Manager } from "../../manager.js";
-import { WacelinkPlayer } from "../../wacelink/main.js";
+import { Player } from "../../structures/Player.js";
 
 export default class {
-  async execute(client: Manager, player: WacelinkPlayer) {
+  async execute(client: Manager, player: Player) {
     const guild = await client.guilds.fetch(player.guildId).catch(() => undefined);
     client.logger.info("PlayerCreate", `Player Created in @ ${guild?.name} / ${player.guildId}`);
-    client.emit("playerCreate", player);
+    // Don't re-emit playerCreate - that causes an infinite loop!
   }
 }

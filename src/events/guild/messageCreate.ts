@@ -172,12 +172,12 @@ export default class {
     }
 
     if (command.playerCheck) {
-      const player = client.wacelink.players.get(message.guild!.id);
+      const player = client.players.get(message.guild!.id);
       const twentyFourBuilder = new AutoReconnectBuilderService(client);
       const is247 = await twentyFourBuilder.get(message.guild!.id);
       if (
         !player ||
-        (is247 && is247.twentyfourseven && player.queue.length == 0 && !player.queue.current)
+        (is247 && is247.twentyfourseven && player.queue.length == 0 && !player.current)
       )
         return message.reply({
           embeds: [

@@ -39,10 +39,10 @@ export default class implements Command {
         ],
       });
 
-    const player = client.wacelink.players.get(handler.guild!.id);
+    const player = client.players.get(handler.guild!.id);
 
     if (!value) {
-      player?.filter.set("bass");
+      player?.filters.set("bass");
 
       const embed = new EmbedBuilder()
         .setDescription(
@@ -66,7 +66,7 @@ export default class implements Command {
         ],
       });
 
-    player?.filter.setEqualizer([
+    player?.filters.setEqualizer([
       { band: 0, gain: Number(value) / 10 },
       { band: 1, gain: Number(value) / 10 },
       { band: 2, gain: Number(value) / 10 },

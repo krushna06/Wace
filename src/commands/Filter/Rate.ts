@@ -38,7 +38,7 @@ export default class implements Command {
         ],
       });
 
-    const player = client.wacelink.players.get(handler.guild!.id);
+    const player = client.players.get(handler.guild!.id);
 
     if (Number(value) < 0)
       return handler.editReply({
@@ -59,7 +59,7 @@ export default class implements Command {
         ],
       });
 
-    player?.filter.setTimescale({ rate: Number(value) });
+    player?.filters.setTimescale({ rate: Number(value) });
     player?.data.set("filter-mode", this.name[0]);
 
     const embed = new EmbedBuilder()

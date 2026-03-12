@@ -1,19 +1,19 @@
 import { ButtonInteraction, EmbedBuilder, VoiceBasedChannel } from "discord.js";
 import { Manager } from "../../../manager.js";
-import { WacelinkPlayer } from "../../../wacelink/main.js";
+import { Player } from "../../../structures/Player.js";
 
 export class ButtonPrevious {
   client: Manager;
   interaction: ButtonInteraction;
   channel: VoiceBasedChannel | null;
   language: string;
-  player: WacelinkPlayer;
+  player: Player;
   constructor(
     client: Manager,
     interaction: ButtonInteraction,
     channel: VoiceBasedChannel | null,
     language: string,
-    player: WacelinkPlayer
+    player: Player
   ) {
     this.channel = channel;
     this.client = client;
@@ -45,7 +45,7 @@ export class ButtonPrevious {
         ],
       });
       return;
-    } else if (!this.player || this.player.queue.previous.length == 0) {
+    } else if (!this.player || this.player.previousQueue.length == 0) {
       this.interaction.reply({
         embeds: [
           new EmbedBuilder()

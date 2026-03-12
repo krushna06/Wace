@@ -3,7 +3,7 @@ import { EmbedBuilder, TextChannel } from "discord.js";
 import { formatDuration } from "../../utilities/FormatDuration.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
-import { WacelinkPlayer } from "../../wacelink/main.js";
+import { Player } from "../../structures/Player.js";
 import { getTitle } from "../../utilities/GetTitle.js";
 
 // Main code
@@ -27,9 +27,9 @@ export default class implements Command {
 
     const realtime = client.config.player.NP_REALTIME;
 
-    const player = client.wacelink.players.get(handler.guild!.id) as WacelinkPlayer;
+    const player = client.players.get(handler.guild!.id) as Player;
 
-    const song = player.queue.current;
+    const song = player.current;
     const position = player.position;
     const CurrentDuration = formatDuration(position);
     const TotalDuration = formatDuration(song!.duration);
@@ -60,7 +60,7 @@ export default class implements Command {
       },
       {
         name: `${client.i18n.get(handler.language, "event.player", "total_duration_title")}`,
-        value: `${formatDuration(player.queue.duration)}`,
+        value: `${formatDuration(player.queue.reduce((acc, t) => acc + (t.duration || t.info?.length || 0), 0))}`,
         inline: true,
       },
       {
@@ -113,7 +113,7 @@ export default class implements Command {
               msg: NEmbed,
             })
             .get(`${handler.guild?.id}`);
-        if (!player.queue.current) return clearInterval(interval);
+        if (!player.current) return clearInterval(interval);
         if (!player.playing) return;
         const CurrentDuration = formatDuration(player.position);
         const Part = Math.floor((player.position / song!.duration!) * 30);

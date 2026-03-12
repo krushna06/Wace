@@ -2,10 +2,10 @@ import { Manager } from "../../manager.js";
 import { EmbedBuilder, TextChannel } from "discord.js";
 import { ClearMessageService } from "../../services/ClearMessageService.js";
 import { AutoReconnectBuilderService } from "../../services/AutoReconnectBuilderService.js";
-import { WacelinkPlayer, WacelinkPlayerState } from "../../wacelink/main.js";
+import { Player } from "../../structures/Player.js";
 
 export default class {
-  async execute(client: Manager, player: WacelinkPlayer) {
+  async execute(client: Manager, player: Player) {
     if (!client.isDatabaseConnected)
       return client.logger.warn(
         "DatabaseService",
@@ -19,7 +19,6 @@ export default class {
     await client.UpdateMusic(player);
     /////////// Update Music Setup ///////////
 
-    client.emit("playerDestroy", player);
     const channel = (await client.channels
       .fetch(player.textId)
       .catch(() => undefined)) as TextChannel;
@@ -36,7 +35,7 @@ export default class {
         true,
         data.voice
       );
-      client.wacelink.players.create({
+      client.playerManager.create({
         guildId: data.guild!,
         voiceId: data.voice!,
         textId: data.text!,

@@ -8,7 +8,7 @@ import {
   playerRowTwo,
 } from "../utilities/PlayerControlButton.js";
 import { ReplyInteractionService } from "../services/ReplyInteractionService.js";
-import { WacelinkPlayer } from "../wacelink/main.js";
+import { Player } from "../structures/Player.js";
 
 export default class implements PlayerButton {
   name = "pause";
@@ -16,7 +16,7 @@ export default class implements PlayerButton {
     client: Manager,
     message: ButtonInteraction<CacheType>,
     language: string,
-    player: WacelinkPlayer,
+    player: Player,
     nplaying: Message<boolean>,
     collector: InteractionCollector<ButtonInteraction<"cached">>
   ): Promise<any> {
@@ -24,9 +24,9 @@ export default class implements PlayerButton {
       collector.stop();
     }
 
-    const newPlayer = await player.setPause(!player.paused);
+    await player.setPause(!player.paused);
 
-    newPlayer.paused
+    player.paused
       ? nplaying
           .edit({
             components: [playerRowOneEdited(client), playerRowTwo(client), filterSelect(client)],
@@ -41,7 +41,7 @@ export default class implements PlayerButton {
     new ReplyInteractionService(
       client,
       message,
-      `${client.i18n.get(language, "button.music", newPlayer.paused ? "pause_msg" : "resume_msg")}`
+      `${client.i18n.get(language, "button.music", player.paused ? "pause_msg" : "resume_msg")}`
     );
   }
 }

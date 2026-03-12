@@ -1,8 +1,9 @@
 import { Manager } from "../../manager.js";
-import { WacelinkPlayer } from "../../wacelink/main.js";
+import { Player } from "../../structures/Player.js";
 
 export default class {
-  async execute(client: Manager, player: WacelinkPlayer, data: unknown) {
-    client.emit("playerUpdate", player);
+  async execute(client: Manager, player: Player, data: unknown) {
+    // Don't re-emit playerUpdate - that causes an infinite loop!
+    // The event is already being emitted by the Player class
   }
 }

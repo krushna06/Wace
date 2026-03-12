@@ -1,12 +1,12 @@
 import { Manager } from "../manager.js";
 import { TextChannel } from "discord.js";
-import { WacelinkPlayer } from "../wacelink/main.js";
+import { Player } from "../structures/Player.js";
 
 export class ClearMessageService {
   client: Manager;
   channel: TextChannel;
-  player: WacelinkPlayer;
-  constructor(client: Manager, channel: TextChannel, player: WacelinkPlayer) {
+  player: Player;
+  constructor(client: Manager, channel: TextChannel, player: Player) {
     this.channel = channel;
     this.client = client;
     this.player = player;

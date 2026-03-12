@@ -20,12 +20,12 @@ export const getLyricsRoute = (client: Manager) => {
         if (!guildId) {
           return reply.code(400).send({ error: "Missing guildId or song info" });
         }
-        const player = client.wacelink.players.get(guildId);
-        if (!player || !player.queue.current) {
+        const player = client.players.get(guildId);
+        if (!player || !player.current) {
           return reply.code(404).send({ error: "No song is currently playing, or missing title/artist info." });
         }
-        title = player.queue.current.title || "";
-        artist = player.queue.current.author || "";
+        title = player.current.title || "";
+        artist = player.current.author || "";
         if (!title || !artist) {
           return reply.code(404).send({ error: "No song is currently playing, or missing title/artist info." });
         }

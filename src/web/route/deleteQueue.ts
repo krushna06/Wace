@@ -5,14 +5,14 @@ export const deleteQueue = (client: Manager) => {
   return async (request: FastifyRequest<{ Params: { guildId: string } }>, reply: FastifyReply) => {
     try {
       const { guildId } = request.params;
-      const player = client.wacelink.players.get(guildId);
+      const player = client.players.get(guildId);
       if (!player) {
         return reply.code(404).send({
           success: false,
           error: "No active player found for this guild"
         });
       }
-      player.queue.clear();
+      player.queue = [];
       reply.send({
         success: true,
         data: {

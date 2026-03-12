@@ -21,9 +21,9 @@ export default class implements Command {
   public async execute(client: Manager, handler: CommandHandler) {
     await handler.deferReply();
 
-    const voiceConnections = client.wacelink.players.values.filter(
+    const voiceConnections = Array.from(client.players.values()).filter(
       (player) =>
-        player.state === 0 && // WacelinkPlayerState.CONNECTED
+        player.shoukaku && // Player is connected
         player.voiceId !== null
     ).length;
 

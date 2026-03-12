@@ -1,6 +1,6 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { Manager } from "../../manager.js";
-import { WacelinkFilterData, WacelinkFilterMode } from "../../wacelink/Interface/Constants.js";
+import { FilterPresets, FilterName } from "../../structures/Filters.js";
 
 interface ApplyFilterBody {
   filter: string;
@@ -20,7 +20,7 @@ export const postApplyFilter = (client: Manager) => {
         });
       }
 
-      const player = client.wacelink.players.get(guildId);
+      const player = client.players.get(guildId);
       if (!player) {
         return reply.code(404).send({
           success: false,
@@ -42,10 +42,10 @@ export const postApplyFilter = (client: Manager) => {
 
       const actualFilterName = filterCommand.name.find(name => name !== "filter" && name !== "filter2") || filter;
 
-      if (!WacelinkFilterData[actualFilterName as WacelinkFilterMode]) {
+      if (!FilterPresets[actualFilterName as FilterName]) {
         return reply.code(400).send({
           success: false,
-          error: `Filter '${actualFilterName}' not found in WacelinkFilterData. Use GET /v1/filters to see available filters.`
+          error: `Filter '${actualFilterName}' not found in FilterPresets. Use GET /v1/filters to see available filters.`
         });
       }
 
@@ -64,7 +64,7 @@ export const postApplyFilter = (client: Manager) => {
           });
         }
 
-        player.filter.setEqualizer([
+        player.filters.setEqualizer([
           { band: 0, gain: amount / 10 },
           { band: 1, gain: amount / 10 },
           { band: 2, gain: amount / 10 },
@@ -84,11 +84,11 @@ export const postApplyFilter = (client: Manager) => {
       } else {
         if (actualFilterName === "clear") {
           player.data.delete("filter-mode");
-          await player.filter.clear();
+          await player.filters.clear();
           await player.setVolume(100);
         } else {
           player.data.set("filter-mode", actualFilterName);
-          await player.filter.set(actualFilterName as WacelinkFilterMode);
+          await player.filters.set(actualFilterName as FilterName);
         }
       }
 

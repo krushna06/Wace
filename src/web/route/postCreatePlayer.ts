@@ -24,7 +24,7 @@ export class PostCreatePlayer {
       deaf: true,
       volume: this.client.config.player.DEFAULT_VOLUME,
     };
-    this.client.wacelink.create(playerData);
+    this.client.playerManager.create(playerData);
     res.send(playerData);
   }
 
@@ -45,7 +45,7 @@ export class PostCreatePlayer {
     if (!data["userId"]) return this.errorRes(req, res, "Missing userId key");
     const Guild = await this.client.guilds.fetch(data["guildId"]).catch(() => undefined);
     if (!Guild) return this.errorRes(req, res, "Guild not found");
-    const isPlayerExist = this.client.wacelink.players.get(Guild.id);
+    const isPlayerExist = this.client.players.get(Guild.id);
     if (isPlayerExist) return this.errorRes(req, res, "Player existed in this guild");
     this.guild = Guild;
     const Member = await Guild.members.fetch(data["userId"]).catch(() => undefined);

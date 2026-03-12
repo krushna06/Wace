@@ -20,7 +20,7 @@ export default class implements Command {
   public async execute(client: Manager, handler: CommandHandler) {
     await handler.deferReply();
 
-    const player = client.wacelink.players.get(handler.guild!.id);
+    const player = client.players.get(handler.guild!.id);
 
     if (player?.data.get("filter-mode") == this.name[0])
       return handler.editReply({
@@ -36,7 +36,7 @@ export default class implements Command {
       });
 
     player?.data.set("filter-mode", this.name[0]);
-    player?.filter.set("china");
+    player?.filters.set("china");
 
     const embed = new EmbedBuilder()
       .setDescription(

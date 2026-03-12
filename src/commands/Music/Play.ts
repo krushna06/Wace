@@ -9,8 +9,8 @@ import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { AutocompleteInteractionChoices, GlobalInteraction } from "../../@types/Interaction.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
-import { WacelinkPlayer, WacelinkSearchResultType, WacelinkTrack } from "../../wacelink/main.js";
-import { AutoFixSearch } from "../../autofix/AutoFixSearch.js";
+import { Player, SearchResult, ExtendedTrack } from "../../structures/Player.js";
+import { getNode } from "../../utilities/GetNode.js";
 
 export default class implements Command {
   public name = ["play"];
@@ -37,7 +37,7 @@ export default class implements Command {
   public async execute(client: Manager, handler: CommandHandler) {
     await handler.deferReply();
 
-    let player = client.wacelink.players.get(handler.guild!.id);
+    let player = client.players.get(handler.guild!.id);
 
     const value = handler.args.join(" ");
 
@@ -72,7 +72,7 @@ export default class implements Command {
       });
 
     if (!player)
-      player = await client.wacelink.create({
+      player = await client.playerManager.create({
         guildId: handler.guild!.id,
         voiceId: handler.member!.voice.channel!.id,
         textId: handler.channel!.id,
@@ -89,20 +89,7 @@ export default class implements Command {
     let result = await player.search(value, { requester: handler.user });
     const tracks = result.tracks;
 
-    if (!result.tracks.length && client.config.utilities.AUTOFIX_LAVALINK.enable) {
-      const autoFixSearch = new AutoFixSearch(client, player, value, handler.user);
-      result = await autoFixSearch.execute();
-
-      if (!result || !result.tracks.length) {
-        return handler.editReply({
-          embeds: [
-            new EmbedBuilder()
-              .setDescription(`${client.i18n.get(handler.language, "command.music", "play_match")}`)
-              .setColor(client.color),
-          ],
-        });
-      }
-    } else if (!result.tracks.length) {
+    if (!result.tracks.length) {
       return handler.editReply({
         embeds: [
           new EmbedBuilder()
@@ -114,14 +101,14 @@ export default class implements Command {
     if (result.type === "PLAYLIST") {
       player.data.set("playlist-uri", value);
       player.data.set("playlist-first-track", true);
-      for (let track of tracks) player.queue.add(track);
+      for (let track of tracks) player.queue.push(track);
     }
-    else if (player.playing && result.type === "SEARCH") player.queue.add(tracks[0]);
+    else if (player.playing && result.type === "SEARCH") player.queue.push(tracks[0]);
     else if (player.playing && result.type !== "SEARCH")
-      for (let track of tracks) player.queue.add(track);
-    else player.queue.add(tracks[0]);
+      for (let track of tracks) player.queue.push(track);
+    else player.queue.push(tracks[0]);
 
-    const TotalDuration = player.queue.duration;
+    const TotalDuration = tracks.reduce((acc, track) => acc + (track.duration || track.info?.length || 0), 0);
 
     if (handler.message) await handler.message.delete().catch(() => null);
 
@@ -134,7 +121,7 @@ export default class implements Command {
         .setDescription(
           `${client.i18n.get(handler.language, "command.music", "play_track", {
             title: this.getTitle(client, result.type, tracks),
-            duration: convertTime(tracks[0].duration as number),
+            duration: convertTime(tracks[0].info.length as number),
             request: String(tracks[0].requester),
           })}`
         )
@@ -158,7 +145,7 @@ export default class implements Command {
       const embed = new EmbedBuilder().setColor(client.color).setDescription(
         `${client.i18n.get(handler.language, "command.music", "play_result", {
           title: this.getTitle(client, result.type, tracks),
-          duration: convertTime(tracks[0].duration as number),
+          duration: convertTime(tracks[0].info.length as number),
           request: String(tracks[0].requester),
         })}`
       );
@@ -184,16 +171,16 @@ export default class implements Command {
 
   getTitle(
     client: Manager,
-    type: WacelinkSearchResultType,
-    tracks: WacelinkTrack[],
+    type: "TRACK" | "PLAYLIST" | "SEARCH",
+    tracks: ExtendedTrack[],
     value?: string
   ): string {
-    if (client.config.player.AVOID_SUSPEND) return tracks[0].title;
+    if (client.config.player.AVOID_SUSPEND) return tracks[0].info.title;
     else {
       if (type === "PLAYLIST") {
-        return `[${tracks[0].title}](${value})`;
+        return `[${tracks[0].info.title}](${value})`;
       } else {
-        return `[${tracks[0].title}](${tracks[0].uri})`;
+        return `[${tracks[0].info.title}](${tracks[0].info.uri})`;
       }
     }
   }
@@ -228,17 +215,44 @@ export default class implements Command {
     }
     
     try {
-      const searchRes = await client.wacelink.search(url || Random);
+      const node = getNode(client);
+      if (!node) {
+        return choice.push({ name: "No nodes available", value: url });
+      }
 
-      if (!searchRes || !searchRes.tracks || searchRes.tracks.length == 0) {
+      const searchQuery = url.startsWith("http") ? url : `ytsearch:${url || Random}`;
+      const searchRes = await node.rest.resolve(searchQuery);
+
+      if (!searchRes) {
         return choice.push({ name: "Error song not matches", value: url });
       }
 
-      for (let i = 0; i < 10; i++) {
-        const x = searchRes.tracks[i];
+      // Handle Shoukaku's LavalinkResponse format
+      let tracks: any[] = [];
+      switch (searchRes.loadType) {
+        case "track":
+          tracks = [searchRes.data];
+          break;
+        case "playlist":
+          tracks = (searchRes.data as any).tracks || [];
+          break;
+        case "search":
+          tracks = searchRes.data as any[];
+          break;
+        case "empty":
+        case "error":
+          return choice.push({ name: "Error song not matches", value: url });
+      }
+
+      if (!tracks || tracks.length === 0) {
+        return choice.push({ name: "Error song not matches", value: url });
+      }
+
+      for (let i = 0; i < Math.min(10, tracks.length); i++) {
+        const x = tracks[i];
         choice.push({
-          name: x && x.title ? x.title : "Unknown track name",
-          value: x && x.uri ? x.uri : url,
+          name: x && x.info?.title ? x.info.title : "Unknown track name",
+          value: x && x.info?.uri ? x.info.uri : url,
         });
       }
     } catch (error) {

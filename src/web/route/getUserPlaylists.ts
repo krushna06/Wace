@@ -32,11 +32,11 @@ export async function getUserPlaylists(
       created: playlist.value.created,
       trackCount: playlist.value.tracks?.length || 0,
       tracks: playlist.value.tracks?.map(track => ({
-        title: track.title,
-        uri: track.uri,
+        title: track.info.title,
+        uri: track.info.uri,
         length: track.length,
         thumbnail: track.thumbnail,
-        author: track.author,
+        author: track.info.author,
         requester: track.requester
       })) || []
     }))

@@ -1,23 +1,23 @@
 import { Manager } from "../manager.js";
-import { WacelinkPlayer, WacelinkSearchResult } from "../wacelink/main.js";
+import { Player, SearchResult } from "../structures/Player.js";
 import { GetLavalinkServerList } from "./GetLavalinkServerList.js";
 
 export class AutoFixSearch {
   client: Manager;
-  player: WacelinkPlayer;
+  player: Player;
   searchQuery: string;
   requester: any;
-  private static searchCache = new Map<string, { result: WacelinkSearchResult | null; timestamp: number }>();
+  private static searchCache = new Map<string, { result: SearchResult | null; timestamp: number }>();
   private static readonly CACHE_TTL = 60000;
 
-  constructor(client: Manager, player: WacelinkPlayer, searchQuery: string, requester: any) {
+  constructor(client: Manager, player: Player, searchQuery: string, requester: any) {
     this.client = client;
     this.player = player;
     this.searchQuery = searchQuery;
     this.requester = requester;
   }
 
-  async execute(): Promise<WacelinkSearchResult | null> {
+  async execute(): Promise<SearchResult | null> {
     const cacheKey = `${this.searchQuery}`;
     const cached = AutoFixSearch.searchCache.get(cacheKey);
     
@@ -47,10 +47,10 @@ export class AutoFixSearch {
       const server = serverList[i];
 
       try {
-        let nodeExists = this.client.wacelink.nodes.get(server.name);
+        let nodeExists = this.client.shoukaku.nodes.get(server.name);
 
         if (!nodeExists) {
-          this.client.wacelink.nodes.add({
+          this.client.shoukaku.nodes.add({
             host: server.host,
             port: server.port,
             auth: server.pass,
@@ -64,7 +64,7 @@ export class AutoFixSearch {
               AutoFixSearch.name,
               `Server ${server.name} failed to connect, removing and trying next...`
             );
-            this.client.wacelink.nodes.remove(server.name);
+            this.client.shoukaku.nodes.remove(server.name);
             continue;
           }
         }
@@ -96,7 +96,7 @@ export class AutoFixSearch {
             AutoFixSearch.name,
             `Server ${server.name} returned no results, trying next...`
           );
-          this.client.wacelink.nodes.remove(server.name);
+          this.client.shoukaku.nodes.remove(server.name);
           continue;
         }
       } catch (error) {
@@ -106,7 +106,7 @@ export class AutoFixSearch {
         );
 
         try {
-          this.client.wacelink.nodes.remove(server.name);
+          this.client.shoukaku.nodes.remove(server.name);
         } catch (e) {
         }
         continue;
@@ -128,7 +128,7 @@ export class AutoFixSearch {
     return new Promise((resolve) => {
       const startTime = Date.now();
       const checkInterval = setInterval(() => {
-        const node = this.client.wacelink.nodes.get(nodeName);
+        const node = this.client.shoukaku.nodes.get(nodeName);
         if (node && node.online) {
           clearInterval(checkInterval);
           resolve(true);

@@ -2,7 +2,7 @@ import * as util from "node:util";
 import { Guild, GuildMember, User } from "discord.js";
 import { Manager } from "../../manager.js";
 import type { FastifyRequest, FastifyReply } from "fastify";
-import { WacelinkPlayer, WacelinkSearchResultType } from "../../wacelink/main.js";
+import { Player } from "../../structures/Player.js";
 
 export class PostPlay {
   guild: Guild | null = null;
@@ -25,9 +25,9 @@ export class PostPlay {
       deaf: true,
       volume: this.client.config.player.DEFAULT_VOLUME,
     };
-    let player = this.client.wacelink.players.get(this.guild!.id) as WacelinkPlayer;
+    let player = this.client.players.get(this.guild!.id) as Player;
     if (!player) {
-      player = await this.client.wacelink.create(playerData);
+      player = await this.client.playerManager.create(playerData);
     } else {
       player.voiceId = this.member!.voice.channel!.id;
       player.textId = "";
@@ -49,13 +49,13 @@ export class PostPlay {
     if (result.type === "PLAYLIST") {
       player.data.set("playlist-uri", data["search"]);
       player.data.set("playlist-first-track", true);
-      for (let track of tracks) player.queue.add(track);
+      for (let track of tracks) player.queue.push(track);
     } else if (player.playing && result.type === "SEARCH") {
-      player.queue.add(tracks[0]);
+      player.queue.push(tracks[0]);
     } else if (player.playing && result.type !== "SEARCH") {
-      for (let track of tracks) player.queue.add(track);
+      for (let track of tracks) player.queue.push(track);
     } else {
-      player.queue.add(tracks[0]);
+      player.queue.push(tracks[0]);
     }
     
     if (!player.playing) await player.play();
@@ -76,11 +76,11 @@ export class PostPlay {
           };
         }
         return {
-          title: track.title,
-          uri: track.uri,
-          length: track.duration,
-          thumbnail: track.artworkUrl,
-          author: track.author,
+          title: track.info.title,
+          uri: track.info.uri,
+          length: track.duration || track.info?.length,
+          thumbnail: track.info.artworkUrl,
+          author: track.info.author,
           requester,
         };
       }),

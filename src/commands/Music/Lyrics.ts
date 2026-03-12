@@ -40,10 +40,10 @@ export default class implements Command {
     let artist = "";
 
     if (query.length == 0) {
-      const player = client.wacelink.players.get(String(handler.guild?.id));
-      if (player && player.queue.current) {
-        title = player.queue.current.title || "";
-        artist = player.queue.current.author || "";
+      const player = client.players.get(String(handler.guild?.id));
+      if (player && player.current) {
+        title = player.current.title || "";
+        artist = player.current.author || "";
       }
       if (!title || !artist) {
         return handler.editReply({

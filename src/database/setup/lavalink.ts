@@ -2,7 +2,7 @@ import { Manager } from "../../manager.js";
 import { AutoReconnect } from "../schema/AutoReconnect.js";
 import chillout from "chillout";
 import { VoiceChannel } from "discord.js";
-import { WacelinkLoopMode, WacelinkPlayer } from "../../wacelink/main.js";
+import { Player } from "../../structures/Player.js";
 
 export class AutoReconnectLavalinkService {
   client: Manager;
@@ -38,7 +38,7 @@ export class AutoReconnectLavalinkService {
     if (Object.keys(maindata).length === 0) return;
 
     let retry_interval = setInterval(async () => {
-      if (this.client.lavalinkUsing.length == 0 || this.client.wacelink.nodes.size == 0)
+      if (this.client.lavalinkUsing.length == 0 || this.client.shoukaku.nodes.size == 0)
         return this.client.logger.info(
           AutoReconnectLavalinkService.name,
           `No lavalink avalible, try again after 3 seconds!`
@@ -89,7 +89,7 @@ export class AutoReconnectLavalinkService {
       return this.client.db.autoreconnect.delete(data.value.guild);
     }
 
-    const player = await this.client.wacelink.create({
+    const player = await this.client.playerManager.create({
       guildId: data.value.guild,
       voiceId: data.value.voice,
       textId: data.value.text,
@@ -116,12 +116,12 @@ export class AutoReconnectLavalinkService {
         await this.previousDataPush(data.value.previous, player);
 
       if (data.value.config.loop !== "none")
-        player.setLoop(data.value.config.loop as WacelinkLoopMode);
+        player.setLoop(data.value.config.loop as "none" | "track" | "queue");
       await player.play(search.tracks[0]);
     }
   }
 
-  async queueDataPush(query: string[], player: WacelinkPlayer) {
+  async queueDataPush(query: string[], player: Player) {
     const SongAdd = [];
     let SongLoad = 0;
 
@@ -142,12 +142,12 @@ export class AutoReconnectLavalinkService {
         SongLoad++;
       }
       if (SongLoad == query.length) {
-        player.queue.add(SongAdd);
+        player.queue.push(SongAdd);
       }
     }
   }
 
-  async previousDataPush(query: string[], player: WacelinkPlayer) {
+  async previousDataPush(query: string[], player: Player) {
     const SongAdd = [];
     let SongLoad = 0;
 
@@ -168,7 +168,7 @@ export class AutoReconnectLavalinkService {
         SongLoad++;
       }
       if (SongLoad == query.length) {
-        player.queue.previous.push(...SongAdd);
+        player.previousQueue.push(...SongAdd);
       }
     }
   }

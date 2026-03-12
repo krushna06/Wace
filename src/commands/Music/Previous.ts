@@ -2,7 +2,7 @@ import { Manager } from "../../manager.js";
 import { EmbedBuilder, Message } from "discord.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
-import { WacelinkPlayer } from "../../wacelink/main.js";
+import { Player } from "../../structures/Player.js";
 
 // Main code
 export default class implements Command {
@@ -22,12 +22,12 @@ export default class implements Command {
   public async execute(client: Manager, handler: CommandHandler) {
     await handler.deferReply();
 
-    const player = client.wacelink.players.get(handler.guild!.id) as WacelinkPlayer;
-    const previousIndex = player.queue.previous.length - 1;
+    const player = client.players.get(handler.guild!.id) as Player;
+    const previousIndex = player.previousQueue.length - 1;
 
     if (
-      player.queue.previous.length == 0 ||
-      player.queue.previous[0].uri == player.queue.current?.uri ||
+      player.previousQueue.length == 0 ||
+      player.previousQueue[0].uri == player.current?.uri ||
       previousIndex < -1
     )
       return handler.editReply({

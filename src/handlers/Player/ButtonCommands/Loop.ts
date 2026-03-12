@@ -1,18 +1,18 @@
 import { ButtonInteraction, EmbedBuilder } from "discord.js";
 import { Manager } from "../../../manager.js";
 import { AutoReconnectBuilderService } from "../../../services/AutoReconnectBuilderService.js";
-import { WacelinkLoopMode, WacelinkPlayer } from "../../../wacelink/main.js";
+import { Player } from "../../../structures/Player.js";
 
 export class ButtonLoop {
   client: Manager;
   interaction: ButtonInteraction;
   language: string;
-  player: WacelinkPlayer;
+  player: Player;
   constructor(
     client: Manager,
     interaction: ButtonInteraction,
     language: string,
-    player: WacelinkPlayer
+    player: Player
   ) {
     this.client = client;
     this.language = language;
@@ -28,10 +28,10 @@ export class ButtonLoop {
 
     switch (this.player.loop) {
       case "none":
-        this.player.setLoop(WacelinkLoopMode.SONG);
+        this.player.setLoop("track");
 
         if (this.client.config.utilities.AUTO_RESUME)
-          this.setLoop247(String(WacelinkLoopMode.SONG));
+          this.setLoop247("track");
 
         const looptrack = new EmbedBuilder()
           .setDescription(`${this.client.i18n.get(this.language, "button.music", "loop_current")}`)
@@ -44,15 +44,15 @@ export class ButtonLoop {
         this.client.wsl.get(this.interaction.guild!.id)?.send({
           op: "playerLoop",
           guild: this.interaction.guild!.id,
-          mode: "song",
+          mode: "track",
         });
         break;
 
-      case "song":
-        this.player.setLoop(WacelinkLoopMode.QUEUE);
+      case "track":
+        this.player.setLoop("queue");
 
         if (this.client.config.utilities.AUTO_RESUME)
-          this.setLoop247(String(WacelinkLoopMode.QUEUE));
+          this.setLoop247("queue");
 
         const loopall = new EmbedBuilder()
           .setDescription(`${this.client.i18n.get(this.language, "button.music", "loop_all")}`)
@@ -70,10 +70,10 @@ export class ButtonLoop {
         break;
 
       case "queue":
-        this.player.setLoop(WacelinkLoopMode.NONE);
+        this.player.setLoop("none");
 
         if (this.client.config.utilities.AUTO_RESUME)
-          this.setLoop247(String(WacelinkLoopMode.NONE));
+          this.setLoop247("none");
 
         const unloopall = new EmbedBuilder()
           .setDescription(`${this.client.i18n.get(this.language, "button.music", "unloop_all")}`)

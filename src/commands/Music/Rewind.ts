@@ -3,7 +3,7 @@ import { formatDuration } from "../../utilities/FormatDuration.js";
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
-import { WacelinkPlayer } from "../../wacelink/main.js";
+import { Player } from "../../structures/Player.js";
 const rewindNum = 10;
 
 // Main code
@@ -24,18 +24,13 @@ export default class implements Command {
   public async execute(client: Manager, handler: CommandHandler) {
     await handler.deferReply();
 
-    const player = client.wacelink.players.get(handler.guild!.id) as WacelinkPlayer;
+    const player = client.players.get(handler.guild!.id) as Player;
 
     const song_position = player.position;
     const CurrentDuration = formatDuration(song_position - rewindNum * 1000);
 
     if (song_position - rewindNum * 1000 > 0) {
-      await player.send({
-        guildId: handler.guild!.id,
-        playerOptions: {
-          position: song_position - rewindNum * 1000,
-        },
-      });
+      await player.shoukaku?.seekTo(song_position - rewindNum * 1000);
 
       const rewind2 = new EmbedBuilder()
         .setDescription(

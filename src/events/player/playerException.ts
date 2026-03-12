@@ -3,10 +3,10 @@ import { EmbedBuilder, TextChannel } from "discord.js";
 import util from "node:util";
 import { AutoReconnectBuilderService } from "../../services/AutoReconnectBuilderService.js";
 import { ClearMessageService } from "../../services/ClearMessageService.js";
-import { WacelinkPlayer } from "../../wacelink/main.js";
+import { Player } from "../../structures/Player.js";
 
 export default class {
-  async execute(client: Manager, player: WacelinkPlayer, data: Record<string, any>) {
+  async execute(client: Manager, player: Player, data: Record<string, any>) {
     client.logger.error(
       "PlayerException",
       `Player got an exception ${util.inspect(data).slice(1).slice(0, -1)}`
@@ -35,12 +35,15 @@ export default class {
     if (data247 !== null && data247 && data247.twentyfourseven && channel)
       new ClearMessageService(client, channel, player);
 
-    const currentPlayer = client.wacelink.players.get(player.guildId) as WacelinkPlayer;
+    const currentPlayer = client.players.get(player.guildId) as Player;
     if (!currentPlayer) return;
     if (currentPlayer.queue.length > 0) {
       await player.skip().catch(() => {});
       return;
     }
-    if (!currentPlayer.sudoDestroy) await player.destroy().catch(() => {});
+    // Check if player should be destroyed
+    if (!player.data.get("sudo-destroy")) {
+      await player.destroy().catch(() => {});
+    }
   }
 }

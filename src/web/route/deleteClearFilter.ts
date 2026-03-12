@@ -6,7 +6,7 @@ export const deleteClearFilter = (client: Manager) => {
     try {
       const { guildId } = request.params;
 
-      const player = client.wacelink.players.get(guildId);
+      const player = client.players.get(guildId);
       if (!player) {
         return reply.code(404).send({
           success: false,
@@ -22,7 +22,7 @@ export const deleteClearFilter = (client: Manager) => {
       }
 
       player.data.delete("filter-mode");
-      await player.filter.clear();
+      await player.filters.clear();
       await player.setVolume(100);
 
       reply.send({

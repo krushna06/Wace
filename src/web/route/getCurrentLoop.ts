@@ -12,7 +12,7 @@ export async function getCurrentLoop(
     `${req.method} ${req.routeOptions.url} params=${req.params ? util.inspect(req.params) : "{}"}`
   );
   const guildId = (req.params as Record<string, string>)["guildId"];
-  const player = client.wacelink.players.get(guildId);
+  const player = client.players.get(guildId);
   if (!player) {
     res.code(400);
     res.send({ error: "Current player not found!" });

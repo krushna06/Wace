@@ -1,19 +1,19 @@
 import { ButtonInteraction, EmbedBuilder, TextChannel, VoiceBasedChannel } from "discord.js";
 import { Manager } from "../../../manager.js";
-import { WacelinkPlayer } from "../../../wacelink/main.js";
+import { Player } from "../../../structures/Player.js";
 
 export class ButtonPause {
   client: Manager;
   interaction: ButtonInteraction;
   channel: VoiceBasedChannel | null;
   language: string;
-  player: WacelinkPlayer;
+  player: Player;
   constructor(
     client: Manager,
     interaction: ButtonInteraction,
     channel: VoiceBasedChannel | null,
     language: string,
-    player: WacelinkPlayer
+    player: Player
   ) {
     this.channel = channel;
     this.client = client;

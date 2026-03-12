@@ -37,7 +37,7 @@ export default class {
         if (!voiceChannel || voiceChannel.type !== 2) continue;
         if (!guild.members.me.voice.channelId || guild.members.me.voice.channelId !== data.voice) {
           try {
-            await client.wacelink.create({
+            await client.playerManager.create({
               guildId: guild.id,
               voiceId: data.voice,
               textId: data.text || null,
@@ -45,7 +45,7 @@ export default class {
               deaf: true,
               volume: client.config.player.DEFAULT_VOLUME,
             });
-            client.logger.info("247Startup", `Joined VC for 24/7 in guild ${guild.id} using Wacelink`);
+            client.logger.info("247Startup", `Joined VC for 24/7 in guild ${guild.id} using Shoukaku`);
           } catch (e) {
             client.logger.error("247Startup", `Failed to join VC for guild ${guild.id}: ${e}`);
           }

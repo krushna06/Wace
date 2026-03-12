@@ -1,4 +1,10 @@
-import { WacelinkNodeOptions } from "../wacelink/main.js";
+export interface NodeOptions {
+  name: string;
+  host: string;
+  port: number;
+  auth: string;
+  secure?: boolean;
+}
 
 export interface Config {
   bot: Bot;
@@ -87,7 +93,7 @@ export interface Player {
   AUTOCOMPLETE_SEARCH: string[];
   NP_REALTIME: boolean;
   LEAVE_TIMEOUT: number;
-  NODES: WacelinkNodeOptions[];
+  NODES: NodeOptions[];
   DEFAULT_VOLUME: number;
   AVOID_SUSPEND: boolean;
   LIMIT_TRACK: number;

@@ -2,11 +2,11 @@ import { ApplicationCommandOptionType, EmbedBuilder } from "discord.js";
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
-import { WacelinkTrack } from "../../wacelink/main.js";
+import { ExtendedTrack } from "../../structures/Player.js";
 
-const TrackAdd: WacelinkTrack[] = [];
+const TrackAdd: ExtendedTrack[] = [];
 const TrackExist: string[] = [];
-let Result: WacelinkTrack[] | null = null;
+let Result: ExtendedTrack[] | null = null;
 
 export default class implements Command {
   public name = ["pl", "savequeue"];
@@ -66,7 +66,7 @@ export default class implements Command {
         ],
       });
 
-    const player = client.wacelink.players.get(handler.guild!.id);
+    const player = client.players.get(handler.guild!.id);
 
     const queue = player?.queue.map((track) => track);
     const current = player?.queue.current;
@@ -82,7 +82,7 @@ export default class implements Command {
         ],
       });
 
-    TrackAdd.push(current as WacelinkTrack);
+    TrackAdd.push(current as ExtendedTrack);
     TrackAdd.push(...queue!);
 
     if (!playlist) Result = TrackAdd;
@@ -92,7 +92,7 @@ export default class implements Command {
         const element = playlist.tracks[i].uri;
         TrackExist.push(element);
       }
-      Result = TrackAdd.filter((track) => !TrackExist.includes(String(track.uri)));
+      Result = TrackAdd.filter((track) => !TrackExist.includes(String(track.info.uri)));
     }
 
     if (Result!.length == 0) {
@@ -118,11 +118,11 @@ export default class implements Command {
 
     Result!.forEach(async (track) => {
       await client.db.playlist.push(`${value}.tracks`, {
-        title: track.title,
-        uri: track.uri,
-        length: track.duration,
-        thumbnail: track.artworkUrl,
-        author: track.author,
+        title: track.info.title,
+        uri: track.info.uri,
+        length: track.duration || track.info?.length,
+        thumbnail: track.info.artworkUrl,
+        author: track.info.author,
         requester: track.requester, // Just case can push
       });
     });

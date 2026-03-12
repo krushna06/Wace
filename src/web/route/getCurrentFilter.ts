@@ -6,7 +6,7 @@ export const getCurrentFilter = (client: Manager) => {
     try {
       const { guildId } = request.params;
 
-      const player = client.wacelink.players.get(guildId);
+      const player = client.players.get(guildId);
       if (!player) {
         return reply.code(404).send({
           success: false,

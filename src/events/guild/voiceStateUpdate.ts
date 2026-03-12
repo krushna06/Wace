@@ -8,7 +8,7 @@ import {
 } from "discord.js";
 import { Manager } from "../../manager.js";
 import { AutoReconnectBuilderService } from "../../services/AutoReconnectBuilderService.js";
-import { WacelinkPlayerState } from "../../wacelink/main.js";
+import { Player } from "../../structures/Player.js";
 
 export default class {
   async execute(client: Manager, oldState: VoiceState, newState: VoiceState) {
@@ -18,14 +18,17 @@ export default class {
         "The database is not yet connected so this event will temporarily not execute. Please try again later!"
       );
 
-    const player = client.wacelink?.players.get(newState.guild.id);
+    const player = client.players.get(newState.guild.id);
     if (!player) return;
 
     const is247 = await client.db.autoreconnect.get(`${newState.guild.id}`);
 
     if (newState.channelId == null && newState.member?.user.id === client.user?.id) {
       player.data.set("sudo-destroy", true);
-      player.state !== WacelinkPlayerState.DESTROYED ? player.destroy() : true;
+      // Destroy player if not already destroyed
+      if (player.shoukaku) {
+        player.destroy();
+      }
     }
 
     if (oldState.member?.user.bot || newState.member?.user.bot) return;
@@ -51,7 +54,10 @@ export default class {
 
     if (!isInVoice || !isInVoice.voice.channelId) {
       player.data.set("sudo-destroy", true);
-      player.state !== WacelinkPlayerState.DESTROYED ? player.destroy() : true;
+      // Destroy player if not already destroyed
+      if (player.shoukaku) {
+        player.destroy();
+      }
     }
 
     if (
@@ -150,7 +156,7 @@ export default class {
           (m) => !m.user.bot
         ).size;
         if (!vcMembers || vcMembers === 1) {
-          const newPlayer = client.wacelink?.players.get(newState.guild.id);
+          const newPlayer = client.players.get(newState.guild.id);
           player.data.set("sudo-destroy", true);
           if (newPlayer) player.stop(is247 && is247.twentyfourseven ? false : true);
           const TimeoutEmbed = new EmbedBuilder()

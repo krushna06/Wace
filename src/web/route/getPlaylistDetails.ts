@@ -45,11 +45,11 @@ export async function getPlaylistDetails(
       created: playlist.created,
       trackCount: playlist.tracks?.length || 0,
       tracks: playlist.tracks?.map(track => ({
-        title: track.title,
-        uri: track.uri,
+        title: track.info.title,
+        uri: track.info.uri,
         length: track.length,
         thumbnail: track.thumbnail,
-        author: track.author,
+        author: track.info.author,
         requester: track.requester
       })) || []
     }

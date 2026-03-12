@@ -8,7 +8,7 @@ import {
 import { PlayerButton } from "../@types/Button.js";
 import { Manager } from "../manager.js";
 import { ReplyInteractionService } from "../services/ReplyInteractionService.js";
-import { WacelinkPlayer } from "../wacelink/main.js";
+import { Player } from "../structures/Player.js";
 
 export default class implements PlayerButton {
   name = "skip";
@@ -16,7 +16,7 @@ export default class implements PlayerButton {
     client: Manager,
     message: ButtonInteraction<CacheType>,
     language: string,
-    player: WacelinkPlayer,
+    player: Player,
     nplaying: Message<boolean>,
     collector: InteractionCollector<ButtonInteraction<"cached">>
   ): Promise<any> {
@@ -24,7 +24,7 @@ export default class implements PlayerButton {
       collector.stop();
     }
 
-    if (player.queue.size == 0 && player.data.get("autoplay") !== true) {
+    if (player.queue.length == 0 && player.data.get("autoplay") !== true) {
       player.data.set("sudo-destroy", true);
       const is247 = await client.db.autoreconnect.get(`${message.guildId}`);
       player.stop(is247 && is247.twentyfourseven ? false : true);

@@ -5,7 +5,7 @@ import { EmbedBuilder, TextChannel } from "discord.js";
 import { formatDuration } from "../../utilities/FormatDuration.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
-import { WacelinkPlayer } from "../../wacelink/main.js";
+import { Player } from "../../structures/Player.js";
 import { getTitle } from "../../utilities/GetTitle.js";
 import { ClassicPro } from "musicard";
 import fs from "fs";
@@ -29,10 +29,10 @@ export default class implements Command {
   public async execute(client: Manager, handler: CommandHandler) {
     await handler.deferReply();
 
-    const player = client.wacelink.players.get(handler.guild!.id) as WacelinkPlayer;
-    const song = player.queue.current;
+    const player = client.players.get(handler.guild!.id);
+    const song = player?.current;
 
-    if (!song) {
+    if (!song || !player) {
       return handler.editReply({
         content: "There is no song currently playing.",
         embeds: [],

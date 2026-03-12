@@ -1,6 +1,6 @@
 import { ButtonInteraction, CacheType, InteractionCollector, Message } from "discord.js";
 import { Manager } from "../manager.js";
-import { WacelinkPlayer } from "../wacelink/main.js";
+import { Player } from "../structures/Player.js";
 
 export class PlayerButton {
   name: string = "";
@@ -8,7 +8,7 @@ export class PlayerButton {
     client: Manager,
     message: ButtonInteraction,
     language: string,
-    player: WacelinkPlayer,
+    player: Player,
     nplaying: Message,
     collector: InteractionCollector<ButtonInteraction<"cached">>
   ): Promise<any> {}

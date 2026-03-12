@@ -2,7 +2,7 @@ import { EmbedBuilder } from "discord.js";
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
-import { WacelinkPlayer } from "../../wacelink/main.js";
+import { Player } from "../../structures/Player.js";
 
 export default class implements Command {
   public name = ["voteskip"];
@@ -21,7 +21,7 @@ export default class implements Command {
   public async execute(client: Manager, handler: CommandHandler) {
     await handler.deferReply();
 
-    const player = client.wacelink.players.get(handler.guild!.id) as WacelinkPlayer;
+    const player = client.players.get(handler.guild!.id) as Player;
     const { channel } = handler.member!.voice;
     if (!channel)
       return handler.editReply({
@@ -45,7 +45,7 @@ export default class implements Command {
       });
     }
 
-    const currentTrack = player.queue.current;
+    const currentTrack = player.current;
     if (!currentTrack) {
       return handler.editReply({
         embeds: [

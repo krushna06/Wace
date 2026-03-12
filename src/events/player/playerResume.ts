@@ -1,10 +1,10 @@
 import { playerRowOne, playerRowTwo } from "../../utilities/PlayerControlButton.js";
 import { Manager } from "../../manager.js";
 import { TextChannel } from "discord.js";
-import { WacelinkPlayer } from "../../wacelink/main.js";
+import { Player } from "../../structures/Player.js";
 
 export default class {
-  async execute(client: Manager, player: WacelinkPlayer) {
+  async execute(client: Manager, player: Player) {
     if (player.voiceId == null) return;
 
     const nowPlaying = client.nplayingMsg.get(`${player.guildId}`);
@@ -15,8 +15,6 @@ export default class {
     }
 
     const setup = await client.db.setup.get(`${player.guildId}`);
-
-    client.emit("playerResume", player);
 
     if (setup && setup.playmsg) {
       const channel = await client.channels.fetch(setup.channel).catch(() => undefined);

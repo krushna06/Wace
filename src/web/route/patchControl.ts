@@ -1,7 +1,8 @@
 import util from "node:util";
 import { Manager } from "../../manager.js";
 import Fastify from "fastify";
-import { WacelinkLoopMode, WacelinkPlayer } from "../../wacelink/main.js";
+import { Player } from "../../structures/Player.js";
+import { getNode } from "../../utilities/GetNode.js";
 
 export type TrackRes = {
   title: string;
@@ -26,7 +27,7 @@ export class PatchControl {
     const isValid = await this.checker(req, res);
     if (!isValid) return;
     const guildId = (req.params as Record<string, string>)["guildId"];
-    const player = this.client.wacelink.players.get(guildId) as WacelinkPlayer;
+    const player = this.client.players.get(guildId) as Player;
     const jsonBody = req.body as Record<string, unknown>;
     const currentKeys = Object.keys(jsonBody);
     for (const key of currentKeys) {
@@ -47,17 +48,17 @@ export class PatchControl {
     this.resetData();
   }
 
-  async loop(res: Fastify.FastifyReply, player: WacelinkPlayer, mode: string) {
-    if (!mode || !["song", "queue", "none"].includes(mode)) {
+  async loop(res: Fastify.FastifyReply, player: Player, mode: string) {
+    if (!mode || !["track", "queue", "none"].includes(mode)) {
       res.code(400);
       res.send({ error: `Invalid loop mode, '${mode}' mode does not exist!` });
       return false;
     }
-    player.setLoop(mode as WacelinkLoopMode);
+    player.setLoop(mode as "none" | "track" | "queue");
     return true;
   }
 
-  async skipMode(res: Fastify.FastifyReply, player: WacelinkPlayer, mode: string) {
+  async skipMode(res: Fastify.FastifyReply, player: Player, mode: string) {
     if (!mode || !["previous", "skip"].includes(mode)) {
       res.code(400);
       res.send({ error: `Invalid loop mode, '${mode}' mode does not exist!` });
@@ -76,7 +77,7 @@ export class PatchControl {
     return true;
   }
 
-  async position(res: Fastify.FastifyReply, player: WacelinkPlayer, pos: string) {
+  async position(res: Fastify.FastifyReply, player: Player, pos: string) {
     if (isNaN(Number(pos))) {
       res.code(400);
       res.send({ error: `Position must be a number!` });
@@ -86,7 +87,7 @@ export class PatchControl {
     return true;
   }
 
-  async volume(res: Fastify.FastifyReply, player: WacelinkPlayer, vol: string) {
+  async volume(res: Fastify.FastifyReply, player: Player, vol: string) {
     if (!vol) return true;
     if (isNaN(Number(vol))) {
       res.code(400);
@@ -97,7 +98,7 @@ export class PatchControl {
     return true;
   }
 
-  async paused(res: Fastify.FastifyReply, player: WacelinkPlayer, paused: boolean) {
+  async paused(res: Fastify.FastifyReply, player: Player, paused: boolean) {
     if (typeof paused !== 'boolean') {
       res.code(400);
       res.send({ error: `Paused must be a boolean value!` });
@@ -107,7 +108,7 @@ export class PatchControl {
     return true;
   }
 
-  async add(res: Fastify.FastifyReply, player: WacelinkPlayer, uriArray: string) {
+  async add(res: Fastify.FastifyReply, player: Player, uriArray: string) {
     if (!uriArray) return true;
     for (const uri of uriArray) {
       if (!this.isValidHttpUrl(uri)) {
@@ -115,14 +116,14 @@ export class PatchControl {
         res.send({ error: `add property must have a link!` });
         return false;
       }
-      const result = await this.client.wacelink.search(uri);
+      const result = await this.getNode(client)?.rest.resolve(uri);
       if (result.tracks.length == 0) {
         res.code(400);
         res.send({ error: `Track not found!` });
         return false;
       }
       const song = result.tracks[0];
-      player.queue.add(song);
+      player.queue.push(song);
       this.addedTrack.push({
         title: song.title,
         uri: song.uri || "",
@@ -138,7 +139,7 @@ export class PatchControl {
   async checker(req: Fastify.FastifyRequest, res: Fastify.FastifyReply): Promise<boolean> {
     const accpetKey: string[] = ["loop", "skipMode", "position", "volume", "add", "paused", "shuffle", "skipTo"];
     const guildId = (req.params as Record<string, string>)["guildId"];
-    const player = this.client.wacelink.players.get(guildId);
+    const player = this.client.players.get(guildId);
     if (!player) {
       res.code(404);
       res.send({ error: "Current player not found!" });
@@ -183,19 +184,19 @@ export class PatchControl {
     return url.protocol === "http:" || url.protocol === "https:";
   }
 
-  async shuffle(res: Fastify.FastifyReply, player: WacelinkPlayer, shuffle: boolean) {
+  async shuffle(res: Fastify.FastifyReply, player: Player, shuffle: boolean) {
     if (typeof shuffle !== 'boolean') {
       res.code(400);
       res.send({ error: `Shuffle must be a boolean value!` });
       return false;
     }
     if (shuffle) {
-      player.queue.shuffle();
+      player.shuffle();
     }
     return true;
   }
 
-  async skipTo(res: Fastify.FastifyReply, player: WacelinkPlayer, pos: string | number) {
+  async skipTo(res: Fastify.FastifyReply, player: Player, pos: string | number) {
     const position = Number(pos);
     if (isNaN(position)) {
       res.code(400);

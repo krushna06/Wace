@@ -3,7 +3,7 @@ import { Manager } from "../../manager.js";
 import { AutoReconnectBuilderService } from "../../services/AutoReconnectBuilderService.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
-import { WacelinkLoopMode, WacelinkPlayer } from "../../wacelink/main.js";
+import { Player } from "../../structures/Player.js";
 
 export default class implements Command {
   public name = ["loop"];
@@ -26,7 +26,7 @@ export default class implements Command {
       choices: [
         {
           name: "Song",
-          value: "song",
+          value: "track",
         },
         {
           name: "Queue",
@@ -43,9 +43,9 @@ export default class implements Command {
   public async execute(client: Manager, handler: CommandHandler) {
     await handler.deferReply();
 
-    const player = client.wacelink.players.get(handler.guild!.id) as WacelinkPlayer;
+    const player = client.players.get(handler.guild!.id) as Player;
 
-    const mode_array = ["song", "queue", "none"];
+    const mode_array = ["track", "queue", "none"];
 
     const mode = handler.args[0];
 
@@ -62,7 +62,7 @@ export default class implements Command {
         ],
       });
 
-    if ((mode == "song" && player.loop == WacelinkLoopMode.SONG) || mode == player.loop)
+    if ((mode == "track" && player.loop == "track") || mode == player.loop)
       return handler.editReply({
         embeds: [
           new EmbedBuilder()
@@ -75,28 +75,28 @@ export default class implements Command {
         ],
       });
 
-    if (mode == "song") {
-      player.setLoop(WacelinkLoopMode.SONG);
+    if (mode == "track") {
+      player.setLoop("track");
       if (client.config.utilities.AUTO_RESUME)
-        this.setLoop247(client, player, WacelinkLoopMode.SONG);
+        this.setLoop247(client, player, SONG);
 
       const looped = new EmbedBuilder()
         .setDescription(`${client.i18n.get(handler.language, "command.music", "loop_current")}`)
         .setColor(client.color);
       handler.editReply({ content: " ", embeds: [looped] });
     } else if (mode == "queue") {
-      player.setLoop(WacelinkLoopMode.QUEUE);
+      player.setLoop("queue");
       if (client.config.utilities.AUTO_RESUME)
-        this.setLoop247(client, player, WacelinkLoopMode.QUEUE);
+        this.setLoop247(client, player, QUEUE);
 
       const looped_queue = new EmbedBuilder()
         .setDescription(`${client.i18n.get(handler.language, "command.music", "loop_all")}`)
         .setColor(client.color);
       handler.editReply({ content: " ", embeds: [looped_queue] });
     } else if (mode === "none") {
-      player.setLoop(WacelinkLoopMode.NONE);
+      player.setLoop("none");
       if (client.config.utilities.AUTO_RESUME)
-        this.setLoop247(client, player, WacelinkLoopMode.NONE);
+        this.setLoop247(client, player, NONE);
 
       const looped = new EmbedBuilder()
         .setDescription(`${client.i18n.get(handler.language, "command.music", "unloop_all")}`)
@@ -111,7 +111,7 @@ export default class implements Command {
     });
   }
 
-  async setLoop247(client: Manager, player: WacelinkPlayer, loop: string) {
+  async setLoop247(client: Manager, player: Player, loop: string) {
     const data = await new AutoReconnectBuilderService(client, player).execute(player.guildId);
     if (data) {
       await client.db.autoreconnect.set(`${player.guildId}.config.loop`, loop);

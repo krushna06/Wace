@@ -2,7 +2,7 @@ import { ApplicationCommandOptionType, EmbedBuilder, User } from "discord.js";
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
-import { WacelinkPlayer } from "../../wacelink/main.js";
+import { Player } from "../../structures/Player.js";
 
 // Main code
 export default class implements Command {
@@ -28,7 +28,7 @@ export default class implements Command {
 
   public async execute(client: Manager, handler: CommandHandler) {
     await handler.deferReply();
-    const player = client.wacelink.players.get(handler.guild!.id) as WacelinkPlayer;
+    const player = client.players.get(handler.guild!.id) as Player;
 
     const getPosition = Number(handler.args[0]);
 
@@ -41,7 +41,7 @@ export default class implements Command {
         ],
       });
 
-    if (player.queue.size == 0 || getPosition >= player.queue.length) {
+    if (player.queue.length == 0 || getPosition >= player.queue.length) {
       const skipped = new EmbedBuilder()
         .setDescription(`${client.i18n.get(handler.language, "command.music", "skip_notfound")}`)
         .setColor(client.color);
@@ -58,8 +58,8 @@ export default class implements Command {
         return handler.editReply({ content: " ", embeds: [skipped] });
       }
       
-      player.queue.previous.push(...cuttedQueue);
-      player.queue.current ? player.queue.previous.unshift(player.queue.current) : true;
+      player.previousQueue.push(...cuttedQueue);
+      player.current ? player.previousQueue.unshift(player.current) : true;
       
       await player.play(nowCurrentTrack).catch((err) => {
         client.logger.error("Skipto play error:", err);
@@ -71,11 +71,11 @@ export default class implements Command {
         queue: player.queue.map((track) => {
           const requesterQueue = track.requester as User;
           return {
-            title: track.title,
-            uri: track.uri,
-            length: track.duration,
-            thumbnail: track.artworkUrl,
-            author: track.author,
+            title: track.info.title,
+            uri: track.info.uri,
+            length: track.duration || track.info?.length,
+            thumbnail: track.info.artworkUrl,
+            author: track.info.author,
             requester: requesterQueue
               ? {
                   id: requesterQueue.id,

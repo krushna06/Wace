@@ -22,16 +22,17 @@ import { ManifestService } from "./services/ManifestService.js";
 import { config } from "dotenv";
 import { initHandler } from "./handlers/index.js";
 import { DeployService } from "./services/DeployService.js";
-import { WacelinkInit } from "./structures/Wacelink.js";
+import { ShoukakuInit } from "./structures/Shoukaku.js";
+import { PlayerManager } from "./structures/PlayerManager.js";
 import { Metadata } from "./@types/Metadata.js";
 import { Config, Emojis } from "./@types/Config.js";
 import { DatabaseTable } from "./database/@types.js";
 import { LavalinkDataType, LavalinkUsingDataType } from "./@types/Lavalink.js";
-import { Wacelink } from "./wacelink/Wacelink.js";
+import { Shoukaku } from "shoukaku";
 import { Command } from "./structures/Command.js";
 import { PlayerButton } from "./@types/Button.js";
 import { GlobalMsg } from "./structures/CommandHandler.js";
-import { WacelinkFilterData, WacelinkPlayer } from "./wacelink/main.js";
+import { Player } from "./structures/Player.js";
 import { TopggService } from "./services/TopggService.js";
 import { Collection } from "./structures/Collection.js";
 import { Localization } from "./structures/Localization.js";
@@ -49,7 +50,9 @@ export class Manager extends Client {
   public lavalinkList: LavalinkDataType[];
   public lavalinkUsing: LavalinkUsingDataType[];
   public lavalinkUsed: LavalinkUsingDataType[];
-  public wacelink: Wacelink;
+  public shoukaku: Shoukaku;
+  public players: Map<string, Player>;
+  public playerManager: PlayerManager;
   public commands: DJSCollection<string, Command>;
   public interval: Collection<NodeJS.Timer>;
   public sentQueue: Collection<boolean>;
@@ -63,8 +66,8 @@ export class Manager extends Client {
   public leaveDelay: Collection<NodeJS.Timeout>;
   public nowPlaying: Collection<{ interval: NodeJS.Timeout; msg: GlobalMsg }>;
   public wsl: Collection<{ send: (data: Record<string, unknown>) => void; auth?: string; guildId?: string }>;
-  public UpdateMusic!: (player: WacelinkPlayer) => Promise<void | Message<true>>;
-  public UpdateQueueMsg!: (player: WacelinkPlayer) => Promise<void | Message<true>>;
+  public UpdateMusic!: (player: Player) => Promise<void | Message<true>>;
+  public UpdateQueueMsg!: (player: Player) => Promise<void | Message<true>>;
   public enSwitch!: ActionRowBuilder<ButtonBuilder>;
   public diSwitch!: ActionRowBuilder<ButtonBuilder>;
   public enSwitchMod!: ActionRowBuilder<ButtonBuilder>;
@@ -149,8 +152,13 @@ export class Manager extends Client {
 
     this.cluster = process.env.IS_SHARING == "true" ? new ClusterClient(this) : undefined;
 
-    this.wacelink = new WacelinkInit(this).init;
-    for (const key of Object.keys(WacelinkFilterData)) {
+    this.shoukaku = new ShoukakuInit(this).init;
+    this.players = new Map<string, Player>();
+    this.playerManager = new PlayerManager(this);
+    
+    // Filter options for music player
+    const filterOptions = ["clear", "bassboost", "nightcore", "vaporwave", "8d", "karaoke", "vibrato", "tremolo"];
+    for (const key of filterOptions) {
       const firstUpperCase = key.charAt(0).toUpperCase() + key.slice(1);
       this.selectMenuOptions.push(
         new StringSelectMenuOptionBuilder()

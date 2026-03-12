@@ -2,7 +2,7 @@ import { ApplicationCommandOptionType, EmbedBuilder, Message } from "discord.js"
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
-import { WacelinkPlayer } from "../../wacelink/main.js";
+import { Player } from "../../structures/Player.js";
 
 // Main code
 export default class implements Command {
@@ -39,7 +39,7 @@ export default class implements Command {
         ],
       });
 
-    const player = client.wacelink.players.get(handler.guild!.id) as WacelinkPlayer;
+    const player = client.players.get(handler.guild!.id) as Player;
 
     if (!value)
       return handler.editReply({

@@ -2,10 +2,10 @@ import { Manager } from "../../manager.js";
 import { TextChannel, EmbedBuilder } from "discord.js";
 import { AutoReconnectBuilderService } from "../../services/AutoReconnectBuilderService.js";
 import { ClearMessageService } from "../../services/ClearMessageService.js";
-import { WacelinkPlayer, WacelinkPlayerState, WacelinkTrack } from "../../wacelink/main.js";
+import { Player } from "../../structures/Player.js";
 
 export default class {
-  async execute(client: Manager, player: WacelinkPlayer, track: WacelinkTrack, message: string) {
+  async execute(client: Manager, player: Player, track: ExtendedTrack, message: string) {
     if (!client.isDatabaseConnected)
       return client.logger.warn(
         "DatabaseService",
@@ -53,9 +53,12 @@ export default class {
     if (data247 !== null && data247 && data247.twentyfourseven && channel)
       new ClearMessageService(client, channel, player);
 
-    const currentPlayer = client.wacelink.players.get(player.guildId) as WacelinkPlayer;
+    const currentPlayer = client.players.get(player.guildId) as Player;
     if (!currentPlayer) return;
     if (currentPlayer.queue.length > 0) return await player.skip().catch(() => {});
-    if (!currentPlayer.sudoDestroy) await player.destroy().catch(() => {});
+    // Check if player should be destroyed
+    if (!player.data.get("sudo-destroy")) {
+      await player.destroy().catch(() => {});
+    }
   }
 }

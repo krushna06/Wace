@@ -14,7 +14,7 @@ export class SongRequesterCleanSetup {
 
     for (let data of guilds) {
       const extractData = data.value;
-      const player = this.client.wacelink.players.get(extractData.guild);
+      const player = this.client.players.get(extractData.guild);
       if (!extractData.enable) return;
       if (player) return;
       await this.restore(extractData);

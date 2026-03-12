@@ -1,7 +1,7 @@
 import { Manager } from "../../manager.js";
 import { EmbedBuilder, TextChannel } from "discord.js";
 import { formatDuration } from "../../utilities/FormatDuration.js";
-import { WacelinkPlayer } from "../../wacelink/main.js";
+import { Player } from "../../structures/Player.js";
 import { getTitle } from "../../utilities/GetTitle.js";
 import { filterSelect } from "../../utilities/PlayerControlButton.js";
 
@@ -13,7 +13,7 @@ export class PlayerUpdateLoader {
   }
 
   async loader(client: Manager) {
-    client.UpdateQueueMsg = async function (player: WacelinkPlayer) {
+    client.UpdateQueueMsg = async function (player: Player) {
       let data = await client.db.setup.get(`${player.guildId}`);
       if (!data) return;
       if (data.enable === false) return;
@@ -48,10 +48,10 @@ export class PlayerUpdateLoader {
 
       const Str = songStrings.slice(0, 10).join("\n");
 
-      const TotalDuration = player.queue.duration;
+      const TotalDuration = player.queue.reduce((acc, t) => acc + (t.duration || t.info?.length || 0), 0);
 
-      let cSong = player.queue.current;
-      let qDuration = `${formatDuration(TotalDuration + Number(player.queue.current?.duration))}`;
+      let cSong = player.current;
+      let qDuration = `${formatDuration(TotalDuration + Number(player.current?.duration))}`;
 
       let dashboardUrl = client.config.utilities.DASHBOARD_URL;
       let dashboardGuildUrl = "";
@@ -100,7 +100,7 @@ export class PlayerUpdateLoader {
 
       return await playMsg
         .edit({
-          content: player.queue.current && player.queue.size == 0 ? " " : queueString,
+          content: player.current && player.queue.length == 0 ? " " : queueString,
           embeds: [embed],
           components: [client.enSwitchMod, filterSelect(client)],
         })
@@ -111,7 +111,7 @@ export class PlayerUpdateLoader {
      *
      * @param {Player} player
      */
-    client.UpdateMusic = async function (player: WacelinkPlayer) {
+    client.UpdateMusic = async function (player: Player) {
       let data = await client.db.setup.get(`${player.guildId}`);
       if (!data) return;
       if (data.enable === false) return;

@@ -4,7 +4,7 @@ import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
 import { formatDuration } from "../../utilities/FormatDuration.js";
 import { PageQueue } from "../../structures/PageQueue.js";
-import { WacelinkPlayer, WacelinkTrack } from "../../wacelink/main.js";
+import { Player } from "../../structures/Player.js";
 import { getTitle } from "../../utilities/GetTitle.js";
 
 // Main code
@@ -25,13 +25,13 @@ export default class implements Command {
   public async execute(client: Manager, handler: CommandHandler) {
     await handler.deferReply();
 
-    const player = client.wacelink.players.get(handler.guild!.id) as WacelinkPlayer;
+    const player = client.players.get(handler.guild!.id) as Player;
 
-    const newQueue = await player.queue.shuffle();
+    const newQueue = await player.shuffle();
 
     const song = newQueue.current;
 
-    const qduration = `${formatDuration(song!.duration + player.queue.duration)}`;
+    const qduration = `${formatDuration(song!.duration + player.queue.reduce((acc, t) => acc + (t.duration || t.info?.length || 0), 0))}`;
     const thumbnail =
       song!.artworkUrl ?? `https://img.youtube.com/vi/${song!.identifier}/hqdefault.jpg`;
 
@@ -83,11 +83,11 @@ export default class implements Command {
       queue: player.queue.map((track) => {
         const requesterQueue = track.requester as User;
         return {
-          title: track.title,
-          uri: track.uri,
-          length: track.duration,
-          thumbnail: track.artworkUrl,
-          author: track.author,
+          title: track.info.title,
+          uri: track.info.uri,
+          length: track.duration || track.info?.length,
+          thumbnail: track.info.artworkUrl,
+          author: track.info.author,
           requester: requesterQueue
             ? {
                 id: requesterQueue.id,

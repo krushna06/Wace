@@ -2,7 +2,7 @@ import { ButtonInteraction, CacheType, InteractionCollector, Message } from "dis
 import { PlayerButton } from "../@types/Button.js";
 import { Manager } from "../manager.js";
 import { ReplyInteractionService } from "../services/ReplyInteractionService.js";
-import { WacelinkLoopMode, WacelinkPlayer } from "../wacelink/main.js";
+import { Player } from "../structures/Player.js";
 
 export default class implements PlayerButton {
   name = "loop";
@@ -10,7 +10,7 @@ export default class implements PlayerButton {
     client: Manager,
     message: ButtonInteraction<CacheType>,
     language: string,
-    player: WacelinkPlayer,
+    player: Player,
     nplaying: Message<boolean>,
     collector: InteractionCollector<ButtonInteraction<"cached">>
   ): Promise<any> {
@@ -26,9 +26,9 @@ export default class implements PlayerButton {
 
     switch (player.loop) {
       case "none":
-        player.setLoop(WacelinkLoopMode.SONG);
+        player.setLoop("track");
 
-        if (client.config.utilities.AUTO_RESUME) setLoop247(WacelinkLoopMode.SONG);
+        if (client.config.utilities.AUTO_RESUME) setLoop247("track");
 
         new ReplyInteractionService(
           client,
@@ -39,15 +39,15 @@ export default class implements PlayerButton {
         client.wsl.get(message.guild!.id)?.send({
           op: "playerLoop",
           guild: message.guild!.id,
-          mode: "song",
+          mode: "track",
         });
 
         break;
 
-      case "song":
-        player.setLoop(WacelinkLoopMode.QUEUE);
+      case "track":
+        player.setLoop("queue");
 
-        if (client.config.utilities.AUTO_RESUME) setLoop247(WacelinkLoopMode.QUEUE);
+        if (client.config.utilities.AUTO_RESUME) setLoop247("queue");
 
         new ReplyInteractionService(
           client,
@@ -64,9 +64,9 @@ export default class implements PlayerButton {
         break;
 
       case "queue":
-        player.setLoop(WacelinkLoopMode.NONE);
+        player.setLoop("none");
 
-        if (client.config.utilities.AUTO_RESUME) setLoop247(WacelinkLoopMode.NONE);
+        if (client.config.utilities.AUTO_RESUME) setLoop247("none");
 
         new ReplyInteractionService(
           client,

@@ -9,9 +9,10 @@ import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
 import { AutocompleteInteractionChoices, GlobalInteraction } from "../../@types/Interaction.js";
-import { WacelinkSearchResultType, WacelinkTrack } from "../../wacelink/main.js";
+import { ExtendedTrack } from "../../structures/Player.js";
+import { getNode } from "../../utilities/GetNode.js";
 
-const TrackAdd: WacelinkTrack[] = [];
+const TrackAdd: ExtendedTrack[] = [];
 
 export default class implements Command {
   public name = ["pl", "add"];
@@ -68,7 +69,7 @@ export default class implements Command {
         ],
       });
 
-    const result = await client.wacelink.search(input, {
+    const result = await getNode(client)?.rest.resolve(input, {
       requester: handler.user,
     });
     const tracks = result.tracks;
@@ -177,11 +178,11 @@ export default class implements Command {
 
     TrackAdd.forEach(async (track) => {
       await client.db.playlist.push(`${value}.tracks`, {
-        title: track.title,
-        uri: track.uri,
-        length: track.duration,
-        thumbnail: track.artworkUrl,
-        author: track.author,
+        title: track.info.title,
+        uri: track.info.uri,
+        length: track.duration || track.info?.length,
+        thumbnail: track.info.artworkUrl,
+        author: track.info.author,
         requester: track.requester, // Just case can push
       });
     });
@@ -201,8 +202,8 @@ export default class implements Command {
 
   getTitle(
     client: Manager,
-    type: WacelinkSearchResultType,
-    tracks: WacelinkTrack[],
+    type: SearchResultType,
+    tracks: ExtendedTrack[],
     value?: string
   ): string {
     if (client.config.player.AVOID_SUSPEND) return tracks[0].title;
@@ -243,18 +244,45 @@ export default class implements Command {
       });
       return;
     }
-    const searchRes = await client.wacelink.search(url || Random);
+    
+    try {
+      const searchRes = await getNode(client)?.rest.resolve(url || Random);
 
-    if (searchRes.tracks.length == 0 || !searchRes.tracks) {
-      return choice.push({ name: "Error song not matches", value: url });
-    }
+      if (!searchRes) {
+        return choice.push({ name: "Error song not matches", value: url });
+      }
 
-    for (let i = 0; i < 10; i++) {
-      const x = searchRes.tracks[i];
-      choice.push({
-        name: x && x.title ? x.title : "Unknown track name",
-        value: x && x.uri ? x.uri : url,
-      });
+      // Handle Shoukaku's LavalinkResponse format
+      let tracks: any[] = [];
+      switch (searchRes.loadType) {
+        case "track":
+          tracks = [searchRes.data];
+          break;
+        case "playlist":
+          tracks = (searchRes.data as any).tracks || [];
+          break;
+        case "search":
+          tracks = searchRes.data as any[];
+          break;
+        case "empty":
+        case "error":
+          return choice.push({ name: "Error song not matches", value: url });
+      }
+
+      if (!tracks || tracks.length === 0) {
+        return choice.push({ name: "Error song not matches", value: url });
+      }
+
+      for (let i = 0; i < Math.min(10, tracks.length); i++) {
+        const x = tracks[i];
+        choice.push({
+          name: x && x.info?.title ? x.info.title : "Unknown track name",
+          value: x && x.info?.uri ? x.info.uri : url,
+        });
+      }
+    } catch (error) {
+      client.logger.error("Autocomplete search error:", error);
+      choice.push({ name: "Search error - try again", value: url });
     }
 
     await (interaction as AutocompleteInteraction).respond(choice).catch(() => {});

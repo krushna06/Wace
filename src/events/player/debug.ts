@@ -4,6 +4,6 @@ import { Manager } from "../../manager.js";
 export default class {
   async execute(client: Manager, logs: string) {
     if (client.config.bot.DEBUG_MODE)
-      return client.logger.debug("WacelinkDebug", `${util.inspect(logs).slice(1).slice(0, -1)}`);
+      return client.logger.debug("ShoukakuDebug", `${util.inspect(logs).slice(1).slice(0, -1)}`);
   }
 }

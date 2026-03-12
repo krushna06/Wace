@@ -2,7 +2,7 @@ import { EmbedBuilder, PermissionsBitField } from "discord.js";
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
-import { WacelinkPlayer } from "../../wacelink/main.js";
+import { Player } from "../../structures/Player.js";
 import { AutoReconnectBuilderService } from "../../services/AutoReconnectBuilderService.js";
 
 export default class implements Command {
@@ -22,7 +22,7 @@ export default class implements Command {
   public async execute(client: Manager, handler: CommandHandler) {
     await handler.deferReply();
 
-    const player = client.wacelink.players.get(handler.guild!.id) as WacelinkPlayer | undefined;
+    const player = client.players.get(handler.guild!.id) as Player | undefined;
 
     const reconnectBuilder = new AutoReconnectBuilderService(client, player);
     const data = await reconnectBuilder.get(handler.guild!.id);

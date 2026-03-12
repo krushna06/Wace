@@ -8,7 +8,7 @@ import {
 import { PlayerButton } from "../@types/Button.js";
 import { Manager } from "../manager.js";
 import { formatDuration } from "../utilities/FormatDuration.js";
-import { WacelinkPlayer } from "../wacelink/main.js";
+import { Player } from "../structures/Player.js";
 import { getTitle } from "../utilities/GetTitle.js";
 
 export default class implements PlayerButton {
@@ -17,15 +17,15 @@ export default class implements PlayerButton {
     client: Manager,
     message: ButtonInteraction<CacheType>,
     language: string,
-    player: WacelinkPlayer,
+    player: Player,
     nplaying: Message<boolean>,
     collector: InteractionCollector<ButtonInteraction<"cached">>
   ): Promise<any> {
     if (!player) {
       collector.stop();
     }
-    const song = player.queue.current;
-    const qduration = `${formatDuration(song!.duration + player.queue.duration)}`;
+    const song = player.current;
+    const qduration = `${formatDuration(song!.duration + player.queue.reduce((acc, t) => acc + (t.duration || t.info?.length || 0), 0))}`;
     const thumbnail =
       song?.artworkUrl ?? `https://img.youtube.com/vi/${song!.identifier}/hqdefault.jpg`;
 

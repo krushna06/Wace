@@ -1,8 +1,12 @@
 import { Manager } from "../../manager.js";
-import { WacelinkNode } from "../../wacelink/main.js";
+import { Node } from "shoukaku";
 
 export default class {
-  async execute(client: Manager, node: WacelinkNode, error: Error) {
-    client.logger.debug("NodeError", `Lavalink "${node.options.name}" error ${error}`);
+  async execute(client: Manager, node: Node | undefined, error: Error) {
+    if (!node) {
+      client.logger.debug("NodeError", `Lavalink node error: ${error.message}`);
+      return;
+    }
+    client.logger.debug("NodeError", `Lavalink "${node.name}" error: ${error.message}`);
   }
 }

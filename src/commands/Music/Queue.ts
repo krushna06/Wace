@@ -4,7 +4,7 @@ import { PageQueue } from "../../structures/PageQueue.js";
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
-import { WacelinkPlayer, WacelinkTrack } from "../../wacelink/main.js";
+import { Player } from "../../structures/Player.js";
 import { getTitle } from "../../utilities/GetTitle.js";
 
 // Main code
@@ -43,10 +43,10 @@ export default class implements Command {
         ],
       });
 
-    const player = client.wacelink.players.get(handler.guild!.id) as WacelinkPlayer;
+    const player = client.players.get(handler.guild!.id) as Player;
 
-    const song = player.queue.current;
-    const qduration = `${formatDuration(song!.duration + player.queue.duration)}`;
+    const song = player.current;
+    const qduration = `${formatDuration(song!.duration + player.queue.reduce((acc, t) => acc + (t.duration || t.info?.length || 0), 0))}`;
     const thumbnail =
       song?.artworkUrl ?? `https://img.youtube.com/vi/${song!.identifier}/hqdefault.jpg`;
 

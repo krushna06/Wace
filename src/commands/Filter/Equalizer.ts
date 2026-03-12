@@ -37,7 +37,7 @@ export default class implements Command {
         ],
       });
 
-    const player = client.wacelink.players.get(handler.guild!.id);
+    const player = client.players.get(handler.guild!.id);
 
     if (!value) {
       const embed = new EmbedBuilder()
@@ -60,7 +60,7 @@ export default class implements Command {
           })}`,
         });
       return handler.editReply({ embeds: [embed] });
-    } else if (value == "off" || value == "reset") return player?.filter.clear();
+    } else if (value == "off" || value == "reset") return player?.filters.clear();
 
     const bands = value.split(/[ ]+/);
     let bandsStr = "";
@@ -97,7 +97,7 @@ export default class implements Command {
 
     for (let i = 0; i < bands.length; i++) {
       if (i > 13) break;
-      player?.filter.setEqualizer([{ band: i, gain: Number(bands[i]) / 10 }]);
+      player?.filters.setEqualizer([{ band: i, gain: Number(bands[i]) / 10 }]);
       bandsStr += `${bands[i]} `;
     }
 

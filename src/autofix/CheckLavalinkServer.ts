@@ -1,7 +1,7 @@
 import { Manager } from "../manager.js";
 import { Headers } from "../@types/Lavalink.js";
 import { GetLavalinkServer } from "./GetLavalinkServer.js";
-import { WacelinkWebsocket } from "../wacelink/main.js";
+import WebSocket from "ws";
 
 export class CheckLavalinkServer {
   client: Manager;
@@ -25,11 +25,11 @@ export class CheckLavalinkServer {
 
     lavalink_data.forEach((config) => {
       let headers = {
-        "Client-Name": "wacelink/1.0.0",
-        "User-Agent": "wacelink/1.0.0",
+        "Client-Name": "shoukaku/4.3.0",
+        "User-Agent": "shoukaku/4.3.0",
         Authorization: config.pass,
         "User-Id": "853620650592567304",
-        "Resume-Key": "wacelink@1.0.0",
+        "Resume-Key": "shoukaku@4.3.0",
       };
 
       const url = `ws://${config.host}:${config.port}/v4/websocket`;
@@ -60,7 +60,7 @@ export class CheckLavalinkServer {
 
   checkServerStatus(url: string, headers: Headers) {
     return new Promise((resolve, reject) => {
-      const ws = new WacelinkWebsocket(url, { headers });
+      const ws = new WebSocket(url, { headers });
       ws.on("open", () => {
         resolve(true);
         ws.close();

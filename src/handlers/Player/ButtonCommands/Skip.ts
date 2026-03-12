@@ -1,19 +1,19 @@
 import { ButtonInteraction, EmbedBuilder, VoiceBasedChannel } from "discord.js";
 import { Manager } from "../../../manager.js";
-import { WacelinkPlayer } from "../../../wacelink/main.js";
+import { Player } from "../../../structures/Player.js";
 
 export class ButtonSkip {
   client: Manager;
   interaction: ButtonInteraction;
   channel: VoiceBasedChannel | null;
   language: string;
-  player: WacelinkPlayer;
+  player: Player;
   constructor(
     client: Manager,
     interaction: ButtonInteraction,
     channel: VoiceBasedChannel | null,
     language: string,
-    player: WacelinkPlayer
+    player: Player
   ) {
     this.channel = channel;
     this.client = client;
@@ -57,7 +57,7 @@ export class ButtonSkip {
     } else {
     }
 
-    if (this.player.queue.size == 0 && this.player.data.get("autoplay") !== true) {
+    if (this.player.queue.length == 0 && this.player.data.get("autoplay") !== true) {
       const embed = new EmbedBuilder()
         .setDescription(`${this.client.i18n.get(this.language, "button.music", "skip_notfound")}`)
         .setColor(this.client.color);

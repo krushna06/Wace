@@ -1,6 +1,6 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { Manager } from "../../manager.js";
-import { WacelinkFilterData } from "../../wacelink/Interface/Constants.js";
+import { FilterPresets } from "../../structures/Filters.js";
 
 export const getFilters = (client: Manager) => {
   return async (request: FastifyRequest, reply: FastifyReply) => {
@@ -11,36 +11,36 @@ export const getFilters = (client: Manager) => {
 
       const filters = filterCommands.map(cmd => {
         const filterName = cmd.name.find(name => name !== "filter" && name !== "filter2") || cmd.name[0];
-        const isInWacelink = WacelinkFilterData[filterName as keyof typeof WacelinkFilterData];
+        const isInPresets = FilterPresets[filterName as keyof typeof FilterPresets];
         
         return {
           name: filterName,
           commandNames: cmd.name,
           description: cmd.description,
           category: cmd.category,
-          hasWacelinkData: !!isInWacelink,
-          wacelinkData: isInWacelink || null,
+          hasFilterData: !!isInPresets,
+          filterData: isInPresets || null,
           usage: cmd.usage,
           aliases: cmd.aliases
         };
       });
 
-      const wacelinkFilters = Object.keys(WacelinkFilterData).map(filterName => ({
+      const availableFilters = Object.keys(FilterPresets).map(filterName => ({
         name: filterName,
-        type: "wacelink",
+        type: "shoukaku",
         description: filterName === "clear" 
           ? "Reset all filters to default" 
           : `${filterName.charAt(0).toUpperCase() + filterName.slice(1)} filter for better audio experience`,
-        data: WacelinkFilterData[filterName as keyof typeof WacelinkFilterData]
+        data: FilterPresets[filterName as keyof typeof FilterPresets]
       }));
 
       reply.send({
         success: true,
         data: {
           commandFilters: filters,
-          wacelinkFilters: wacelinkFilters,
+          availableFilters: availableFilters,
           totalCommandFilters: filters.length,
-          totalWacelinkFilters: wacelinkFilters.length
+          totalAvailableFilters: availableFilters.length
         }
       });
     } catch (error) {

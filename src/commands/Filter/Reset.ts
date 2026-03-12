@@ -20,7 +20,7 @@ export default class implements Command {
   async execute(client: Manager, handler: CommandHandler) {
     await handler.deferReply();
 
-    const player = client.wacelink.players.get(handler.guild!.id);
+    const player = client.players.get(handler.guild!.id);
 
     if (!player?.data.get("filter-mode"))
       return handler.editReply({
@@ -35,7 +35,7 @@ export default class implements Command {
 
     player?.data.delete("filter-mode");
 
-    await player?.filter.clear();
+    await player?.filters.clear();
     await player?.setVolume(100);
 
     const resetted = new EmbedBuilder()

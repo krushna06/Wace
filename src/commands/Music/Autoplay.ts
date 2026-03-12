@@ -2,7 +2,7 @@ import { EmbedBuilder } from "discord.js";
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
-import { WacelinkPlayer } from "../../wacelink/main.js";
+import { Player } from "../../structures/Player.js";
 
 export default class implements Command {
   public name = ["autoplay"];
@@ -21,13 +21,13 @@ export default class implements Command {
   public async execute(client: Manager, handler: CommandHandler) {
     await handler.deferReply();
 
-    const player = client.wacelink.players.get(handler.guild!.id) as WacelinkPlayer;
+    const player = client.players.get(handler.guild!.id) as Player;
 
     if (player.data.get("autoplay") === true) {
       player.data.set("autoplay", false);
       player.data.set("identifier", null);
       player.data.set("requester", null);
-      player.queue.clear();
+      player.queue = [];
 
       const off = new EmbedBuilder()
         .setDescription(
@@ -39,14 +39,14 @@ export default class implements Command {
 
       await handler.editReply({ content: " ", embeds: [off] });
     } else {
-      const identifier = player.queue.current!.identifier;
+      const identifier = player.current!.identifier;
 
       player.data.set("autoplay", true);
       player.data.set("identifier", identifier);
       player.data.set("requester", handler.user);
-      player.data.set("source", player.queue.current?.sourceName);
-      player.data.set("author", player.queue.current?.author);
-      player.data.set("title", player.queue.current?.title);
+      player.data.set("source", player.current?.sourceName);
+      player.data.set("author", player.current?.author);
+      player.data.set("title", player.current?.title);
 
       const on = new EmbedBuilder()
         .setDescription(

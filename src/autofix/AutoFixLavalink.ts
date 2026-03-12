@@ -15,7 +15,7 @@ export class AutoFixLavalink {
     this.client.logger.info(AutoFixLavalink.name, "----- Starting autofix lavalink... -----");
     
     let hasOnlineNodes = false;
-    this.client.wacelink.nodes.forEach((node) => {
+    this.client.shoukaku.nodes.forEach((node) => {
       if (node.online) {
         hasOnlineNodes = true;
       }
@@ -60,8 +60,8 @@ export class AutoFixLavalink {
   }
 
   checkLavalink() {
-    if (this.client.wacelink.nodes.size !== 0 && this.client.lavalinkUsing.length == 0) {
-      this.client.wacelink.nodes.forEach((data, index) => {
+    if (this.client.shoukaku.nodes.size !== 0 && this.client.lavalinkUsing.length == 0) {
+      this.client.shoukaku.nodes.forEach((data, index) => {
         this.client.lavalinkUsing.push({
           host: data.options.host,
           port: data.options.port,
@@ -83,11 +83,11 @@ export class AutoFixLavalink {
     }
 
     const targetLavalink = this.client.lavalinkUsing[lavalinkIndex];
-    if (this.client.wacelink.nodes.size == 0 && this.client.lavalinkUsing.length != 0) {
+    if (this.client.shoukaku.nodes.size == 0 && this.client.lavalinkUsing.length != 0) {
       this.client.lavalinkUsing.splice(lavalinkIndex, 1);
-    } else if (this.client.wacelink.nodes.size !== 0 && this.client.lavalinkUsing.length !== 0) {
-      const isLavalinkExist = this.client.wacelink.nodes.get(targetLavalink.name);
-      if (isLavalinkExist) this.client.wacelink.nodes.remove(targetLavalink.name);
+    } else if (this.client.shoukaku.nodes.size !== 0 && this.client.lavalinkUsing.length !== 0) {
+      const isLavalinkExist = this.client.shoukaku.nodes.get(targetLavalink.name);
+      if (isLavalinkExist) this.client.shoukaku.nodes.remove(targetLavalink.name);
       this.client.lavalinkUsing.splice(lavalinkIndex, 1);
     }
   }
@@ -101,7 +101,7 @@ export class AutoFixLavalink {
 
     const nodeInfo = onlineList[Math.floor(Math.random() * onlineList.length)];
 
-    this.client.wacelink.nodes.add({
+    this.client.shoukaku.nodes.add({
       port: nodeInfo.port,
       host: nodeInfo.host,
       auth: nodeInfo.pass,

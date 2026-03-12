@@ -2,10 +2,10 @@ import { Manager } from "../../manager.js";
 import { TextChannel } from "discord.js";
 import { ClearMessageService } from "../../services/ClearMessageService.js";
 import { AutoReconnectBuilderService } from "../../services/AutoReconnectBuilderService.js";
-import { WacelinkPlayer, WacelinkPlayerState } from "../../wacelink/main.js";
+import { Player } from "../../structures/Player.js";
 
 export default class {
-  async execute(client: Manager, player: WacelinkPlayer) {
+  async execute(client: Manager, player: Player) {
     if (!client.isDatabaseConnected)
       return client.logger.warn(
         "DatabaseService",
@@ -18,9 +18,9 @@ export default class {
     const tempLavalinkNode = player.data.get("tempLavalinkNode") as string | undefined;
     if (tempLavalinkNode) {
       try {
-        const tempNode = client.wacelink.nodes.get(tempLavalinkNode);
+        const tempNode = client.shoukaku.nodes.get(tempLavalinkNode);
         if (tempNode) {
-          client.wacelink.nodes.remove(tempLavalinkNode);
+          client.shoukaku.nodes.remove(tempLavalinkNode);
           client.logger.info("TrackEnd", `Removed temporary lavalink node: ${tempLavalinkNode}`);
         }
         player.data.delete("tempLavalinkNode");
@@ -53,7 +53,7 @@ export default class {
       }
     }
 
-    const currentPlayer = client.wacelink.players.get(player.guildId) as WacelinkPlayer;
+    const currentPlayer = client.players.get(player.guildId) as Player;
     if (!currentPlayer) return;
     
     const skipTriggered = player.data.get("skipTriggered");
@@ -62,6 +62,9 @@ export default class {
       return;
     }
     
-    if (!currentPlayer.sudoDestroy) await player.destroy().catch(() => {});
+    // Check if player should be destroyed
+    if (!player.data.get("sudo-destroy")) {
+      await player.destroy().catch(() => {});
+    }
   }
 }

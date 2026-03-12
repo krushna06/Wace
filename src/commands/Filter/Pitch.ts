@@ -38,7 +38,7 @@ export default class implements Command {
         ],
       });
 
-    const player = client.wacelink.players.get(handler.guild!.id);
+    const player = client.players.get(handler.guild!.id);
 
     if (Number(value) < 0)
       return handler.editReply({
@@ -59,7 +59,7 @@ export default class implements Command {
         ],
       });
 
-    await player?.filter.setTimescale({ pitch: Number(value) });
+    await player?.filters.setTimescale({ pitch: Number(value) });
 
     player?.data.set("filter-mode", this.name[0]);
 

@@ -2,7 +2,7 @@ import { ButtonInteraction, CacheType, InteractionCollector, Message } from "dis
 import { PlayerButton } from "../@types/Button.js";
 import { Manager } from "../manager.js";
 import { ReplyInteractionService } from "../services/ReplyInteractionService.js";
-import { WacelinkPlayer } from "../wacelink/main.js";
+import { Player } from "../structures/Player.js";
 
 export default class implements PlayerButton {
   name = "replay";
@@ -10,23 +10,22 @@ export default class implements PlayerButton {
     client: Manager,
     message: ButtonInteraction<CacheType>,
     language: string,
-    player: WacelinkPlayer,
+    player: Player,
     nplaying: Message<boolean>,
     collector: InteractionCollector<ButtonInteraction<"cached">>
   ): Promise<any> {
     if (!player) {
       collector.stop();
     }
-    const previousIndex = player.queue.previous.length - 1;
-
-    if (player.queue.previous.length == 0 || previousIndex === -1)
+    if (!player.previous)
       return new ReplyInteractionService(
         client,
         message,
         `${client.i18n.get(language, "button.music", "previous_notfound")}`
       );
 
-    player.previous();
+    // Play the previous track
+    await player.play(player.previous);
 
     player.data.set("endMode", "previous");
 

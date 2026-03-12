@@ -18,7 +18,7 @@ import {
 } from "../../services/SpotifySearchService.js";
 
 export default class implements Command {
-  public name = ["spotify", "song"];
+  public name = ["spotify", "track"];
   public description = "Searches for a Spotify song";
   public category = "Spotify";
   public accessableby = [Accessableby.Member];
