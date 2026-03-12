@@ -54,11 +54,11 @@ export class WebServer {
           if (req.routeOptions.url !== "/v1/websocket") {
             client.logger.info("WebServer", `Route URL: ${req.routeOptions.url}`);
           }
-          
+
           if (req.routeOptions.url === "/v1/websocket") {
             return done();
           }
-          
+
           if (!req.headers["authorization"]) {
             reply.code(400);
             reply.send(JSON.stringify({ error: "Missing Authorization" }));
@@ -96,7 +96,7 @@ export class WebServer {
         fastify.get("/premium/user/:userId", (req, res) => getUserPremium(client, req, res));
         fastify.get("/premium/guild/:guildId", (req, res) => getGuildPremium(client, req, res));
         fastify.get("/guild-checker/:guildId/:userId", getGuildChecker(client));
-        
+
         fastify.get("/filters", (req, res) => getFilters(client)(req, res));
         fastify.get("/filters/:guildId", (req, res) => getCurrentFilter(client)(req as any, res));
         fastify.post("/filters/:guildId", (req, res) => postApplyFilter(client)(req as any, res));

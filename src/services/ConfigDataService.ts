@@ -18,7 +18,7 @@ export class ConfigDataService {
     }
 
     if (process.env.DOCKER_COMPOSE_MODE) {
-      // Change lavalink data
+
       const lavalink_changedata = res.player.NODES[0];
       lavalink_changedata.host = String(process.env.NODE_HOST);
       lavalink_changedata.port = Number(process.env.NODE_PORT);
@@ -27,7 +27,7 @@ export class ConfigDataService {
       lavalink_changedata.secure = false;
 
       if (process.env.DOCKER_COMPOSE_DATABASE) {
-        // Change db data
+
         const db_chnagedata = res.utilities.DATABASE;
         if (db_chnagedata.driver == "mongodb") {
           db_chnagedata.config.uri = String(process.env.MONGO_URI);

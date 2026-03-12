@@ -3,7 +3,7 @@ import { ConfigDataService } from "./services/ConfigDataService.js";
 const configData = new ConfigDataService().data;
 configData.bot.TOKEN.forEach((token, index) => {
   const wace = new Manager(configData, index, configData.utilities.MESSAGE_CONTENT.enable);
-  // Anti crash handling
+
   process
     .on("unhandledRejection", (error) => wace.logger.unhandled("AntiCrash", error))
     .on("uncaughtException", (error) => wace.logger.unhandled("AntiCrash", error))

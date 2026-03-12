@@ -5,7 +5,6 @@ const index = Number(process.env.WACE_CURRENT_INDEX);
 const token = String(process.env.WACE_CURRENT_TOKEN);
 const wace = new Manager(configData, index, configData.utilities.MESSAGE_CONTENT.enable);
 
-// Anti crash handling
 process
   .on("unhandledRejection", (error) => wace.logger.unhandled("AntiCrash", error))
   .on("uncaughtException", (error) => wace.logger.unhandled("AntiCrash", error))

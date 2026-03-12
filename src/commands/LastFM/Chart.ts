@@ -172,4 +172,4 @@ export default class implements Command {
       return handler.editReply({ content: "There was an error generating your chart. Please try again later." });
     }
   }
-} 
+}

@@ -29,7 +29,7 @@ export default class implements Command {
 
     const roleData = handler.args[0];
     const getRole = await handler.parseMentions(roleData);
-    
+
     if (!getRole || getRole.type !== ParseMentionEnum.ROLE) {
       const embed = new EmbedBuilder()
         .setDescription(`${client.i18n.get(handler.language, "error", "no_role")}`)
@@ -38,8 +38,8 @@ export default class implements Command {
     }
 
     const role = getRole.data as Role;
-    
-    // Check if the role is manageable by the bot
+
+
     if (!role.editable) {
       const embed = new EmbedBuilder()
         .setDescription(`${client.i18n.get(handler.language, "error", "role_not_editable")}`)
@@ -49,13 +49,13 @@ export default class implements Command {
 
     try {
       const setup = await client.db.setup.get(handler.guild!.id);
-      
+
       if (setup) {
-        // Update existing setup
+
         setup.premiumRole = role.id;
         await client.db.setup.set(handler.guild!.id, setup);
       } else {
-        // Create new setup
+
         await client.db.setup.set(handler.guild!.id, {
           guild: handler.guild!.id,
           enable: false,
@@ -90,4 +90,4 @@ export default class implements Command {
       return handler.editReply({ embeds: [embed] });
     }
   }
-} 
+}

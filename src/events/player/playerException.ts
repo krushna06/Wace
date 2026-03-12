@@ -11,9 +11,9 @@ export default class {
       "PlayerException",
       `Player got an exception ${util.inspect(data).slice(1).slice(0, -1)}`
     );
-    /////////// Update Music Setup //////////
+
     await client.UpdateMusic(player);
-    /////////// Update Music Setup ///////////
+
     const fetch_channel = await client.channels.fetch(player.textId).catch(() => undefined);
     const text_channel = fetch_channel! as TextChannel;
     if (text_channel) {
@@ -41,7 +41,7 @@ export default class {
       await player.skip().catch(() => {});
       return;
     }
-    // Check if player should be destroyed
+
     if (!player.data.get("sudo-destroy")) {
       await player.destroy().catch(() => {});
     }

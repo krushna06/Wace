@@ -28,10 +28,10 @@ export default class {
     if (!player) return;
 
     client.logger.debug("TrackStart", `Track parameter: ${track?.info.title}, requester: ${JSON.stringify(track?.requester)}`);
-    
+
     const playlistUri = player.data.get("playlist-uri");
     const isFirstTrackOfPlaylist = player.data.get("playlist-first-track");
-    
+
     if (track && track.requester && player.guildId) {
       let userId: string;
       if (typeof track.requester === 'object' && track.requester !== null) {
@@ -39,22 +39,22 @@ export default class {
       } else {
         userId = String(track.requester);
       }
-      
+
       if (userId && userId !== '[object Object]' && userId.length > 0) {
         try {
           await incrementUserSongPlay(client.db, userId, player.guildId);
           await incrementGuildSongPlay(client.db, player.guildId);
           await incrementGuildSongStats(client.db, player.guildId, track, userId);
-          
+
           const uriToSave = (playlistUri && isFirstTrackOfPlaylist) ? playlistUri : track.info.uri;
-          const trackToSave = (playlistUri && isFirstTrackOfPlaylist) 
-            ? { ...track, uri: playlistUri } 
+          const trackToSave = (playlistUri && isFirstTrackOfPlaylist)
+            ? { ...track, uri: playlistUri }
             : track;
-          
+
           await setGuildLastPlayed(client.db, player.guildId, trackToSave);
           await setUserLastPlayed(client.db, userId, trackToSave);
           await logUserPlayHistory(client.db, userId, player.guildId, track);
-          
+
           if (isFirstTrackOfPlaylist) {
             player.data.delete("playlist-first-track");
           }
@@ -67,11 +67,9 @@ export default class {
       }
     }
 
-    /////////// Update Music Setup ///////////
 
     await client.UpdateQueueMsg(player);
 
-    /////////// Update Music Setup ///////////
 
     const channel = (await client.channels
       .fetch(player.textId)
@@ -122,7 +120,7 @@ export default class {
     const language = guildModel;
 
     if (song) {
-      // Clear voteskip data for the new song
+
       for (const [key] of player.data.entries()) {
         if (key.startsWith("voteskip_")) {
           player.data.delete(key);
@@ -188,7 +186,7 @@ export default class {
       ? await playing_channel.send({
           embeds: [embeded],
           components: [filterSelect(client), playerRowOne(client), playerRowTwo(client)],
-          // files: client.config.bot.SAFE_PLAYER_MODE ? [] : [attachment],
+
         })
       : undefined;
 

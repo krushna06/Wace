@@ -71,15 +71,15 @@ export class ButtonPause {
       newPlayer.paused
         ? playMsg
             .edit({
-              // content: playMsg.content,
-              // embeds: new EmbedBuilder(playMsg.embeds),
+
+
               components: [this.client.enSwitch],
             })
             .catch(() => null)
         : playMsg
             .edit({
-              // content: playMsg.content,
-              // embeds: playMsg.embeds,
+
+
               components: [this.client.enSwitchMod],
             })
             .catch(() => null);

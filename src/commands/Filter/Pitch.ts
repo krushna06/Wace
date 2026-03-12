@@ -2,7 +2,6 @@ import { EmbedBuilder, ApplicationCommandOptionType, Message } from "discord.js"
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
-
 export default class implements Command {
   public name = ["filter", "pitch"];
   public description = "Sets the pitch of the song.";
@@ -23,12 +22,9 @@ export default class implements Command {
       required: true,
     },
   ];
-
   public async execute(client: Manager, handler: CommandHandler) {
     await handler.deferReply();
-
     const value = handler.args[0];
-
     if (value && isNaN(+value))
       return handler.editReply({
         embeds: [
@@ -37,9 +33,7 @@ export default class implements Command {
             .setColor(client.color),
         ],
       });
-
     const player = client.players.get(handler.guild!.id);
-
     if (Number(value) < 0)
       return handler.editReply({
         embeds: [
@@ -58,11 +52,8 @@ export default class implements Command {
             .setColor(client.color),
         ],
       });
-
     await player?.filters.setTimescale({ pitch: Number(value) });
-
     player?.data.set("filter-mode", this.name[0]);
-
     const embed = new EmbedBuilder()
       .setDescription(
         `${client.i18n.get(handler.language, "command.filter", "pitch_on", {

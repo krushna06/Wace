@@ -2,7 +2,6 @@ import { EmbedBuilder } from "discord.js";
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
-
 export default class implements Command {
   public name = ["filter2", "superbass"];
   public description = "Turning on superbass filter";
@@ -16,12 +15,9 @@ export default class implements Command {
   public usingInteraction = true;
   public sameVoiceCheck = true;
   public permissions = [];
-
   public async execute(client: Manager, handler: CommandHandler) {
     await handler.deferReply();
-
     const player = client.players.get(handler.guild!.id);
-
     if (player?.data.get("filter-mode") == this.name[0])
       return handler.editReply({
         embeds: [
@@ -34,7 +30,6 @@ export default class implements Command {
             .setColor(client.color),
         ],
       });
-
     player?.data.set("filter-mode", this.name[0]);
     player?.filters.setEqualizer([
       { band: 0, gain: 0.2 },
@@ -52,7 +47,6 @@ export default class implements Command {
       { band: 12, gain: 0 },
       { band: 13, gain: 0 },
     ]);
-
     const sbed = new EmbedBuilder()
       .setDescription(
         `${client.i18n.get(handler.language, "command.filter", "filter_on", {

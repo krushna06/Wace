@@ -9,7 +9,6 @@ import { PlayerButton } from "../@types/Button.js";
 import { Manager } from "../manager.js";
 import { ReplyInteractionService } from "../services/ReplyInteractionService.js";
 import { Player } from "../structures/Player.js";
-
 export default class implements PlayerButton {
   name = "stop";
   async run(
@@ -21,19 +20,15 @@ export default class implements PlayerButton {
     collector: InteractionCollector<ButtonInteraction<"cached">>
   ): Promise<any> {
     collector.stop();
-
     player.data.set("sudo-destroy", true);
     const is247 = await client.db.autoreconnect.get(message.guildId);
     player.stop(is247 && is247.twentyfourseven ? false : true);
-
     const embed = new EmbedBuilder()
       .setDescription(client.i18n.get(language, "button.music", "stop_msg"))
       .setImage(
         client.config.PATREON_IMAGE?.[0]
       );
-
     await message.reply({ embeds: [embed] });
-
     new ReplyInteractionService(
       client,
       message,

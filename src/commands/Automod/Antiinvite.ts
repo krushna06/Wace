@@ -14,7 +14,6 @@ import {
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
-
 export default class implements Command {
   public name = ["antiinvite"];
   public description = "Enable or disable anti-invite system";
@@ -27,7 +26,6 @@ export default class implements Command {
   public usingInteraction = true;
   public sameVoiceCheck = false;
   public permissions = [];
-
   options = [
     {
       name: "type",
@@ -70,10 +68,8 @@ export default class implements Command {
       required: false,
     },
   ];
-
   public async execute(client: Manager, handler: CommandHandler) {
     await handler.deferReply();
-
     // @ts-ignore
     const options = handler.interaction.options as CommandInteractionOptionResolver;
     const type = options.getString("type");
@@ -81,7 +77,6 @@ export default class implements Command {
     const exemptChannels = options.getChannel("exempt-channels") as GuildBasedChannel | null;
     const timeout = options.getInteger("timeout");
     const logChannel = options.getChannel("log-channel") as GuildBasedChannel | null;
-
     if (!type || !["enable", "disable"].includes(type)) {
       return handler.editReply({
         embeds: [
@@ -93,7 +88,6 @@ export default class implements Command {
         ],
       });
     }
-
     const existingRules = await handler.guild.autoModerationRules.fetch({ cache: false });
     const conflictingRules = existingRules.filter(
       (rule) => rule.triggerType === AutoModerationRuleTriggerType.Keyword
@@ -109,10 +103,8 @@ export default class implements Command {
         ],
       });
     }
-
     const ruleName = client.i18n.get(handler.language, "automod.antiinvite", "rule_name");
     const existingRule = existingRules.find((rule) => rule.name === ruleName);
-
     if (type === "enable") {
       if (existingRule && existingRule.enabled) {
         return handler.editReply({
@@ -125,7 +117,6 @@ export default class implements Command {
           ],
         });
       }
-
       if (existingRule) {
         await handler.guild.autoModerationRules.edit(existingRule.id, {
           enabled: true,
@@ -160,7 +151,6 @@ export default class implements Command {
             username: handler.member.user.username,
           }),
         };
-
         if (timeout) {
           ruleToCreate.actions.push({
             type: AutoModerationActionType.Timeout,
@@ -169,7 +159,6 @@ export default class implements Command {
             },
           });
         }
-
         if (logChannel) {
           const logChannelPermissions = logChannel.permissionsFor(handler.guild.members.me!);
           if (!logChannelPermissions.has(PermissionsBitField.Flags.ViewChannel)) {
@@ -185,7 +174,6 @@ export default class implements Command {
               ],
             });
           }
-
           if (!logChannelPermissions.has(PermissionsBitField.Flags.SendMessages)) {
             return handler.editReply({
               embeds: [
@@ -199,7 +187,6 @@ export default class implements Command {
               ],
             });
           }
-
           const memberPermissions = logChannel.permissionsFor(handler.member);
           if (!memberPermissions.has(PermissionsBitField.Flags.ViewChannel)) {
             return handler.editReply({
@@ -217,7 +204,6 @@ export default class implements Command {
               ],
             });
           }
-
           if (!memberPermissions.has(PermissionsBitField.Flags.SendMessages)) {
             return handler.editReply({
               embeds: [
@@ -234,7 +220,6 @@ export default class implements Command {
               ],
             });
           }
-
           ruleToCreate.actions.push({
             type: AutoModerationActionType.SendAlertMessage,
             metadata: {
@@ -247,10 +232,8 @@ export default class implements Command {
             },
           });
         }
-
         await handler.guild.autoModerationRules.create(ruleToCreate);
       }
-
       const embed = new EmbedBuilder()
         .setColor(client.color)
         .setTimestamp()
@@ -309,7 +292,6 @@ export default class implements Command {
           },
         ])
         .setThumbnail(handler.guild.iconURL({ size: 256 }));
-
       return handler.editReply({ embeds: [embed] });
     } else {
       if (!existingRule || !existingRule.enabled) {
@@ -323,11 +305,9 @@ export default class implements Command {
           ],
         });
       }
-
       await handler.guild.autoModerationRules.edit(existingRule.id, {
         enabled: false,
       });
-
       const embed = new EmbedBuilder()
         .setColor(client.color)
         .setTimestamp()
@@ -336,7 +316,6 @@ export default class implements Command {
           client.i18n.get(handler.language, "automod.antiinvite", "system_disabled_description")
         )
         .setThumbnail(handler.guild.iconURL({ size: 256 }));
-
       return handler.editReply({ embeds: [embed] });
     }
   }

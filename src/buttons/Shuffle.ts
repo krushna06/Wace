@@ -12,7 +12,6 @@ import { formatDuration } from "../utilities/FormatDuration.js";
 import { PageQueue } from "../structures/PageQueue.js";
 import { Player } from "../structures/Player.js";
 import { getTitle } from "../utilities/GetTitle.js";
-
 export default class implements PlayerButton {
   name = "shuffle";
   async run(
@@ -26,17 +25,13 @@ export default class implements PlayerButton {
     if (!player) {
       collector.stop();
     }
-
     await player.shuffle();
-
     const song = player.current;
     const qduration = `${formatDuration((song?.info.length || 0) + player.queue.reduce((acc, t) => acc + (t.duration || t.info?.length || 0), 0))}`;
     const thumbnail =
       song?.info.artworkUrl ?? `https://img.youtube.com/vi/${song?.info.identifier}/hqdefault.jpg`;
-
     let pagesNum = Math.ceil(player.queue.length / 10);
     if (pagesNum === 0) pagesNum = 1;
-
     const songStrings = [];
     for (let i = 0; i < player.queue.length; i++) {
       const song = player.queue[i];
@@ -45,11 +40,9 @@ export default class implements PlayerButton {
         `
       );
     }
-
     const pages = [];
     for (let i = 0; i < pagesNum; i++) {
       const str = songStrings.slice(i * 10, i * 10 + 10).join("");
-
       const embed = new EmbedBuilder()
         .setThumbnail(thumbnail)
         .setColor(client.color)
@@ -72,10 +65,8 @@ export default class implements PlayerButton {
             total_duration: qduration,
           })}`,
         });
-
       pages.push(embed);
     }
-
     client.wsl.get(message.guild!.id)?.send({
       op: "playerQueueShuffle",
       guild: message.guild!.id,
@@ -98,7 +89,6 @@ export default class implements PlayerButton {
         };
       }),
     });
-
     if (pages.length == pagesNum && player.queue.length > 10) {
       await new PageQueue(client, pages, 60000, player.queue.length, language).buttonPage(
         message,

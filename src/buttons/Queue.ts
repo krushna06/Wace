@@ -10,7 +10,6 @@ import { Manager } from "../manager.js";
 import { formatDuration } from "../utilities/FormatDuration.js";
 import { Player } from "../structures/Player.js";
 import { getTitle } from "../utilities/GetTitle.js";
-
 export default class implements PlayerButton {
   name = "queue";
   async run(
@@ -28,10 +27,8 @@ export default class implements PlayerButton {
     const qduration = `${formatDuration(song!.duration + player.queue.reduce((acc, t) => acc + (t.duration || t.info?.length || 0), 0))}`;
     const thumbnail =
       song?.artworkUrl ?? `https://img.youtube.com/vi/${song!.identifier}/hqdefault.jpg`;
-
     let pagesNum = Math.ceil(player.queue.length / 10);
     if (pagesNum === 0) pagesNum = 1;
-
     const songStrings = [];
     for (let i = 0; i < player.queue.length; i++) {
       const song = player.queue[i];
@@ -40,11 +37,9 @@ export default class implements PlayerButton {
         `
       );
     }
-
     const pages = [];
     for (let i = 0; i < pagesNum; i++) {
       const str = songStrings.slice(i * 10, i * 10 + 10).join("");
-
       const embed = new EmbedBuilder()
         .setAuthor({
           name: `${client.i18n.get(language, "button.music", "queue_author", {
@@ -69,7 +64,6 @@ export default class implements PlayerButton {
             total_duration: qduration,
           })}`,
         });
-
       pages.push(embed);
     }
     message.reply({ embeds: [pages[0]], ephemeral: true });

@@ -34,13 +34,13 @@ export default class implements Command {
     }
 
     const apiKey = client.config.player.LASTFM.api_key;
-    
+
     try {
-      // Get current track to extract artist info
+
       const tracksData: any = await getUserRecentTracks(session.username, apiKey, 1, session.session_key);
       const tracks = tracksData.recenttracks.track;
       let nowPlaying = null;
-      
+
       if (Array.isArray(tracks)) {
         nowPlaying = tracks.find((t) => t["@attr"] && t["@attr"].nowplaying === "true");
       } else if (tracks && tracks["@attr"] && tracks["@attr"].nowplaying === "true") {
@@ -56,10 +56,10 @@ export default class implements Command {
       }
 
       const artist = nowPlaying.artist['#text'];
-      
-      // Get artist info from LastFM
+
+
       const artistData: any = await getArtistInfo(artist, apiKey, session.username);
-      
+
       if (!artistData || !artistData.artist) {
         const embed = new EmbedBuilder()
           .setTitle("Artist Not Found")
@@ -71,7 +71,7 @@ export default class implements Command {
       const artistInfo = artistData.artist;
       const tags = artistInfo.toptags?.tag?.slice(0, 5) || [];
       const tagList = tags.length > 0 ? tags.map((tag: any) => tag.name).join(", ") : "No tags available";
-      
+
       const embed = new EmbedBuilder()
         .setTitle(`Artist Info: ${artistInfo.name}`)
         .setURL(artistInfo.url)
@@ -97,4 +97,4 @@ export default class implements Command {
       return handler.editReply({ content: " ", embeds: [embed] });
     }
   }
-} 
+}

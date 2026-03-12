@@ -27,7 +27,7 @@ export default class implements Command {
   public options = [
     {
       name: "query",
-      type: 3, // String type
+      type: 3,
       description: "The album you want to search for",
       required: true,
     },

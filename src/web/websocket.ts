@@ -28,7 +28,7 @@ export class WebsocketRoute {
           const data = JSON.parse(message.toString());
           this.handleWebsocketMessage(socket, connection, data);
         } catch (error) {
-          socket.send(JSON.stringify({ 
+          socket.send(JSON.stringify({
             error: "Invalid JSON format",
             type: "error"
           }));
@@ -44,7 +44,7 @@ export class WebsocketRoute {
     }
 
     if (!connection.auth) {
-      socket.send(JSON.stringify({ 
+      socket.send(JSON.stringify({
         error: "Authentication required. Send auth message first.",
         type: "error"
       }));
@@ -52,7 +52,7 @@ export class WebsocketRoute {
     }
 
     if (connection.auth !== this.client.config.utilities.WEB_SERVER.auth) {
-      socket.send(JSON.stringify({ 
+      socket.send(JSON.stringify({
         error: "Invalid authentication token",
         type: "error"
       }));
@@ -73,13 +73,13 @@ export class WebsocketRoute {
         this.handleResume(socket, connection, data);
         break;
       case "ping":
-        socket.send(JSON.stringify({ 
+        socket.send(JSON.stringify({
           type: "pong",
           timestamp: Date.now()
         }));
         break;
       default:
-        socket.send(JSON.stringify({ 
+        socket.send(JSON.stringify({
           error: "Unknown message type",
           type: "error"
         }));
@@ -88,7 +88,7 @@ export class WebsocketRoute {
 
   private handleAuth(socket: WebSocket, connection: WebsocketConnection, data: any) {
     if (!data.auth) {
-      socket.send(JSON.stringify({ 
+      socket.send(JSON.stringify({
         error: "Missing auth token",
         type: "error"
       }));
@@ -96,7 +96,7 @@ export class WebsocketRoute {
     }
 
     if (data.auth !== this.client.config.utilities.WEB_SERVER.auth) {
-      socket.send(JSON.stringify({ 
+      socket.send(JSON.stringify({
         error: "Invalid auth token",
         type: "error"
       }));
@@ -104,7 +104,7 @@ export class WebsocketRoute {
     }
 
     connection.auth = data.auth;
-    socket.send(JSON.stringify({ 
+    socket.send(JSON.stringify({
       type: "auth_success",
       message: "Authentication successful"
     }));
@@ -112,7 +112,7 @@ export class WebsocketRoute {
 
   private handleSubscribe(socket: WebSocket, connection: WebsocketConnection, data: any) {
     if (!data.guildId) {
-      socket.send(JSON.stringify({ 
+      socket.send(JSON.stringify({
         error: "Missing guildId",
         type: "error"
       }));
@@ -120,7 +120,7 @@ export class WebsocketRoute {
     }
 
     if (this.client.wsl.get(data.guildId)) {
-      socket.send(JSON.stringify({ 
+      socket.send(JSON.stringify({
         error: "Already have connection on this guild",
         type: "error"
       }));
@@ -129,8 +129,8 @@ export class WebsocketRoute {
 
     connection.guildId = data.guildId;
     this.client.wsl.set(data.guildId, connection);
-    
-    socket.send(JSON.stringify({ 
+
+    socket.send(JSON.stringify({
       type: "subscribe_success",
       guildId: data.guildId,
       message: "Successfully subscribed to guild events"
@@ -139,7 +139,7 @@ export class WebsocketRoute {
 
   private handleUnsubscribe(socket: WebSocket, connection: WebsocketConnection, data: any) {
     if (!connection.guildId) {
-      socket.send(JSON.stringify({ 
+      socket.send(JSON.stringify({
         error: "Not subscribed to any guild",
         type: "error"
       }));
@@ -149,8 +149,8 @@ export class WebsocketRoute {
     this.client.wsl.delete(connection.guildId);
     const guildId = connection.guildId;
     connection.guildId = undefined;
-    
-    socket.send(JSON.stringify({ 
+
+    socket.send(JSON.stringify({
       type: "unsubscribe_success",
       guildId: guildId,
       message: "Successfully unsubscribed from guild events"

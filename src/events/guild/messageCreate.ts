@@ -83,7 +83,7 @@ export default class {
 
     if (setup && setup.channel == message.channelId) return;
 
-    //////////////////////////////// Ratelimit check start ////////////////////////////////
+
     const ratelimit = commandRateLimitManager.acquire(
       `${message.author.id}@${command.name.join("-")}`
     );
@@ -99,12 +99,11 @@ export default class {
     }
 
     ratelimit.consume();
-    //////////////////////////////// Ratelimit check end ////////////////////////////////
 
-    //////////////////////////////// Permission check start ////////////////////////////////
+
     const permissionChecker = new CheckPermissionServices();
 
-    //Default permission
+
     const defaultPermissions = [
       PermissionFlagsBits.SendMessages,
       PermissionFlagsBits.ViewChannel,
@@ -158,9 +157,8 @@ export default class {
       const returnData = await permissionChecker.message(message, command.permissions);
       if (returnData.result !== "PermissionPass") return respondError(returnData);
     }
-    //////////////////////////////// Permission check end ////////////////////////////////
 
-    //////////////////////////////// Check avalibility start ////////////////////////////////
+
     if (command.lavalink && client.lavalinkUsing.length == 0) {
       return message.reply({
         embeds: [
@@ -213,9 +211,8 @@ export default class {
             .setColor(client.color),
         ],
       });
-    //////////////////////////////// Check avalibility end ////////////////////////////////
 
-    //////////////////////////////// Check accessibility start ////////////////////////////////
+
     const premiumUser = await client.db.premium.get(message.author.id);
     const premiumGuild = await client.db.preGuild.get(String(message.guild?.id));
     const isPremium = (premiumUser && premiumUser.isPremium) ?? false;
@@ -227,7 +224,7 @@ export default class {
       command.accessableby.includes(Accessableby.Premium);
     let hasDJRole = false;
     let hasPremiumRole = false;
-    
+
     if (command.accessableby.includes(Accessableby.DJ)) {
       if (setup && setup.djRole) {
         hasDJRole = message.member!.roles.cache.has(setup.djRole);
@@ -235,7 +232,7 @@ export default class {
         hasDJRole = message.member!.permissions.has(PermissionFlagsBits.ManageGuild);
       }
     }
-    
+
     if (setup && setup.premiumRole) {
       hasPremiumRole = message.member!.roles.cache.has(setup.premiumRole);
     }
@@ -306,7 +303,7 @@ export default class {
     if (command.accessableby.includes(Accessableby.DJ) && !userPerm.dj) {
       const embed = new EmbedBuilder()
         .setDescription(
-          hasDJRole 
+          hasDJRole
             ? `${client.i18n.get(language, "error", "dj_role_required")}`
             : `${client.i18n.get(language, "error", "user_no_perms", { perm: "DJ Role" })}`
         )
@@ -350,7 +347,7 @@ export default class {
         return message.reply({ content: " ", embeds: [embed], components: [row] });
       }
     }
-    //////////////////////////////// Check accessibility end ////////////////////////////////
+
 
     try {
       const handler = new CommandHandler({

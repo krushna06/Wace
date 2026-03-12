@@ -3,7 +3,6 @@ import { PlayerButton } from "../@types/Button.js";
 import { Manager } from "../manager.js";
 import { ReplyInteractionService } from "../services/ReplyInteractionService.js";
 import { Player } from "../structures/Player.js";
-
 export default class implements PlayerButton {
   name = "clear";
   async run(
@@ -18,18 +17,15 @@ export default class implements PlayerButton {
       collector.stop();
     }
     player.queue = [];
-
     new ReplyInteractionService(
       client,
       message,
       `${client.i18n.get(language, "button.music", "clear_msg")}`
     );
-
     client.wsl.get(message.guild!.id)?.send({
       op: "playerClearQueue",
       guild: message.guild!.id,
     });
-
     return;
   }
 }

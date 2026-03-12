@@ -123,7 +123,7 @@ export default class implements Command {
         length: track.duration || track.info?.length,
         thumbnail: track.info.artworkUrl,
         author: track.info.author,
-        requester: track.requester, // Just case can push
+        requester: track.requester,
       });
     });
 

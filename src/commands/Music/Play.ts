@@ -185,7 +185,7 @@ export default class implements Command {
     }
   }
 
-  // Autocomplete function
+
   async autocomplete(client: Manager, interaction: GlobalInteraction, language: string) {
     let choice: AutocompleteInteractionChoices[] = [];
     // @ts-ignore
@@ -213,7 +213,7 @@ export default class implements Command {
       });
       return;
     }
-    
+
     try {
       const node = getNode(client);
       if (!node) {
@@ -227,7 +227,7 @@ export default class implements Command {
         return choice.push({ name: "Error song not matches", value: url });
       }
 
-      // Handle Shoukaku's LavalinkResponse format
+
       let tracks: any[] = [];
       switch (searchRes.loadType) {
         case "track":

@@ -5,14 +5,14 @@ import { FilterPresets } from "../../structures/Filters.js";
 export const getFilters = (client: Manager) => {
   return async (request: FastifyRequest, reply: FastifyReply) => {
     try {
-      const filterCommands = client.commands.filter(cmd => 
+      const filterCommands = client.commands.filter(cmd =>
         cmd.category === "Filter" && cmd.name.some(name => name.startsWith("filter"))
       );
 
       const filters = filterCommands.map(cmd => {
         const filterName = cmd.name.find(name => name !== "filter" && name !== "filter2") || cmd.name[0];
         const isInPresets = FilterPresets[filterName as keyof typeof FilterPresets];
-        
+
         return {
           name: filterName,
           commandNames: cmd.name,
@@ -28,8 +28,8 @@ export const getFilters = (client: Manager) => {
       const availableFilters = Object.keys(FilterPresets).map(filterName => ({
         name: filterName,
         type: "shoukaku",
-        description: filterName === "clear" 
-          ? "Reset all filters to default" 
+        description: filterName === "clear"
+          ? "Reset all filters to default"
           : `${filterName.charAt(0).toUpperCase() + filterName.slice(1)} filter for better audio experience`,
         data: FilterPresets[filterName as keyof typeof FilterPresets]
       }));
@@ -51,4 +51,4 @@ export const getFilters = (client: Manager) => {
       });
     }
   };
-}; 
+};

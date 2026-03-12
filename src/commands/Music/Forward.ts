@@ -6,7 +6,6 @@ import { CommandHandler } from "../../structures/CommandHandler.js";
 import { Player } from "../../structures/Player.js";
 const fastForwardNum = 10;
 
-// Main code
 export default class implements Command {
   public name = ["forward"];
   public description = "Forward timestamp in the song! (10s)";

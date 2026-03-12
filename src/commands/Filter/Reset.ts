@@ -2,7 +2,6 @@ import { EmbedBuilder } from "discord.js";
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
-
 export default class implements Command {
   public name = ["filter", "reset"];
   public description = "Reset filter";
@@ -16,12 +15,9 @@ export default class implements Command {
   public usingInteraction = true;
   public sameVoiceCheck = true;
   public permissions = [];
-
   async execute(client: Manager, handler: CommandHandler) {
     await handler.deferReply();
-
     const player = client.players.get(handler.guild!.id);
-
     if (!player?.data.get("filter-mode"))
       return handler.editReply({
         embeds: [
@@ -32,12 +28,9 @@ export default class implements Command {
             .setColor(client.color),
         ],
       });
-
     player?.data.delete("filter-mode");
-
     await player?.filters.clear();
     await player?.setVolume(100);
-
     const resetted = new EmbedBuilder()
       .setDescription(`${client.i18n.get(handler.language, "command.filter", "reset_on")}`)
       .setColor(client.color);

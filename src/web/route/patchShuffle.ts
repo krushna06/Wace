@@ -1,7 +1,6 @@
 import util from "node:util";
 import { Manager } from "../../manager.js";
 import Fastify from "fastify";
-
 export async function patchShuffle(
   client: Manager,
   req: Fastify.FastifyRequest,

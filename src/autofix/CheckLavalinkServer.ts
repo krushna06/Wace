@@ -2,27 +2,21 @@ import { Manager } from "../manager.js";
 import { Headers } from "../@types/Lavalink.js";
 import { GetLavalinkServer } from "./GetLavalinkServer.js";
 import WebSocket from "ws";
-
 export class CheckLavalinkServer {
   client: Manager;
   constructor(client: Manager, isLogEnable: boolean = true) {
     this.client = client;
     this.execute(isLogEnable);
   }
-
   async execute(isLogEnable: boolean) {
     if (isLogEnable)
       this.client.logger.info(
         CheckLavalinkServer.name,
         "Running check lavalink server from [https://lavalink.darrennathanael.com/] source"
       );
-
     const getLavalinkServerClass = new GetLavalinkServer();
-
     const lavalink_data = await getLavalinkServerClass.execute();
-
     if (this.client.lavalinkList.length !== 0) this.client.lavalinkList.length = 0;
-
     lavalink_data.forEach((config) => {
       let headers = {
         "Client-Name": "shoukaku/4.3.0",
@@ -31,9 +25,7 @@ export class CheckLavalinkServer {
         "User-Id": "853620650592567304",
         "Resume-Key": "shoukaku@4.3.0",
       };
-
       const url = `ws://${config.host}:${config.port}/v4/websocket`;
-
       this.checkServerStatus(url, headers)
         .then(() => {
           this.client.lavalinkList.push({
@@ -57,7 +49,6 @@ export class CheckLavalinkServer {
         });
     });
   }
-
   checkServerStatus(url: string, headers: Headers) {
     return new Promise((resolve, reject) => {
       const ws = new WebSocket(url, { headers });

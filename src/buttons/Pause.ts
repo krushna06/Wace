@@ -9,7 +9,6 @@ import {
 } from "../utilities/PlayerControlButton.js";
 import { ReplyInteractionService } from "../services/ReplyInteractionService.js";
 import { Player } from "../structures/Player.js";
-
 export default class implements PlayerButton {
   name = "pause";
   async run(
@@ -23,9 +22,7 @@ export default class implements PlayerButton {
     if (!player) {
       collector.stop();
     }
-
     await player.setPause(!player.paused);
-
     player.paused
       ? nplaying
           .edit({
@@ -37,7 +34,6 @@ export default class implements PlayerButton {
             components: [playerRowOne(client), playerRowTwo(client), filterSelect(client)],
           })
           .catch(() => null);
-
     new ReplyInteractionService(
       client,
       message,

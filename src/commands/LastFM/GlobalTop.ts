@@ -91,4 +91,4 @@ export default class implements Command {
       return handler.editReply({ content: " ", embeds: [embed] });
     }
   }
-} 
+}

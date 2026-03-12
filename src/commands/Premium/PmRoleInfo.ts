@@ -22,7 +22,7 @@ export default class implements Command {
 
     try {
       const setup = await client.db.setup.get(handler.guild!.id);
-      
+
       if (!setup || !setup.premiumRole) {
         const embed = new EmbedBuilder()
           .setDescription(`${client.i18n.get(handler.language, "command.premium", "setup_pm_info_no_role")}`)
@@ -31,7 +31,7 @@ export default class implements Command {
       }
 
       const role = handler.guild!.roles.cache.get(setup.premiumRole);
-      
+
       if (!role) {
         const embed = new EmbedBuilder()
           .setDescription(`${client.i18n.get(handler.language, "command.premium", "setup_pm_info_role_deleted")}`)
@@ -63,4 +63,4 @@ export default class implements Command {
       return handler.editReply({ embeds: [embed] });
     }
   }
-} 
+}

@@ -3,7 +3,6 @@ import { PlayerButton } from "../@types/Button.js";
 import { Manager } from "../manager.js";
 import { ReplyInteractionService } from "../services/ReplyInteractionService.js";
 import { Player } from "../structures/Player.js";
-
 export default class implements PlayerButton {
   name = "loop";
   async run(
@@ -17,69 +16,53 @@ export default class implements PlayerButton {
     if (!player) {
       collector.stop();
     }
-
     async function setLoop247(loop: string) {
       if (await client.db.autoreconnect.get(player.guildId)) {
         await client.db.autoreconnect.set(`${player.guildId}.config.loop`, loop);
       }
     }
-
     switch (player.loop) {
       case "none":
         player.setLoop("track");
-
         if (client.config.utilities.AUTO_RESUME) setLoop247("track");
-
         new ReplyInteractionService(
           client,
           message,
           `${client.i18n.get(language, "button.music", "loop_current")}`
         );
-
         client.wsl.get(message.guild!.id)?.send({
           op: "playerLoop",
           guild: message.guild!.id,
           mode: "track",
         });
-
         break;
-
       case "track":
         player.setLoop("queue");
-
         if (client.config.utilities.AUTO_RESUME) setLoop247("queue");
-
         new ReplyInteractionService(
           client,
           message,
           `${client.i18n.get(language, "button.music", "loop_all")}`
         );
-
         client.wsl.get(message.guild!.id)?.send({
           op: "playerLoop",
           guild: message.guild!.id,
           mode: "queue",
         });
-
         break;
-
       case "queue":
         player.setLoop("none");
-
         if (client.config.utilities.AUTO_RESUME) setLoop247("none");
-
         new ReplyInteractionService(
           client,
           message,
           `${client.i18n.get(language, "button.music", "unloop_all")}`
         );
-
         client.wsl.get(message.guild!.id)?.send({
           op: "playerLoop",
           guild: message.guild!.id,
           mode: "none",
         });
-
         break;
     }
   }

@@ -107,7 +107,7 @@ export default class implements Command {
     const pages = [];
     for (let i = 0; i < pagesNum; i++) {
       const str = playlistStrings.slice(i * 10, i * 10 + 10).join(`\n`);
-      const embed = new EmbedBuilder() //${playlist.name}'s Playlists
+      const embed = new EmbedBuilder()
         .setAuthor({
           name: `${client.i18n.get(handler.language, "command.playlist", "detail_embed_title", {
             name: playlist.name,
@@ -115,7 +115,7 @@ export default class implements Command {
           iconURL: handler.user?.displayAvatarURL(),
         })
         .setDescription(`${str == "" ? "  Nothing" : "\n" + str}`)
-        .setColor(client.color) //Page • ${i + 1}/${pagesNum} | ${playlist.tracks.length} • Songs | ${totalDuration} • Total duration
+        .setColor(client.color)
         .setFooter({
           text: `${client.i18n.get(handler.language, "command.playlist", "detail_embed_footer", {
             page: String(i + 1),

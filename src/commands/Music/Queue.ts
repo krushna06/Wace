@@ -7,7 +7,6 @@ import { CommandHandler } from "../../structures/CommandHandler.js";
 import { Player } from "../../structures/Player.js";
 import { getTitle } from "../../utilities/GetTitle.js";
 
-// Main code
 export default class implements Command {
   public name = ["queue"];
   public description = "Show the queue of songs.";

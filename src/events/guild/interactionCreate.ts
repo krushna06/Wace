@@ -78,7 +78,7 @@ export default class {
 
     if (!command) return commandNameArray.length == 0;
 
-    //////////////////////////////// Ratelimit check start ////////////////////////////////
+
     const ratelimit = commandRateLimitManager.acquire(
       `${interaction.user.id}@${command.name.join("-")}`
     );
@@ -94,12 +94,11 @@ export default class {
     } else if (ratelimit.limited) return;
 
     ratelimit.consume();
-    //////////////////////////////// Ratelimit check end ////////////////////////////////
 
-    //////////////////////////////// Permission check start ////////////////////////////////
+
     const permissionChecker = new CheckPermissionServices();
 
-    // Default permission
+
     const defaultPermissions = [
       PermissionFlagsBits.ManageMessages,
       PermissionFlagsBits.ViewChannel,
@@ -147,9 +146,8 @@ export default class {
       const returnData = await permissionChecker.interaction(interaction, command.permissions);
       if (returnData.result !== "PermissionPass") return respondError(interaction, returnData);
     }
-    //////////////////////////////// Permission check end ////////////////////////////////
 
-    //////////////////////////////// Check avalibility start ////////////////////////////////
+
     const isNotManager = !(interaction.member!.permissions as Readonly<PermissionsBitField>).has(
       PermissionsBitField.Flags.ManageGuild
     );
@@ -207,20 +205,19 @@ export default class {
         ],
       });
     }
-    //////////////////////////////// Check avalibility end ////////////////////////////////
 
-    //////////////////////////////// Check accessibility start ////////////////////////////////
+
     const premiumUser = await client.db.premium.get(interaction.user.id);
     const premiumGuild = await client.db.preGuild.get(interaction.guild.id);
     const isPremium = premiumUser && premiumUser.isPremium;
     const isPremiumGuild = premiumGuild && premiumGuild.isPremium;
     const isOwner = interaction.user.id == client.owner;
     const isAdmin = client.config.bot.ADMIN.includes(interaction.user.id);
-    
+
     let hasDJRole = false;
     let hasPremiumRole = false;
     const setup = await client.db.setup.get(interaction.guild.id);
-    
+
     if (command.accessableby.includes(Accessableby.DJ)) {
       if (setup && setup.djRole) {
         const member = interaction.member as GuildMember;
@@ -231,7 +228,7 @@ export default class {
         );
       }
     }
-    
+
     if (setup && setup.premiumRole) {
       const member = interaction.member as GuildMember;
       hasPremiumRole = member.roles.cache.has(setup.premiumRole);
@@ -302,7 +299,7 @@ export default class {
     if (command.accessableby.includes(Accessableby.DJ) && !userPerm.dj) {
       const embed = new EmbedBuilder()
         .setDescription(
-          hasDJRole 
+          hasDJRole
             ? `${client.i18n.get(language, "error", "dj_role_required")}`
             : `${client.i18n.get(language, "error", "user_no_perms", { perm: "DJ Role" })}`
         )
@@ -343,7 +340,7 @@ export default class {
         return interaction.reply({ content: " ", embeds: [embed], components: [row] });
       }
     }
-    //////////////////////////////// Check accessibility end ////////////////////////////////
+
 
     try {
       const args: string[] = [];

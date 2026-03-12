@@ -3,7 +3,7 @@ import { Player } from "../../structures/Player.js";
 
 export default class {
   async execute(client: Manager, player: Player, data: unknown) {
-    // Don't re-emit playerUpdate - that causes an infinite loop!
-    // The event is already being emitted by the Player class
+
+
   }
 }

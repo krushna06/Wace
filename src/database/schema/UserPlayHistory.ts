@@ -7,4 +7,4 @@ export interface UserPlayHistory {
   uri: string;
   playedAt: number;
   artworkUrl?: string;
-} 
+}

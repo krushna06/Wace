@@ -40,4 +40,4 @@ export const deleteClearFilter = (client: Manager) => {
       });
     }
   };
-}; 
+};

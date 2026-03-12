@@ -6,7 +6,6 @@ export type LavalinkDataType = {
   name: string;
   online: boolean;
 };
-
 export type LavalinkUsingDataType = {
   host: string;
   port: number;
@@ -14,7 +13,6 @@ export type LavalinkUsingDataType = {
   secure: boolean;
   name: string;
 };
-
 export type Headers = {
   "Client-Name": string;
   "User-Agent": string;

@@ -3,7 +3,6 @@ import { PlayerButton } from "../@types/Button.js";
 import { Manager } from "../manager.js";
 import { ReplyInteractionService } from "../services/ReplyInteractionService.js";
 import { Player } from "../structures/Player.js";
-
 export default class implements PlayerButton {
   name = "replay";
   async run(
@@ -23,12 +22,8 @@ export default class implements PlayerButton {
         message,
         `${client.i18n.get(language, "button.music", "previous_notfound")}`
       );
-
-    // Play the previous track
     await player.play(player.previous);
-
     player.data.set("endMode", "previous");
-
     new ReplyInteractionService(
       client,
       message,

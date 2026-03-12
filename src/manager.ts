@@ -103,7 +103,7 @@ export class Manager extends Client {
           ],
     });
 
-    // Initial basic bot config
+
     const __dirname = dirname(fileURLToPath(import.meta.url));
     this.logger = new LoggerService(this, clientIndex);
     this.metadata = new ManifestService().data.metadata.bot;
@@ -126,12 +126,12 @@ export class Manager extends Client {
       /^https:\/\/deezer\.page\.link\/[a-zA-Z0-9]{12}$/,
     ];
 
-    // Initial autofix lavalink varibles
+
     this.lavalinkList = [];
     this.lavalinkUsing = [];
     this.lavalinkUsed = [];
 
-    // Collections
+
     this.commands = new DJSCollection<string, Command>();
     this.interval = new Collection<NodeJS.Timer>();
     this.sentQueue = new Collection<boolean>();
@@ -147,7 +147,7 @@ export class Manager extends Client {
     this.wsl = new Collection<{ send: (data: Record<string, unknown>) => void; auth?: string; guildId?: string }>();
     this.isDatabaseConnected = false;
 
-    // Icons setup
+
     this.icons = this.config.emojis;
 
     this.cluster = process.env.IS_SHARING == "true" ? new ClusterClient(this) : undefined;
@@ -155,8 +155,8 @@ export class Manager extends Client {
     this.shoukaku = new ShoukakuInit(this).init;
     this.players = new Map<string, Player>();
     this.playerManager = new PlayerManager(this);
-    
-    // Filter options for music player
+
+
     const filterOptions = ["clear", "bassboost", "nightcore", "vaporwave", "8d", "karaoke", "vibrato", "tremolo"];
     for (const key of filterOptions) {
       const firstUpperCase = key.charAt(0).toUpperCase() + key.slice(1);

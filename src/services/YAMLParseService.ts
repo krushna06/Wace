@@ -19,7 +19,7 @@ export class YAMLParseService {
       const __dirname = dirname(fileURLToPath(import.meta.url));
       const distPath = join(__dirname, "..", "manifest.xml");
       const srcPath = join(__dirname, "..", "..", "src", "manifest.xml");
-      
+
       let manifestPath = distPath;
       if (!fs.existsSync(distPath) && fs.existsSync(srcPath)) {
         manifestPath = srcPath;
@@ -50,7 +50,7 @@ export class YAMLParseService {
       if (re.exec(element) !== null || re.exec(element)) {
         const extract = re.exec(element) as string[] | null;
         const varName = extract![1];
-        
+
         if (varName === "version") {
           res_array.push(_.replace(element, extract![0], version));
         } else if (

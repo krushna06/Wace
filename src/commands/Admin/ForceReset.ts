@@ -4,7 +4,6 @@ import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
 import { Player } from "../../structures/Player.js";
 import { AutoReconnectBuilderService } from "../../services/AutoReconnectBuilderService.js";
-
 export default class implements Command {
   public name = ["forcereset"];
   public description = "Force reset the music player and settings (Admin only)";
@@ -18,19 +17,14 @@ export default class implements Command {
   public sameVoiceCheck = false;
   public permissions = [PermissionsBitField.Flags.Administrator];
   public options = [];
-
   public async execute(client: Manager, handler: CommandHandler) {
     await handler.deferReply();
-
     const player = client.players.get(handler.guild!.id) as Player | undefined;
-
     const reconnectBuilder = new AutoReconnectBuilderService(client, player);
     const data = await reconnectBuilder.get(handler.guild!.id);
-    
     if (data && data.twentyfourseven) {
       await reconnectBuilder.build247(handler.guild!.id, false, data.voice);
     }
-
     if (player) {
       try {
         player.data.set("sudo-destroy", true);
@@ -39,11 +33,9 @@ export default class implements Command {
         client.logger.error("ForceReset", `Error destroying player: ${error}`);
       }
     }
-
     const embed = new EmbedBuilder()
       .setDescription("Successfully force reset the music player and settings.")
       .setColor(client.color);
-
     await handler.editReply({ content: " ", embeds: [embed] });
   }
 }

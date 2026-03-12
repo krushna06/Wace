@@ -7,7 +7,6 @@ import { PageQueue } from "../../structures/PageQueue.js";
 import { Player } from "../../structures/Player.js";
 import { getTitle } from "../../utilities/GetTitle.js";
 
-// Main code
 export default class implements Command {
   public name = ["shuffle"];
   public description = "Shuffle song in queue!";

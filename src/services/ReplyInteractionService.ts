@@ -24,7 +24,7 @@ export class ReplyInteractionService {
       .catch(() => null);
 
     if (!msg) {
-      // Optionally log an error here if necessary
+
       return;
     }
 
@@ -33,7 +33,7 @@ export class ReplyInteractionService {
     setTimeout(() => {
       if (!setup || setup.channel !== this.message.channelId) {
         msg.delete().catch(() => {
-          // Silence the error without logging it
+
         });
       }
     }, this.client.config.utilities.DELETE_MSG_TIMEOUT);

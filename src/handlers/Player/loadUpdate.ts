@@ -71,7 +71,7 @@ export class PlayerUpdateLoader {
             duration: formatDuration(cSong!.duration),
             request: `${cSong!.requester}`,
           })}`
-        ) // [${cSong.title}](${cSong.uri}) \`[${formatDuration(cSong.duration)}]\` • ${cSong.requester}
+        )
         .setColor(client.color)
         .setImage(
           `${

@@ -3,7 +3,6 @@ import { PlayerButton } from "../@types/Button.js";
 import { Manager } from "../manager.js";
 import { ReplyInteractionService } from "../services/ReplyInteractionService.js";
 import { Player } from "../structures/Player.js";
-
 export default class implements PlayerButton {
   name = "volup";
   async run(
@@ -17,11 +16,9 @@ export default class implements PlayerButton {
     if (!player) {
       collector.stop();
     }
-
     const reply_msg = `${client.i18n.get(language, "button.music", "volup_msg", {
       volume: `${player.volume + 10}`,
     })}`;
-
     if (player.volume >= 100) {
       new ReplyInteractionService(
         client,
@@ -30,15 +27,12 @@ export default class implements PlayerButton {
       );
       return;
     }
-
     player.setVolume(player.volume + 10);
-
     client.wsl.get(message.guild!.id)?.send({
       op: "playerVolume",
       guild: message.guild!.id,
       volume: player.volume,
     });
-
     new ReplyInteractionService(client, message, reply_msg);
     return;
   }

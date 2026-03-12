@@ -6,7 +6,6 @@ import { Lyricist } from "@execaman/lyricist";
 import { getLyrics } from "genius-lyrics-api";
 import { ConfigDataService } from "../../services/ConfigDataService.js";
 
-// Main code
 export default class implements Command {
   public name = ["lyrics"];
   public description = "Make the bot join the voice channel.";

@@ -71,4 +71,4 @@ export async function getGuildLanguage(
     res.code(500);
     res.send({ error: "Internal server error" });
   }
-} 
+}

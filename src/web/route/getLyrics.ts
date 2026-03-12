@@ -86,4 +86,4 @@ export const getLyricsRoute = (client: Manager) => {
       return reply.code(500).send({ error: "Internal server error" });
     }
   };
-}; 
+};

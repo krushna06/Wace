@@ -5,4 +5,4 @@ export interface UserLastPlayed {
   author: string;
   uri: string;
   playedAt: number;
-} 
+}

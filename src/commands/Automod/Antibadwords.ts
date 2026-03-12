@@ -15,7 +15,6 @@ import {
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
-
 export default class implements Command {
   public name = ["antibadwords"];
   public description = "Enable or disable anti-bad-words system";
@@ -28,7 +27,6 @@ export default class implements Command {
   public usingInteraction = true;
   public sameVoiceCheck = false;
   public permissions = [];
-
   options = [
     {
       name: "type",
@@ -83,10 +81,8 @@ export default class implements Command {
       required: false,
     },
   ];
-
   public async execute(client: Manager, handler: CommandHandler) {
     await handler.deferReply();
-
     // @ts-ignore
     const options = handler.interaction.options as CommandInteractionOptionResolver;
     const type = options.getString("type");
@@ -96,7 +92,6 @@ export default class implements Command {
     const profanity = options.getBoolean("profanity") ?? true;
     const sexualContent = options.getBoolean("sexual-content") ?? true;
     const slurs = options.getBoolean("slurs") ?? true;
-
     if (!type || !["enable", "disable"].includes(type)) {
       return handler.editReply({
         embeds: [
@@ -108,7 +103,6 @@ export default class implements Command {
         ],
       });
     }
-
     if (type === "enable" && !profanity && !sexualContent && !slurs) {
       return handler.editReply({
         embeds: [
@@ -124,12 +118,10 @@ export default class implements Command {
         ],
       });
     }
-
     const existingRules = await handler.guild.autoModerationRules.fetch({ cache: false });
     const conflictingRule = existingRules
       .filter((rule) => rule.triggerType === AutoModerationRuleTriggerType.KeywordPreset)
       .first();
-
     if (type === "enable") {
       if (conflictingRule && conflictingRule.enabled) {
         return handler.editReply({
@@ -142,13 +134,11 @@ export default class implements Command {
           ],
         });
       }
-
       if (conflictingRule) {
         await conflictingRule.delete(
           client.i18n.get(handler.language, "automod.antibadwords", "new_rule_created")
         );
       }
-
       const ruleToCreate: any = {
         name: client.i18n.get(handler.language, "automod.antibadwords", "rule_name"),
         creatorId: client.user!.id,
@@ -176,7 +166,6 @@ export default class implements Command {
           username: handler.member.user.username,
         }),
       };
-
       if (profanity)
         ruleToCreate.triggerMetadata.presets.push(AutoModerationRuleKeywordPresetType.Profanity);
       if (sexualContent)
@@ -185,7 +174,6 @@ export default class implements Command {
         );
       if (slurs)
         ruleToCreate.triggerMetadata.presets.push(AutoModerationRuleKeywordPresetType.Slurs);
-
       if (logChannel) {
         const logChannelPermissions = logChannel.permissionsFor(handler.guild.members.me!);
         if (!logChannelPermissions.has(PermissionsBitField.Flags.ViewChannel)) {
@@ -201,7 +189,6 @@ export default class implements Command {
             ],
           });
         }
-
         if (!logChannelPermissions.has(PermissionsBitField.Flags.SendMessages)) {
           return handler.editReply({
             embeds: [
@@ -215,7 +202,6 @@ export default class implements Command {
             ],
           });
         }
-
         const memberPermissions = logChannel.permissionsFor(handler.member);
         if (!memberPermissions.has(PermissionsBitField.Flags.ViewChannel)) {
           return handler.editReply({
@@ -233,7 +219,6 @@ export default class implements Command {
             ],
           });
         }
-
         if (!memberPermissions.has(PermissionsBitField.Flags.SendMessages)) {
           return handler.editReply({
             embeds: [
@@ -250,7 +235,6 @@ export default class implements Command {
             ],
           });
         }
-
         ruleToCreate.actions.push({
           type: AutoModerationActionType.SendAlertMessage,
           metadata: {
@@ -263,9 +247,7 @@ export default class implements Command {
           },
         });
       }
-
       await handler.guild.autoModerationRules.create(ruleToCreate);
-
       const embed = new EmbedBuilder()
         .setColor(client.color)
         .setTimestamp()
@@ -324,7 +306,6 @@ export default class implements Command {
           },
         ])
         .setThumbnail(handler.guild.iconURL({ size: 256 }));
-
       return handler.editReply({ embeds: [embed] });
     } else {
       if (!conflictingRule || !conflictingRule.enabled) {
@@ -338,11 +319,9 @@ export default class implements Command {
           ],
         });
       }
-
       await handler.guild.autoModerationRules.edit(conflictingRule.id, {
         enabled: false,
       });
-
       const embed = new EmbedBuilder()
         .setColor(client.color)
         .setTimestamp()
@@ -357,7 +336,6 @@ export default class implements Command {
           iconURL: handler.member.user.displayAvatarURL({ size: 256 }),
         })
         .setThumbnail(handler.guild.iconURL({ size: 256 }));
-
       return handler.editReply({ embeds: [embed] });
     }
   }

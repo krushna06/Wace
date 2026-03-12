@@ -41,11 +41,11 @@ export class PostPlay {
       this.clean();
       return;
     }
-    
+
     for (let track of tracks) {
       track.requester = this.member!.user;
     }
-    
+
     if (result.type === "PLAYLIST") {
       player.data.set("playlist-uri", data["search"]);
       player.data.set("playlist-first-track", true);
@@ -57,11 +57,11 @@ export class PostPlay {
     } else {
       player.queue.push(tracks[0]);
     }
-    
+
     if (!player.playing) await player.play();
-    
+
     await this.client.UpdateQueueMsg(player);
-    
+
     res.send({
       success: true,
       type: result.type,
@@ -125,4 +125,4 @@ export class PostPlay {
     this.clean();
     return false;
   }
-} 
+}

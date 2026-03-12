@@ -32,8 +32,17 @@ export class DeployService {
 
     await chillout.forEach(interactionFilePaths, async (interactionFilePath: string) => {
       if (/Manager|Handler|Service/.test(interactionFilePath) || /LastfmManager\.ts$/.test(interactionFilePath)) return;
-      const cmd = new (await import(pathToFileURL(interactionFilePath).toString())).default();
-      cmd.usingInteraction ? store.push(cmd) : true;
+      
+      try {
+        const imported = await import(pathToFileURL(interactionFilePath).toString());
+        if (!imported.default || typeof imported.default !== 'function') {
+          return;
+        }
+        
+        const cmd = new imported.default();
+        cmd.usingInteraction ? store.push(cmd) : true;
+      } catch (error) {
+      }
       return;
     });
 
@@ -88,9 +97,9 @@ export class DeployService {
   }
 
   protected commandReducer(all: UploadCommandInterface[], current: CommandInterface) {
-    // Push single name command
+
     if (current.name.length == 1) all.push(this.singleCommandMaker(current));
-    // Push double name command
+
     if (current.name.length == 2) {
       let baseItem = all.find((i: UploadCommandInterface) => {
         return i.name == current.name[0] && i.type == current.type;
@@ -98,7 +107,7 @@ export class DeployService {
       if (!baseItem) all.push(this.doubleCommandMaker(current));
       else baseItem.options!.push(this.singleItemMaker(current, 1));
     }
-    // Push trible name command
+
     if (current.name.length == 3) {
       let SubItem = all.find((i: UploadCommandInterface) => {
         return i.name == current.name[0] && i.type == current.type;
@@ -120,7 +129,7 @@ export class DeployService {
       }
     }
 
-    // Return all
+
     return all;
   }
 

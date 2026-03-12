@@ -28,4 +28,4 @@ export const deleteQueue = (client: Manager) => {
       });
     }
   };
-}; 
+};

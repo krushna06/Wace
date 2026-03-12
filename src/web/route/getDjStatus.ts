@@ -39,4 +39,4 @@ export async function getDjStatus(
   const hasManageGuild = Member.permissions.has(PermissionFlagsBits.ManageGuild);
   const isAdmin = Member.permissions.has(PermissionFlagsBits.Administrator);
   res.send({ data: (hasDJRole || hasManageGuild || isAdmin) ? 1 : 0 });
-} 
+}

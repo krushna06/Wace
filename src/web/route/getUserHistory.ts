@@ -29,4 +29,4 @@ export const getUserHistory = (client: Manager) => {
     }
     reply.send({ userId, history: userSongs });
   };
-}; 
+};

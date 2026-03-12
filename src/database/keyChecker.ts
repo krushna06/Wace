@@ -29,7 +29,7 @@ export class keyChecker {
     logger.error(
       import.meta.url,
       `
-      Invalid config [${res}], please set [${objReqKey.join(", ")}] only. Example: 
+      Invalid config [${res}], please set [${objReqKey.join(", ")}] only. Example:
       DATABASE:
         driver: "${this.dbName}"
         config: ${utils.inspect(this.sampleConfig)}`

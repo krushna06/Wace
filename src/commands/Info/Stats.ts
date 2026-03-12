@@ -4,7 +4,6 @@ import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
 import { getUserPlayHistory } from "../../database/handler.js";
 import fetch from "node-fetch";
-
 export default class implements Command {
   public name = ["stats"];
   public description = "Show user or guild stats (songs played, commands executed)";
@@ -32,7 +31,6 @@ export default class implements Command {
       ],
     },
   ];
-
   public async execute(client: Manager, handler: CommandHandler) {
     await handler.deferReply();
     const type = handler.args[0];
@@ -150,4 +148,4 @@ export default class implements Command {
     }
     await handler.editReply({ embeds: [embed] });
   }
-} 
+}

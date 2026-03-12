@@ -42,7 +42,7 @@ export default class implements Command {
       value: category,
     }));
 
-    // Dynamically generate the categories list for the embed
+
     const categoriesList = '```\n' + categories.join('\n') + '\n```';
 
     const selectMenu = new StringSelectMenuBuilder()

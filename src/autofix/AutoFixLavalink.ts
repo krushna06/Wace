@@ -1,7 +1,6 @@
 import { Manager } from "../manager.js";
 import { LavalinkDataType } from "../@types/Lavalink.js";
 import chalk from "chalk";
-
 export class AutoFixLavalink {
   client: Manager;
   lavalinkName: string;
@@ -10,17 +9,14 @@ export class AutoFixLavalink {
     this.lavalinkName = lavalinkName;
     this.execute();
   }
-
   async execute() {
     this.client.logger.info(AutoFixLavalink.name, "----- Starting autofix lavalink... -----");
-    
     let hasOnlineNodes = false;
     this.client.shoukaku.nodes.forEach((node) => {
       if (node.online) {
         hasOnlineNodes = true;
       }
     });
-    
     if (hasOnlineNodes) {
       this.client.logger.info(
         AutoFixLavalink.name,
@@ -29,14 +25,11 @@ export class AutoFixLavalink {
       this.client.logger.info(AutoFixLavalink.name, "----- Terminated autofix lavalink. -----");
       return;
     }
-
     this.checkLavalink();
     await this.removeCurrentLavalink();
-    
     if (this.client.lavalinkList.filter((i) => i.online).length == 0) {
       const autofixError = chalk.hex("#e12885");
       const autofixErrorMess = autofixError("Error: ");
-      
       this.client.logger.info(
         AutoFixLavalink.name,
         autofixErrorMess + "No lavalink online or avalible for this bot."
@@ -49,16 +42,13 @@ export class AutoFixLavalink {
       this.client.logger.info(AutoFixLavalink.name, "----- Terminated autofix lavalink. -----");
       return;
     }
-
     await this.applyNewLavalink();
-
     this.client.logger.info(
       AutoFixLavalink.name,
       "Now used new lavalink, please wait 1 second to make it connect."
     );
     this.client.logger.info(AutoFixLavalink.name, "----- Terminated autofix lavalink. -----");
   }
-
   checkLavalink() {
     if (this.client.shoukaku.nodes.size !== 0 && this.client.lavalinkUsing.length == 0) {
       this.client.shoukaku.nodes.forEach((data, index) => {
@@ -72,16 +62,13 @@ export class AutoFixLavalink {
       });
     }
   }
-
   async removeCurrentLavalink() {
     const lavalinkIndex = this.client.lavalinkUsing.findIndex(
       (data) => data.name == this.lavalinkName
     );
-
     if (lavalinkIndex === -1) {
       return;
     }
-
     const targetLavalink = this.client.lavalinkUsing[lavalinkIndex];
     if (this.client.shoukaku.nodes.size == 0 && this.client.lavalinkUsing.length != 0) {
       this.client.lavalinkUsing.splice(lavalinkIndex, 1);
@@ -91,16 +78,12 @@ export class AutoFixLavalink {
       this.client.lavalinkUsing.splice(lavalinkIndex, 1);
     }
   }
-
   async applyNewLavalink() {
     const onlineList: LavalinkDataType[] = [];
-
     this.client.lavalinkList.filter(async (data) => {
       if (data.online == true) return onlineList.push(data);
     });
-
     const nodeInfo = onlineList[Math.floor(Math.random() * onlineList.length)];
-
     this.client.shoukaku.nodes.add({
       port: nodeInfo.port,
       host: nodeInfo.host,
@@ -108,7 +91,6 @@ export class AutoFixLavalink {
       name: nodeInfo.name,
       secure: nodeInfo.secure,
     });
-
     return nodeInfo;
   }
 }

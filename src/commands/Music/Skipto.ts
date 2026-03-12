@@ -4,7 +4,6 @@ import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
 import { Player } from "../../structures/Player.js";
 
-// Main code
 export default class implements Command {
   public name = ["skipto"];
   public description = "Skip to a specific position";
@@ -50,21 +49,21 @@ export default class implements Command {
     } else {
       const cuttedQueue = player.queue.splice(0, getPosition);
       const nowCurrentTrack = cuttedQueue.splice(-1)[0];
-      
+
       if (!nowCurrentTrack) {
         const skipped = new EmbedBuilder()
           .setDescription(`${client.i18n.get(handler.language, "command.music", "skip_notfound")}`)
           .setColor(client.color);
         return handler.editReply({ content: " ", embeds: [skipped] });
       }
-      
+
       player.previousQueue.push(...cuttedQueue);
       player.current ? player.previousQueue.unshift(player.current) : true;
-      
+
       await player.play(nowCurrentTrack).catch((err) => {
         client.logger.error("Skipto play error:", err);
       });
-      
+
       client.wsl.get(handler.guild!.id)?.send({
         op: "playerQueueSkip",
         guild: handler.guild!.id,

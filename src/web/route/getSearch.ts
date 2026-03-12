@@ -36,7 +36,7 @@ export async function getSearch(
 
   const searchQuery = query.startsWith("http") ? query : `${validSource}search:${query}`;
   const rawResult = await node.rest.resolve(searchQuery).catch(() => null);
-  
+
   if (!rawResult || !rawResult.tracks.length) {
     res.code(404);
     res.send({ error: "No tracks found" });

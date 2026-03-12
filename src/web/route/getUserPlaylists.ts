@@ -13,7 +13,7 @@ export async function getUserPlaylists(
   );
 
   const userId = (req.params as Record<string, string>)["userId"];
-  
+
   if (!userId) {
     res.code(400);
     res.send({ error: "User ID is required" });
@@ -41,4 +41,4 @@ export async function getUserPlaylists(
       })) || []
     }))
   });
-} 
+}

@@ -24,7 +24,7 @@ export const getGuildChecker = (client: Manager) => {
           error: "User not found in guild"
         });
       }
-      // Check voice channel
+
       const userVoiceChannelId = Member.voice?.channelId || null;
       const botMember = Guild.members.me;
       const botVoiceChannelId = botMember?.voice?.channelId || null;
@@ -47,4 +47,4 @@ export const getGuildChecker = (client: Manager) => {
       });
     }
   };
-}; 
+};

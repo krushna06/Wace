@@ -90,7 +90,7 @@ export default class implements Command {
       components: [actionRow],
     });
 
-    let currentPage = "hostInfo"; // Start with hostInfo page
+    let currentPage = "hostInfo";
 
     const filter = (i) => i.user.id === handler.user.id;
     // @ts-ignore
@@ -133,7 +133,7 @@ export default class implements Command {
         await initialMessage.edit({ components: [] });
       } catch (error) {
         if (error.code !== 10008) {
-          // Ignore "Unknown Message" error
+
           console.error("Failed to edit the message:", error);
         }
       }

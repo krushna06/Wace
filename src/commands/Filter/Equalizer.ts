@@ -2,7 +2,6 @@ import { EmbedBuilder, ApplicationCommandOptionType } from "discord.js";
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
-
 export default class implements Command {
   public name = ["filter", "equalizer"];
   public description = "Custom Equalizer!";
@@ -22,12 +21,9 @@ export default class implements Command {
       type: ApplicationCommandOptionType.String,
     },
   ];
-
   public async execute(client: Manager, handler: CommandHandler) {
     await handler.deferReply();
-
     const value = handler.args[0];
-
     if (value && isNaN(+value))
       return handler.editReply({
         embeds: [
@@ -36,9 +32,7 @@ export default class implements Command {
             .setColor(client.color),
         ],
       });
-
     const player = client.players.get(handler.guild!.id);
-
     if (!value) {
       const embed = new EmbedBuilder()
         .setAuthor({
@@ -61,7 +55,6 @@ export default class implements Command {
         });
       return handler.editReply({ embeds: [embed] });
     } else if (value == "off" || value == "reset") return player?.filters.clear();
-
     const bands = value.split(/[ ]+/);
     let bandsStr = "";
     for (let i = 0; i < bands.length; i++) {
@@ -82,7 +75,6 @@ export default class implements Command {
               .setColor(client.color),
           ],
         });
-
       if (Number(bands[i]) < -10)
         return handler.editReply({
           embeds: [
@@ -94,15 +86,12 @@ export default class implements Command {
           ],
         });
     }
-
     for (let i = 0; i < bands.length; i++) {
       if (i > 13) break;
       player?.filters.setEqualizer([{ band: i, gain: Number(bands[i]) / 10 }]);
       bandsStr += `${bands[i]} `;
     }
-
     player?.data.set("filter-mode", this.name[0]);
-
     const embed = new EmbedBuilder()
       .setDescription(
         `${client.i18n.get(handler.language, "command.filter", "eq_on", {

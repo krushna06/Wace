@@ -13,7 +13,7 @@ export async function getPlaylistDetails(
   );
 
   const playlistId = (req.params as Record<string, string>)["playlistId"];
-  
+
   if (!playlistId) {
     res.code(400);
     res.send({ error: "Playlist ID is required" });
@@ -28,7 +28,7 @@ export async function getPlaylistDetails(
     return;
   }
 
-  // Only check for private if the user is not the owner
+
   const userId = req.headers["x-user-id"] as string;
   if (playlist.private && playlist.owner !== userId) {
     res.code(403);
@@ -54,4 +54,4 @@ export async function getPlaylistDetails(
       })) || []
     }
   });
-} 
+}

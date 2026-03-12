@@ -29,42 +29,8 @@ export default class {
       }
     }
 
-    /////////// Update Music Setup //////////
     await client.UpdateMusic(player);
-    /////////// Update Music Setup ///////////
 
     client.emit("playerEnd", player);
-
-    const data = await new AutoReconnectBuilderService(client, player).get(player.guildId);
-    const channel = (await client.channels
-      .fetch(player.textId)
-      .catch(() => undefined)) as TextChannel;
-    if (channel) {
-      if (data && data.twentyfourseven) return;
-
-      if (player.queue.length || player!.queue!.current) {
-        await new ClearMessageService(client, channel, player);
-        return;
-      }
-
-      if (player.loop !== "none") {
-        await new ClearMessageService(client, channel, player);
-        return;
-      }
-    }
-
-    const currentPlayer = client.players.get(player.guildId) as Player;
-    if (!currentPlayer) return;
-    
-    const skipTriggered = player.data.get("skipTriggered");
-    if (skipTriggered) {
-      player.data.set("skipTriggered", false);
-      return;
-    }
-    
-    // Check if player should be destroyed
-    if (!player.data.get("sudo-destroy")) {
-      await player.destroy().catch(() => {});
-    }
   }
 }

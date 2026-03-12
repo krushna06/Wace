@@ -52,7 +52,7 @@ export default class implements Command {
     } else return;
   }
 
-  // Prefix mode
+
   private async prefixMode(
     client: Manager,
     message: Message,
@@ -262,7 +262,7 @@ export default class implements Command {
     }
   }
 
-  // Interaction mode
+
   private async interactionMode(
     client: Manager,
     interaction: CommandInteraction,
@@ -370,7 +370,7 @@ export default class implements Command {
         ],
       });
 
-    // Send Message
+
     await collector.deferReply();
 
     if (!playlist)

@@ -94,4 +94,4 @@ export const editPlaylist = (client: Manager) => {
       reply.code(500).send({ error: "Internal server error" });
     }
   };
-}; 
+};

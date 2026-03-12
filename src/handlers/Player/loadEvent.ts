@@ -44,7 +44,7 @@ export class PlayerEventLoader {
         `Event [${eName}] doesn't have exeture function on the class, Skipping...`
       );
 
-    // Register events on the client instead of wacelink
+
     this.client.on(eName as any, (...args: unknown[]) =>
       events.execute(this.client, ...args)
     );

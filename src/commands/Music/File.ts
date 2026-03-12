@@ -5,7 +5,6 @@ import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
 import { AutoFixSearch } from "../../autofix/AutoFixSearch.js";
 
-// Main code
 export default class implements Command {
   public name = ["file"];
   public description = "Play the music file for the bot";

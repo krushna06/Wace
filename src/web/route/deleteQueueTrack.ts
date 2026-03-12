@@ -46,4 +46,4 @@ export const deleteQueueTrack = (client: Manager) => {
       });
     }
   };
-}; 
+};

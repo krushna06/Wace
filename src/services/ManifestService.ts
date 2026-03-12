@@ -9,7 +9,7 @@ export class ManifestService {
   get data() {
     const distPath = join(__dirname, "..", "manifest.xml");
     const srcPath = join(__dirname, "..", "..", "src", "manifest.xml");
-    
+
     let manifestPath = distPath;
     if (!fs.existsSync(distPath) && fs.existsSync(srcPath)) {
       manifestPath = srcPath;

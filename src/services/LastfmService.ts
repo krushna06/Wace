@@ -1,14 +1,11 @@
-// This file contains Last.fm API utility functions....
 import fetch from "node-fetch";
 
-// Get user info
 export async function getUserInfo(username: string, apiKey: string) {
   const url = `https://ws.audioscrobbler.com/2.0/?method=user.getinfo&user=${encodeURIComponent(username)}&api_key=${apiKey}&format=json`;
   const res = await fetch(url);
   return res.json();
 }
 
-// Get user's top artists
 export async function getUserTopArtists(username: string, apiKey: string, period = "overall", limit = 10, sessionKey?: string) {
   let url = `https://ws.audioscrobbler.com/2.0/?method=user.gettopartists&user=${encodeURIComponent(username)}&api_key=${apiKey}&format=json&period=${period}&limit=${limit}`;
   if (sessionKey) url += `&sk=${sessionKey}`;
@@ -16,7 +13,6 @@ export async function getUserTopArtists(username: string, apiKey: string, period
   return res.json();
 }
 
-// Get user's top albums
 export async function getUserTopAlbums(username: string, apiKey: string, period = "overall", limit = 10, sessionKey?: string) {
   let url = `https://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=${encodeURIComponent(username)}&api_key=${apiKey}&format=json&period=${period}&limit=${limit}`;
   if (sessionKey) url += `&sk=${sessionKey}`;
@@ -24,7 +20,6 @@ export async function getUserTopAlbums(username: string, apiKey: string, period 
   return res.json();
 }
 
-// Get user's top tracks
 export async function getUserTopTracks(username: string, apiKey: string, period = "overall", limit = 10, sessionKey?: string) {
   let url = `https://ws.audioscrobbler.com/2.0/?method=user.gettoptracks&user=${encodeURIComponent(username)}&api_key=${apiKey}&format=json&period=${period}&limit=${limit}`;
   if (sessionKey) url += `&sk=${sessionKey}`;
@@ -32,7 +27,6 @@ export async function getUserTopTracks(username: string, apiKey: string, period 
   return res.json();
 }
 
-// Get user's recent tracks
 export async function getUserRecentTracks(username: string, apiKey: string, limit = 5, sessionKey?: string) {
   let url = `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${encodeURIComponent(username)}&api_key=${apiKey}&format=json&limit=${limit}`;
   if (sessionKey) url += `&sk=${sessionKey}`;
@@ -40,21 +34,18 @@ export async function getUserRecentTracks(username: string, apiKey: string, limi
   return res.json();
 }
 
-// Get global top artists
 export async function getGlobalTopArtists(apiKey: string, limit = 10) {
   const url = `https://ws.audioscrobbler.com/2.0/?method=chart.gettopartists&api_key=${apiKey}&format=json&limit=${limit}`;
   const res = await fetch(url);
   return res.json();
 }
 
-// Get global top tracks
 export async function getGlobalTopTracks(apiKey: string, limit = 10) {
   const url = `https://ws.audioscrobbler.com/2.0/?method=chart.gettoptracks&api_key=${apiKey}&format=json&limit=${limit}`;
   const res = await fetch(url);
   return res.json();
 }
 
-// Get album info
 export async function getAlbumInfo(artist: string, album: string, apiKey: string, username?: string) {
   let url = `https://ws.audioscrobbler.com/2.0/?method=album.getinfo&artist=${encodeURIComponent(artist)}&album=${encodeURIComponent(album)}&api_key=${apiKey}&format=json`;
   if (username) url += `&username=${encodeURIComponent(username)}`;
@@ -62,7 +53,6 @@ export async function getAlbumInfo(artist: string, album: string, apiKey: string
   return res.json();
 }
 
-// Get artist info
 export async function getArtistInfo(artist: string, apiKey: string, username?: string) {
   let url = `https://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=${encodeURIComponent(artist)}&api_key=${apiKey}&format=json`;
   if (username) url += `&username=${encodeURIComponent(username)}`;
@@ -70,7 +60,6 @@ export async function getArtistInfo(artist: string, apiKey: string, username?: s
   return res.json();
 }
 
-// Get track info
 export async function getTrackInfo(artist: string, track: string, apiKey: string, username?: string) {
   let url = `https://ws.audioscrobbler.com/2.0/?method=track.getinfo&artist=${encodeURIComponent(artist)}&track=${encodeURIComponent(track)}&api_key=${apiKey}&format=json`;
   if (username) url += `&username=${encodeURIComponent(username)}`;
@@ -78,7 +67,6 @@ export async function getTrackInfo(artist: string, track: string, apiKey: string
   return res.json();
 }
 
-// Get all artists in a user's library
 export async function getUserAllArtists(username: string, apiKey: string) {
   let page = 1;
   let totalPages = 1;

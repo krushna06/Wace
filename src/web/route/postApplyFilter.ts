@@ -28,8 +28,8 @@ export const postApplyFilter = (client: Manager) => {
         });
       }
 
-      const filterCommand = client.commands.find(cmd => 
-        cmd.category === "Filter" && 
+      const filterCommand = client.commands.find(cmd =>
+        cmd.category === "Filter" &&
         cmd.name.some(name => name === filter || name === `filter2` || name === `filter`)
       );
 
@@ -98,8 +98,8 @@ export const postApplyFilter = (client: Manager) => {
           guildId,
           filter: actualFilterName === "clear" ? null : actualFilterName,
           commandName: filter,
-          message: actualFilterName === "clear" 
-            ? "All filters have been reset" 
+          message: actualFilterName === "clear"
+            ? "All filters have been reset"
             : `Filter '${actualFilterName}' has been applied successfully`
         }
       });
@@ -111,4 +111,4 @@ export const postApplyFilter = (client: Manager) => {
       });
     }
   };
-}; 
+};

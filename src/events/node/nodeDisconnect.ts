@@ -5,15 +5,15 @@ import { AutoReconnectBuilderService } from "../../services/AutoReconnectBuilder
 export default class {
   async execute(client: Manager, node: Node, code: number, reason: Buffer) {
     const players = Array.from(client.players.entries());
-    
+
     for (const [guildId, player] of players) {
-      // Shoukaku players don't have a node property with options
-      // We'll check if the player's shoukaku instance is connected to this node
+
+
       if (player.shoukaku && player.shoukaku.node.name === node.name) {
         const data = await new AutoReconnectBuilderService(client, player).get(guildId);
         const p: any = player;
         if (data && data.twentyfourseven) {
-          // Store original methods if not already stored
+
           if (!p.__originalDestroy) {
             p.__originalDestroy = player.destroy;
             player.destroy = async function() {
@@ -21,7 +21,7 @@ export default class {
               return;
             };
           }
-          // Clear queue and pause
+
           player.queue = [];
           if (player.shoukaku) {
             await player.shoukaku.setPaused(true).catch(() => {});

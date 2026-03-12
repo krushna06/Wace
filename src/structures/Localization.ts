@@ -16,12 +16,12 @@ export class Localization extends I18n {
     const locateErr = `Locale '${locale}' not found.`;
     const sectionErr = `Section '${section}' not found in locale '${locale}'`;
     const keyErr = `Key '${key}' not found in section ${section} in locale '${locale}'`;
-    
+
     if (currentString == locateErr || currentString == sectionErr || currentString == keyErr) {
       currentString = super.get("en", section, key, args);
     }
-    
-    // Replace placeholders with config values
+
+
     if (this.config) {
       currentString = currentString.replace(/{botName}/g, this.config.bot.BOT_NAME);
       currentString = currentString.replace(/{supportLink}/g, this.config.bot.INVITE_LINK);
@@ -29,7 +29,7 @@ export class Localization extends I18n {
         currentString = currentString.replace(/{clientId}/g, this.clientId);
       }
     }
-    
+
     return currentString;
   }
 }

@@ -3,7 +3,6 @@ import { CommandHandler } from "../../structures/CommandHandler.js";
 import { Manager } from "../../manager.js";
 import { stripIndents } from "common-tags";
 import { EmbedBuilder, version } from "discord.js";
-
 export default class implements Command {
   public name = ["info"];
   public description = "Shows the information of the Bot";
@@ -17,16 +16,13 @@ export default class implements Command {
   public usingInteraction = true;
   public sameVoiceCheck = false;
   public permissions = [];
-
   public async execute(client: Manager, handler: CommandHandler) {
     await handler.deferReply();
-
     const voiceConnections = Array.from(client.players.values()).filter(
       (player) =>
-        player.shoukaku && // Player is connected
+        player.shoukaku &&
         player.voiceId !== null
     ).length;
-
     const botInfo = stripIndents`\`\`\`
     Codename        | ${client.metadata.codename}
     Bot Version     | ${client.metadata.version}
@@ -37,7 +33,6 @@ export default class implements Command {
     User Count      | ${client.guilds.cache.reduce((a, b) => a + b.memberCount, 0)}
     Active Voices   | ${voiceConnections}
     \`\`\``;
-
     const embed = new EmbedBuilder()
       .setAuthor({
         name: client.user!.username,

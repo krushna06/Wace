@@ -3,4 +3,4 @@ export interface UserStats {
   guildId: string;
   songsPlayed: number;
   commandsExecuted: number;
-} 
+}

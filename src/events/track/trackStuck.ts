@@ -12,9 +12,9 @@ export default class {
         "The database is not yet connected so this event will temporarily not execute. Please try again later!"
       );
 
-    /////////// Update Music Setup //////////
+
     await client.UpdateMusic(player);
-    /////////// Update Music Setup ///////////
+
 
     const guild = await client.guilds.fetch(player.guildId).catch(() => undefined);
 
@@ -54,7 +54,7 @@ export default class {
     const currentPlayer = client.players.get(player.guildId) as Player;
     if (!currentPlayer) return;
     if (currentPlayer.queue.length > 0) return await player.skip().catch(() => {});
-    // Check if player should be destroyed
+
     if (!player.data.get("sudo-destroy")) {
       await player.destroy().catch(() => {});
     }

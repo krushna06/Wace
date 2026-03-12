@@ -1,4 +1,3 @@
-// Filter presets for Shoukaku
 export const FilterPresets = {
   clear: {},
   bassboost: {

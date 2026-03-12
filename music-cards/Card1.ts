@@ -1,4 +1,3 @@
-// Preview: https://i.imgur.com/oscHdGS.png
 
 import { Manager } from "../../manager.js";
 import { EmbedBuilder, TextChannel } from "discord.js";
@@ -10,7 +9,6 @@ import { getTitle } from "../../utilities/GetTitle.js";
 import { ClassicPro } from "musicard";
 import fs from "fs";
 
-// Main code
 export default class implements Command {
   public name = ["card"];
   public description = "Display a card of the song currently playing.";

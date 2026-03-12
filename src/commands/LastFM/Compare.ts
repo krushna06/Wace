@@ -114,4 +114,4 @@ export default class implements Command {
       .setColor(client.color);
     return handler.editReply({ content: " ", embeds: [embed] });
   }
-} 
+}

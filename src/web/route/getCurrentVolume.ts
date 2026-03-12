@@ -19,4 +19,4 @@ export async function getCurrentVolume(
     return;
   }
   res.send({ data: player.volume });
-} 
+}

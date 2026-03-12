@@ -1,5 +1,4 @@
 import { LavalinkDataType } from "../@types/Lavalink.js";
-
 export interface LavalinkServerResponse {
   "unique-id": string;
   identifier: string;
@@ -9,13 +8,11 @@ export interface LavalinkServerResponse {
   secure: boolean;
   version: string;
 }
-
 export class GetLavalinkServerList {
   private static serverCache: LavalinkDataType[] | null = null;
   private static readonly CACHE_TTL = 300000;
   private static lastFetchTime = 0;
   private static readonly MAX_SERVERS = 3;
-
   async execute(): Promise<LavalinkDataType[]> {
     if (
       GetLavalinkServerList.serverCache &&
@@ -23,11 +20,9 @@ export class GetLavalinkServerList {
     ) {
       return GetLavalinkServerList.serverCache;
     }
-
     try {
       const res = await fetch("https://lavalink-list.ajieblogs.eu.org/All");
       const data: LavalinkServerResponse[] = await res.json();
-
       const servers = data
         .slice(0, GetLavalinkServerList.MAX_SERVERS)
         .map((server) => ({
@@ -38,10 +33,8 @@ export class GetLavalinkServerList {
           name: server.identifier,
           online: true,
         }));
-
       GetLavalinkServerList.serverCache = servers;
       GetLavalinkServerList.lastFetchTime = Date.now();
-
       return servers;
     } catch (error) {
       return [];

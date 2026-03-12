@@ -126,7 +126,7 @@ export default class implements Command {
         .setColor(client.color);
       handler.editReply({ content: " ", embeds: [embed] });
     } else {
-      //The playlist link is invalid.
+
       return handler.editReply({
         embeds: [
           new EmbedBuilder()
@@ -183,7 +183,7 @@ export default class implements Command {
         length: track.duration || track.info?.length,
         thumbnail: track.info.artworkUrl,
         author: track.info.author,
-        requester: track.requester, // Just case can push
+        requester: track.requester,
       });
     });
 
@@ -216,7 +216,7 @@ export default class implements Command {
     }
   }
 
-  // Autocomplete function
+
   public async autocomplete(client: Manager, interaction: GlobalInteraction, language: string) {
     let choice: AutocompleteInteractionChoices[] = [];
     // @ts-ignore
@@ -244,7 +244,7 @@ export default class implements Command {
       });
       return;
     }
-    
+
     try {
       const searchRes = await getNode(client)?.rest.resolve(url || Random);
 
@@ -252,7 +252,7 @@ export default class implements Command {
         return choice.push({ name: "Error song not matches", value: url });
       }
 
-      // Handle Shoukaku's LavalinkResponse format
+
       let tracks: any[] = [];
       switch (searchRes.loadType) {
         case "track":

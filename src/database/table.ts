@@ -1,7 +1,6 @@
 import { IDriver, QuickDB } from "wace.quick.db";
 import { Manager } from "../manager.js";
 import { Handler } from "./handler.js";
-// Schema
 import { AutoReconnect } from "./schema/AutoReconnect.js";
 import { Playlist } from "./schema/Playlist.js";
 import { Code } from "./schema/Code.js";
@@ -11,7 +10,6 @@ import { Language } from "./schema/Language.js";
 import { Prefix } from "./schema/Prefix.js";
 import { SongNoti } from "./schema/SongNoti.js";
 import { QuickDatabasePlus } from "../structures/QuickDatabasePlus.js";
-
 export class TableSetup {
   client: Manager;
   driver: IDriver;
@@ -22,21 +20,17 @@ export class TableSetup {
     this.driverName = driverName;
     this.register();
   }
-
   async register() {
     const baseDB = new QuickDatabasePlus(this.client.config.utilities.DATABASE.cacheCleanSchedule, {
       driver: this.driver,
     });
-
     const start = Date.now();
     await baseDB.init();
     const end = Date.now();
-
     this.client.logger.info(
       "DatabaseService",
       `Connected to the database! [${this.driverName}] [${end - start}ms]`
     );
-
     this.client.db = {
       autoreconnect: await baseDB.table<AutoReconnect>("autoreconnect"),
       playlist: await baseDB.table<Playlist>("playlist"),
@@ -55,7 +49,6 @@ export class TableSetup {
       userLastPlayed: await baseDB.table("userLastPlayed"),
       userPlayHistory: await baseDB.table("userPlayHistory"),
     };
-
     this.client.isDatabaseConnected = true;
     new Handler(this.client);
   }

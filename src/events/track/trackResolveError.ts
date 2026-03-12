@@ -16,9 +16,9 @@ export default class {
 
     client.logger.error("TrackResolveError", message);
 
-    /////////// Update Music Setup //////////
+
     await client.UpdateMusic(player);
-    /////////// Update Music Setup ///////////
+
 
     const channel = (await client.channels
       .fetch(player.textId)
@@ -56,7 +56,7 @@ export default class {
     const currentPlayer = client.players.get(player.guildId) as Player;
     if (!currentPlayer) return;
     if (currentPlayer.queue.length > 0) return await player.skip().catch(() => {});
-    // Check if player should be destroyed
+
     if (!player.data.get("sudo-destroy")) {
       await player.destroy().catch(() => {});
     }

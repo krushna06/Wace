@@ -9,8 +9,8 @@ export class PlayerManager {
   private setupShoukakuListeners(): void {
     this.client.shoukaku.on("ready", (name) => {
       this.client.logger.info("Shoukaku", `Node ${name} is ready`);
-      
-      // Get the node and emit nodeConnect event for backward compatibility
+
+
       const node = this.client.shoukaku.nodes.get(name);
       if (node) {
         this.client.emit("nodeConnect", node);
@@ -19,7 +19,7 @@ export class PlayerManager {
 
     this.client.shoukaku.on("error", (name, error) => {
       this.client.logger.error("Shoukaku", `Node ${name} error: ${error.message}`);
-      
+
       const node = this.client.shoukaku.nodes.get(name);
       if (node) {
         this.client.emit("nodeError", node, error);
@@ -28,7 +28,7 @@ export class PlayerManager {
 
     this.client.shoukaku.on("close", (name, code, reason) => {
       this.client.logger.warn("Shoukaku", `Node ${name} closed: ${code} ${reason}`);
-      
+
       const node = this.client.shoukaku.nodes.get(name);
       if (node) {
         this.client.emit("nodeClosed", node);
@@ -37,7 +37,7 @@ export class PlayerManager {
 
     this.client.shoukaku.on("disconnect", (name, count) => {
       this.client.logger.warn("Shoukaku", `Node ${name} disconnected. Retry count: ${count}`);
-      
+
       const node = this.client.shoukaku.nodes.get(name);
       if (node) {
         this.client.emit("nodeDisconnect", node, 1006, Buffer.from(`Disconnected after ${count} retries`));
@@ -53,7 +53,7 @@ export class PlayerManager {
 
   async create(options: PlayerOptions): Promise<Player> {
     let player = this.client.players.get(options.guildId);
-    
+
     if (player) {
       player.voiceId = options.voiceId;
       player.textId = options.textId;
@@ -62,13 +62,13 @@ export class PlayerManager {
 
     player = new Player(this.client, options);
     this.client.players.set(options.guildId, player);
-    
-    // Connect AFTER adding to map to prevent race conditions
+
+
     await player.connect();
-    
-    // Emit playerCreate event
+
+
     this.client.emit("playerCreate", player);
-    
+
     return player;
   }
 

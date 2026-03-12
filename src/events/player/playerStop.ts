@@ -15,9 +15,9 @@ export default class {
     const guild = await client.guilds.fetch(player.guildId).catch(() => undefined);
     client.logger.info("PlayerStop", `Player Stop in @ ${guild!.name} / ${player.guildId}`);
 
-    /////////// Update Music Setup //////////
+
     await client.UpdateMusic(player);
-    /////////// Update Music Setup ///////////
+
 
     const channel = (await client.channels
       .fetch(player.textId)

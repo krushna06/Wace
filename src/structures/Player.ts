@@ -21,12 +21,12 @@ export interface SearchResult {
 
 export interface ExtendedTrack extends Track {
   requester?: User;
-  duration?: number; // Alias for info.length
-  title?: string; // Alias for info.title
-  uri?: string; // Alias for info.uri
-  author?: string; // Alias for info.author
-  artworkUrl?: string; // Alias for info.artworkUrl
-  identifier?: string; // Alias for info.identifier
+  duration?: number;
+  title?: string;
+  uri?: string;
+  author?: string;
+  artworkUrl?: string;
+  identifier?: string;
 }
 
 export class Player {
@@ -37,7 +37,7 @@ export class Player {
   public queue: ExtendedTrack[] = [];
   public current: ExtendedTrack | null = null;
   public previous: ExtendedTrack | null = null;
-  public previousQueue: ExtendedTrack[] = []; // Track history for previous command
+  public previousQueue: ExtendedTrack[] = [];
   public playing: boolean = false;
   public paused: boolean = false;
   public loop: "none" | "track" | "queue" = "none";
@@ -63,7 +63,7 @@ export class Player {
     const node = getNode(this.client);
     if (!node) throw new Error("No available nodes");
 
-    // Use Shoukaku to join the channel, not the node directly
+
     this.shoukaku = await this.client.shoukaku.joinVoiceChannel({
       guildId: this.guildId,
       channelId: this.voiceId,
@@ -87,8 +87,8 @@ export class Player {
     this.shoukaku.on("end", (data) => {
       this.stopPositionTracking();
       this.client.emit("trackEnd", this, this.current, data);
-      
-      if (data.reason === "finished" || data.reason === "loadFailed") {
+
+      if (data.reason === "finished" || data.reason === "loadFailed" || data.reason === "stopped") {
         this.handleTrackEnd();
       }
     });
@@ -133,6 +133,8 @@ export class Player {
   }
 
   private async handleTrackEnd(): Promise<void> {
+    this.client.logger.debug("Player.handleTrackEnd", `Queue length: ${this.queue.length}, Loop: ${this.loop}, Current: ${this.current?.title}`);
+    
     if (this.loop === "track" && this.current) {
       await this.play();
       return;
@@ -143,11 +145,15 @@ export class Player {
     }
 
     if (this.queue.length > 0) {
+      this.client.logger.debug("Player.handleTrackEnd", `Playing next track from queue`);
       await this.play();
     } else if (this.data.get("autoplay")) {
-      // Autoplay logic would go here
+      this.client.logger.debug("Player.handleTrackEnd", `Queue empty, autoplay enabled`);
+      this.client.emit("queueEmpty", this);
       this.playing = false;
     } else {
+      this.client.logger.debug("Player.handleTrackEnd", `Queue empty, no autoplay`);
+      this.client.emit("queueEmpty", this);
       this.playing = false;
       this.current = null;
     }
@@ -159,7 +165,7 @@ export class Player {
 
     let searchQuery = query;
     const urlPattern = /^https?:\/\//;
-    
+
     if (!urlPattern.test(query)) {
       const defaultEngine = "ytsearch";
       searchQuery = `${defaultEngine}:${query}`;
@@ -168,13 +174,13 @@ export class Player {
     this.client.logger.debug("Player.search", `Searching for: ${searchQuery}`);
     const result = await node.rest.resolve(searchQuery);
     this.client.logger.debug("Player.search", `Result loadType: ${result?.loadType}`);
-    
+
     if (!result) {
       this.client.logger.warn("Player.search", `No result for query: ${searchQuery}`);
       return { type: "SEARCH", tracks: [] };
     }
 
-    // Handle different Shoukaku response types
+
     let tracks: ExtendedTrack[] = [];
     let type: "TRACK" | "PLAYLIST" | "SEARCH" = "SEARCH";
     let playlistName: string | undefined;
@@ -205,11 +211,11 @@ export class Player {
       return { type: "SEARCH", tracks: [] };
     }
 
-    // Map tracks to ExtendedTrack format
+
     const extendedTracks: ExtendedTrack[] = tracks.map((track: any) => ({
       ...track,
       requester: options?.requester,
-      // Add aliases for backward compatibility
+
       duration: track.info?.length || track.length,
       title: track.info?.title || track.title,
       uri: track.info?.uri || track.uri,
@@ -231,21 +237,21 @@ export class Player {
     }
 
     if (track) {
-      // Add current track to previous queue before playing new track
+
       if (this.current) {
         this.previousQueue.push(this.current);
       }
       this.previous = this.current;
       this.current = track;
     } else if (this.queue.length > 0) {
-      // Add current track to previous queue before playing next track
+
       if (this.current) {
         this.previousQueue.push(this.current);
       }
       this.previous = this.current;
       this.current = this.queue.shift()!;
     } else if (this.current) {
-      // Replay current track
+
     } else {
       return;
     }
@@ -258,7 +264,7 @@ export class Player {
 
   async stop(disconnect: boolean = true): Promise<void> {
     this.stopPositionTracking();
-    
+
     if (this.shoukaku) {
       await this.shoukaku.stopTrack();
     }
@@ -300,17 +306,17 @@ export class Player {
 
   async previous(): Promise<void> {
     if (!this.previousQueue || this.previousQueue.length === 0) return;
-    
-    // Get the last track from previous queue
+
+
     const previousTrack = this.previousQueue.pop();
     if (!previousTrack) return;
 
-    // Add current track back to the front of the queue
+
     if (this.current) {
       this.queue.unshift(this.current);
     }
 
-    // Play the previous track
+
     await this.play(previousTrack);
   }
 
@@ -339,12 +345,12 @@ export class Player {
 
   async destroy(): Promise<void> {
     this.stopPositionTracking();
-    
+
     if (this.shoukaku) {
       this.shoukaku.removeAllListeners();
     }
 
-    // Use Shoukaku's leaveVoiceChannel to disconnect
+
     await this.client.shoukaku.leaveVoiceChannel(this.guildId);
 
     this.client.players.delete(this.guildId);
@@ -353,7 +359,7 @@ export class Player {
 
   get state(): string {
     if (!this.shoukaku) return "DISCONNECTED";
-    // Shoukaku doesn't have connection.state, just return a simple state
+
     return this.shoukaku.paused ? "PAUSED" : "CONNECTED";
   }
 

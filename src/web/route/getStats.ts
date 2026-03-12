@@ -1,7 +1,6 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { Manager } from "../../manager.js";
 import { getTopSongsForGuild, getTopUsersForGuild, getLastPlayedSongForGuild, getTopSongsForUser, getLastPlayedSongForUser } from "../../database/handler.js";
-
 export const getUserStats = (client: Manager) => {
   return async (
     request: FastifyRequest<{ Params: { userId: string } }>,
@@ -22,7 +21,6 @@ export const getUserStats = (client: Manager) => {
     });
   };
 };
-
 export const getGuildStats = (client: Manager) => {
   return async (
     request: FastifyRequest<{ Params: { guildId: string } }>,
@@ -40,7 +38,6 @@ export const getGuildStats = (client: Manager) => {
     });
   };
 };
-
 export const getTopSongs = (client: Manager) => {
   return async (
     request: FastifyRequest<{ Params: { guildId: string } }>,
@@ -51,7 +48,6 @@ export const getTopSongs = (client: Manager) => {
     reply.send({ guildId, topSongs });
   };
 };
-
 export const getTopUsers = (client: Manager) => {
   return async (
     request: FastifyRequest<{ Params: { guildId: string } }>,
@@ -86,7 +82,6 @@ export const getTopUsers = (client: Manager) => {
     reply.send({ guildId, topUsers: usersWithNames });
   };
 };
-
 export const getLastPlayed = (client: Manager) => {
   return async (
     request: FastifyRequest<{ Params: { guildId: string } }>,
@@ -97,7 +92,6 @@ export const getLastPlayed = (client: Manager) => {
     reply.send({ guildId, lastPlayed });
   };
 };
-
 export const getTopSongsUser = (client: Manager) => {
   return async (
     request: FastifyRequest<{ Params: { userId: string } }>,
@@ -108,7 +102,6 @@ export const getTopSongsUser = (client: Manager) => {
     reply.send({ userId, topSongs });
   };
 };
-
 export const getLastPlayedUser = (client: Manager) => {
   return async (
     request: FastifyRequest<{ Params: { userId: string } }>,
@@ -118,4 +111,4 @@ export const getLastPlayedUser = (client: Manager) => {
     const lastPlayed = await getLastPlayedSongForUser(client.db, userId);
     reply.send({ userId, lastPlayed });
   };
-}; 
+};

@@ -13,7 +13,6 @@ import { Player } from "../../structures/Player.js";
 import { getTitle } from "../../utilities/GetTitle.js";
 import { getNode } from "../../utilities/GetNode.js";
 
-// Main code
 export default class implements Command {
   public name = ["insert"];
   public description = "Insert a song into a specific position in queue.";
@@ -129,7 +128,7 @@ export default class implements Command {
     return handler.editReply({ embeds: [embed] });
   }
 
-  // Autocomplete function
+
   async autocomplete(client: Manager, interaction: GlobalInteraction, language: string) {
     let choice: AutocompleteInteractionChoices[] = [];
     // @ts-ignore
@@ -157,7 +156,7 @@ export default class implements Command {
       });
       return;
     }
-    
+
     try {
       const searchRes = await getNode(client)?.rest.resolve(url || Random);
 
@@ -165,7 +164,7 @@ export default class implements Command {
         return choice.push({ name: "Error song not matches", value: url });
       }
 
-      // Handle Shoukaku's LavalinkResponse format
+
       let tracks: any[] = [];
       switch (searchRes.loadType) {
         case "track":

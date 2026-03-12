@@ -5,4 +5,4 @@ export interface GuildLastPlayed {
   author: string;
   uri: string;
   playedAt: number;
-} 
+}

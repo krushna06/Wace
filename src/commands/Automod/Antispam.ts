@@ -14,7 +14,6 @@ import {
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
-
 export default class implements Command {
   public name = ["antispam"];
   public description = "Enable or disable anti-spam system";
@@ -27,7 +26,6 @@ export default class implements Command {
   public usingInteraction = true;
   public sameVoiceCheck = false;
   public permissions = [];
-
   options = [
     {
       name: "type",
@@ -64,17 +62,14 @@ export default class implements Command {
       required: false,
     },
   ];
-
   public async execute(client: Manager, handler: CommandHandler) {
     await handler.deferReply();
-
     // @ts-ignore
     const options = handler.interaction.options as CommandInteractionOptionResolver;
     const type = options.getString("type");
     const exemptRoles = options.getRole("exempt-roles") as Role | null;
     const exemptChannels = options.getChannel("exempt-channels") as GuildBasedChannel | null;
     const logChannel = options.getChannel("log-channel") as GuildBasedChannel | null;
-
     if (!type || !["enable", "disable"].includes(type)) {
       return handler.editReply({
         embeds: [
@@ -84,12 +79,10 @@ export default class implements Command {
         ],
       });
     }
-
     const existingRules = await handler.guild.autoModerationRules.fetch({ cache: false });
     const conflictingRule = existingRules
       .filter((rule) => rule.triggerType === AutoModerationRuleTriggerType.Spam)
       .first();
-
     if (type === "enable") {
       if (conflictingRule && conflictingRule.enabled) {
         return handler.editReply({
@@ -100,11 +93,9 @@ export default class implements Command {
           ],
         });
       }
-
       if (conflictingRule) {
         await conflictingRule.delete("New anti-spam rule created");
       }
-
       const ruleToCreate: any = {
         name: `Anti-spam [${client.config.bot.BOT_NAME}]`,
         creatorId: client.user!.id,
@@ -123,7 +114,6 @@ export default class implements Command {
         ],
         reason: `Requested by ${handler.member.user.username}`,
       };
-
       if (logChannel) {
         const logChannelPermissions = logChannel.permissionsFor(handler.guild.members.me!);
         if (!logChannelPermissions.has(PermissionsBitField.Flags.ViewChannel)) {
@@ -135,7 +125,6 @@ export default class implements Command {
             ],
           });
         }
-
         if (!logChannelPermissions.has(PermissionsBitField.Flags.SendMessages)) {
           return handler.editReply({
             embeds: [
@@ -147,7 +136,6 @@ export default class implements Command {
             ],
           });
         }
-
         const memberPermissions = logChannel.permissionsFor(handler.member);
         if (!memberPermissions.has(PermissionsBitField.Flags.ViewChannel)) {
           return handler.editReply({
@@ -158,7 +146,6 @@ export default class implements Command {
             ],
           });
         }
-
         if (!memberPermissions.has(PermissionsBitField.Flags.SendMessages)) {
           return handler.editReply({
             embeds: [
@@ -170,7 +157,6 @@ export default class implements Command {
             ],
           });
         }
-
         ruleToCreate.actions.push({
           type: AutoModerationActionType.SendAlertMessage,
           metadata: {
@@ -179,9 +165,7 @@ export default class implements Command {
           },
         });
       }
-
       await handler.guild.autoModerationRules.create(ruleToCreate);
-
       const embed = new EmbedBuilder()
         .setColor(client.color)
         .setTimestamp()
@@ -219,7 +203,6 @@ export default class implements Command {
           },
         ])
         .setThumbnail(handler.guild.iconURL({ size: 256 }));
-
       return handler.editReply({ embeds: [embed] });
     } else {
       if (!conflictingRule || !conflictingRule.enabled) {
@@ -231,11 +214,9 @@ export default class implements Command {
           ],
         });
       }
-
       await handler.guild.autoModerationRules.edit(conflictingRule.id, {
         enabled: false,
       });
-
       const embed = new EmbedBuilder()
         .setColor(client.color)
         .setTimestamp()
@@ -243,7 +224,6 @@ export default class implements Command {
         .setDescription(
           "The anti-spam system has been disabled. Generic spam will now be allowed."
         );
-
       return handler.editReply({ embeds: [embed] });
     }
   }

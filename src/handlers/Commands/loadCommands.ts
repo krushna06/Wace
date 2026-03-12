@@ -50,38 +50,55 @@ export class CommandLoader {
   async register(commandFile: string) {
     if (/Manager|Handler|Service/.test(commandFile) || /LastfmManager\.ts$/.test(commandFile)) return;
     const rltPath = relative(__dirname, commandFile);
-    const command = new (await import(pathToFileURL(commandFile).toString())).default();
+    
+    try {
+      const imported = await import(pathToFileURL(commandFile).toString());
+      if (!imported.default || typeof imported.default !== 'function') {
+        this.client.logger.debug(
+          CommandLoader.name,
+          `"${rltPath}" does not have a valid default export. Skipping...`
+        );
+        return;
+      }
+      
+      const command = new imported.default();
 
-    if (!command.name?.length) {
-      this.client.logger.warn(
+      if (!command.name?.length) {
+        this.client.logger.warn(
+          CommandLoader.name,
+          `"${rltPath}" The command file does not have a name. Skipping...`
+        );
+        return;
+      }
+
+      if (this.client.commands.has(command.name)) {
+        this.client.logger.warn(
+          CommandLoader.name,
+          `"${command.name}" command has already been installed. Skipping...`
+        );
+        return;
+      }
+
+      const checkRes = this.keyChecker(command);
+
+      if (checkRes !== KeyCheckerEnum.Pass) {
+        this.client.logger.warn(
+          CommandLoader.name,
+          `"${command.name}" command is not implements correctly [${checkRes}]. Skipping...`
+        );
+        return;
+      }
+
+      this.client.commands.set(command.name.join("-"), command);
+
+      if (command.aliases && command.aliases.length !== 0)
+        command.aliases.forEach((a: string) => this.client.aliases.set(a, command.name.join("-")));
+    } catch (error) {
+      this.client.logger.debug(
         CommandLoader.name,
-        `"${rltPath}" The command file does not have a name. Skipping...`
+        `Error loading "${rltPath}": ${error instanceof Error ? error.message : String(error)}`
       );
-      return;
     }
-
-    if (this.client.commands.has(command.name)) {
-      this.client.logger.warn(
-        CommandLoader.name,
-        `"${command.name}" command has already been installed. Skipping...`
-      );
-      return;
-    }
-
-    const checkRes = this.keyChecker(command);
-
-    if (checkRes !== KeyCheckerEnum.Pass) {
-      this.client.logger.warn(
-        CommandLoader.name,
-        `"${command.name}" command is not implements correctly [${checkRes}]. Skipping...`
-      );
-      return;
-    }
-
-    this.client.commands.set(command.name.join("-"), command);
-
-    if (command.aliases && command.aliases.length !== 0)
-      command.aliases.forEach((a: string) => this.client.aliases.set(a, command.name.join("-")));
   }
 
   keyChecker(obj: Record<string, any>): KeyCheckerEnum {

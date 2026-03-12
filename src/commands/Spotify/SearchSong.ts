@@ -28,7 +28,7 @@ export default class implements Command {
   public options = [
     {
       name: "query",
-      type: 3, // String type
+      type: 3,
       description: "The song you want to search for",
       required: true,
     },
@@ -59,7 +59,7 @@ export default class implements Command {
         return;
       }
 
-      const track = tracks[0]; // Assuming we take the first track in the search results
+      const track = tracks[0];
       const artists = track.artists.map((artist) => artist.name).join(", ");
       const releaseDate = new Date(track.album.release_date).toLocaleDateString();
 

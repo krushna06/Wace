@@ -2,7 +2,6 @@ import { Manager } from "../../manager.js";
 import { EmbedBuilder, ApplicationCommandOptionType, Message } from "discord.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
-
 export default class implements Command {
   public name = ["filter", "bass", "bassboost"];
   public description = "Turning on bassboost filter";
@@ -22,12 +21,9 @@ export default class implements Command {
       type: ApplicationCommandOptionType.Number,
     },
   ];
-
   public async execute(client: Manager, handler: CommandHandler) {
     await handler.deferReply();
-
     const value = handler.args[0];
-
     if (value && isNaN(+value))
       return handler.editReply({
         embeds: [
@@ -38,12 +34,9 @@ export default class implements Command {
             .setColor(client.color),
         ],
       });
-
     const player = client.players.get(handler.guild!.id);
-
     if (!value) {
       player?.filters.set("bass");
-
       const embed = new EmbedBuilder()
         .setDescription(
           `${client.i18n.get(handler.language, "command.filter", "filter_on", {
@@ -51,10 +44,8 @@ export default class implements Command {
           })}`
         )
         .setColor(client.color);
-
       return handler.editReply({ content: " ", embeds: [embed] });
     }
-
     if (Number(value) > 10 || Number(value) < -10)
       return handler.editReply({
         embeds: [
@@ -65,7 +56,6 @@ export default class implements Command {
             .setColor(client.color),
         ],
       });
-
     player?.filters.setEqualizer([
       { band: 0, gain: Number(value) / 10 },
       { band: 1, gain: Number(value) / 10 },
@@ -83,7 +73,6 @@ export default class implements Command {
       { band: 13, gain: 0 },
     ]);
     player?.data.set("filter-mode", this.name[0]);
-
     const embed = new EmbedBuilder()
       .setDescription(
         `${client.i18n.get(handler.language, "command.filter", "bassboost_set", {
@@ -91,7 +80,6 @@ export default class implements Command {
         })}`
       )
       .setColor(client.color);
-
     return handler.editReply({ content: " ", embeds: [embed] });
   }
 }

@@ -5,7 +5,6 @@ export interface NodeOptions {
   auth: string;
   secure?: boolean;
 }
-
 export interface Config {
   bot: Bot;
   player: Player;
@@ -13,7 +12,6 @@ export interface Config {
   emojis: Emojis;
   PATREON_IMAGE?: string[];
 }
-
 export interface Bot {
   TOKEN: string[];
   EMBED_COLOR: string;
@@ -27,13 +25,11 @@ export interface Bot {
   SUPPORT_LINK: string;
   PRESENCE: BotPresence;
 }
-
 export interface BotPresence {
   status: "online" | "idle" | "dnd" | "invisible";
   activity_name: string;
   activity_type: 0 | 1 | 2 | 3 | 4 | 5;
 }
-
 export interface Utilities {
   AUTO_RESUME: boolean;
   DELETE_MSG_TIMEOUT: number;
@@ -48,34 +44,28 @@ export interface Utilities {
   DASHBOARD_URL?: string;
   GUILD_JOIN_MESSAGE: GuildJoinMessage;
 }
-
 export interface AutofixLavalink {
   enable: boolean;
   retryCount: number;
   retryTimeout: number;
 }
-
 export interface GuildJoinMessage {
   enable: boolean;
   dm_owner: boolean;
 }
-
 export interface Database {
   driver: string;
   config: any;
   cacheCleanSchedule: string;
 }
-
 export interface MessageContent {
   enable: boolean;
   commands: Commands;
 }
-
 export interface Commands {
   enable: boolean;
   prefix: string;
 }
-
 export interface WebServer {
   enable: boolean;
   host: string;
@@ -85,7 +75,6 @@ export interface WebServer {
   BOT_NAME: string;
   EASTER_EGG_REFERENCE: string;
 }
-
 export interface Player {
   SPOTIFY: Spotify;
   LASTFM: Lastfm;
@@ -99,30 +88,25 @@ export interface Player {
   LIMIT_TRACK: number;
   LIMIT_PLAYLIST: number;
 }
-
 export interface Lastfm {
   enable: boolean;
   api_key: string;
   shared_secret: string;
   callback_url?: string;
 }
-
 export interface Spotify {
   enable: boolean;
   id: string;
   secret: string;
 }
-
 export interface Genius {
   enable: boolean;
   api_key: string;
 }
-
 export interface Emojis {
   PLAYER: PlayerEmojis;
   GLOBAL: GlobalEmojis;
 }
-
 export interface PlayerEmojis {
   play: string;
   pause: string;
@@ -136,7 +120,6 @@ export interface PlayerEmojis {
   queue: string;
   delete: string;
 }
-
 export interface GlobalEmojis {
   arrow_next: string;
   arrow_previous: string;

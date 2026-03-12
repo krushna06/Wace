@@ -63,4 +63,4 @@ export function getLastfmCallbackRoute(client: Manager) {
       return;
     }
   };
-} 
+}

@@ -1,7 +1,6 @@
 import MarkdownIt from "markdown-it";
 var md = new MarkdownIt();
 import Token from "markdown-it/lib/token.js";
-
 export class GetLavalinkServer {
   async execute() {
     const res = await fetch(
@@ -10,24 +9,18 @@ export class GetLavalinkServer {
     const resJson = await res.text();
     return this.getLavalinkServerInfo(resJson);
   }
-
   getLavalinkServerInfo(data: string) {
     const MdCodeTagFilter: string[] = [];
-
     var result = md.parse(data, "");
-
     result.filter(async (data: Token) => {
       if (data.tag == "code") {
         MdCodeTagFilter.push(data.content);
       }
     });
-
     const lavalinkCredentailsFilter = this.parseData(MdCodeTagFilter);
     const final = this.commitData(lavalinkCredentailsFilter);
-
     return final;
   }
-
   parseBoolean(value: string) {
     if (typeof value === "string") {
       value = value.trim().toLowerCase();
@@ -39,12 +32,10 @@ export class GetLavalinkServer {
         return false;
     }
   }
-
   parseData(MdCodeTagFilter: string[]) {
     const LavalinkCredentailsFilter: string[] = [];
     for (let i = 0; i < MdCodeTagFilter.length; i++) {
       const element = MdCodeTagFilter[i];
-      // Phrase data
       const res = element.replace(/\n/g, "");
       const res2 = res.replace(/\s+/g, "");
       const res3 = res2.replace(/Host/g, "");
@@ -56,7 +47,6 @@ export class GetLavalinkServer {
     }
     return LavalinkCredentailsFilter;
   }
-
   async commitData(LavalinkCredentailsFilter: string[]) {
     const FinalData = [];
     for (let i = 0; i < LavalinkCredentailsFilter.length; i++) {
@@ -77,19 +67,3 @@ export class GetLavalinkServer {
     return FinalData;
   }
 }
-
-// function parseBoolean(value: string) {
-//   if (typeof value === "string") {
-//     value = value.trim().toLowerCase();
-//   }
-//   switch (value) {
-//     case "true":
-//       return true;
-//     default:
-//       return false;
-//   }
-// }
-
-// export default async () => {
-
-// };

@@ -6,7 +6,6 @@ import { CommandHandler } from "../../structures/CommandHandler.js";
 import { Player } from "../../structures/Player.js";
 const time_regex = /(^[0-9][\d]{0,3}):(0[0-9]{1}$|[1-5]{1}[0-9])/;
 
-// Main code
 export default class implements Command {
   public name = ["seek"];
   public description = "Seek timestamp in the song!";

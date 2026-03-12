@@ -4,7 +4,6 @@ import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
 import { Player } from "../../structures/Player.js";
 
-// Main code
 export default class implements Command {
   public name = ["volume"];
   public description = "Adjusts the volume of the bot.";

@@ -27,7 +27,7 @@ export default class implements Command {
   public permissions = [];
   public options = [
     {
-      name: "iloveradio", // Unique name for ILOVERADIO stations
+      name: "iloveradio",
       description: "Select a radio station from ILOVERADIO",
       required: false,
       type: ApplicationCommandOptionType.String,
@@ -217,7 +217,7 @@ export default class implements Command {
     }
   }
 
-  // Autocomplete function
+
   async autocomplete(client: Manager, interaction: GlobalInteraction, language: string) {
     let choice: AutocompleteInteractionChoices[] = [];
     // @ts-ignore
@@ -245,7 +245,7 @@ export default class implements Command {
       });
       return;
     }
-    
+
     try {
       const searchRes = await getNode(client)?.rest.resolve(url || Random);
 
@@ -253,7 +253,7 @@ export default class implements Command {
         return choice.push({ name: "Error song not matches", value: url });
       }
 
-      // Handle Shoukaku's LavalinkResponse format
+
       let tracks: any[] = [];
       switch (searchRes.loadType) {
         case "track":

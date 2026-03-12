@@ -1,7 +1,6 @@
 import { Manager } from "../../manager.js";
 import { EmbedBuilder, Message, GuildMember, TextChannel } from "discord.js";
 import { GlobalInteraction } from "../../@types/Interaction.js";
-// Button Commands
 import { ButtonPrevious } from "./ButtonCommands/Previous.js";
 import { ButtonSkip } from "./ButtonCommands/Skip.js";
 import { ButtonStop } from "./ButtonCommands/Stop.js";
@@ -56,7 +55,7 @@ export class PlayerContentLoader {
 
     if (interaction.isStringSelectMenu() && customId === "filter") {
       const filterMode = interaction.values[0];
-      
+
       if (!channel) {
         await interaction.reply({
           content: `${client.i18n.get(language, "event.player", "join_voice")}`,
@@ -242,11 +241,11 @@ export class PlayerContentLoader {
         .catch(() => null);
       return;
     }
-    
+
     for (let track of tracks) {
       track.requester = message.author;
     }
-    
+
     if (result.type === "PLAYLIST") for (let track of tracks) player.queue.push(track);
     else if (player.playing && result.type === "SEARCH") player.queue.push(tracks[0]);
     else if (player.playing && result.type !== "SEARCH")

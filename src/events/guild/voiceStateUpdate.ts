@@ -25,7 +25,7 @@ export default class {
 
     if (newState.channelId == null && newState.member?.user.id === client.user?.id) {
       player.data.set("sudo-destroy", true);
-      // Destroy player if not already destroyed
+
       if (player.shoukaku) {
         player.destroy();
       }
@@ -54,7 +54,7 @@ export default class {
 
     if (!isInVoice || !isInVoice.voice.channelId) {
       player.data.set("sudo-destroy", true);
-      // Destroy player if not already destroyed
+
       if (player.shoukaku) {
         player.destroy();
       }
@@ -90,7 +90,7 @@ export default class {
       if (oldState.channelId === newState.channelId) return;
       if (newState.guild.members.me!.voice.channel.members.filter((m) => !m.user.bot).size > 2)
         return;
-      // Resume player
+
 
       const leaveTimeout = client.leaveDelay.get(newState.guild.id);
       if (leaveTimeout) {
@@ -127,7 +127,7 @@ export default class {
       oldState.guild.members.me!.voice?.channel &&
       oldState.guild.members.me!.voice.channel.members.filter((m) => !m.user.bot).size === 0
     ) {
-      // Pause player
+
       const currentPause = player.paused;
       player.paused == true ? true : player.setPause(true);
 
@@ -150,7 +150,7 @@ export default class {
         }, client.config.utilities.DELETE_MSG_TIMEOUT);
       }
 
-      // Delay leave timeout
+
       let leaveDelayTimeout = setTimeout(async () => {
         const vcMembers = oldState.guild.members.me!.voice.channel?.members.filter(
           (m) => !m.user.bot

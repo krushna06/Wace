@@ -6,7 +6,6 @@ import { CommandHandler } from "../../structures/CommandHandler.js";
 import { Player } from "../../structures/Player.js";
 import { getTitle } from "../../utilities/GetTitle.js";
 
-// Main code
 export default class implements Command {
   public name = ["nowplaying"];
   public description = "Display the song currently playing.";

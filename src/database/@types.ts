@@ -14,14 +14,12 @@ import { SongStats } from "./schema/SongStats.js";
 import { GuildLastPlayed } from "./schema/GuildLastPlayed.js";
 import { UserLastPlayed } from "./schema/UserLastPlayed.js";
 import { UserPlayHistory } from "./schema/UserPlayHistory.js";
-
 export interface LastfmSession {
   discord_id: string;
   session_key: string;
   username: string;
   expires?: number;
 }
-
 export interface DatabaseTable {
   autoreconnect: QuickDatabasePlus<AutoReconnect>;
   playlist: QuickDatabasePlus<Playlist>;

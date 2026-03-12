@@ -9,32 +9,26 @@ import {
   ApplicationCommandOptionType,
 } from "discord.js";
 import { Manager } from "../manager.js";
-
 export type GlobalInteraction =
   | CommandInteraction
   | AnySelectMenuInteraction
   | ButtonInteraction
   | ModalSubmitInteraction
   | AutocompleteInteraction;
-
 export type NoAutoInteraction =
   | CommandInteraction
   | AnySelectMenuInteraction
   | ButtonInteraction
   | ModalSubmitInteraction;
-
 export type ReplyOnlyInteraction = CommandInteraction | ButtonInteraction;
-
 export type AutocompleteInteractionChoices = {
   name: string;
   value: string;
 };
-
 export type CommandOptionChoiceInterface = {
   name: string;
   value: string;
 };
-
 export type CommandOptionInterface = {
   name: string;
   description: string;
@@ -44,7 +38,6 @@ export type CommandOptionInterface = {
   options?: CommandOptionInterface[];
   choices?: CommandOptionChoiceInterface[];
 };
-
 export type CommandInterface = {
   type: ApplicationCommandOptionType | undefined | ApplicationCommandType;
   name: string[];
@@ -53,7 +46,6 @@ export type CommandInterface = {
   defaultPermission?: undefined | typeof PermissionFlagsBits;
   run: (interaction: GlobalInteraction, client: Manager, language: string) => void;
 };
-
 export type UploadCommandInterface = {
   type: ApplicationCommandOptionType | undefined | ApplicationCommandType;
   name: string;
