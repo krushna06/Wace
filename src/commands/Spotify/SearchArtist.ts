@@ -41,18 +41,18 @@ export default class implements Command {
   public permissions = [];
 
   public async execute(client: Manager, handler: CommandHandler) {
-    await handler.deferReply();
-
-    const interaction = handler.interaction as CommandInteraction;
-    // @ts-ignore
-    const query = (interaction.options as CommandInteractionOptionResolver).getString("query");
-
-    if (!query) {
-      await handler.editReply({ content: "Please provide a valid artist name." });
-      return;
-    }
-
     try {
+      await handler.deferReply();
+
+      const interaction = handler.interaction as CommandInteraction;
+      // @ts-ignore
+      const query = (interaction.options as CommandInteractionOptionResolver).getString("query");
+
+      if (!query) {
+        await handler.editReply({ content: "Please provide a valid artist name." });
+        return;
+      }
+
       const accessToken = await getAccessToken();
       const artists = await searchArtists(query, accessToken);
 
@@ -142,9 +142,12 @@ export default class implements Command {
           await i.deferUpdate();
         }
       });
-    } catch (error) {
-      console.error("Error searching Spotify artist:", error);
-      await handler.editReply({ content: "An error occurred while searching for the artist." });
+    } catch (error: any) {
+      if (error?.code === 10062) {
+        client.logger.warn("SearchArtist", "Interaction expired (took too long to respond)");
+        return;
+      }
+      client.logger.error("SearchArtist", error);
     }
   }
 }

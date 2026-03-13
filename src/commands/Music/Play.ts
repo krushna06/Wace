@@ -35,122 +35,130 @@ export default class implements Command {
   ];
 
   public async execute(client: Manager, handler: CommandHandler) {
-    await handler.deferReply();
+    try {
+      await handler.deferReply();
 
-    let player = client.players.get(handler.guild!.id);
+      let player = client.players.get(handler.guild!.id);
 
-    const value = handler.args.join(" ");
+      const value = handler.args.join(" ");
 
-    if (!value)
-      return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${client.i18n.get(handler.language, "command.music", "play_arg")}`)
-            .setColor(client.color),
-        ],
+      if (!value)
+        return handler.editReply({
+          embeds: [
+            new EmbedBuilder()
+              .setDescription(`${client.i18n.get(handler.language, "command.music", "play_arg")}`)
+              .setColor(client.color),
+          ],
+        });
+
+      const { channel } = handler.member!.voice;
+      if (!channel)
+        return handler.editReply({
+          embeds: [
+            new EmbedBuilder()
+              .setDescription(`${client.i18n.get(handler.language, "error", "no_in_voice")}`)
+              .setColor(client.color),
+          ],
+        });
+
+      const emotes = (str: string) => str.match(/<a?:.+?:\d{18}>|\p{Extended_Pictographic}/gu);
+
+      if (emotes(value) !== null)
+        return handler.editReply({
+          embeds: [
+            new EmbedBuilder()
+              .setDescription(`${client.i18n.get(handler.language, "command.music", "play_emoji")}`)
+              .setColor(client.color),
+          ],
+        });
+
+      if (!player)
+        player = await client.playerManager.create({
+          guildId: handler.guild!.id,
+          voiceId: handler.member!.voice.channel!.id,
+          textId: handler.channel!.id,
+          shardId: handler.guild?.shardId ?? 0,
+          deaf: true,
+          volume: client.config.player.DEFAULT_VOLUME,
+        });
+      else if (player && !this.checkSameVoice(client, handler, handler.language)) {
+        return;
+      }
+
+      player.textId = handler.channel!.id;
+
+      let result = await player.search(value, { requester: handler.user });
+      const tracks = result.tracks;
+
+      if (!result.tracks.length) {
+        return handler.editReply({
+          embeds: [
+            new EmbedBuilder()
+              .setDescription(`${client.i18n.get(handler.language, "command.music", "play_match")}`)
+              .setColor(client.color),
+          ],
+        });
+      }
+      if (result.type === "PLAYLIST") {
+        player.data.set("playlist-uri", value);
+        player.data.set("playlist-first-track", true);
+        for (let track of tracks) player.queue.push(track);
+      }
+      else if (player.playing && result.type === "SEARCH") player.queue.push(tracks[0]);
+      else if (player.playing && result.type !== "SEARCH")
+        for (let track of tracks) player.queue.push(track);
+      else player.queue.push(tracks[0]);
+
+      const TotalDuration = tracks.reduce((acc, track) => acc + (track.duration || track.info?.length || 0), 0);
+
+      if (handler.message) await handler.message.delete().catch(() => null);
+
+      if (!player.playing) await player.play().catch((err) => {
+        client.logger.error("Play command error:", err);
       });
 
-    const { channel } = handler.member!.voice;
-    if (!channel)
-      return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${client.i18n.get(handler.language, "error", "no_in_voice")}`)
-            .setColor(client.color),
-        ],
-      });
+      if (result.type === "TRACK") {
+        const embed = new EmbedBuilder()
+          .setDescription(
+            `${client.i18n.get(handler.language, "command.music", "play_track", {
+              title: this.getTitle(client, result.type, tracks),
+              duration: convertTime(tracks[0].info.length as number),
+              request: String(tracks[0].requester),
+            })}`
+          )
+          .setColor(client.color);
 
-    const emotes = (str: string) => str.match(/<a?:.+?:\d{18}>|\p{Extended_Pictographic}/gu);
+        handler.editReply({ content: " ", embeds: [embed] });
+      } else if (result.type === "PLAYLIST") {
+        const embed = new EmbedBuilder()
+          .setDescription(
+            `${client.i18n.get(handler.language, "command.music", "play_playlist", {
+              title: this.getTitle(client, result.type, tracks, value),
+              duration: convertTime(TotalDuration),
+              songs: String(tracks.length),
+              request: String(tracks[0].requester),
+            })}`
+          )
+          .setColor(client.color);
 
-    if (emotes(value) !== null)
-      return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${client.i18n.get(handler.language, "command.music", "play_emoji")}`)
-            .setColor(client.color),
-        ],
-      });
-
-    if (!player)
-      player = await client.playerManager.create({
-        guildId: handler.guild!.id,
-        voiceId: handler.member!.voice.channel!.id,
-        textId: handler.channel!.id,
-        shardId: handler.guild?.shardId ?? 0,
-        deaf: true,
-        volume: client.config.player.DEFAULT_VOLUME,
-      });
-    else if (player && !this.checkSameVoice(client, handler, handler.language)) {
-      return;
-    }
-
-    player.textId = handler.channel!.id;
-
-    let result = await player.search(value, { requester: handler.user });
-    const tracks = result.tracks;
-
-    if (!result.tracks.length) {
-      return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${client.i18n.get(handler.language, "command.music", "play_match")}`)
-            .setColor(client.color),
-        ],
-      });
-    }
-    if (result.type === "PLAYLIST") {
-      player.data.set("playlist-uri", value);
-      player.data.set("playlist-first-track", true);
-      for (let track of tracks) player.queue.push(track);
-    }
-    else if (player.playing && result.type === "SEARCH") player.queue.push(tracks[0]);
-    else if (player.playing && result.type !== "SEARCH")
-      for (let track of tracks) player.queue.push(track);
-    else player.queue.push(tracks[0]);
-
-    const TotalDuration = tracks.reduce((acc, track) => acc + (track.duration || track.info?.length || 0), 0);
-
-    if (handler.message) await handler.message.delete().catch(() => null);
-
-    if (!player.playing) await player.play().catch((err) => {
-      client.logger.error("Play command error:", err);
-    });
-
-    if (result.type === "TRACK") {
-      const embed = new EmbedBuilder()
-        .setDescription(
-          `${client.i18n.get(handler.language, "command.music", "play_track", {
+        handler.editReply({ content: " ", embeds: [embed] });
+      } else if (result.type === "SEARCH") {
+        const embed = new EmbedBuilder().setColor(client.color).setDescription(
+          `${client.i18n.get(handler.language, "command.music", "play_result", {
             title: this.getTitle(client, result.type, tracks),
             duration: convertTime(tracks[0].info.length as number),
             request: String(tracks[0].requester),
           })}`
-        )
-        .setColor(client.color);
+        );
 
-      handler.editReply({ content: " ", embeds: [embed] });
-    } else if (result.type === "PLAYLIST") {
-      const embed = new EmbedBuilder()
-        .setDescription(
-          `${client.i18n.get(handler.language, "command.music", "play_playlist", {
-            title: this.getTitle(client, result.type, tracks, value),
-            duration: convertTime(TotalDuration),
-            songs: String(tracks.length),
-            request: String(tracks[0].requester),
-          })}`
-        )
-        .setColor(client.color);
-
-      handler.editReply({ content: " ", embeds: [embed] });
-    } else if (result.type === "SEARCH") {
-      const embed = new EmbedBuilder().setColor(client.color).setDescription(
-        `${client.i18n.get(handler.language, "command.music", "play_result", {
-          title: this.getTitle(client, result.type, tracks),
-          duration: convertTime(tracks[0].info.length as number),
-          request: String(tracks[0].requester),
-        })}`
-      );
-
-      handler.editReply({ content: " ", embeds: [embed] });
+        handler.editReply({ content: " ", embeds: [embed] });
+      }
+    } catch (error: any) {
+      if (error?.code === 10062) {
+        client.logger.warn("Play", "Interaction expired (took too long to respond)");
+        return;
+      }
+      client.logger.error("Play", error);
     }
   }
 

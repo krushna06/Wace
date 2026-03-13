@@ -38,18 +38,18 @@ export default class implements Command {
   public permissions = [];
 
   public async execute(client: Manager, handler: CommandHandler) {
-    await handler.deferReply();
-
-    const interaction = handler.interaction as CommandInteraction;
-    // @ts-ignore
-    const query = (interaction.options as CommandInteractionOptionResolver).getString("query");
-
-    if (!query) {
-      await handler.editReply({ content: "Please provide a valid album name." });
-      return;
-    }
-
     try {
+      await handler.deferReply();
+
+      const interaction = handler.interaction as CommandInteraction;
+      // @ts-ignore
+      const query = (interaction.options as CommandInteractionOptionResolver).getString("query");
+
+      if (!query) {
+        await handler.editReply({ content: "Please provide a valid album name." });
+        return;
+      }
+
       const accessToken = await getAccessToken();
       const album = await searchAlbum(query, accessToken);
 
@@ -108,9 +108,12 @@ export default class implements Command {
           await i.reply({ embeds: [tracksEmbed], ephemeral: true });
         }
       });
-    } catch (error) {
-      console.error("Error searching Spotify album:", error);
-      await handler.editReply({ content: "An error occurred while searching for the album." });
+    } catch (error: any) {
+      if (error?.code === 10062) {
+        client.logger.warn("SearchAlbum", "Interaction expired (took too long to respond)");
+        return;
+      }
+      client.logger.error("SearchAlbum", error);
     }
   }
 }
