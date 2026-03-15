@@ -60,9 +60,17 @@ export class Player {
   }
 
   async connect(): Promise<void> {
-    const node = getNode(this.client);
-    if (!node) throw new Error("No available nodes");
-
+    let node = getNode(this.client);
+    
+    let retries = 0;
+    while (!node && retries < 3) {
+      this.client.logger.warn("Player.connect", `No nodes available, retrying... (${retries + 1}/3)`);
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      node = getNode(this.client);
+      retries++;
+    }
+    
+    if (!node) throw new Error("No available nodes after retries");
 
     this.shoukaku = await this.client.shoukaku.joinVoiceChannel({
       guildId: this.guildId,
@@ -155,7 +163,16 @@ export class Player {
   }
 
   async search(query: string, options?: { requester?: User }): Promise<SearchResult> {
-    const node = getNode(this.client);
+    let node = getNode(this.client);
+    
+    let retries = 0;
+    while (!node && retries < 2) {
+      this.client.logger.warn("Player.search", `No nodes available, retrying... (${retries + 1}/2)`);
+      await new Promise(resolve => setTimeout(resolve, 500));
+      node = getNode(this.client);
+      retries++;
+    }
+    
     if (!node) throw new Error("No available nodes");
 
     let searchQuery = query;

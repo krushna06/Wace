@@ -36,6 +36,7 @@ import { Player } from "./structures/Player.js";
 import { TopggService } from "./services/TopggService.js";
 import { Collection } from "./structures/Collection.js";
 import { Localization } from "./structures/Localization.js";
+import { FilterPresets } from "./structures/Filters.js";
 config();
 
 export class Manager extends Client {
@@ -157,7 +158,7 @@ export class Manager extends Client {
     this.playerManager = new PlayerManager(this);
 
 
-    const filterOptions = ["clear", "bassboost", "nightcore", "vaporwave", "8d", "karaoke", "vibrato", "tremolo"];
+    const filterOptions = Object.keys(FilterPresets);
     for (const key of filterOptions) {
       const firstUpperCase = key.charAt(0).toUpperCase() + key.slice(1);
       this.selectMenuOptions.push(

@@ -2,8 +2,33 @@ import { Manager } from "../manager.js";
 import { Player, PlayerOptions } from "./Player.js";
 
 export class PlayerManager {
+  private healthCheckInterval: NodeJS.Timeout | null = null;
+
   constructor(public client: Manager) {
     this.setupShoukakuListeners();
+    this.startHealthCheck();
+  }
+
+  private startHealthCheck(): void {
+    this.healthCheckInterval = setInterval(() => {
+      const nodes = [...this.client.shoukaku.nodes.values()];
+      
+      if (nodes.length === 0) {
+        this.client.logger.warn("PlayerManager", "No nodes connected, attempting to re-add nodes...");
+        // Re-add all configured nodes
+        this.client.config.player.NODES.forEach((nodeConfig) => {
+          const existingNode = this.client.shoukaku.nodes.get(nodeConfig.name);
+          if (!existingNode) {
+            this.client.shoukaku.addNode({
+              name: nodeConfig.name,
+              url: `${nodeConfig.host}:${nodeConfig.port}`,
+              auth: nodeConfig.auth,
+              secure: nodeConfig.secure || false,
+            });
+          }
+        });
+      }
+    }, 30000);
   }
 
   private setupShoukakuListeners(): void {
