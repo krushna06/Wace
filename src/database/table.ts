@@ -1,4 +1,4 @@
-import { IDriver, QuickDB } from "wace.quick.db";
+import { IDriver, QuickDB } from "quick.db";
 import { Manager } from "../manager.js";
 import { Handler } from "./handler.js";
 import { AutoReconnect } from "./schema/AutoReconnect.js";

@@ -1,4 +1,4 @@
-import { IQuickDBOptions, QuickDB } from "wace.quick.db";
+import { IQuickDBOptions, QuickDB } from "quick.db";
 import { Collection } from "./Collection.js";
 import cron from "node-cron";
 
@@ -29,7 +29,9 @@ export class QuickDatabasePlus<D = any> extends QuickDB {
   }
 
   async update<T = D>(key: string, object: object): Promise<T> {
-    const res = await super.update(key, object);
+    const existing = ((await super.get<T>(key)) ?? {}) as object;
+    const merged = { ...existing, ...object } as T;
+    const res = await super.set(key, merged);
     this.cache.set(key, res);
     return res;
   }
@@ -102,6 +104,7 @@ export class QuickDatabasePlus<D = any> extends QuickDB {
     return res;
   }
 
+  // @ts-expect-error: override returns Promise<QuickDatabasePlus<T>> vs base QuickDB<T>
   async table<T = D>(table: string): Promise<QuickDatabasePlus<T>> {
     if (typeof table != "string") {
       throw new Error(`First argument (table) needs to be a string received "${typeof table}"`);
@@ -109,7 +112,7 @@ export class QuickDatabasePlus<D = any> extends QuickDB {
     const options = { ...this.newOptions };
     options.table = table;
     options.driver = this.driver;
-    const instance = new QuickDatabasePlus(this.scheduleConfig, options);
+    const instance = new QuickDatabasePlus<T>(this.scheduleConfig, options);
     await instance.driver.prepare(options.table);
     return instance;
   }

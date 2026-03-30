@@ -1,6 +1,6 @@
 import { Manager } from "../../manager.js";
 import { Database } from "../../@types/Config.js";
-import { PostgresDriver } from "wace.quick.db/PostgresDriver";
+import { PostgresDriver } from "./PostgresDriverCompat.js";
 import { TableSetup } from "../table.js";
 import { keyChecker } from "../keyChecker.js";
 

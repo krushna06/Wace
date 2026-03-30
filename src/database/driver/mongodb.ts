@@ -1,6 +1,6 @@
 import { Manager } from "../../manager.js";
 import { Database } from "../../@types/Config.js";
-import { MongoDriver } from "wace.quick.db/MongoDriver";
+import { MongoDriver } from "quick.db";
 import { TableSetup } from "../table.js";
 import { keyChecker } from "../keyChecker.js";
 
