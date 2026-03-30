@@ -8,5 +8,5 @@ import { Manager } from "../manager.js";
  */
 export function getNode(client: Manager): Node | undefined {
   const nodes = [...client.shoukaku.nodes.values()];
-  return nodes.length > 0 ? nodes[0] : undefined;
+  return nodes.find((n) => n.state === 2) ?? (nodes.length > 0 ? nodes[0] : undefined);
 }

@@ -34,19 +34,49 @@ export async function getSearch(
     return;
   }
 
-  const searchQuery = query.startsWith("http") ? query : `${validSource}search:${query}`;
+  const searchQuery = query.startsWith("http") ? query : `${validSource}:${query}`;
   const rawResult = await node.rest.resolve(searchQuery).catch(() => null);
 
-  if (!rawResult || !rawResult.tracks.length) {
+  if (!rawResult || rawResult.loadType === "empty" || rawResult.loadType === "error") {
+    res.code(404);
+    res.send({ error: "No tracks found" });
+    return;
+  }
+
+  let tracks: any[] = [];
+  let playlistName: string | undefined;
+  let resultType: "TRACK" | "PLAYLIST" | "SEARCH" = "SEARCH";
+
+  switch (rawResult.loadType) {
+    case "track":
+      tracks = [rawResult.data];
+      resultType = "TRACK";
+      break;
+    case "playlist":
+      tracks = (rawResult.data as any).tracks ?? [];
+      playlistName = (rawResult.data as any).info?.name;
+      resultType = "PLAYLIST";
+      break;
+    case "search":
+      tracks = rawResult.data as any[];
+      resultType = "SEARCH";
+      break;
+    default:
+      res.code(404);
+      res.send({ error: "No tracks found" });
+      return;
+  }
+
+  if (!tracks.length) {
     res.code(404);
     res.send({ error: "No tracks found" });
     return;
   }
 
   const result = {
-    type: rawResult.playlistInfo?.name ? "PLAYLIST" : (searchQuery.includes("search:") ? "SEARCH" : "TRACK"),
-    playlistName: rawResult.playlistInfo?.name,
-    tracks: rawResult.tracks.map((track) => ({
+    type: resultType,
+    playlistName,
+    tracks: tracks.map((track) => ({
       ...track,
       requester: user,
       duration: track.duration || track.info?.length,
