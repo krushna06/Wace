@@ -4,6 +4,8 @@ import { Manager } from "../../manager.js";
 import { Playlist } from "../../database/schema/Playlist.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
+import { AutocompleteInteractionChoices, GlobalInteraction } from "../../@types/Interaction.js";
+import { CommandInteraction, AutocompleteInteraction } from "discord.js";
 let playlist: Playlist | null;
 
 export default class implements Command {
@@ -25,6 +27,7 @@ export default class implements Command {
       description: "The id of the playlist",
       type: ApplicationCommandOptionType.String,
       required: true,
+      autocomplete: true,
     },
   ];
 
@@ -144,5 +147,43 @@ export default class implements Command {
         }
       }
     }
+  }
+
+  public async autocomplete(client: Manager, interaction: GlobalInteraction, language: string) {
+    let choice: AutocompleteInteractionChoices[] = [];
+    
+    try {
+      // @ts-ignore
+      const idOption = (interaction as CommandInteraction).options.get("id");
+      const focusedValue = String(idOption?.value || "").toLowerCase();
+      
+      const fullList = await client.db.playlist.all();
+      
+      if (fullList && Array.isArray(fullList)) {
+        const userId = (interaction as CommandInteraction).user.id;
+        const userPlaylists = fullList
+          .filter((data: any) => {
+            return data && data.value && data.value.owner === userId;
+          })
+          .map((data: any) => data.value)
+          .filter((playlist: any) => {
+            if (!playlist || !playlist.name || !playlist.id) return false;
+            return playlist.name.toLowerCase().includes(focusedValue) || 
+                   playlist.id.toLowerCase().includes(focusedValue);
+          })
+          .slice(0, 25);
+
+        for (const playlist of userPlaylists) {
+          choice.push({
+            name: playlist.name,
+            value: playlist.id,
+          });
+        }
+      }
+    } catch (error) {
+      client.logger.error("Autocomplete playlist error:", error);
+    }
+
+    await (interaction as AutocompleteInteraction).respond(choice).catch(() => {});
   }
 }

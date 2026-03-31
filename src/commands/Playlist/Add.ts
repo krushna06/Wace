@@ -35,6 +35,7 @@ export default class implements Command {
       description: "The id of the playlist",
       required: true,
       type: ApplicationCommandOptionType.String,
+      autocomplete: true,
     },
     {
       name: "search",
@@ -88,7 +89,17 @@ export default class implements Command {
 
     switch (result.loadType) {
       case "track":
-        tracks = [result.data as any];
+        const trackData = result.data as any;
+        tracks = [{
+          ...trackData,
+          requester: handler.user,
+          duration: trackData.info?.length || trackData.length,
+          title: trackData.info?.title || trackData.title,
+          uri: trackData.info?.uri || trackData.uri,
+          author: trackData.info?.author || trackData.author,
+          artworkUrl: trackData.info?.artworkUrl || trackData.artworkUrl,
+          identifier: trackData.info?.identifier || trackData.identifier,
+        }];
         resultType = "TRACK";
         break;
       case "playlist":
@@ -261,12 +272,13 @@ export default class implements Command {
     tracks: ExtendedTrack[],
     value?: string
   ): string {
-    if (client.config.player.AVOID_SUSPEND) return tracks[0].title;
+    const title = tracks[0]?.title || tracks[0]?.info?.title || "Unknown";
+    if (client.config.player.AVOID_SUSPEND) return title;
     else {
       if (type === "PLAYLIST") {
-        return `[${tracks[0].title}](${value})`;
+        return `[${title}](${value})`;
       } else {
-        return `[${tracks[0].title}](${tracks[0].uri})`;
+        return `[${title}](${tracks[0]?.uri || tracks[0]?.info?.uri || ""})`;
       }
     }
   }
@@ -274,6 +286,46 @@ export default class implements Command {
 
   public async autocomplete(client: Manager, interaction: GlobalInteraction, language: string) {
     let choice: AutocompleteInteractionChoices[] = [];
+    // @ts-ignore
+    const focusedOption = (interaction as CommandInteraction).options.getFocused(true);
+
+    if (focusedOption.name === "id") {
+      try {
+        // @ts-ignore
+        const idOption = (interaction as CommandInteraction).options.get("id");
+        const focusedValue = String(idOption?.value || "").toLowerCase();
+        
+        const fullList = await client.db.playlist.all();
+        
+        if (fullList && Array.isArray(fullList)) {
+          const userId = (interaction as CommandInteraction).user.id;
+          const userPlaylists = fullList
+            .filter((data: any) => {
+              return data && data.value && data.value.owner === userId;
+            })
+            .map((data: any) => data.value)
+            .filter((playlist: any) => {
+              if (!playlist || !playlist.name || !playlist.id) return false;
+              return playlist.name.toLowerCase().includes(focusedValue) || 
+                     playlist.id.toLowerCase().includes(focusedValue);
+            })
+            .slice(0, 25);
+
+          for (const playlist of userPlaylists) {
+            choice.push({
+              name: playlist.name,
+              value: playlist.id,
+            });
+          }
+        }
+      } catch (error) {
+        client.logger.error("Autocomplete playlist error:", error);
+      }
+
+      await (interaction as AutocompleteInteraction).respond(choice).catch(() => {});
+      return;
+    }
+
     // @ts-ignore
     const url = String((interaction as CommandInteraction).options.get("search")!.value);
 

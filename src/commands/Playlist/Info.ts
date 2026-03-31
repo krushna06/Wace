@@ -1,8 +1,10 @@
-import { ApplicationCommandOptionType, EmbedBuilder, Message } from "discord.js";
+import { ApplicationCommandOptionType, EmbedBuilder, Message, CommandInteraction, AutocompleteInteraction } from "discord.js";
 import humanizeDuration from "humanize-duration";
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
+import { AutocompleteInteractionChoices, GlobalInteraction } from "../../@types/Interaction.js";
+import { getPlaylistAutocomplete } from "../../utilities/PlaylistAutocomplete.js";
 
 export default class implements Command {
   public name = ["pl", "info"];
@@ -23,6 +25,7 @@ export default class implements Command {
       description: "The id of the playlist",
       type: ApplicationCommandOptionType.String,
       required: true,
+      autocomplete: true,
     },
   ];
 
@@ -95,5 +98,14 @@ export default class implements Command {
       ])
       .setColor(client.color);
     handler.editReply({ embeds: [embed] });
+  }
+
+  public async autocomplete(client: Manager, interaction: GlobalInteraction, language: string) {
+    // @ts-ignore
+    const idOption = (interaction as CommandInteraction).options.get("id");
+    const focusedValue = String(idOption?.value || "").toLowerCase();
+
+    const choices = await getPlaylistAutocomplete(client, interaction, focusedValue);
+    await (interaction as AutocompleteInteraction).respond(choices).catch(() => {});
   }
 }

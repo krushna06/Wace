@@ -4,10 +4,14 @@ import {
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
+  CommandInteraction,
+  AutocompleteInteraction,
 } from "discord.js";
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
+import { AutocompleteInteractionChoices, GlobalInteraction } from "../../@types/Interaction.js";
+import { getPlaylistAutocomplete } from "../../utilities/PlaylistAutocomplete.js";
 import EventEmitter from "node:events";
 
 export default class implements Command {
@@ -29,6 +33,7 @@ export default class implements Command {
       description: "The id of the playlist",
       required: true,
       type: ApplicationCommandOptionType.String,
+      autocomplete: true,
     },
   ];
 
@@ -124,5 +129,14 @@ export default class implements Command {
       // @ts-ignore
       collector?.removeAllListeners();
     });
+  }
+
+  public async autocomplete(client: Manager, interaction: GlobalInteraction, language: string) {
+    // @ts-ignore
+    const idOption = (interaction as CommandInteraction).options.get("id");
+    const focusedValue = String(idOption?.value || "").toLowerCase();
+
+    const choices = await getPlaylistAutocomplete(client, interaction, focusedValue);
+    await (interaction as AutocompleteInteraction).respond(choices).catch(() => {});
   }
 }

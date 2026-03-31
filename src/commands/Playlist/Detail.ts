@@ -1,10 +1,12 @@
-import { EmbedBuilder, ApplicationCommandOptionType, Message } from "discord.js";
+import { EmbedBuilder, ApplicationCommandOptionType, Message, CommandInteraction, AutocompleteInteraction } from "discord.js";
 import { formatDuration } from "../../utilities/FormatDuration.js";
 import { PageQueue } from "../../structures/PageQueue.js";
 import { Manager } from "../../manager.js";
 import { PlaylistTrack } from "../../database/schema/Playlist.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
+import { AutocompleteInteractionChoices, GlobalInteraction } from "../../@types/Interaction.js";
+import { getPlaylistAutocomplete } from "../../utilities/PlaylistAutocomplete.js";
 
 export default class implements Command {
   public name = ["pl", "detail"];
@@ -25,6 +27,7 @@ export default class implements Command {
       description: "The id of the playlist",
       required: true,
       type: ApplicationCommandOptionType.String,
+      autocomplete: true,
     },
     {
       name: "page",
@@ -180,5 +183,14 @@ export default class implements Command {
     else {
       return `[${tracks.title}](${tracks.uri})`;
     }
+  }
+
+  public async autocomplete(client: Manager, interaction: GlobalInteraction, language: string) {
+    // @ts-ignore
+    const idOption = (interaction as CommandInteraction).options.get("id");
+    const focusedValue = String(idOption?.value || "").toLowerCase();
+
+    const choices = await getPlaylistAutocomplete(client, interaction, focusedValue);
+    await (interaction as AutocompleteInteraction).respond(choices).catch(() => {});
   }
 }
