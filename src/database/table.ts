@@ -10,6 +10,10 @@ import { Language } from "./schema/Language.js";
 import { Prefix } from "./schema/Prefix.js";
 import { SongNoti } from "./schema/SongNoti.js";
 import { QuickDatabasePlus } from "../structures/QuickDatabasePlus.js";
+import { UserRecommendations } from "./schema/UserRecommendations.js";
+import { GameStats } from "./schema/GameStats.js";
+import { LastFMNews } from "./schema/LastFMNews.js";
+import { Achievement } from "./schema/Achievement.js";
 export class TableSetup {
   client: Manager;
   driver: IDriver;
@@ -48,6 +52,10 @@ export class TableSetup {
       guildLastPlayed: await baseDB.table("guildLastPlayed"),
       userLastPlayed: await baseDB.table("userLastPlayed"),
       userPlayHistory: await baseDB.table("userPlayHistory"),
+      userRecommendations: await baseDB.table<UserRecommendations>("userRecommendations"),
+      gameStats: await baseDB.table<GameStats>("gameStats"),
+      lastfmNews: await baseDB.table<LastFMNews>("lastfmNews"),
+      achievement: await baseDB.table<Achievement>("achievement"),
     };
     this.client.isDatabaseConnected = true;
     new Handler(this.client);

@@ -37,6 +37,9 @@ import { TopggService } from "./services/TopggService.js";
 import { Collection } from "./structures/Collection.js";
 import { Localization } from "./structures/Localization.js";
 import { FilterPresets } from "./structures/Filters.js";
+import { AchievementManager } from "./structures/AchievementManager.js";
+import { RecommendationEngine } from "./structures/RecommendationEngine.js";
+import { MusicNewsService } from "./services/MusicNewsService.js";
 config();
 
 export class Manager extends Client {
@@ -77,6 +80,9 @@ export class Manager extends Client {
   public cluster?: ClusterClient<Client>;
   public REGEX: RegExp[];
   public selectMenuOptions: StringSelectMenuOptionBuilder[] = [];
+  public achievementManager!: AchievementManager;
+  public recommendationEngine!: RecommendationEngine;
+  public musicNewsService!: MusicNewsService;
 
   constructor(
     public config: Config,
@@ -156,6 +162,9 @@ export class Manager extends Client {
     this.shoukaku = new ShoukakuInit(this).init;
     this.players = new Map<string, Player>();
     this.playerManager = new PlayerManager(this);
+    this.achievementManager = new AchievementManager(this);
+    this.recommendationEngine = new RecommendationEngine(this);
+    this.musicNewsService = new MusicNewsService(this);
 
 
     const filterOptions = Object.keys(FilterPresets);

@@ -14,6 +14,10 @@ import { SongStats } from "./schema/SongStats.js";
 import { GuildLastPlayed } from "./schema/GuildLastPlayed.js";
 import { UserLastPlayed } from "./schema/UserLastPlayed.js";
 import { UserPlayHistory } from "./schema/UserPlayHistory.js";
+import { UserRecommendations } from "./schema/UserRecommendations.js";
+import { GameStats } from "./schema/GameStats.js";
+import { LastFMNews } from "./schema/LastFMNews.js";
+import { Achievement } from "./schema/Achievement.js";
 export interface LastfmSession {
   discord_id: string;
   session_key: string;
@@ -37,4 +41,8 @@ export interface DatabaseTable {
   guildLastPlayed: QuickDatabasePlus<GuildLastPlayed>;
   userLastPlayed: QuickDatabasePlus<UserLastPlayed>;
   userPlayHistory: QuickDatabasePlus<UserPlayHistory>;
+  userRecommendations: QuickDatabasePlus<UserRecommendations>;
+  gameStats: QuickDatabasePlus<GameStats>;
+  lastfmNews: QuickDatabasePlus<LastFMNews>;
+  achievement: QuickDatabasePlus<Achievement>;
 }
