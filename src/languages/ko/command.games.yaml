@@ -1,0 +1,30 @@
+### Guess The Song command!
+guessthesong_title: "노래 맞추기"
+guessthesong_description: "노래 스니펫이 재생 중입니다...\n노래 제목을 맞춰보세요!"
+guessthesong_time: "맞추기까지 30초가 있습니다"
+guessthesong_correct: "정답!"
+guessthesong_correct_msg: "**%{title}** by **%{artist}**\n\n%{user}가 맞혔습니다!"
+guessthesong_wrong: "오답!"
+guessthesong_wrong_msg: "노래는 **%{title}** by **%{artist}**였습니다"
+guessthesong_no_song: "현재 재생 중인 노래가 없습니다"
+
+### Artist Name Game command!
+artistnamegame_title: "아티스트 맞추기"
+artistnamegame_description: "노래 스니펫이 재생 중입니다...\n아티스트 이름을 맞춰보세요!"
+artistnamegame_time: "맞추기까지 30초가 있습니다"
+artistnamegame_correct: "정답!"
+artistnamegame_correct_msg: "아티스트는 **%{artist}**입니다\n\n%{user}가 맞혔습니다!"
+artistnamegame_wrong: "오답!"
+artistnamegame_wrong_msg: "아티스트는 **%{artist}**입니다"
+artistnamegame_no_song: "현재 재생 중인 노래가 없습니다"
+
+### Game Stats command!
+gamestats_title: "게임 통계 - %{user}"
+gamestats_no_games: "아직 게임을 플레이하지 않았습니다!"
+gamestats_guess_the_song: "노래 맞추기"
+gamestats_artist_name_game: "아티스트 맞추기"
+gamestats_music_trivia: "음악 퀴즈"
+gamestats_played: "플레이됨: **%{played}**"
+gamestats_correct: "정답: **%{correct}**"
+gamestats_accuracy: "정확도: **%{accuracy}%**"
+gamestats_best_streak: "최고 연승: **%{streak}**"

@@ -1,0 +1,19 @@
+### Discover Weekly command!
+discoverweekly_title: "주간 발견 - %{user}"
+discoverweekly_no_recommendations: "아직 추천이 없습니다. 개인화된 추천을 받으려면 더 많은 노래를 재생하세요!"
+discoverweekly_generated: "생성됨: %{date}"
+
+### Spotify Wrapped command!
+spotifywrapped_title: "당신의 2024 래핑 - %{user}"
+spotifywrapped_no_wrapped: "연간 래핑이 아직 준비되지 않았습니다. 계속 듣고 보고서를 생성하세요!"
+spotifywrapped_total_minutes: "총 재생 시간"
+spotifywrapped_total_minutes_value: "**%{minutes}** 분"
+spotifywrapped_top_tracks: "상위 5개 곡"
+spotifywrapped_top_artists: "상위 5개 아티스트"
+spotifywrapped_top_genres: "상위 5개 장르"
+spotifywrapped_generated: "생성됨: %{date}"
+
+### Music News command!
+musicnews_title: "음악 뉴스"
+musicnews_no_news: "사용 가능한 뉴스가 없습니다. Last.FM으로 아티스트를 팔로우하여 업데이트를 받으세요!"
+musicnews_last_updated: "마지막 업데이트: %{date}"

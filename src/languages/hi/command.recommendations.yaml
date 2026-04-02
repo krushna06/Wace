@@ -1,0 +1,19 @@
+### Discover Weekly command!
+discoverweekly_title: "साप्ताहिक खोज - %{user}"
+discoverweekly_no_recommendations: "अभी कोई सिफारिशें उपलब्ध नहीं हैं। व्यक्तिगत सिफारिशें प्राप्त करने के लिए अधिक गाने सुनें!"
+discoverweekly_generated: "उत्पन्न: %{date}"
+
+### Spotify Wrapped command!
+spotifywrapped_title: "आपकी 2024 रैप्ड - %{user}"
+spotifywrapped_no_wrapped: "आपकी वार्षिक रैप्ड अभी तैयार नहीं है। अपनी रिपोर्ट उत्पन्न करने के लिए सुनते रहें!"
+spotifywrapped_total_minutes: "कुल मिनट सुने गए"
+spotifywrapped_total_minutes_value: "**%{minutes}** मिनट"
+spotifywrapped_top_tracks: "शीर्ष 5 गाने"
+spotifywrapped_top_artists: "शीर्ष 5 कलाकार"
+spotifywrapped_top_genres: "शीर्ष 5 शैलियां"
+spotifywrapped_generated: "उत्पन्न: %{date}"
+
+### Music News command!
+musicnews_title: "संगीत समाचार"
+musicnews_no_news: "कोई समाचार उपलब्ध नहीं है। अपडेट प्राप्त करने के लिए Last.FM के साथ कलाकारों का अनुसरण करें!"
+musicnews_last_updated: "अंतिम अपडेट: %{date}"

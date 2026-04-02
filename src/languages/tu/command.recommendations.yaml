@@ -1,0 +1,19 @@
+### Discover Weekly command!
+discoverweekly_title: "Haftalik Kesfet - %{user}"
+discoverweekly_no_recommendations: "Henuz oneriler yok. Kisisellestirilmis oneriler almak icin daha fazla sarki oynatiniz!"
+discoverweekly_generated: "Olusturuldu: %{date}"
+
+### Spotify Wrapped command!
+spotifywrapped_title: "Sizin 2024 Wrapped - %{user}"
+spotifywrapped_no_wrapped: "Yillik wrapped henuz hazir degil. Raporunuzu olusturmak icin dinlemeye devam ediniz!"
+spotifywrapped_total_minutes: "Toplam Dinleme Dakikasi"
+spotifywrapped_total_minutes_value: "**%{minutes}** dakika"
+spotifywrapped_top_tracks: "En Iyi 5 Sarki"
+spotifywrapped_top_artists: "En Iyi 5 Sanatci"
+spotifywrapped_top_genres: "En Iyi 5 Tür"
+spotifywrapped_generated: "Olusturuldu: %{date}"
+
+### Music News command!
+musicnews_title: "Muzik Haberleri"
+musicnews_no_news: "Haber yok. Guncellemeler almak icin Last.FM ile sanatcilari takip ediniz!"
+musicnews_last_updated: "Son Guncelleme: %{date}"

@@ -1,0 +1,30 @@
+### Guess The Song command!
+guessthesong_title: "Guess The Song"
+guessthesong_description: "A song snippet is playing...\nGuess the song title!"
+guessthesong_time: "You have 30 seconds to guess"
+guessthesong_correct: "Correct!"
+guessthesong_correct_msg: "**%{title}** by **%{artist}**\n\n%{user} got it right!"
+guessthesong_wrong: "Wrong!"
+guessthesong_wrong_msg: "The song was **%{title}** by **%{artist}**"
+guessthesong_no_song: "No song is currently playing"
+
+### Artist Name Game command!
+artistnamegame_title: "Guess The Artist"
+artistnamegame_description: "A song snippet is playing...\nGuess the artist name!"
+artistnamegame_time: "You have 30 seconds to guess"
+artistnamegame_correct: "Correct!"
+artistnamegame_correct_msg: "The artist is **%{artist}**\n\n%{user} got it right!"
+artistnamegame_wrong: "Wrong!"
+artistnamegame_wrong_msg: "The artist is **%{artist}**"
+artistnamegame_no_song: "No song is currently playing"
+
+### Game Stats command!
+gamestats_title: "Game Statistics - %{user}"
+gamestats_no_games: "You haven't played any games yet!"
+gamestats_guess_the_song: "Guess The Song"
+gamestats_artist_name_game: "Artist Name Game"
+gamestats_music_trivia: "Music Trivia"
+gamestats_played: "Played: **%{played}**"
+gamestats_correct: "Correct: **%{correct}**"
+gamestats_accuracy: "Accuracy: **%{accuracy}%**"
+gamestats_best_streak: "Best Streak: **%{streak}**"

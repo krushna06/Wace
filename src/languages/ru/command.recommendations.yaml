@@ -1,0 +1,19 @@
+### Discover Weekly command!
+discoverweekly_title: "Еженедельные Открытия - %{user}"
+discoverweekly_no_recommendations: "Рекомендации еще недоступны. Слушайте больше песен, чтобы получить персональные рекомендации!"
+discoverweekly_generated: "Создано: %{date}"
+
+### Spotify Wrapped command!
+spotifywrapped_title: "Ваш Итоговый Отчет 2024 - %{user}"
+spotifywrapped_no_wrapped: "Ваш годовой отчет еще не готов. Продолжайте слушать, чтобы создать свой отчет!"
+spotifywrapped_total_minutes: "Всего Минут Прослушано"
+spotifywrapped_total_minutes_value: "**%{minutes}** минут"
+spotifywrapped_top_tracks: "Топ 5 Песен"
+spotifywrapped_top_artists: "Топ 5 Исполнителей"
+spotifywrapped_top_genres: "Топ 5 Жанров"
+spotifywrapped_generated: "Создано: %{date}"
+
+### Music News command!
+musicnews_title: "Музыкальные Новости"
+musicnews_no_news: "Новости недоступны. Следите за исполнителями через Last.FM, чтобы получать обновления!"
+musicnews_last_updated: "Последнее обновление: %{date}"

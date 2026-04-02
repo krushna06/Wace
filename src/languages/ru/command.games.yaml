@@ -1,0 +1,30 @@
+### Guess The Song command!
+guessthesong_title: "Угадай Песню"
+guessthesong_description: "Воспроизводится отрывок песни...\nУгадайте название песни!"
+guessthesong_time: "У вас есть 30 секунд для угадывания"
+guessthesong_correct: "Правильно!"
+guessthesong_correct_msg: "**%{title}** от **%{artist}**\n\n%{user} угадал правильно!"
+guessthesong_wrong: "Неправильно!"
+guessthesong_wrong_msg: "Песня была **%{title}** от **%{artist}**"
+guessthesong_no_song: "В настоящее время песня не воспроизводится"
+
+### Artist Name Game command!
+artistnamegame_title: "Угадай Исполнителя"
+artistnamegame_description: "Воспроизводится отрывок песни...\nУгадайте имя исполнителя!"
+artistnamegame_time: "У вас есть 30 секунд для угадывания"
+artistnamegame_correct: "Правильно!"
+artistnamegame_correct_msg: "Исполнитель - **%{artist}**\n\n%{user} угадал правильно!"
+artistnamegame_wrong: "Неправильно!"
+artistnamegame_wrong_msg: "Исполнитель - **%{artist}**"
+artistnamegame_no_song: "В настоящее время песня не воспроизводится"
+
+### Game Stats command!
+gamestats_title: "Статистика Игр - %{user}"
+gamestats_no_games: "Вы еще не играли ни в одну игру!"
+gamestats_guess_the_song: "Угадай Песню"
+gamestats_artist_name_game: "Угадай Исполнителя"
+gamestats_music_trivia: "Музыкальная Викторина"
+gamestats_played: "Сыграно: **%{played}**"
+gamestats_correct: "Правильно: **%{correct}**"
+gamestats_accuracy: "Точность: **%{accuracy}%**"
+gamestats_best_streak: "Лучшая Серия: **%{streak}**"

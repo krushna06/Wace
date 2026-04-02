@@ -1,0 +1,30 @@
+### Guess The Song command!
+guessthesong_title: "Devinez La Chanson"
+guessthesong_description: "Un extrait de chanson est en cours de lecture...\nDevinez le titre de la chanson!"
+guessthesong_time: "Vous avez 30 secondes pour deviner"
+guessthesong_correct: "Correct!"
+guessthesong_correct_msg: "**%{title}** par **%{artist}**\n\n%{user} a trouve!"
+guessthesong_wrong: "Incorrect!"
+guessthesong_wrong_msg: "La chanson etait **%{title}** par **%{artist}**"
+guessthesong_no_song: "Aucune chanson n'est actuellement en cours de lecture"
+
+### Artist Name Game command!
+artistnamegame_title: "Devinez L'Artiste"
+artistnamegame_description: "Un extrait de chanson est en cours de lecture...\nDevinez le nom de l'artiste!"
+artistnamegame_time: "Vous avez 30 secondes pour deviner"
+artistnamegame_correct: "Correct!"
+artistnamegame_correct_msg: "L'artiste est **%{artist}**\n\n%{user} a trouve!"
+artistnamegame_wrong: "Incorrect!"
+artistnamegame_wrong_msg: "L'artiste est **%{artist}**"
+artistnamegame_no_song: "Aucune chanson n'est actuellement en cours de lecture"
+
+### Game Stats command!
+gamestats_title: "Statistiques de Jeu - %{user}"
+gamestats_no_games: "Vous n'avez pas encore joue a aucun jeu!"
+gamestats_guess_the_song: "Devinez La Chanson"
+gamestats_artist_name_game: "Devinez L'Artiste"
+gamestats_music_trivia: "Trivia Musical"
+gamestats_played: "Joues: **%{played}**"
+gamestats_correct: "Corrects: **%{correct}**"
+gamestats_accuracy: "Precision: **%{accuracy}%**"
+gamestats_best_streak: "Meilleure Serie: **%{streak}**"

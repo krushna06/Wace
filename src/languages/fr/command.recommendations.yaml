@@ -1,0 +1,19 @@
+### Discover Weekly command!
+discoverweekly_title: "Decouvrez Hebdomadaire - %{user}"
+discoverweekly_no_recommendations: "Aucune recommandation disponible pour le moment. Ecoutez plus de chansons pour obtenir des recommandations personnalisees!"
+discoverweekly_generated: "Genere: %{date}"
+
+### Spotify Wrapped command!
+spotifywrapped_title: "Votre Resume 2024 - %{user}"
+spotifywrapped_no_wrapped: "Votre resume annuel n'est pas encore pret. Continuez a ecouter pour generer votre rapport!"
+spotifywrapped_total_minutes: "Total des Minutes Ecoutees"
+spotifywrapped_total_minutes_value: "**%{minutes}** minutes"
+spotifywrapped_top_tracks: "Top 5 Chansons"
+spotifywrapped_top_artists: "Top 5 Artistes"
+spotifywrapped_top_genres: "Top 5 Genres"
+spotifywrapped_generated: "Genere: %{date}"
+
+### Music News command!
+musicnews_title: "Actualites Musicales"
+musicnews_no_news: "Aucune actualite disponible. Suivez les artistes avec Last.FM pour obtenir des mises a jour!"
+musicnews_last_updated: "Derniere mise a jour: %{date}"

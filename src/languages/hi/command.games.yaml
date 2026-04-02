@@ -1,0 +1,30 @@
+### Guess The Song command!
+guessthesong_title: "गाना अनुमान लगाएं"
+guessthesong_description: "एक गाने का अंश बज रहा है...\nगाने का शीर्षक अनुमान लगाएं!"
+guessthesong_time: "आपके पास अनुमान लगाने के लिए 30 सेकंड हैं"
+guessthesong_correct: "सही!"
+guessthesong_correct_msg: "**%{title}** द्वारा **%{artist}**\n\n%{user} ने सही अनुमान लगाया!"
+guessthesong_wrong: "गलत!"
+guessthesong_wrong_msg: "गाना **%{title}** द्वारा **%{artist}** था"
+guessthesong_no_song: "वर्तमान में कोई गाना नहीं बज रहा है"
+
+### Artist Name Game command!
+artistnamegame_title: "कलाकार अनुमान लगाएं"
+artistnamegame_description: "एक गाने का अंश बज रहा है...\nकलाकार का नाम अनुमान लगाएं!"
+artistnamegame_time: "आपके पास अनुमान लगाने के लिए 30 सेकंड हैं"
+artistnamegame_correct: "सही!"
+artistnamegame_correct_msg: "कलाकार **%{artist}** है\n\n%{user} ने सही अनुमान लगाया!"
+artistnamegame_wrong: "गलत!"
+artistnamegame_wrong_msg: "कलाकार **%{artist}** है"
+artistnamegame_no_song: "वर्तमान में कोई गाना नहीं बज रहा है"
+
+### Game Stats command!
+gamestats_title: "गेम आंकड़े - %{user}"
+gamestats_no_games: "आपने अभी तक कोई गेम नहीं खेला है!"
+gamestats_guess_the_song: "गाना अनुमान लगाएं"
+gamestats_artist_name_game: "कलाकार अनुमान लगाएं"
+gamestats_music_trivia: "संगीत तुच्छ"
+gamestats_played: "खेला गया: **%{played}**"
+gamestats_correct: "सही: **%{correct}**"
+gamestats_accuracy: "सटीकता: **%{accuracy}%**"
+gamestats_best_streak: "सर्वश्रेष्ठ स्ट्रीक: **%{streak}**"

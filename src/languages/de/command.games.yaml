@@ -1,0 +1,30 @@
+### Guess The Song command!
+guessthesong_title: "Lied Erraten"
+guessthesong_description: "Ein Liedausschnitt wird abgespielt...\nErraten Sie den Titel des Liedes!"
+guessthesong_time: "Sie haben 30 Sekunden zum Erraten"
+guessthesong_correct: "Richtig!"
+guessthesong_correct_msg: "**%{title}** von **%{artist}**\n\n%{user} hat es richtig gemacht!"
+guessthesong_wrong: "Falsch!"
+guessthesong_wrong_msg: "Das Lied war **%{title}** von **%{artist}**"
+guessthesong_no_song: "Derzeit wird kein Lied abgespielt"
+
+### Artist Name Game command!
+artistnamegame_title: "Kunstler Erraten"
+artistnamegame_description: "Ein Liedausschnitt wird abgespielt...\nErraten Sie den Namen des Kunstlers!"
+artistnamegame_time: "Sie haben 30 Sekunden zum Erraten"
+artistnamegame_correct: "Richtig!"
+artistnamegame_correct_msg: "Der Kunstler ist **%{artist}**\n\n%{user} hat es richtig gemacht!"
+artistnamegame_wrong: "Falsch!"
+artistnamegame_wrong_msg: "Der Kunstler ist **%{artist}**"
+artistnamegame_no_song: "Derzeit wird kein Lied abgespielt"
+
+### Game Stats command!
+gamestats_title: "Spielstatistiken - %{user}"
+gamestats_no_games: "Du hast noch kein Spiel gespielt!"
+gamestats_guess_the_song: "Lied Erraten"
+gamestats_artist_name_game: "Kunstler Erraten"
+gamestats_music_trivia: "Musik-Trivia"
+gamestats_played: "Gespielt: **%{played}**"
+gamestats_correct: "Richtig: **%{correct}**"
+gamestats_accuracy: "Genauigkeit: **%{accuracy}%**"
+gamestats_best_streak: "Beste Serie: **%{streak}**"

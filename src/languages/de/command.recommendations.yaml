@@ -1,0 +1,19 @@
+### Discover Weekly command!
+discoverweekly_title: "Wochentliche Entdeckungen - %{user}"
+discoverweekly_no_recommendations: "Noch keine Empfehlungen verfugbar. Spielen Sie mehr Lieder ab, um personalisierte Empfehlungen zu erhalten!"
+discoverweekly_generated: "Generiert: %{date}"
+
+### Spotify Wrapped command!
+spotifywrapped_title: "Ihr 2024 Jahresruckblick - %{user}"
+spotifywrapped_no_wrapped: "Ihr jahrlicher Jahresruckblick ist noch nicht bereit. Horen Sie weiter zu, um Ihren Bericht zu generieren!"
+spotifywrapped_total_minutes: "Gesamte Horminuten"
+spotifywrapped_total_minutes_value: "**%{minutes}** Minuten"
+spotifywrapped_top_tracks: "Top 5 Lieder"
+spotifywrapped_top_artists: "Top 5 Kunstler"
+spotifywrapped_top_genres: "Top 5 Genres"
+spotifywrapped_generated: "Generiert: %{date}"
+
+### Music News command!
+musicnews_title: "Musiknachrichten"
+musicnews_no_news: "Keine Nachrichten verfugbar. Folgen Sie Kunstlern mit Last.FM, um Updates zu erhalten!"
+musicnews_last_updated: "Zuletzt aktualisiert: %{date}"

@@ -1,0 +1,30 @@
+### Guess The Song command!
+guessthesong_title: "Sarki Tahmin Et"
+guessthesong_description: "Bir sarki parcasi oynatiliyor...\nSarki basligini tahmin edin!"
+guessthesong_time: "Tahmin etmek icin 30 saniyeniz var"
+guessthesong_correct: "Dogru!"
+guessthesong_correct_msg: "**%{title}** by **%{artist}**\n\n%{user} dogru tahmin etti!"
+guessthesong_wrong: "Yanlis!"
+guessthesong_wrong_msg: "Sarki **%{title}** by **%{artist}** idi"
+guessthesong_no_song: "Sunuanda oynatilan sarki yok"
+
+### Artist Name Game command!
+artistnamegame_title: "Sanatci Tahmin Et"
+artistnamegame_description: "Bir sarki parcasi oynatiliyor...\nSanatci adini tahmin edin!"
+artistnamegame_time: "Tahmin etmek icin 30 saniyeniz var"
+artistnamegame_correct: "Dogru!"
+artistnamegame_correct_msg: "Sanatci **%{artist}**\n\n%{user} dogru tahmin etti!"
+artistnamegame_wrong: "Yanlis!"
+artistnamegame_wrong_msg: "Sanatci **%{artist}**"
+artistnamegame_no_song: "Sunuanda oynatilan sarki yok"
+
+### Game Stats command!
+gamestats_title: "Oyun Istatistikleri - %{user}"
+gamestats_no_games: "Henuz hic oyun oynamadiniz!"
+gamestats_guess_the_song: "Sarki Tahmin Et"
+gamestats_artist_name_game: "Sanatci Tahmin Et"
+gamestats_music_trivia: "Muzik Bilgisi"
+gamestats_played: "Oynandi: **%{played}**"
+gamestats_correct: "Dogru: **%{correct}**"
+gamestats_accuracy: "Dogruluk: **%{accuracy}%**"
+gamestats_best_streak: "En Iyi Seri: **%{streak}**"
