@@ -5,6 +5,9 @@ export default class {
   async execute(client: Manager) {
     client.logger.info("ClientReady", `Logged in ${client.user!.tag}`);
 
+    const inviteLink = `https://discord.com/oauth2/authorize?client_id=${client.user!.id}&permissions=8&scope=bot%20applications.commands`;
+    client.logger.info("ClientReady", `Invite link: ${inviteLink}`);
+
     const activityName = client.config.bot.PRESENCE.activity_name.replace("${version}", client.metadata?.version || "unknown");
 
     client.user!.setPresence({

@@ -102,16 +102,45 @@ utilities:
   DASHBOARD_URL: "https://localhost:3001"
 
   # Database services config
+  # Note: If you enter an invalid driver, bot will use json driver as default
+  # Available drivers: json, mysql, mongodb, postgres
+  # Cache cleaning reduces memory usage over time.
+  # Uses node-cron syntax: https://github.com/node-cron/node-cron?tab=readme-ov-file#allowed-fields
+  # Set cacheCleanSchedule to "DISABLE" to turn off caching entirely.
+
+  # --- JSON (default, no setup required) ---
   DATABASE:
-    # Note: If you enter an invalid driver, bot will use json driver as default
-    driver: "json" # mongodb, mysql, json, postgres
-    # Config depends on driver, you can see sample config at src/database/driver
-    config: { path: "./wace.database.json" }
-    # Cache cleaning for reduce memory
-    # This feature have the same API with this link below
-    # https://github.com/node-cron/node-cron?tab=readme-ov-file#allowed-fields
-    # You can disable caching by using DISABLE string
+    driver: "json"
+    config:
+      path: "./wace.database.json"
     cacheCleanSchedule: "0 */30 * * * *"
+
+  # --- MySQL ---
+  # DATABASE:
+  #   driver: "mysql"
+  #   config:
+  #     host: "localhost"
+  #     user: "wace_user"
+  #     password: "Waceuser@2026!"
+  #     database: "wace_database"
+  #   cacheCleanSchedule: "0 */30 * * * *"
+
+  # --- MongoDB ---
+  # DATABASE:
+  #   driver: "mongodb"
+  #   config:
+  #     uri: "mongodb://127.0.0.1:27017/wace"
+  #   cacheCleanSchedule: "0 */30 * * * *"
+
+  # --- PostgreSQL ---
+  # DATABASE:
+  #   driver: "postgres"
+  #   config:
+  #     host: "localhost"
+  #     user: "your_user"
+  #     password: "your_password"
+  #     database: "your_db_name"
+  #   cacheCleanSchedule: "0 */30 * * * *"
 
   # Msg content for bot using prefix command and setup
   MESSAGE_CONTENT:
