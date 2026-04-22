@@ -50,9 +50,19 @@ export default class implements Command {
       .setPlaceholder(client.i18n.get(handler.language, "help", "choose_category"))
       .addOptions(menuOptions);
 
+    const showSourceCodeButton = true;
+    const showInviteButton = true;
+    const showSupportButton = true;
+    const showDonateButton = true;
+    const showDashboardButton = true;
+
     const buttons: ButtonBuilder[] = [];
 
-    if (client.config.bot.SOURCE_CODE_LINK && client.config.bot.SOURCE_CODE_LINK.trim() !== "") {
+    if (
+      showSourceCodeButton &&
+      client.config.bot.SOURCE_CODE_LINK &&
+      client.config.bot.SOURCE_CODE_LINK.trim() !== ""
+    ) {
       buttons.push(
         new ButtonBuilder()
           .setLabel(client.i18n.get(handler.language, "help", "source_code_label"))
@@ -61,14 +71,20 @@ export default class implements Command {
       );
     }
 
-    buttons.push(
-      new ButtonBuilder()
-        .setLabel(client.i18n.get(handler.language, "help", "invite_label"))
-        .setStyle(ButtonStyle.Link)
-        .setURL(`https://discord.com/oauth2/authorize?client_id=${client.user?.id}`)
-    );
+    if (showInviteButton) {
+      buttons.push(
+        new ButtonBuilder()
+          .setLabel(client.i18n.get(handler.language, "help", "invite_label"))
+          .setStyle(ButtonStyle.Link)
+          .setURL(`https://discord.com/oauth2/authorize?client_id=${client.user?.id}`)
+      );
+    }
 
-    if (client.config.bot.SUPPORT_LINK && client.config.bot.SUPPORT_LINK.trim() !== "") {
+    if (
+      showSupportButton &&
+      client.config.bot.SUPPORT_LINK &&
+      client.config.bot.SUPPORT_LINK.trim() !== ""
+    ) {
       buttons.push(
         new ButtonBuilder()
           .setLabel(client.i18n.get(handler.language, "help", "support_label"))
@@ -77,12 +93,24 @@ export default class implements Command {
       );
     }
 
-    buttons.push(
-      new ButtonBuilder()
-        .setStyle(ButtonStyle.Secondary)
-        .setLabel(client.i18n.get(handler.language, "help", "donate_label"))
-        .setCustomId("donate")
-    );
+    let dashboardButton: ButtonBuilder | null = null;
+    const dashboardUrl = client.config.utilities.DASHBOARD_URL;
+    if (showDashboardButton && dashboardUrl && dashboardUrl.trim() !== "") {
+      dashboardButton = new ButtonBuilder()
+        .setLabel("Music Controller")
+        .setStyle(ButtonStyle.Link)
+        .setURL(dashboardUrl.replace(/\/$/, "") + `/guild/${handler.guild?.id ?? ""}`);
+      buttons.push(dashboardButton);
+    }
+
+    if (showDonateButton) {
+      buttons.push(
+        new ButtonBuilder()
+          .setStyle(ButtonStyle.Secondary)
+          .setLabel(client.i18n.get(handler.language, "help", "donate_label"))
+          .setCustomId("donate")
+      );
+    }
 
     const initialEmbed = new EmbedBuilder()
       .setDescription(client.i18n.get(handler.language, "help", "help_menu"))
@@ -105,24 +133,16 @@ export default class implements Command {
       .setColor(client.color);
 
     const row = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(selectMenu);
-    let dashboardButton = null;
-    const dashboardUrl = client.config.utilities.DASHBOARD_URL;
-    if (dashboardUrl && dashboardUrl.trim() !== "") {
-      const url = dashboardUrl.replace(/\/$/, "") + `/guild/${handler.guild?.id ?? ""}`;
-      dashboardButton = new ButtonBuilder()
-        .setLabel("Music Controller")
-        .setStyle(ButtonStyle.Link)
-        .setURL(url);
-    }
 
-    const buttonRow = new ActionRowBuilder<ButtonBuilder>().addComponents(buttons);
-    if (dashboardButton) {
-      buttonRow.addComponents(dashboardButton);
+    const components: Array<ActionRowBuilder<StringSelectMenuBuilder> | ActionRowBuilder<ButtonBuilder>> = [row];
+    if (buttons.length > 0) {
+      const buttonRow = new ActionRowBuilder<ButtonBuilder>().addComponents(buttons);
+      components.push(buttonRow);
     }
 
     const initialMessage = await handler.editReply({
       embeds: [initialEmbed],
-      components: [row, buttonRow],
+      components,
     });
 
     const filter = (i) => i.customId === "select-category" && i.user.id === handler.user.id;
@@ -136,7 +156,7 @@ export default class implements Command {
       embed.setTitle(`Commands in ${selectedCategory.toUpperCase()}`);
       await i.update({
         embeds: [embed],
-        components: [row, buttonRow],
+        components,
       });
     });
 
