@@ -23,9 +23,12 @@ bot:
   # Bot presence/status configuration
   # status: online, idle, dnd, invisible
   # activity_type: 0 = Playing, 1 = Streaming, 2 = Listening, 3 = Watching, 4 = Custom, 5 = Competing
+  # activity_name can be a single string or a list for rotating status (changes every 5 seconds)
   PRESENCE:
     status: "online"
-    activity_name: "v${version} | /play"
+    activity_name:
+      - "v${version} | /play"
+      - "/help | wace bot"
     activity_type: 2
 
 player:

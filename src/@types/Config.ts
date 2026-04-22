@@ -27,7 +27,7 @@ export interface Bot {
 }
 export interface BotPresence {
   status: "online" | "idle" | "dnd" | "invisible";
-  activity_name: string;
+  activity_name: string | string[];
   activity_type: 0 | 1 | 2 | 3 | 4 | 5;
 }
 export interface Utilities {

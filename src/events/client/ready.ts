@@ -8,17 +8,27 @@ export default class {
     const inviteLink = `https://discord.com/oauth2/authorize?client_id=${client.user!.id}&permissions=8&scope=bot%20applications.commands`;
     client.logger.info("ClientReady", `Invite link: ${inviteLink}`);
 
-    const activityName = client.config.bot.PRESENCE.activity_name.replace("${version}", client.metadata?.version || "unknown");
+    const version = client.metadata?.version || "unknown";
+    const rawNames = client.config.bot.PRESENCE.activity_name;
+    const activityNames = (Array.isArray(rawNames) ? rawNames : [rawNames])
+      .map((n) => n.replace("${version}", version));
 
-    client.user!.setPresence({
-      activities: [
-        {
-          name: activityName,
-          type: client.config.bot.PRESENCE.activity_type,
-        },
-      ],
-      status: client.config.bot.PRESENCE.status,
-    });
+    const setActivity = (name: string) => {
+      client.user!.setPresence({
+        activities: [{ name, type: client.config.bot.PRESENCE.activity_type }],
+        status: client.config.bot.PRESENCE.status,
+      });
+    };
+
+    setActivity(activityNames[0]);
+
+    if (activityNames.length > 1) {
+      let index = 1;
+      setInterval(() => {
+        setActivity(activityNames[index % activityNames.length]);
+        index++;
+      }, 5000);
+    }
 
     if (client.config.utilities.TOPGG_TOKEN && client.config.utilities.TOPGG_TOKEN.length !== 0) {
       const topgg = new TopggService(client);
