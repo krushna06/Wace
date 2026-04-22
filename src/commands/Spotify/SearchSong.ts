@@ -74,8 +74,8 @@ export default class implements Command {
                 { name: "Album:", value: `**From the album: [${track.album.name}](${track.album.external_urls.spotify})**` },
                 { name: "Total Tracks:", value: track.album.total_tracks ? track.album.total_tracks.toString() : "N/A", inline: true },
               ],
+              components: [actionRow],
             }),
-            actionRow,
           ],
         });
 

@@ -71,8 +71,8 @@ export default class implements Command {
             { name: "Join Date (Server)", value: joinDateServerUnix ? `<t:${joinDateServerUnix}:F>` : "N/A", inline: true },
             { name: "Join Date (Discord)", value: `<t:${joinDateDiscordUnix}:F>`, inline: true },
           ],
+          components: [row],
         }),
-        row,
       ],
     });
 
@@ -89,6 +89,23 @@ export default class implements Command {
       }
     });
 
-    collector?.on("end", async () => { await handler.editReply({ components: [] }); });
+    collector?.on("end", async () => {
+      await handler.editReply({
+        flags: CV2_FLAG,
+        components: [
+          cv2.build({
+            author: targetUser.username,
+            thumbnail: userAvatar,
+            color: client.color,
+            timestamp: true,
+            fields: [
+              { name: "User Name", value: targetUser.username, inline: true },
+              { name: "Join Date (Server)", value: joinDateServerUnix ? `<t:${joinDateServerUnix}:F>` : "N/A", inline: true },
+              { name: "Join Date (Discord)", value: `<t:${joinDateDiscordUnix}:F>`, inline: true },
+            ],
+          }),
+        ],
+      }).catch(() => {});
+    });
   }
 }

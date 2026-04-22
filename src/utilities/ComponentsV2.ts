@@ -7,6 +7,7 @@ import {
   SeparatorSpacingSize,
   MessageFlags,
   resolveColor,
+  ActionRowBuilder,
 } from "discord.js";
 import type { ColorResolvable } from "discord.js";
 
@@ -35,6 +36,8 @@ export interface EmbedLikeOptions {
   footer?: string;
   /** Timestamp appended to footer. */
   timestamp?: boolean;
+  /** Action rows (buttons/selects) to nest inside the container. */
+  components?: ActionRowBuilder<any>[];
 }
 
 function resolveAccentColor(color?: ColorResolvable): number | undefined {
@@ -114,6 +117,13 @@ export function buildEmbed(options: EmbedLikeOptions): ContainerBuilder {
     container.addTextDisplayComponents(
       new TextDisplayBuilder().setContent(`-# ${footerParts.join(" • ")}`)
     );
+  }
+
+  if (options.components && options.components.length > 0) {
+    container.addSeparatorComponents(
+      new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small)
+    );
+    container.addActionRowComponents(...options.components);
   }
 
   return container;

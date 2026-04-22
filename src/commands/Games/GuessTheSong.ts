@@ -44,8 +44,8 @@ export default class GuessTheSong extends Command {
           description: "A song snippet is playing...\nGuess the song title!",
           footer: "You have 30 seconds to guess",
           color: client.color,
+          components: [buttons],
         }),
-        buttons,
       ],
     });
 

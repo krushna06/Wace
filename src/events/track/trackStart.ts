@@ -155,6 +155,7 @@ export default class {
       thumbnail: track.info.artworkUrl ?? `https://img.youtube.com/vi/${track.identifier}/hqdefault.jpg`,
       fields: embedFields,
       timestamp: true,
+      components: [filterSelect(client), playerRowOne(client), playerRowTwo(client)],
     });
 
     const playing_channel = (await client.channels
@@ -168,24 +169,18 @@ export default class {
       try {
         nplaying = await existingNplaying.msg.edit({
           flags: CV2_FLAG,
-          components: [embeded, filterSelect(client), playerRowOne(client), playerRowTwo(client)],
+          components: [embeded],
         });
         if (existingNplaying.coll) existingNplaying.coll.stop();
         if (existingNplaying.filterColl) existingNplaying.filterColl.stop();
       } catch (error) {
         nplaying = playing_channel
-          ? await playing_channel.send({
-              flags: CV2_FLAG,
-              components: [embeded, filterSelect(client), playerRowOne(client), playerRowTwo(client)],
-            })
+          ? await playing_channel.send({ flags: CV2_FLAG, components: [embeded] })
           : undefined;
       }
     } else {
       nplaying = playing_channel
-        ? await playing_channel.send({
-            flags: CV2_FLAG,
-            components: [embeded, filterSelect(client), playerRowOne(client), playerRowTwo(client)],
-          })
+        ? await playing_channel.send({ flags: CV2_FLAG, components: [embeded] })
         : undefined;
     }
 

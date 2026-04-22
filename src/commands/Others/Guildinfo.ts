@@ -64,8 +64,8 @@ export default class implements Command {
           color: client.color,
           timestamp: true,
           description: `**Server Name:** ${guild.name}\n**Server ID:** ${guild.id}\n**Owner:** ${ownerName}\n**Verify Level:** ${guild.verificationLevel}\n**Boost Tier:** ${guild.premiumTier}\n**Boost Count:** ${guild.premiumSubscriptionCount}\n**Created On:** <t:${Math.floor(guild.createdAt.getTime() / 1000)}:F>`,
+          components: [row],
         }),
-        row,
       ],
     });
 
@@ -93,7 +93,21 @@ export default class implements Command {
       await i.reply({ flags: CV2_FLAG, components: [cv2.build({ title, description, color: client.color, timestamp: true })], ephemeral: true });
     });
 
-    collector?.on("end", async () => { await handler.editReply({ components: [] }); });
+    collector?.on("end", async () => {
+      await handler.editReply({
+        flags: CV2_FLAG,
+        components: [
+          cv2.build({
+            author: guild.name,
+            title: "Guild Information",
+            thumbnail: guild.iconURL({ size: 2048 }) || undefined,
+            color: client.color,
+            timestamp: true,
+            description: `**Server Name:** ${guild.name}\n**Server ID:** ${guild.id}\n**Owner:** ${ownerName}\n**Verify Level:** ${guild.verificationLevel}\n**Boost Tier:** ${guild.premiumTier}\n**Boost Count:** ${guild.premiumSubscriptionCount}\n**Created On:** <t:${Math.floor(guild.createdAt.getTime() / 1000)}:F>`,
+          }),
+        ],
+      }).catch(() => {});
+    });
   }
 
   private getMemberInfo(guild: Guild): string {

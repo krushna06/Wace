@@ -82,12 +82,19 @@ export default class implements Command {
     const initialMessage = await handler.editReply({
       flags: CV2_FLAG,
       components: [
-        cv2.build({ title: "Host Information", description: hostInfo, color: client.color }),
-        actionRow,
+        cv2.build({
+          title: "Host Information",
+          description: hostInfo,
+          color: client.color,
+          components: [actionRow],
+        }),
       ],
     });
 
     let currentPage = "hostInfo";
+
+    const buildPage = (title: string, description: string, row: ActionRowBuilder<ButtonBuilder>) =>
+      cv2.build({ title, description, color: client.color, components: [row] });
 
     const filter = (i) => i.user.id === handler.user.id;
     // @ts-ignore
@@ -98,32 +105,14 @@ export default class implements Command {
 
       if (i.customId === "home") {
         currentPage = "hostInfo";
-        await i.editReply({
-          flags: CV2_FLAG,
-          components: [
-            cv2.build({ title: "Host Information", description: hostInfo, color: client.color }),
-            actionRow,
-          ],
-        });
+        await i.editReply({ flags: CV2_FLAG, components: [buildPage("Host Information", hostInfo, actionRow)] });
       } else if (i.customId === "prev" || i.customId === "next") {
         if (currentPage === "hostInfo") {
           currentPage = "botInfo";
-          await i.editReply({
-            flags: CV2_FLAG,
-            components: [
-              cv2.build({ title: "Bot Information", description: botInfo, color: client.color }),
-              actionRow,
-            ],
-          });
-        } else if (currentPage === "botInfo") {
+          await i.editReply({ flags: CV2_FLAG, components: [buildPage("Bot Information", botInfo, actionRow)] });
+        } else {
           currentPage = "hostInfo";
-          await i.editReply({
-            flags: CV2_FLAG,
-            components: [
-              cv2.build({ title: "Host Information", description: hostInfo, color: client.color }),
-              actionRow,
-            ],
-          });
+          await i.editReply({ flags: CV2_FLAG, components: [buildPage("Host Information", hostInfo, actionRow)] });
         }
       }
     });
@@ -136,14 +125,11 @@ export default class implements Command {
 
     collector.on("end", async () => {
       try {
-        const lastPage = currentPage === "hostInfo"
-          ? cv2.build({ title: "Host Information", description: hostInfo, color: client.color })
-          : cv2.build({ title: "Bot Information", description: botInfo, color: client.color });
-        await initialMessage.edit({ flags: CV2_FLAG, components: [lastPage, disabledRow] });
+        const title = currentPage === "hostInfo" ? "Host Information" : "Bot Information";
+        const description = currentPage === "hostInfo" ? hostInfo : botInfo;
+        await initialMessage.edit({ flags: CV2_FLAG, components: [buildPage(title, description, disabledRow)] });
       } catch (error) {
-        if (error.code !== 10008) {
-          console.error("Failed to edit the message:", error);
-        }
+        if (error.code !== 10008) console.error("Failed to edit the message:", error);
       }
     });
   }

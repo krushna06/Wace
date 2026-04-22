@@ -57,8 +57,11 @@ export default class implements Command {
       const msg = await handler.editReply({
         flags: CV2_FLAG,
         components: [
-          cv2.simple(`${client.i18n.get(handler.language, "command.playlist", "delete_confirm", { playlist_id: value })}`, client.color),
-          action,
+          cv2.build({
+            description: `${client.i18n.get(handler.language, "command.playlist", "delete_confirm", { playlist_id: value })}`,
+            color: client.color,
+            components: [action],
+          }),
         ],
       });
 

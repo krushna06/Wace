@@ -84,8 +84,8 @@ export default class implements Command {
                   { name: "Total Albums", value: totalAlbums.toLocaleString(), inline: true },
                   { name: "Spotify", value: `[Link](${artist.external_urls.spotify})`, inline: true },
                 ],
+                components: [row],
               }),
-              row,
             ],
           });
         };

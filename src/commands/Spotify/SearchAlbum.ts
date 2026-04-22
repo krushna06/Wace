@@ -68,8 +68,8 @@ export default class implements Command {
               color: client.color,
               timestamp: true,
               fields: [{ name: "Total Tracks:", value: album.total_tracks ? album.total_tracks.toString() : "N/A", inline: true }],
+              components: [actionRow],
             }),
-            actionRow,
           ],
         });
 
