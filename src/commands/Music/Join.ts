@@ -1,7 +1,7 @@
-import { EmbedBuilder } from "discord.js";
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 
 export default class implements Command {
   public name = ["join"];
@@ -23,11 +23,8 @@ export default class implements Command {
     const { channel } = handler.member!.voice;
     if (!channel)
       return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${client.i18n.get(handler.language, "error", "no_in_voice")}`)
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "error", "no_in_voice")}`, client.color)],
       });
 
     let player = client.players.get(handler.guild!.id);
@@ -47,38 +44,23 @@ export default class implements Command {
 
     player.textId = handler.channel!.id;
 
-    const embed = new EmbedBuilder()
-      .setDescription(
-        `${client.i18n.get(handler.language, "command.music", "join_msg", {
-          channel: String(channel),
-        })}`
-      )
-      .setColor(client.color);
-
-    handler.editReply({ content: " ", embeds: [embed] });
+    handler.editReply({
+      flags: CV2_FLAG,
+      components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "join_msg", { channel: String(channel) })}`, client.color)],
+    });
   }
 
   checkSameVoice(client: Manager, handler: CommandHandler, language: string) {
     if (handler.member!.voice.channel !== handler.guild!.members.me!.voice.channel) {
       handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${client.i18n.get(handler.language, "error", "no_same_voice")}`)
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "error", "no_same_voice")}`, client.color)],
       });
       return false;
     } else if (handler.member!.voice.channel === handler.guild!.members.me!.voice.channel) {
       handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(
-              `${client.i18n.get(handler.language, "command.music", "join_already", {
-                channel: String(handler.member!.voice.channel),
-              })}`
-            )
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "join_already", { channel: String(handler.member!.voice.channel) })}`, client.color)],
       });
       return false;
     }

@@ -1,9 +1,10 @@
 import { Manager } from "../../manager.js";
-import { EmbedBuilder, TextChannel } from "discord.js";
+import { TextChannel } from "discord.js";
 import { formatDuration } from "../../utilities/FormatDuration.js";
 import { Player } from "../../structures/Player.js";
 import { getTitle } from "../../utilities/GetTitle.js";
 import { filterSelect } from "../../utilities/PlayerControlButton.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 
 export class PlayerUpdateLoader {
   client: Manager;
@@ -60,39 +61,28 @@ export class PlayerUpdateLoader {
         dashboardGuildUrl = `${dashboardUrl}/guild/${player.guildId}`;
       }
 
-      let embed = new EmbedBuilder()
-        .setAuthor({
-          name: `${client.i18n.get(language, "event.setup", "setup_author")}`,
-          iconURL: `${client.i18n.get(language, "event.setup", "setup_author_icon")}`,
-        })
-        .setDescription(
-          `${client.i18n.get(language, "event.setup", "setup_desc", {
-            title: getTitle(client, cSong!),
-            duration: formatDuration(cSong!.duration),
-            request: `${cSong!.requester}`,
-          })}`
-        )
-        .setColor(client.color)
-        .setImage(
-          `${
-            cSong!.artworkUrl
-              ? cSong!.artworkUrl
-              : `https://cdn.discordapp.com/avatars/${client.user!.id}/${client.user!.avatar}.jpeg?size=300`
-          }`
-        )
-        .setFooter({
-          text: `${client.i18n.get(language, "event.setup", "setup_footer", {
-            volume: `${player.volume}`,
-            duration: qDuration,
-          })}`,
-        });
+      const fields = [];
       if (dashboardGuildUrl) {
-        embed.addFields({
-          name: `Dashboard`,
-          value: `[Music Controller](${dashboardGuildUrl})`,
-          inline: false,
-        });
+        fields.push({ name: "Dashboard", value: `[Music Controller](${dashboardGuildUrl})` });
       }
+
+      const embed = cv2.build({
+        color: client.color,
+        author: `${client.i18n.get(language, "event.setup", "setup_author")}`,
+        description: `${client.i18n.get(language, "event.setup", "setup_desc", {
+          title: getTitle(client, cSong!),
+          duration: formatDuration(cSong!.duration),
+          request: `${cSong!.requester}`,
+        })}`,
+        thumbnail: cSong!.artworkUrl
+          ? cSong!.artworkUrl
+          : `https://cdn.discordapp.com/avatars/${client.user!.id}/${client.user!.avatar}.jpeg?size=300`,
+        fields,
+        footer: `${client.i18n.get(language, "event.setup", "setup_footer", {
+          volume: `${player.volume}`,
+          duration: qDuration,
+        })}`,
+      });
 
       const queueString = `${client.i18n.get(language, "event.setup", "setup_content")}\n${
         Str == "" ? " " : "\n" + Str
@@ -100,17 +90,13 @@ export class PlayerUpdateLoader {
 
       return await playMsg
         .edit({
+          flags: CV2_FLAG,
           content: player.current && player.queue.length == 0 ? " " : queueString,
-          embeds: [embed],
-          components: [client.enSwitchMod, filterSelect(client)],
+          components: [embed, client.enSwitchMod, filterSelect(client)],
         })
         .catch(() => {});
     };
 
-    /**
-     *
-     * @param {Player} player
-     */
     client.UpdateMusic = async function (player: Player) {
       let data = await client.db.setup.get(`${player.guildId}`);
       if (!data) return;
@@ -133,20 +119,17 @@ export class PlayerUpdateLoader {
 
       const queueMsg = `${client.i18n.get(language, "event.setup", "setup_queuemsg")}`;
 
-      const playEmbed = new EmbedBuilder()
-        .setColor(client.color)
-        .setAuthor({
-          name: `${client.i18n.get(language, "event.setup", "setup_playembed_author")}`,
-        })
-        .setImage(
-          `https://cdn.discordapp.com/avatars/${client.user!.id}/${client.user!.avatar}.jpeg?size=300`
-        );
+      const playEmbed = cv2.build({
+        color: client.color,
+        author: `${client.i18n.get(language, "event.setup", "setup_playembed_author")}`,
+        thumbnail: `https://cdn.discordapp.com/avatars/${client.user!.id}/${client.user!.avatar}.jpeg?size=300`,
+      });
 
       return await playMsg
         .edit({
+          flags: CV2_FLAG,
           content: `${queueMsg}`,
-          embeds: [playEmbed],
-          components: [client.diSwitch],
+          components: [playEmbed, client.diSwitch],
         })
         .catch(() => {});
     };

@@ -1,5 +1,5 @@
 import { Manager } from "../../manager.js";
-import { EmbedBuilder, Message, GuildMember, TextChannel } from "discord.js";
+import { Message, GuildMember, TextChannel } from "discord.js";
 import { GlobalInteraction } from "../../@types/Interaction.js";
 import { ButtonPrevious } from "./ButtonCommands/Previous.js";
 import { ButtonSkip } from "./ButtonCommands/Skip.js";
@@ -9,6 +9,7 @@ import { ButtonPause } from "./ButtonCommands/Pause.js";
 import { RateLimitManager } from "@sapphire/ratelimits";
 import { convertTime } from "../../utilities/ConvertTime.js";
 import { getTitle } from "../../utilities/GetTitle.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 const rateLimitManager = new RateLimitManager(2000);
 
 /**
@@ -65,24 +66,18 @@ export class PlayerContentLoader {
       }
 
       if (player.data.get("filter-mode") == filterMode) {
-        const embed = new EmbedBuilder()
-          .setDescription(
-            `${client.i18n.get(language, "button.music", "filter_already", { name: filterMode })}`
-          )
-          .setColor(client.color);
         await interaction.reply({
-          embeds: [embed],
+          flags: CV2_FLAG,
+          components: [cv2.simple(`${client.i18n.get(language, "button.music", "filter_already", { name: filterMode })}`, client.color)],
           ephemeral: true,
         });
         return;
       }
 
       if (filterMode == "clear" && !player.data.get("filter-mode")) {
-        const embed = new EmbedBuilder()
-          .setDescription(`${client.i18n.get(language, "button.music", "reset_already")}`)
-          .setColor(client.color);
         await interaction.reply({
-          embeds: [embed],
+          flags: CV2_FLAG,
+          components: [cv2.simple(`${client.i18n.get(language, "button.music", "reset_already")}`, client.color)],
           ephemeral: true,
         });
         return;
@@ -93,16 +88,11 @@ export class PlayerContentLoader {
         : player.data.set("filter-mode", filterMode);
       filterMode == "clear" ? await player.filters.clear() : await player.filters.set(filterMode);
 
-      const embed = new EmbedBuilder()
-        .setDescription(
-          filterMode == "clear"
-            ? `${client.i18n.get(language, "button.music", "reset_on")}`
-            : `${client.i18n.get(language, "button.music", "filter_on", { name: filterMode })}`
-        )
-        .setColor(client.color);
-
       await interaction.reply({
-        embeds: [embed],
+        flags: CV2_FLAG,
+        components: [cv2.simple(filterMode == "clear"
+          ? `${client.i18n.get(language, "button.music", "reset_on")}`
+          : `${client.i18n.get(language, "button.music", "filter_on", { name: filterMode })}`, client.color)],
         ephemeral: true,
       });
       return;
@@ -184,11 +174,8 @@ export class PlayerContentLoader {
     if (!voiceChannel)
       // @ts-ignore
       return message.channel.send({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${client.i18n.get(language, "error", "no_in_voice")}`)
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(language, "error", "no_in_voice")}`, client.color)],
       });
 
     let msg = await message.channel.messages.fetch(database!.playmsg).catch(() => undefined);
@@ -197,11 +184,8 @@ export class PlayerContentLoader {
 
     if (emotes(song) !== null) {
       msg?.reply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${client.i18n.get(language, "event.setup", "play_emoji")}`)
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(language, "event.setup", "play_emoji")}`, client.color)],
       });
       return;
     }
@@ -218,11 +202,8 @@ export class PlayerContentLoader {
     else {
       if (message.member!.voice.channel !== message.guild!.members.me!.voice.channel) {
         msg?.reply({
-          embeds: [
-            new EmbedBuilder()
-              .setDescription(`${client.i18n.get(language, "error", "no_same_voice")}`)
-              .setColor(client.color),
-          ],
+          flags: CV2_FLAG,
+          components: [cv2.simple(`${client.i18n.get(language, "error", "no_same_voice")}`, client.color)],
         });
         return;
       }
@@ -259,37 +240,33 @@ export class PlayerContentLoader {
     if (!player.playing) player.play();
 
     if (result.type === "PLAYLIST") {
-      const embed = new EmbedBuilder()
-        .setDescription(
-          `${client.i18n.get(language, "event.setup", "play_playlist", {
-            title: getTitle(client, result.tracks[0]),
-            duration: convertTime(TotalDuration),
-            songs: `${result.tracks.length}`,
-            request: `${result.tracks[0].requester}`,
-          })}`
-        )
-        .setColor(client.color);
-      msg?.reply({ content: " ", embeds: [embed] });
+      msg?.reply({
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(language, "event.setup", "play_playlist", {
+          title: getTitle(client, result.tracks[0]),
+          duration: convertTime(TotalDuration),
+          songs: `${result.tracks.length}`,
+          request: `${result.tracks[0].requester}`,
+        })}`, client.color)],
+      });
     } else if (result.type === "TRACK") {
-      const embed = new EmbedBuilder()
-        .setDescription(
-          `${client.i18n.get(language, "event.setup", "play_track", {
-            title: getTitle(client, result.tracks[0]),
-            duration: convertTime(result.tracks[0].duration as number),
-            request: `${result.tracks[0].requester}`,
-          })}`
-        )
-        .setColor(client.color);
-      msg?.reply({ content: " ", embeds: [embed] });
-    } else if (result.type === "SEARCH") {
-      const embed = new EmbedBuilder().setColor(client.color).setDescription(
-        `${client.i18n.get(language, "event.setup", "play_result", {
+      msg?.reply({
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(language, "event.setup", "play_track", {
           title: getTitle(client, result.tracks[0]),
           duration: convertTime(result.tracks[0].duration as number),
           request: `${result.tracks[0].requester}`,
-        })}`
-      );
-      msg?.reply({ content: " ", embeds: [embed] });
+        })}`, client.color)],
+      });
+    } else if (result.type === "SEARCH") {
+      msg?.reply({
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(language, "event.setup", "play_result", {
+          title: getTitle(client, result.tracks[0]),
+          duration: convertTime(result.tracks[0].duration as number),
+          request: `${result.tracks[0].requester}`,
+        })}`, client.color)],
+      });
     }
 
     await client.UpdateQueueMsg(player);

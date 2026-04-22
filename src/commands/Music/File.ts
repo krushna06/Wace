@@ -1,9 +1,10 @@
-import { ApplicationCommandOptionType, Attachment, EmbedBuilder } from "discord.js";
+import { ApplicationCommandOptionType, Attachment } from "discord.js";
 import { Manager } from "../../manager.js";
 import { convertTime } from "../../utilities/ConvertTime.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
 import { AutoFixSearch } from "../../autofix/AutoFixSearch.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 
 export default class implements Command {
   public name = ["file"];
@@ -35,44 +36,26 @@ export default class implements Command {
 
     if (!file)
       return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(
-              `${client.i18n.get(handler.language, "command.music", "file_notfound")}`
-            )
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "file_notfound")}`, client.color)],
       });
 
     const { channel } = handler.member!.voice;
     if (!channel)
       return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${client.i18n.get(handler.language, "error", "no_in_voice")}`)
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "error", "no_in_voice")}`, client.color)],
       });
 
     if (file.contentType !== "audio/mpeg" && file.contentType !== "audio/ogg")
       return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(
-              `${client.i18n.get(handler.language, "command.music", "play_invalid_file")}`
-            )
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "play_invalid_file")}`, client.color)],
       });
     if (!file.contentType)
       handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(
-              `${client.i18n.get(handler.language, "command.music", "play_warning_file")}`
-            )
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "play_warning_file")}`, client.color)],
       });
 
     if (!player)
@@ -96,20 +79,14 @@ export default class implements Command {
 
       if (!result || !result.tracks.length) {
         return handler.editReply({
-          embeds: [
-            new EmbedBuilder()
-              .setDescription(`${client.i18n.get(handler.language, "command.music", "play_match")}`)
-              .setColor(client.color),
-          ],
+          flags: CV2_FLAG,
+          components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "play_match")}`, client.color)],
         });
       }
     } else if (!result.tracks.length) {
       return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${client.i18n.get(handler.language, "command.music", "play_match")}`)
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "play_match")}`, client.color)],
       });
     }
     if (result.type === "PLAYLIST") for (let track of tracks) player.queue.push(track);
@@ -125,44 +102,24 @@ export default class implements Command {
     if (!player.playing) player.play();
 
     if (result.type === "PLAYLIST") {
-      const embed = new EmbedBuilder()
-        .setDescription(
-          `${client.i18n.get(handler.language, "command.music", "play_playlist", {
-            title: file.name,
-            duration: convertTime(TotalDuration),
-            songs: String(tracks.length),
-            request: String(tracks[0].requester),
-          })}`
-        )
-        .setColor(client.color);
-      handler.editReply({ content: " ", embeds: [embed] });
+      handler.editReply({
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "play_playlist", { title: file.name, duration: convertTime(TotalDuration), songs: String(tracks.length), request: String(tracks[0].requester) })}`, client.color)],
+      });
     } else if (result.type === "TRACK") {
-      const embed = new EmbedBuilder()
-        .setDescription(
-          `${client.i18n.get(handler.language, "command.music", "play_track", {
-            title: file.name,
-            duration: convertTime(tracks[0].duration as number),
-            request: String(tracks[0].requester),
-          })}`
-        )
-        .setColor(client.color);
-      handler.editReply({ content: " ", embeds: [embed] });
+      handler.editReply({
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "play_track", { title: file.name, duration: convertTime(tracks[0].duration as number), request: String(tracks[0].requester) })}`, client.color)],
+      });
     } else if (result.type === "SEARCH") {
-      const embed = new EmbedBuilder().setColor(client.color).setDescription(
-        `${client.i18n.get(handler.language, "command.music", "play_result", {
-          title: file.name,
-          duration: convertTime(tracks[0].duration as number),
-          request: String(tracks[0].requester),
-        })}`
-      );
-      handler.editReply({ content: " ", embeds: [embed] });
+      handler.editReply({
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "play_result", { title: file.name, duration: convertTime(tracks[0].duration as number), request: String(tracks[0].requester) })}`, client.color)],
+      });
     } else {
       handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${client.i18n.get(handler.language, "command.music", "play_match")}`)
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "play_match")}`, client.color)],
       });
       player.data.set("sudo-destroy", true);
       const is247 = await client.db.autoreconnect.get(`${handler.guild?.id}`);

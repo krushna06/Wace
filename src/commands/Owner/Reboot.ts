@@ -1,7 +1,7 @@
-import { EmbedBuilder, Message } from "discord.js";
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 
 export default class implements Command {
   public name = ["reboot"];
@@ -21,15 +21,14 @@ export default class implements Command {
   public async execute(client: Manager, handler: CommandHandler) {
     await handler.deferReply();
 
-    const restart = new EmbedBuilder()
-      .setDescription(`${client.i18n.get(handler.language, "command.utils", "restart_msg")}`)
-      .setColor(client.color)
-      .setFooter({
-        text: `${handler.guild!.members.me!.displayName}`,
-        iconURL: client.user!.displayAvatarURL(),
-      });
-
-    await handler.editReply({ embeds: [restart] });
+    await handler.editReply({
+      flags: CV2_FLAG,
+      components: [cv2.build({
+        description: `${client.i18n.get(handler.language, "command.utils", "restart_msg")}`,
+        footer: `${handler.guild!.members.me!.displayName}`,
+        color: client.color,
+      })],
+    });
 
     process.exit();
   }

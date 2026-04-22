@@ -3,7 +3,8 @@ const { timestamp, prettyPrint, printf } = format;
 import chalk from "chalk";
 import util from "node:util";
 import { Manager } from "../manager.js";
-import { EmbedBuilder, TextChannel } from "discord.js";
+import { TextChannel } from "discord.js";
+import { cv2, CV2_FLAG } from "../utilities/ComponentsV2.js";
 
 type InfoDataType = {
   message: string;
@@ -128,18 +129,20 @@ export class LoggerService {
       if (!channel || !channel.isTextBased()) return;
       let embed = null;
       if (message.length > 4096) {
-        embed = new EmbedBuilder()
-          .setDescription("Logs too long to display! please check your host!")
-          .setTitle(`${type} from ${className}`)
-          .setColor(this.client.color);
+        embed = cv2.build({
+          title: `${type} from ${className}`,
+          description: "Logs too long to display! please check your host!",
+          color: this.client.color,
+        });
       } else {
-        embed = new EmbedBuilder()
-          .setDescription(message)
-          .setTitle(`${type} from ${className}`)
-          .setColor(this.client.color);
+        embed = cv2.build({
+          title: `${type} from ${className}`,
+          description: message,
+          color: this.client.color,
+        });
       }
 
-      await channel.messages.channel.send({ embeds: [embed] });
+      await channel.messages.channel.send({ flags: CV2_FLAG, components: [embed] });
     } catch (err) {}
   }
 }

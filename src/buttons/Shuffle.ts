@@ -1,7 +1,6 @@
 import {
   ButtonInteraction,
   CacheType,
-  EmbedBuilder,
   InteractionCollector,
   Message,
   User,
@@ -12,6 +11,7 @@ import { formatDuration } from "../utilities/FormatDuration.js";
 import { PageQueue } from "../structures/PageQueue.js";
 import { Player } from "../structures/Player.js";
 import { getTitle } from "../utilities/GetTitle.js";
+import { cv2, CV2_FLAG } from "../utilities/ComponentsV2.js";
 export default class implements PlayerButton {
   name = "shuffle";
   async run(
@@ -43,29 +43,18 @@ export default class implements PlayerButton {
     const pages = [];
     for (let i = 0; i < pagesNum; i++) {
       const str = songStrings.slice(i * 10, i * 10 + 10).join("");
-      const embed = new EmbedBuilder()
-        .setThumbnail(thumbnail)
-        .setColor(client.color)
-        .setAuthor({
-          name: `${client.i18n.get(language, "button.music", "shuffle_msg")}`,
-        })
-        .setDescription(
-          `${client.i18n.get(language, "button.music", "queue_description", {
-            track: getTitle(client, song!),
-            duration: formatDuration(song?.duration),
-            requester: `${song!.requester}`,
-            list_song: str == "" ? "  Nothing" : "\n" + str,
-          })}`
-        )
-        .setFooter({
-          text: `${client.i18n.get(language, "button.music", "queue_footer", {
-            page: `${i + 1}`,
-            pages: `${pagesNum}`,
-            queue_lang: `${player.queue.length}`,
-            total_duration: qduration,
-          })}`,
-        });
-      pages.push(embed);
+      const page = cv2.build({
+        author: `${client.i18n.get(language, "button.music", "shuffle_msg")}`,
+        thumbnail,
+        color: client.color,
+        description: `${client.i18n.get(language, "button.music", "queue_description", {
+          track: getTitle(client, song!),
+          duration: formatDuration(song?.duration),
+          requester: `${song!.requester}`,
+          list_song: str == "" ? "  Nothing" : "\n" + str,
+        })}`,
+      });
+      pages.push(page);
     }
     client.wsl.get(message.guild!.id)?.send({
       op: "playerQueueShuffle",
@@ -90,10 +79,7 @@ export default class implements PlayerButton {
       }),
     });
     if (pages.length == pagesNum && player.queue.length > 10) {
-      await new PageQueue(client, pages, 60000, player.queue.length, language).buttonPage(
-        message,
-        qduration
-      );
-    } else message.reply({ embeds: [pages[0]], ephemeral: true });
+      await new PageQueue(client, pages, 60000, player.queue.length, language).buttonPage(message, qduration);
+    } else message.reply({ flags: CV2_FLAG, components: [pages[0]], ephemeral: true });
   }
 }

@@ -1,6 +1,5 @@
 import {
   ApplicationCommandOptionType,
-  EmbedBuilder,
 } from "discord.js";
 import { convertTime } from "../../utilities/ConvertTime.js";
 import { Manager } from "../../manager.js";
@@ -9,6 +8,7 @@ import { CommandHandler } from "../../structures/CommandHandler.js";
 import { Player, SearchResult, ExtendedTrack } from "../../structures/Player.js";
 import { getLastPlayedSongForGuild, getLastPlayedSongForUser } from "../../database/handler.js";
 import { AutoFixSearch } from "../../autofix/AutoFixSearch.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 
 type SearchResultType = "TRACK" | "PLAYLIST" | "SEARCH";
 
@@ -31,14 +31,8 @@ export default class implements Command {
       type: ApplicationCommandOptionType.String,
       required: true,
       choices: [
-        {
-          name: "Guild",
-          value: "guild",
-        },
-        {
-          name: "User",
-          value: "user",
-        },
+        { name: "Guild", value: "guild" },
+        { name: "User", value: "user" },
       ],
     },
   ];
@@ -50,21 +44,15 @@ export default class implements Command {
 
     if (!type || !["guild", "user"].includes(type))
       return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${client.i18n.get(handler.language, "command.music", "lastplayed_invalid_type")}`)
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "lastplayed_invalid_type")}`, client.color)],
       });
 
     const { channel } = handler.member!.voice;
     if (!channel)
       return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${client.i18n.get(handler.language, "error", "no_in_voice")}`)
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "error", "no_in_voice")}`, client.color)],
       });
 
     let player = client.players.get(handler.guild!.id);
@@ -89,21 +77,15 @@ export default class implements Command {
       lastPlayed = await getLastPlayedSongForGuild(client.db, handler.guild!.id);
       if (!lastPlayed)
         return handler.editReply({
-          embeds: [
-            new EmbedBuilder()
-              .setDescription(`${client.i18n.get(handler.language, "command.music", "lastplayed_notfound_guild")}`)
-              .setColor(client.color),
-          ],
+          flags: CV2_FLAG,
+          components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "lastplayed_notfound_guild")}`, client.color)],
         });
     } else {
       lastPlayed = await getLastPlayedSongForUser(client.db, handler.user!.id);
       if (!lastPlayed)
         return handler.editReply({
-          embeds: [
-            new EmbedBuilder()
-              .setDescription(`${client.i18n.get(handler.language, "command.music", "lastplayed_notfound_user")}`)
-              .setColor(client.color),
-          ],
+          flags: CV2_FLAG,
+          components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "lastplayed_notfound_user")}`, client.color)],
         });
     }
 
@@ -116,20 +98,14 @@ export default class implements Command {
 
       if (!autoFixResult || !autoFixResult.tracks.length) {
         return handler.editReply({
-          embeds: [
-            new EmbedBuilder()
-              .setDescription(`${client.i18n.get(handler.language, "command.music", "play_match")}`)
-              .setColor(client.color),
-          ],
+          flags: CV2_FLAG,
+          components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "play_match")}`, client.color)],
         });
       }
     } else if (!result.tracks.length) {
       return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${client.i18n.get(handler.language, "command.music", "play_match")}`)
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "play_match")}`, client.color)],
       });
     }
 
@@ -143,33 +119,18 @@ export default class implements Command {
 
     if (!player.playing) player.play();
 
-    const embed = new EmbedBuilder()
-      .setDescription(
-        type === "guild"
-          ? `${client.i18n.get(handler.language, "command.music", "lastplayed_guild", {
-              title: this.getTitle(client, result.type, tracks),
-              duration: convertTime(tracks[0].duration as number),
-              request: String(tracks[0].requester),
-            })}`
-          : `${client.i18n.get(handler.language, "command.music", "lastplayed_user", {
-              title: this.getTitle(client, result.type, tracks),
-              duration: convertTime(tracks[0].duration as number),
-              request: String(tracks[0].requester),
-            })}`
-      )
-      .setColor(client.color);
+    const description = type === "guild"
+      ? `${client.i18n.get(handler.language, "command.music", "lastplayed_guild", { title: this.getTitle(client, result.type, tracks), duration: convertTime(tracks[0].duration as number), request: String(tracks[0].requester) })}`
+      : `${client.i18n.get(handler.language, "command.music", "lastplayed_user", { title: this.getTitle(client, result.type, tracks), duration: convertTime(tracks[0].duration as number), request: String(tracks[0].requester) })}`;
 
-    handler.editReply({ content: " ", embeds: [embed] });
+    handler.editReply({ flags: CV2_FLAG, components: [cv2.simple(description, client.color)] });
   }
 
   checkSameVoice(client: Manager, handler: CommandHandler, language: string) {
     if (handler.member!.voice.channel !== handler.guild!.members.me!.voice.channel) {
       handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${client.i18n.get(handler.language, "error", "no_same_voice")}`)
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "error", "no_same_voice")}`, client.color)],
       });
       return false;
     }

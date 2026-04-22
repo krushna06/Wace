@@ -1,8 +1,9 @@
 import { Manager } from "../../manager.js";
-import { EmbedBuilder } from "discord.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
 import { Player } from "../../structures/Player.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
+
 export default class implements Command {
   public name = ["stop"];
   public description = "Stop music and make the bot leave the voice channel.";
@@ -16,22 +17,16 @@ export default class implements Command {
   public sameVoiceCheck = true;
   public permissions = [];
   public options = [];
+
   public async execute(client: Manager, handler: CommandHandler) {
     await handler.deferReply();
     const player = client.players.get(handler.guild!.id) as Player;
     const { channel } = handler.member!.voice;
     player.data.set("sudo-destroy", true);
     await player.destroy();
-    const embed = new EmbedBuilder()
-      .setDescription(
-        `${client.i18n.get(handler.language, "command.music", "stop_msg", {
-          channel: channel!.name,
-        })}`
-      )
-      .setImage(
-        client.config.PATREON_IMAGE?.[0]
-      )
-      .setColor(client.color);
-    await handler.editReply({ content: " ", embeds: [embed] });
+    await handler.editReply({
+      flags: CV2_FLAG,
+      components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "stop_msg", { channel: channel!.name })}`, client.color)],
+    });
   }
 }

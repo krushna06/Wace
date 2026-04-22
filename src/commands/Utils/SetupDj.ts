@@ -1,7 +1,8 @@
-import { EmbedBuilder, ApplicationCommandOptionType } from "discord.js";
+import { ApplicationCommandOptionType } from "discord.js";
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 
 export default class implements Command {
   public name = ["setup-dj"];
@@ -31,15 +32,8 @@ export default class implements Command {
     const roleOption = handler.interaction?.options.get('role');
     if (!roleOption || roleOption.role === null) {
       return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(
-              `${client.i18n.get(handler.language, "error", "arg_error", {
-                text: "a role mention or 'remove'!",
-              })}`
-            )
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "error", "arg_error", { text: "a role mention or 'remove'!" })}`, client.color)],
       });
     }
 
@@ -48,13 +42,8 @@ export default class implements Command {
     if (roleOption.value === "remove") {
       if (!setup || !setup.djRole) {
         return handler.editReply({
-          embeds: [
-            new EmbedBuilder()
-              .setDescription(
-                `${client.i18n.get(handler.language, "command.utils", "dj_already_empty")}`
-              )
-              .setColor(client.color),
-          ],
+          flags: CV2_FLAG,
+          components: [cv2.simple(`${client.i18n.get(handler.language, "command.utils", "dj_already_empty")}`, client.color)],
         });
       }
 
@@ -62,13 +51,8 @@ export default class implements Command {
       await client.db.setup.set(handler.guild!.id, newSetup);
 
       return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(
-              `${client.i18n.get(handler.language, "command.utils", "dj_removed")}`
-            )
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "command.utils", "dj_removed")}`, client.color)],
       });
     } else {
       const role = roleOption.role!;
@@ -87,15 +71,8 @@ export default class implements Command {
       await client.db.setup.set(handler.guild!.id, newSetup);
 
       return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(
-              `${client.i18n.get(handler.language, "command.utils", "dj_set", {
-                role: role.toString(),
-              })}`
-            )
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "command.utils", "dj_set", { role: role.toString() })}`, client.color)],
       });
     }
   }

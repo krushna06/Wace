@@ -1,5 +1,6 @@
-import { EmbedBuilder, ButtonInteraction, CacheType } from "discord.js";
+import { ButtonInteraction, CacheType } from "discord.js";
 import { Manager } from "../manager.js";
+import { cv2, CV2_FLAG } from "../utilities/ComponentsV2.js";
 
 export class ReplyInteractionService {
   client: Manager;
@@ -14,11 +15,10 @@ export class ReplyInteractionService {
   }
 
   async execute() {
-    const embed = new EmbedBuilder().setDescription(this.content).setColor(this.client.color);
-
     const msg = await this.message
       .reply({
-        embeds: [embed],
+        flags: CV2_FLAG,
+        components: [cv2.simple(this.content, this.client.color)],
         ephemeral: false,
       })
       .catch(() => null);

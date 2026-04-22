@@ -1,8 +1,9 @@
-import { EmbedBuilder, ApplicationCommandOptionType } from "discord.js";
+import { ApplicationCommandOptionType } from "discord.js";
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
 import { SongNotiEnum } from "../../database/schema/SongNoti.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 
 export default class implements Command {
   public name = ["songnoti"];
@@ -24,14 +25,8 @@ export default class implements Command {
       type: ApplicationCommandOptionType.String,
       required: true,
       choices: [
-        {
-          name: "Enable",
-          value: "enable",
-        },
-        {
-          name: "Disable",
-          value: "disable",
-        },
+        { name: "Enable", value: "enable" },
+        { name: "Disable", value: "disable" },
       ],
     },
   ];
@@ -45,61 +40,33 @@ export default class implements Command {
     if (value === "enable") {
       if (originalValue === SongNotiEnum.Enable)
         return handler.editReply({
-          embeds: [
-            new EmbedBuilder()
-              .setDescription(
-                `${client.i18n.get(handler.language, "command.utils", "songnoti_already", {
-                  mode: handler.modeLang.enable,
-                })}`
-              )
-              .setColor(client.color),
-          ],
+          flags: CV2_FLAG,
+          components: [cv2.simple(`${client.i18n.get(handler.language, "command.utils", "songnoti_already", { mode: handler.modeLang.enable })}`, client.color)],
         });
 
       await client.db.songNoti.set(`${handler.guild!.id}`, SongNotiEnum.Enable);
 
-      const embed = new EmbedBuilder()
-        .setDescription(
-          `${client.i18n.get(handler.language, "command.utils", "songnoti_set", {
-            toggle: handler.modeLang.enable,
-          })}`
-        )
-        .setColor(client.color);
-
-      return handler.editReply({ embeds: [embed] });
+      return handler.editReply({
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "command.utils", "songnoti_set", { toggle: handler.modeLang.enable })}`, client.color)],
+      });
     } else if (value === "disable") {
       if (originalValue === SongNotiEnum.Disable)
         return handler.editReply({
-          embeds: [
-            new EmbedBuilder()
-              .setDescription(
-                `${client.i18n.get(handler.language, "command.utils", "songnoti_already", {
-                  mode: handler.modeLang.disable,
-                })}`
-              )
-              .setColor(client.color),
-          ],
+          flags: CV2_FLAG,
+          components: [cv2.simple(`${client.i18n.get(handler.language, "command.utils", "songnoti_already", { mode: handler.modeLang.disable })}`, client.color)],
         });
 
       await client.db.songNoti.set(`${handler.guild!.id}`, SongNotiEnum.Disable);
-      const embed = new EmbedBuilder()
-        .setDescription(
-          `${client.i18n.get(handler.language, "command.utils", "songnoti_set", {
-            toggle: handler.modeLang.disable,
-          })}`
-        )
-        .setColor(client.color);
-
-      return handler.editReply({ embeds: [embed] });
+      return handler.editReply({
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "command.utils", "songnoti_set", { toggle: handler.modeLang.disable })}`, client.color)],
+      });
     } else {
-      const onsome = new EmbedBuilder()
-        .setDescription(
-          `${client.i18n.get(handler.language, "error", "arg_error", {
-            text: "**enable** or **disable**!",
-          })}`
-        )
-        .setColor(client.color);
-      return handler.editReply({ content: " ", embeds: [onsome] });
+      return handler.editReply({
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "error", "arg_error", { text: "**enable** or **disable**!" })}`, client.color)],
+      });
     }
   }
 }

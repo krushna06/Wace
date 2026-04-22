@@ -1,9 +1,10 @@
-import { EmbedBuilder } from "discord.js";
 import { formatDuration } from "../../utilities/FormatDuration.js";
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
 import { Player } from "../../structures/Player.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
+
 const rewindNum = 10;
 
 export default class implements Command {
@@ -31,24 +32,14 @@ export default class implements Command {
     if (song_position - rewindNum * 1000 > 0) {
       await player.shoukaku?.seekTo(song_position - rewindNum * 1000);
 
-      const rewind2 = new EmbedBuilder()
-        .setDescription(
-          `${client.i18n.get(handler.language, "command.music", "rewind_msg", {
-            duration: CurrentDuration,
-          })}`
-        )
-        .setColor(client.color);
-
-      handler.editReply({ content: " ", embeds: [rewind2] });
+      handler.editReply({
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "rewind_msg", { duration: CurrentDuration })}`, client.color)],
+      });
     } else {
       return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(
-              `${client.i18n.get(handler.language, "command.music", "rewind_beyond")}`
-            )
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "rewind_beyond")}`, client.color)],
       });
     }
   }

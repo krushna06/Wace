@@ -1,10 +1,11 @@
-import { ApplicationCommandOptionType, EmbedBuilder, Message, CommandInteraction, AutocompleteInteraction } from "discord.js";
+import { ApplicationCommandOptionType, Message, CommandInteraction, AutocompleteInteraction } from "discord.js";
 import humanizeDuration from "humanize-duration";
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
 import { AutocompleteInteractionChoices, GlobalInteraction } from "../../@types/Interaction.js";
 import { getPlaylistAutocomplete } from "../../utilities/PlaylistAutocomplete.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 
 export default class implements Command {
   public name = ["pl", "info"];
@@ -30,75 +31,35 @@ export default class implements Command {
   ];
 
   public async execute(client: Manager, handler: CommandHandler) {
-    await handler.deferReply();
+      await handler.deferReply();
 
-    const value = handler.args[0] ? handler.args[0] : null;
+      const value = handler.args[0] ? handler.args[0] : null;
+      const reply = (desc: string) => handler.editReply({ flags: CV2_FLAG, components: [cv2.simple(desc, client.color)] });
 
-    if (value == null)
+      if (value == null) return reply(`${client.i18n.get(handler.language, "command.playlist", "invalid")}`);
+
+      const info = await client.db.playlist.get(value);
+      if (!info) return reply(`${client.i18n.get(handler.language, "command.playlist", "invalid")}`);
+
+      const created = humanizeDuration(Date.now() - Number(info.created), { largest: 1 });
+      const name = await client.users.fetch(info.owner);
+
       return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${client.i18n.get(handler.language, "command.playlist", "invalid")}`)
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.build({
+          title: info.name,
+          color: client.color,
+          fields: [
+            { name: `${client.i18n.get(handler.language, "command.playlist", "info_owner")}`, value: `${name.username}` },
+            { name: `${client.i18n.get(handler.language, "command.playlist", "info_id")}`, value: `${info.id}` },
+            { name: `${client.i18n.get(handler.language, "command.playlist", "info_des")}`, value: `${info.description === null || info.description === "null" ? client.i18n.get(handler.language, "command.playlist", "no_des") : info.description}` },
+            { name: `${client.i18n.get(handler.language, "command.playlist", "info_private")}`, value: `${info.private ? client.i18n.get(handler.language, "command.playlist", "public") : client.i18n.get(handler.language, "command.playlist", "private")}` },
+            { name: `${client.i18n.get(handler.language, "command.playlist", "info_created")}`, value: `${created}` },
+            { name: `${client.i18n.get(handler.language, "command.playlist", "info_total")}`, value: `${info.tracks!.length}` },
+          ],
+        })],
       });
-
-    const info = await client.db.playlist.get(value);
-
-    if (!info)
-      return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${client.i18n.get(handler.language, "command.playlist", "invalid")}`)
-            .setColor(client.color),
-        ],
-      });
-
-    const created = humanizeDuration(Date.now() - Number(info.created), {
-      largest: 1,
-    });
-
-    const name = await client.users.fetch(info.owner);
-
-    const embed = new EmbedBuilder()
-      .setTitle(info.name)
-      .addFields([
-        {
-          name: `${client.i18n.get(handler.language, "command.playlist", "info_owner")}`,
-          value: `${name.username}`,
-        },
-        {
-          name: `${client.i18n.get(handler.language, "command.playlist", "info_id")}`,
-          value: `${info.id}`,
-        },
-        {
-          name: `${client.i18n.get(handler.language, "command.playlist", "info_des")}`,
-          value: `${
-            info.description === null || info.description === "null"
-              ? client.i18n.get(handler.language, "command.playlist", "no_des")
-              : info.description
-          }`,
-        },
-        {
-          name: `${client.i18n.get(handler.language, "command.playlist", "info_private")}`,
-          value: `${
-            info.private
-              ? client.i18n.get(handler.language, "command.playlist", "public")
-              : client.i18n.get(handler.language, "command.playlist", "private")
-          }`,
-        },
-        {
-          name: `${client.i18n.get(handler.language, "command.playlist", "info_created")}`,
-          value: `${created}`,
-        },
-        {
-          name: `${client.i18n.get(handler.language, "command.playlist", "info_total")}`,
-          value: `${info.tracks!.length}`,
-        },
-      ])
-      .setColor(client.color);
-    handler.editReply({ embeds: [embed] });
-  }
+    }
 
   public async autocomplete(client: Manager, interaction: GlobalInteraction, language: string) {
     // @ts-ignore

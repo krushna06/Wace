@@ -1,8 +1,9 @@
-import { ApplicationCommandOptionType, EmbedBuilder, User } from "discord.js";
+import { ApplicationCommandOptionType, User } from "discord.js";
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
 import { Player } from "../../structures/Player.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 
 export default class implements Command {
   public name = ["skipto"];
@@ -33,28 +34,18 @@ export default class implements Command {
 
     if (!handler.args[0] || isNaN(getPosition) || getPosition < 0)
       return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${client.i18n.get(handler.language, "error", "number_invalid")}`)
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "error", "number_invalid")}`, client.color)],
       });
 
     if (player.queue.length == 0 || getPosition >= player.queue.length) {
-      const skipped = new EmbedBuilder()
-        .setDescription(`${client.i18n.get(handler.language, "command.music", "skip_notfound")}`)
-        .setColor(client.color);
-
-      handler.editReply({ content: " ", embeds: [skipped] });
+      handler.editReply({ flags: CV2_FLAG, components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "skip_notfound")}`, client.color)] });
     } else {
       const cuttedQueue = player.queue.splice(0, getPosition);
       const nowCurrentTrack = cuttedQueue.splice(-1)[0];
 
       if (!nowCurrentTrack) {
-        const skipped = new EmbedBuilder()
-          .setDescription(`${client.i18n.get(handler.language, "command.music", "skip_notfound")}`)
-          .setColor(client.color);
-        return handler.editReply({ content: " ", embeds: [skipped] });
+        return handler.editReply({ flags: CV2_FLAG, components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "skip_notfound")}`, client.color)] });
       }
 
       player.previousQueue.push(...cuttedQueue);
@@ -86,10 +77,7 @@ export default class implements Command {
           };
         }),
       });
-      const skipped = new EmbedBuilder()
-        .setDescription(`${client.i18n.get(handler.language, "command.music", "skip_msg")}`)
-        .setColor(client.color);
-      handler.editReply({ content: " ", embeds: [skipped] });
+      handler.editReply({ flags: CV2_FLAG, components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "skip_msg")}`, client.color)] });
     }
   }
 }

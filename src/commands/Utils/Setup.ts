@@ -1,7 +1,8 @@
-import { EmbedBuilder, ApplicationCommandOptionType, ChannelType } from "discord.js";
+import { ApplicationCommandOptionType, ChannelType } from "discord.js";
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 
 export default class implements Command {
   public name = ["setup"];
@@ -23,14 +24,8 @@ export default class implements Command {
       type: ApplicationCommandOptionType.String,
       required: true,
       choices: [
-        {
-          name: "Create",
-          value: "create",
-        },
-        {
-          name: "Delete",
-          value: "delete",
-        },
+        { name: "Create", value: "create" },
+        { name: "Delete", value: "delete" },
       ],
     },
   ];
@@ -41,15 +36,8 @@ export default class implements Command {
 
     if (!handler.args[0] || !option.includes(handler.args[0]))
       return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(
-              `${client.i18n.get(handler.language, "error", "arg_error", {
-                text: "**create** or **delete**!",
-              })}`
-            )
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "error", "arg_error", { text: "**create** or **delete**!" })}`, client.color)],
       });
 
     const value = handler.args[0];
@@ -59,13 +47,8 @@ export default class implements Command {
 
       if (SetupChannel && SetupChannel!.enable == true)
         return handler.editReply({
-          embeds: [
-            new EmbedBuilder()
-              .setDescription(
-                `${client.i18n.get(handler.language, "command.utils", "setup_enable")}`
-              )
-              .setColor(client.color),
-          ],
+          flags: CV2_FLAG,
+          components: [cv2.simple(`${client.i18n.get(handler.language, "command.utils", "setup_enable")}`, client.color)],
         });
 
       const parent = await handler.guild!.channels.create({
@@ -80,19 +63,17 @@ export default class implements Command {
       });
       const queueMsg = `${client.i18n.get(handler.language, "event.setup", "setup_queuemsg")}`;
 
-      const playEmbed = new EmbedBuilder()
-        .setColor(client.color)
-        .setAuthor({
-          name: `${client.i18n.get(handler.language, "event.setup", "setup_playembed_author")}`,
-        })
-        .setImage(
-          `https://cdn.discordapp.com/avatars/${client.user!.id}/${client.user!.avatar}.jpeg?size=300`
-        );
-
       const channel_msg = await textChannel.send({
+        flags: CV2_FLAG,
         content: `${queueMsg}`,
-        embeds: [playEmbed],
-        components: [client.diSwitch],
+        components: [
+          cv2.build({
+            color: client.color,
+            author: `${client.i18n.get(handler.language, "event.setup", "setup_playembed_author")}`,
+            thumbnail: `https://cdn.discordapp.com/avatars/${client.user!.id}/${client.user!.avatar}.jpeg?size=300`,
+          }),
+          client.diSwitch,
+        ],
       });
 
       const voiceChannel = await handler.guild!.channels.create({
@@ -113,23 +94,23 @@ export default class implements Command {
 
       await client.db.setup.set(`${handler.guild!.id}`, new_data);
 
-      const embed = new EmbedBuilder()
-        .setDescription(
-          `${client.i18n.get(handler.language, "command.utils", "setup_msg", {
-            channel: String(textChannel),
-          })}`
-        )
-        .setColor(client.color);
-      return handler.editReply({ embeds: [embed] });
+      return handler.editReply({
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "command.utils", "setup_msg", { channel: String(textChannel) })}`, client.color)],
+      });
     } else if (value === "delete") {
       const SetupChannel = await client.db.setup.get(`${handler.guild!.id}`);
 
-      const embed_none = new EmbedBuilder()
-        .setDescription(`${client.i18n.get(handler.language, "command.utils", "setup_null")}`)
-        .setColor(client.color);
-
-      if (SetupChannel == null) return handler.editReply({ embeds: [embed_none] });
-      if (SetupChannel.enable == false) return handler.editReply({ embeds: [embed_none] });
+      if (SetupChannel == null)
+        return handler.editReply({
+          flags: CV2_FLAG,
+          components: [cv2.simple(`${client.i18n.get(handler.language, "command.utils", "setup_null")}`, client.color)],
+        });
+      if (SetupChannel.enable == false)
+        return handler.editReply({
+          flags: CV2_FLAG,
+          components: [cv2.simple(`${client.i18n.get(handler.language, "command.utils", "setup_null")}`, client.color)],
+        });
 
       const fetchedTextChannel = SetupChannel.channel
         ? await handler.guild!.channels.fetch(SetupChannel.channel).catch(() => {})
@@ -141,14 +122,6 @@ export default class implements Command {
         ? await handler.guild!.channels.fetch(SetupChannel.category).catch(() => {})
         : undefined;
 
-      const embed = new EmbedBuilder()
-        .setDescription(
-          `${client.i18n.get(handler.language, "command.utils", "setup_deleted", {
-            channel: String(fetchedTextChannel),
-          })}`
-        )
-        .setColor(client.color);
-
       if (fetchedCategory) await fetchedCategory.delete().catch(() => null);
       if (fetchedVoiceChannel) await fetchedVoiceChannel.delete().catch(() => null);
       if (fetchedTextChannel) await fetchedTextChannel.delete().catch(() => null);
@@ -157,15 +130,15 @@ export default class implements Command {
 
       if (!fetchedCategory || !fetchedTextChannel || !fetchedVoiceChannel) {
         return handler.editReply({
-          embeds: [
-            new EmbedBuilder()
-              .setDescription(`${client.i18n.get(handler.language, "command.utils", "setup_null")}`)
-              .setColor(client.color),
-          ],
+          flags: CV2_FLAG,
+          components: [cv2.simple(`${client.i18n.get(handler.language, "command.utils", "setup_null")}`, client.color)],
         });
       }
 
-      return handler.editReply({ embeds: [embed] });
+      return handler.editReply({
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "command.utils", "setup_deleted", { channel: String(fetchedTextChannel) })}`, client.color)],
+      });
     }
   }
 }

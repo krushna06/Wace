@@ -7,7 +7,6 @@ import {
   ModalBuilder,
   TextInputBuilder,
   TextInputStyle,
-  InteractionCollector,
 } from "discord.js";
 import { readdirSync } from "fs";
 import { join, dirname } from "path";
@@ -15,6 +14,7 @@ import { fileURLToPath } from "url";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
 import { Manager } from "../../manager.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -41,7 +41,6 @@ export default class implements Command {
       label: category.toUpperCase(),
       value: category,
     }));
-
 
     const categoriesList = '```\n' + categories.join('\n') + '\n```';
 
@@ -93,14 +92,14 @@ export default class implements Command {
       );
     }
 
-    let dashboardButton: ButtonBuilder | null = null;
     const dashboardUrl = client.config.utilities.DASHBOARD_URL;
     if (showDashboardButton && dashboardUrl && dashboardUrl.trim() !== "") {
-      dashboardButton = new ButtonBuilder()
-        .setLabel("Music Controller")
-        .setStyle(ButtonStyle.Link)
-        .setURL(dashboardUrl.replace(/\/$/, "") + `/guild/${handler.guild?.id ?? ""}`);
-      buttons.push(dashboardButton);
+      buttons.push(
+        new ButtonBuilder()
+          .setLabel("Music Controller")
+          .setStyle(ButtonStyle.Link)
+          .setURL(dashboardUrl.replace(/\/$/, "") + `/guild/${handler.guild?.id ?? ""}`)
+      );
     }
 
     if (showDonateButton) {
@@ -112,26 +111,6 @@ export default class implements Command {
       );
     }
 
-    const initialEmbed = new EmbedBuilder()
-      .setDescription(client.i18n.get(handler.language, "help", "help_menu"))
-      .addFields(
-        {
-          name: client.i18n.get(handler.language, "help", "categories"),
-          value: categoriesList,
-          inline: true,
-        },
-        {
-          name: client.i18n.get(handler.language, "help", "information_title"),
-          value: client.i18n.get(handler.language, "help", "information_content"),
-          inline: true,
-        },
-        {
-          name: client.i18n.get(handler.language, "help", "get_started_title"),
-          value: client.i18n.get(handler.language, "help", "get_started_content"),
-        }
-      )
-      .setColor(client.color);
-
     const row = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(selectMenu);
 
     const components: Array<ActionRowBuilder<StringSelectMenuBuilder> | ActionRowBuilder<ButtonBuilder>> = [row];
@@ -140,9 +119,31 @@ export default class implements Command {
       components.push(buttonRow);
     }
 
-    const initialMessage = await handler.editReply({
-      embeds: [initialEmbed],
-      components,
+    await handler.editReply({
+      flags: CV2_FLAG,
+      components: [
+        cv2.build({
+          description: client.i18n.get(handler.language, "help", "help_menu"),
+          fields: [
+            {
+              name: client.i18n.get(handler.language, "help", "categories"),
+              value: categoriesList,
+              inline: true,
+            },
+            {
+              name: client.i18n.get(handler.language, "help", "information_title"),
+              value: client.i18n.get(handler.language, "help", "information_content"),
+              inline: true,
+            },
+            {
+              name: client.i18n.get(handler.language, "help", "get_started_title"),
+              value: client.i18n.get(handler.language, "help", "get_started_content"),
+            },
+          ],
+          color: client.color,
+        }),
+        ...components,
+      ],
     });
 
     const filter = (i) => i.customId === "select-category" && i.user.id === handler.user.id;
@@ -152,11 +153,18 @@ export default class implements Command {
     collector.on("collect", async (i) => {
       if (!i.isSelectMenu()) return;
       const selectedCategory = i.values[0];
-      const embed = this.generateCategoryEmbed(client, selectedCategory);
-      embed.setTitle(`Commands in ${selectedCategory.toUpperCase()}`);
+      const commands = client.commands.filter((c) => c.category === selectedCategory);
+      const description = commands.map((command) => `\`${command.name.join("-")}\``).join(", ");
       await i.update({
-        embeds: [embed],
-        components,
+        flags: CV2_FLAG,
+        components: [
+          cv2.build({
+            title: `Commands in ${selectedCategory.toUpperCase()}`,
+            description: description && description.length > 0 ? description : undefined,
+            color: client.color,
+          }),
+          ...components,
+        ],
       });
     });
 
@@ -206,40 +214,10 @@ export default class implements Command {
         const paypalLink = `https://www.paypal.com/paypalme/krushna06/${amount}`;
 
         await interaction.reply({
-          content: `[Click here to donate $${amount}](${paypalLink})`,
+          content: `[Click here to donate ${amount}](${paypalLink})`,
           ephemeral: true,
         });
       }
     });
-  }
-
-  private generateCategoryEmbed(client: Manager, category: string): EmbedBuilder {
-    const commands = client.commands.filter((c) => c.category === category);
-
-    const description = commands.map((command) => `\`${command.name.join("-")}\``).join(", ");
-
-    const embed = new EmbedBuilder()
-      .setTitle(`Commands in ${category.toUpperCase()}`)
-      .setDescription(description && description.length > 0 ? description : null)
-      .setColor(client.color);
-
-    return embed;
-  }
-
-  private transalatedFinder(client: Manager, handler: CommandHandler) {
-    return {
-      name: `${client.i18n.get(handler.language, "help", "ce_finder_name")}`,
-      des: `${client.i18n.get(handler.language, "help", "ce_finder_des")}`,
-      usage: `${client.i18n.get(handler.language, "help", "ce_finder_usage")}`,
-      access: `${client.i18n.get(handler.language, "help", "ce_finder_access")}`,
-      aliases: `${client.i18n.get(handler.language, "help", "ce_finder_aliases")}`,
-      slash: `${client.i18n.get(handler.language, "help", "ce_finder_slash")}`,
-      desNone: `${client.i18n.get(handler.language, "help", "ce_finder_des_no")}`,
-      usageNone: `${client.i18n.get(handler.language, "help", "ce_finder_usage_no")}`,
-      aliasesPrefix: `${client.i18n.get(handler.language, "help", "ce_finder_aliases_prefix")}`,
-      aliasesNone: `${client.i18n.get(handler.language, "help", "ce_finder_aliases_no")}`,
-      slashEnable: `${client.i18n.get(handler.language, "help", "ce_finder_slash_enable")}`,
-      slashDisable: `${client.i18n.get(handler.language, "help", "ce_finder_slash_disable")}`,
-    };
   }
 }

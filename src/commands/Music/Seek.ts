@@ -1,9 +1,11 @@
-import { ApplicationCommandOptionType, EmbedBuilder } from "discord.js";
+import { ApplicationCommandOptionType } from "discord.js";
 import { formatDuration } from "../../utilities/FormatDuration.js";
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
 import { Player } from "../../structures/Player.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
+
 const time_regex = /(^[0-9][\d]{0,3}):(0[0-9]{1}$|[1-5]{1}[0-9])/;
 
 export default class implements Command {
@@ -35,11 +37,8 @@ export default class implements Command {
 
     if (!time_regex.test(time))
       return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${client.i18n.get(handler.language, "command.music", "seek_invalid")}`)
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "seek_invalid")}`, client.color)],
       });
     else {
       const [m, s] = time.split(/:/);
@@ -52,11 +51,8 @@ export default class implements Command {
 
     if (value * 1000 >= player.current!.duration! || value < 0)
       return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${client.i18n.get(handler.language, "command.music", "seek_beyond")}`)
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "seek_beyond")}`, client.color)],
       });
     await player.seek(value * 1000);
 
@@ -69,14 +65,9 @@ export default class implements Command {
 
     const Duration = formatDuration(final_res);
 
-    const seeked = new EmbedBuilder()
-      .setDescription(
-        `${client.i18n.get(handler.language, "command.music", "seek_msg", {
-          duration: Duration,
-        })}`
-      )
-      .setColor(client.color);
-
-    handler.editReply({ content: " ", embeds: [seeked] });
+    handler.editReply({
+      flags: CV2_FLAG,
+      components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "seek_msg", { duration: Duration })}`, client.color)],
+    });
   }
 }

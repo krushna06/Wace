@@ -1,7 +1,8 @@
-import { EmbedBuilder, ApplicationCommandOptionType } from "discord.js";
+import { ApplicationCommandOptionType } from "discord.js";
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 
 export default class implements Command {
   public name = ["language"];
@@ -43,41 +44,26 @@ export default class implements Command {
     const languages = client.i18n.getLocales();
 
     if (!languages.includes(input as string)) {
-      const embed = new EmbedBuilder()
-        .setDescription(
-          `${client.i18n.get(handler.language, "command.utils", "provide_lang", {
-            languages: languages.join(", "),
-          })}`
-        )
-        .setColor(client.color);
-      return handler.editReply({ content: " ", embeds: [embed] });
+      return handler.editReply({
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "command.utils", "provide_lang", { languages: languages.join(", ") })}`, client.color)],
+      });
     }
 
     const newLang = await client.db.language.get(`${handler.guild!.id}`);
 
     if (!newLang) {
       await client.db.language.set(`${handler.guild!.id}`, input);
-      const embed = new EmbedBuilder()
-        .setDescription(
-          `${client.i18n.get(handler.language, "command.utils", "lang_set", {
-            language: String(input),
-          })}`
-        )
-        .setColor(client.color);
-
-      return handler.editReply({ content: " ", embeds: [embed] });
+      return handler.editReply({
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "command.utils", "lang_set", { language: String(input) })}`, client.color)],
+      });
     } else if (newLang) {
       await client.db.language.set(`${handler.guild!.id}`, input);
-
-      const embed = new EmbedBuilder()
-        .setDescription(
-          `${client.i18n.get(handler.language, "command.utils", "lang_change", {
-            language: String(input),
-          })}`
-        )
-        .setColor(client.color);
-
-      return handler.editReply({ content: " ", embeds: [embed] });
+      return handler.editReply({
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "command.utils", "lang_change", { language: String(input) })}`, client.color)],
+      });
     }
   }
 }

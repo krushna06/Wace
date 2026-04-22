@@ -1,8 +1,8 @@
-import { EmbedBuilder } from "discord.js";
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
 import { Player } from "../../structures/Player.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 
 export default class implements Command {
   public name = ["autoplay"];
@@ -29,15 +29,10 @@ export default class implements Command {
       player.data.set("requester", null);
       player.queue = [];
 
-      const off = new EmbedBuilder()
-        .setDescription(
-          `${client.i18n.get(handler.language, "command.music", "autoplay_off", {
-            mode: handler.modeLang.disable,
-          })}`
-        )
-        .setColor(client.color);
-
-      await handler.editReply({ content: " ", embeds: [off] });
+      await handler.editReply({
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "autoplay_off", { mode: handler.modeLang.disable })}`, client.color)],
+      });
     } else {
       const identifier = player.current!.identifier;
 
@@ -47,15 +42,10 @@ export default class implements Command {
       player.data.set("author", player.current?.author);
       player.data.set("title", player.current?.title);
 
-      const on = new EmbedBuilder()
-        .setDescription(
-          `${client.i18n.get(handler.language, "command.music", "autoplay_on", {
-            mode: handler.modeLang.enable,
-          })}`
-        )
-        .setColor(client.color);
-
-      await handler.editReply({ content: " ", embeds: [on] });
+      await handler.editReply({
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "autoplay_on", { mode: handler.modeLang.enable })}`, client.color)],
+      });
     }
   }
 }

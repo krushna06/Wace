@@ -1,5 +1,4 @@
 import {
-  EmbedBuilder,
   ApplicationCommandOptionType,
   CommandInteraction,
   AutocompleteInteraction,
@@ -11,6 +10,7 @@ import { CommandHandler } from "../../structures/CommandHandler.js";
 import { AutocompleteInteractionChoices, GlobalInteraction } from "../../@types/Interaction.js";
 import { ExtendedTrack } from "../../structures/Player.js";
 import { getNode } from "../../utilities/GetNode.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 
 type SearchResultType = "TRACK" | "PLAYLIST" | "SEARCH";
 
@@ -47,224 +47,98 @@ export default class implements Command {
   ];
 
   public async execute(client: Manager, handler: CommandHandler) {
-    await handler.deferReply();
+      await handler.deferReply();
 
-    const value = handler.args[0] ? handler.args[0] : null;
-    if (value == null || !value)
-      return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${client.i18n.get(handler.language, "command.playlist", "invalid")}`)
-            .setColor(client.color),
-        ],
-      });
+      const value = handler.args[0] ? handler.args[0] : null;
+      const reply = (desc: string) => handler.editReply({ flags: CV2_FLAG, components: [cv2.simple(desc, client.color)] });
+      const followReply = (desc: string) => handler.followUp({ flags: CV2_FLAG, components: [cv2.simple(desc, client.color)] });
 
-    const input = handler.args[1];
+      if (value == null || !value) return reply(`${client.i18n.get(handler.language, "command.playlist", "invalid")}`);
 
-    const Inputed = input;
+      const input = handler.args[1];
+      const Inputed = input;
 
-    if (!input)
-      return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${client.i18n.get(handler.language, "command.playlist", "add_match")}`)
-            .setColor(client.color),
-        ],
-      });
+      if (!input) return reply(`${client.i18n.get(handler.language, "command.playlist", "add_match")}`);
 
-    const result = await getNode(client)?.rest.resolve(input);
-    
-    if (!result) {
-      return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${client.i18n.get(handler.language, "command.playlist", "add_match")}`)
-            .setColor(client.color),
-        ],
-      });
-    }
+      const result = await getNode(client)?.rest.resolve(input);
+      if (!result) return reply(`${client.i18n.get(handler.language, "command.playlist", "add_match")}`);
 
-    let tracks: ExtendedTrack[] = [];
-    let resultType: SearchResultType = "SEARCH";
+      let tracks: ExtendedTrack[] = [];
+      let resultType: SearchResultType = "SEARCH";
 
-    switch (result.loadType) {
-      case "track":
-        const trackData = result.data as any;
-        tracks = [{
-          ...trackData,
-          requester: handler.user,
-          duration: trackData.info?.length || trackData.length,
-          title: trackData.info?.title || trackData.title,
-          uri: trackData.info?.uri || trackData.uri,
-          author: trackData.info?.author || trackData.author,
-          artworkUrl: trackData.info?.artworkUrl || trackData.artworkUrl,
-          identifier: trackData.info?.identifier || trackData.identifier,
-        }];
-        resultType = "TRACK";
-        break;
-      case "playlist":
-        const playlistData = result.data as any;
-        tracks = (playlistData.tracks || []).map((track: any) => ({
-          ...track,
-          requester: handler.user,
-          duration: track.info?.length || track.length,
-          title: track.info?.title || track.title,
-          uri: track.info?.uri || track.uri,
-          author: track.info?.author || track.author,
-          artworkUrl: track.info?.artworkUrl || track.artworkUrl,
-          identifier: track.info?.identifier || track.identifier,
-        }));
-        resultType = "PLAYLIST";
-        break;
-      case "search":
-        tracks = (result.data as any[]).map((track: any) => ({
-          ...track,
-          requester: handler.user,
-          duration: track.info?.length || track.length,
-          title: track.info?.title || track.title,
-          uri: track.info?.uri || track.uri,
-          author: track.info?.author || track.author,
-          artworkUrl: track.info?.artworkUrl || track.artworkUrl,
-          identifier: track.info?.identifier || track.identifier,
-        }));
-        resultType = "SEARCH";
-        break;
-      case "empty":
-      case "error":
-        return handler.editReply({
-          embeds: [
-            new EmbedBuilder()
-              .setDescription(`${client.i18n.get(handler.language, "command.playlist", "add_match")}`)
-              .setColor(client.color),
-          ],
+      switch (result.loadType) {
+        case "track": {
+          const trackData = result.data as any;
+          tracks = [{ ...trackData, requester: handler.user, duration: trackData.info?.length || trackData.length, title: trackData.info?.title || trackData.title, uri: trackData.info?.uri || trackData.uri, author: trackData.info?.author || trackData.author, artworkUrl: trackData.info?.artworkUrl || trackData.artworkUrl, identifier: trackData.info?.identifier || trackData.identifier }];
+          resultType = "TRACK";
+          break;
+        }
+        case "playlist": {
+          const playlistData = result.data as any;
+          tracks = (playlistData.tracks || []).map((track: any) => ({ ...track, requester: handler.user, duration: track.info?.length || track.length, title: track.info?.title || track.title, uri: track.info?.uri || track.uri, author: track.info?.author || track.author, artworkUrl: track.info?.artworkUrl || track.artworkUrl, identifier: track.info?.identifier || track.identifier }));
+          resultType = "PLAYLIST";
+          break;
+        }
+        case "search":
+          tracks = (result.data as any[]).map((track: any) => ({ ...track, requester: handler.user, duration: track.info?.length || track.length, title: track.info?.title || track.title, uri: track.info?.uri || track.uri, author: track.info?.author || track.author, artworkUrl: track.info?.artworkUrl || track.artworkUrl, identifier: track.info?.identifier || track.identifier }));
+          resultType = "SEARCH";
+          break;
+        case "empty":
+        case "error":
+          return reply(`${client.i18n.get(handler.language, "command.playlist", "add_match")}`);
+      }
+
+      if (!tracks || tracks.length === 0) return reply(`${client.i18n.get(handler.language, "command.playlist", "add_match")}`);
+
+      if (resultType === "PLAYLIST") for (let track of tracks) TrackAdd.push(track);
+      else TrackAdd.push(tracks[0]);
+
+      const Duration = convertTime(tracks[0].duration as number);
+      const TotalDuration = tracks.reduce((acc, cur) => acc + (cur.duration || 0), 0);
+
+      if (resultType === "PLAYLIST") {
+        reply(`${client.i18n.get(handler.language, "command.playlist", "add_playlist", { title: this.getTitle(client, resultType, tracks, Inputed), duration: convertTime(TotalDuration), track: String(tracks.length), user: String(handler.user) })}`);
+      } else if (resultType === "TRACK") {
+        reply(`${client.i18n.get(handler.language, "command.playlist", "add_track", { title: this.getTitle(client, resultType, tracks), duration: Duration, user: String(handler.user) })}`);
+      } else if (resultType === "SEARCH") {
+        reply(`${client.i18n.get(handler.language, "command.playlist", "add_search", { title: this.getTitle(client, resultType, tracks), duration: Duration, user: String(handler.user) })}`);
+      } else {
+        TrackAdd.length = 0;
+        return reply(`${client.i18n.get(handler.language, "command.playlist", "add_match")}`);
+      }
+
+      const playlist = await client.db.playlist.get(value);
+      if (!playlist) {
+        TrackAdd.length = 0;
+        return followReply(`${client.i18n.get(handler.language, "command.playlist", "invalid")}`);
+      }
+      if (playlist.owner !== handler.user?.id) {
+        followReply(`${client.i18n.get(handler.language, "command.playlist", "add_owner")}`);
+        TrackAdd.length = 0;
+        return;
+      }
+
+      const LimitTrack = playlist.tracks!.length + TrackAdd.length;
+      if (LimitTrack > client.config.player.LIMIT_TRACK) {
+        followReply(`${client.i18n.get(handler.language, "command.playlist", "add_limit_track", { limit: String(client.config.player.LIMIT_TRACK) })}`);
+        TrackAdd.length = 0;
+        return;
+      }
+
+      TrackAdd.forEach(async (track) => {
+        await client.db.playlist.push(`${value}.tracks`, {
+          title: track.info.title,
+          uri: track.info.uri,
+          length: track.duration || track.info?.length,
+          thumbnail: track.info.artworkUrl,
+          author: track.info.author,
+          requester: track.requester,
         });
-    }
-
-    if (!tracks || tracks.length === 0)
-      return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${client.i18n.get(handler.language, "command.playlist", "add_match")}`)
-            .setColor(client.color),
-        ],
-      });
-    if (resultType === "PLAYLIST") for (let track of tracks) TrackAdd.push(track);
-    else TrackAdd.push(tracks[0]);
-
-    const Duration = convertTime(tracks[0].duration as number);
-    const TotalDuration = tracks.reduce(
-      (acc, cur) => acc + (cur.duration || 0),
-      0
-    );
-
-    if (resultType === "PLAYLIST") {
-      const embed = new EmbedBuilder()
-        .setDescription(
-          `${client.i18n.get(handler.language, "command.playlist", "add_playlist", {
-            title: this.getTitle(client, resultType, tracks, Inputed),
-            duration: convertTime(TotalDuration),
-            track: String(tracks.length),
-            user: String(handler.user),
-          })}`
-        )
-        .setColor(client.color);
-      handler.editReply({ content: " ", embeds: [embed] });
-    } else if (resultType === "TRACK") {
-      const embed = new EmbedBuilder()
-        .setDescription(
-          `${client.i18n.get(handler.language, "command.playlist", "add_track", {
-            title: this.getTitle(client, resultType, tracks),
-            duration: Duration,
-            user: String(handler.user),
-          })}`
-        )
-        .setColor(client.color);
-      handler.editReply({ content: " ", embeds: [embed] });
-    } else if (resultType === "SEARCH") {
-      const embed = new EmbedBuilder()
-        .setDescription(
-          `${client.i18n.get(handler.language, "command.playlist", "add_search", {
-            title: this.getTitle(client, resultType, tracks),
-            duration: Duration,
-            user: String(handler.user),
-          })}`
-        )
-        .setColor(client.color);
-      handler.editReply({ content: " ", embeds: [embed] });
-    } else {
-
-      return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${client.i18n.get(handler.language, "command.playlist", "add_match")}`)
-            .setColor(client.color),
-        ],
-      });
-    }
-
-    const playlist = await client.db.playlist.get(value);
-
-    if (!playlist)
-      return handler.followUp({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${client.i18n.get(handler.language, "command.playlist", "invalid")}`)
-            .setColor(client.color),
-        ],
       });
 
-    if (playlist.owner !== handler.user?.id) {
-      handler.followUp({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${client.i18n.get(handler.language, "command.playlist", "add_owner")}`)
-            .setColor(client.color),
-        ],
-      });
+      followReply(`${client.i18n.get(handler.language, "command.playlist", "add_added", { count: String(TrackAdd.length), playlist: value })}`);
       TrackAdd.length = 0;
-      return;
     }
-    const LimitTrack = playlist.tracks!.length + TrackAdd.length;
-
-    if (LimitTrack > client.config.player.LIMIT_TRACK) {
-      handler.followUp({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(
-              `${client.i18n.get(handler.language, "command.playlist", "add_limit_track", {
-                limit: String(client.config.player.LIMIT_TRACK),
-              })}`
-            )
-            .setColor(client.color),
-        ],
-      });
-      TrackAdd.length = 0;
-      return;
-    }
-
-    TrackAdd.forEach(async (track) => {
-      await client.db.playlist.push(`${value}.tracks`, {
-        title: track.info.title,
-        uri: track.info.uri,
-        length: track.duration || track.info?.length,
-        thumbnail: track.info.artworkUrl,
-        author: track.info.author,
-        requester: track.requester,
-      });
-    });
-
-    const embed = new EmbedBuilder()
-      .setDescription(
-        `${client.i18n.get(handler.language, "command.playlist", "add_added", {
-          count: String(TrackAdd.length),
-          playlist: value,
-        })}`
-      )
-      .setColor(client.color);
-
-    handler.followUp({ content: " ", embeds: [embed] });
-    TrackAdd.length = 0;
-  }
 
   getTitle(
     client: Manager,

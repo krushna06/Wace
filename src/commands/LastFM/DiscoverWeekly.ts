@@ -1,7 +1,8 @@
 import { Command, Accessableby } from "../../structures/Command.js";
 import { Manager } from "../../manager.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
-import { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 
 export default class DiscoverWeekly extends Command {
   constructor() {
@@ -22,13 +23,8 @@ export default class DiscoverWeekly extends Command {
 
     if (!recommendations) {
       return handler.sendMessage({
-        embeds: [
-          new EmbedBuilder()
-            .setColor(client.color)
-            .setDescription(
-              "No recommendations available yet. Play more songs to get personalized recommendations!"
-            ),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple("No recommendations available yet. Play more songs to get personalized recommendations!", client.color)],
       });
     }
 
@@ -36,42 +32,27 @@ export default class DiscoverWeekly extends Command {
 
     if (tracks.length === 0) {
       return handler.sendMessage({
-        embeds: [
-          new EmbedBuilder()
-            .setColor(client.color)
-            .setDescription(
-              "No recommendations available yet. Play more songs to get personalized recommendations!"
-            ),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple("No recommendations available yet. Play more songs to get personalized recommendations!", client.color)],
       });
     }
 
-    const embed = new EmbedBuilder()
-      .setColor(client.color)
-      .setTitle(`Discover Weekly - ${user.username}`)
-      .setDescription(
-        tracks
-          .map(
-            (track, i) =>
-              `**${i + 1}.** [${track.title}](${track.uri}) by **${track.artist}**\n*Score: ${track.score.toFixed(2)}*`
-          )
-          .join("\n")
-      )
-      .setFooter({
-        text: `Generated: ${new Date(recommendations.weeklyRecommendations.generatedAt).toLocaleDateString()}`,
-      });
-
     const buttons = new ActionRowBuilder<ButtonBuilder>().addComponents(
-      new ButtonBuilder()
-        .setCustomId("dw_queue")
-        .setLabel("Add to Queue")
-        .setStyle(ButtonStyle.Success),
-      new ButtonBuilder()
-        .setCustomId("dw_playlist")
-        .setLabel("Create Playlist")
-        .setStyle(ButtonStyle.Primary)
+      new ButtonBuilder().setCustomId("dw_queue").setLabel("Add to Queue").setStyle(ButtonStyle.Success),
+      new ButtonBuilder().setCustomId("dw_playlist").setLabel("Create Playlist").setStyle(ButtonStyle.Primary)
     );
 
-    return handler.sendMessage({ embeds: [embed], components: [buttons] });
+    return handler.sendMessage({
+      flags: CV2_FLAG,
+      components: [
+        cv2.build({
+          title: `Discover Weekly - ${user.username}`,
+          description: tracks.map((track, i) => `**${i + 1}.** [${track.title}](${track.uri}) by **${track.artist}**\n*Score: ${track.score.toFixed(2)}*`).join("\n"),
+          footer: `Generated: ${new Date(recommendations.weeklyRecommendations.generatedAt).toLocaleDateString()}`,
+          color: client.color,
+        }),
+        buttons,
+      ],
+    });
   }
 }

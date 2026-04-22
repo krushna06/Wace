@@ -1,7 +1,8 @@
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler, ParseMentionEnum } from "../../structures/CommandHandler.js";
 import { Manager } from "../../manager.js";
-import { ApplicationCommandOptionType, EmbedBuilder, User } from "discord.js";
+import { ApplicationCommandOptionType, User } from "discord.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 
 export default class implements Command {
   public name = ["avatar"];
@@ -28,39 +29,35 @@ export default class implements Command {
     await handler.deferReply();
     const data = handler.args[0];
     const getData = await handler.parseMentions(data);
-    console.log(data, getData);
 
     if (data && getData && getData.type !== ParseMentionEnum.USER)
       return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(
-              `${client.i18n.get(handler.language, "error", "arg_error", {
-                text: "**@mention**!",
-              })}`
-            )
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "error", "arg_error", { text: "**@mention**!" })}`, client.color)],
       });
 
     const value = getData.data as User;
 
     if (value && (value as any) !== "error") {
-      const embed = new EmbedBuilder()
-        .setTitle(value.username)
-        .setImage(`https://cdn.discordapp.com/avatars/${value.id}/${value.avatar}.jpeg?size=300`)
-        .setColor(client.color)
-        .setTimestamp();
-      await handler.editReply({ embeds: [embed] });
+      await handler.editReply({
+        flags: CV2_FLAG,
+        components: [cv2.build({
+          title: value.username,
+          thumbnail: `https://cdn.discordapp.com/avatars/${value.id}/${value.avatar}.jpeg?size=300`,
+          color: client.color,
+          timestamp: true,
+        })],
+      });
     } else {
-      const embed = new EmbedBuilder()
-        .setTitle(handler.user!.username)
-        .setImage(
-          `https://cdn.discordapp.com/avatars/${handler.user?.id}/${handler.user?.avatar}.jpeg?size=300`
-        )
-        .setColor(client.color)
-        .setTimestamp();
-      await handler.editReply({ embeds: [embed] });
+      await handler.editReply({
+        flags: CV2_FLAG,
+        components: [cv2.build({
+          title: handler.user!.username,
+          thumbnail: `https://cdn.discordapp.com/avatars/${handler.user?.id}/${handler.user?.avatar}.jpeg?size=300`,
+          color: client.color,
+          timestamp: true,
+        })],
+      });
     }
   }
 }

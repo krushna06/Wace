@@ -2,7 +2,6 @@ import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
 import { Manager } from "../../manager.js";
 import {
-  EmbedBuilder,
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
@@ -13,6 +12,7 @@ import {
   GuildMember,
   ChannelType,
 } from "discord.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 
 export default class implements Command {
   public name = ["guildinfo"];
@@ -32,9 +32,7 @@ export default class implements Command {
     let owner: GuildMember | null = null;
     try {
       owner = await guild.members.fetch(guild.ownerId);
-    } catch (error) {
-      console.error("Error fetching guild owner:", error);
-    }
+    } catch {}
     return owner ? `<@${owner.id}>` : "N/A";
   }
 
@@ -43,7 +41,6 @@ export default class implements Command {
 
     const interaction = handler.interaction as CommandInteraction;
     const guild = interaction.guild;
-
     if (!guild) {
       await handler.editReply({ content: "Could not fetch guild information." });
       return;
@@ -51,49 +48,26 @@ export default class implements Command {
 
     const ownerName = await this.getGuildOwner(guild);
 
-    const embed = new EmbedBuilder()
-      .setAuthor({
-        name: guild.name,
-        iconURL: guild.iconURL({ size: 2048 }) || undefined,
-      })
-      .setColor(client.color)
-      .setTitle("Guild Information")
-      .setDescription(
-        `
-**Server Name:** ${guild.name}
-**Server ID:** ${guild.id}
-**Owner:** ${ownerName}
-**Verify Level:** ${guild.verificationLevel}
-**Boost Tier:** ${guild.premiumTier}
-**Boost Count:** ${guild.premiumSubscriptionCount}
-**Created On:** <t:${Math.floor(guild.createdAt.getTime() / 1000)}:F>
-      `
-      )
-      .setThumbnail(guild.iconURL({ size: 2048 }) || undefined)
-      .setTimestamp();
-
-    const memberInfoButton = new ButtonBuilder()
-      .setCustomId("member_info")
-      .setLabel("Member Info")
-      .setStyle(ButtonStyle.Secondary);
-
-    const channelInfoButton = new ButtonBuilder()
-      .setCustomId("channel_info")
-      .setLabel("Channel Info")
-      .setStyle(ButtonStyle.Success);
-
-    const roleEmojiInfoButton = new ButtonBuilder()
-      .setCustomId("role_emoji_info")
-      .setLabel("Role & Emoji Info")
-      .setStyle(ButtonStyle.Danger);
-
     const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
-      memberInfoButton,
-      channelInfoButton,
-      roleEmojiInfoButton
+      new ButtonBuilder().setCustomId("member_info").setLabel("Member Info").setStyle(ButtonStyle.Secondary),
+      new ButtonBuilder().setCustomId("channel_info").setLabel("Channel Info").setStyle(ButtonStyle.Success),
+      new ButtonBuilder().setCustomId("role_emoji_info").setLabel("Role & Emoji Info").setStyle(ButtonStyle.Danger)
     );
 
-    await handler.editReply({ embeds: [embed], components: [row] });
+    await handler.editReply({
+      flags: CV2_FLAG,
+      components: [
+        cv2.build({
+          author: guild.name,
+          title: "Guild Information",
+          thumbnail: guild.iconURL({ size: 2048 }) || undefined,
+          color: client.color,
+          timestamp: true,
+          description: `**Server Name:** ${guild.name}\n**Server ID:** ${guild.id}\n**Owner:** ${ownerName}\n**Verify Level:** ${guild.verificationLevel}\n**Boost Tier:** ${guild.premiumTier}\n**Boost Count:** ${guild.premiumSubscriptionCount}\n**Created On:** <t:${Math.floor(guild.createdAt.getTime() / 1000)}:F>`,
+        }),
+        row,
+      ],
+    });
 
     const filter = (i: Interaction) => i.user.id === interaction.user.id;
     const collector = interaction.channel?.createMessageComponentCollector({
@@ -104,83 +78,35 @@ export default class implements Command {
 
     collector?.on("collect", async (i) => {
       if (!i.isButton()) return;
-
-      let infoEmbed;
+      let description = "";
+      let title = "";
       if (i.customId === "member_info") {
-        infoEmbed = new EmbedBuilder()
-          .setTitle("Member Information")
-          .setDescription(this.getMemberInfo(guild))
-          .setColor(client.color)
-          .setTimestamp();
+        title = "Member Information";
+        description = this.getMemberInfo(guild);
       } else if (i.customId === "channel_info") {
-        infoEmbed = new EmbedBuilder()
-          .setTitle("Channel Information")
-          .setDescription(this.getChannelInfo(guild))
-          .setColor(client.color)
-          .setTimestamp();
+        title = "Channel Information";
+        description = this.getChannelInfo(guild);
       } else if (i.customId === "role_emoji_info") {
-        infoEmbed = new EmbedBuilder()
-          .setTitle("Role & Emoji Information")
-          .setDescription(this.getRoleEmojiInfo(guild))
-          .setColor(client.color)
-          .setTimestamp();
+        title = "Role & Emoji Information";
+        description = this.getRoleEmojiInfo(guild);
       }
-
-      await i.reply({ embeds: [infoEmbed], ephemeral: true });
+      await i.reply({ flags: CV2_FLAG, components: [cv2.build({ title, description, color: client.color, timestamp: true })], ephemeral: true });
     });
 
-    collector?.on("end", async () => {
-      await handler.editReply({ components: [] });
-    });
+    collector?.on("end", async () => { await handler.editReply({ components: [] }); });
   }
 
   private getMemberInfo(guild: Guild): string {
     const members = guild.members.cache;
-    const memberCount = members.filter((member) => !member.user.bot).size;
-    const botCount = members.filter((member) => member.user.bot).size;
-    return `
-**Members:** ${memberCount} members
-**Bots:** ${botCount} bots
-    `;
+    return `**Members:** ${members.filter((m) => !m.user.bot).size} members\n**Bots:** ${members.filter((m) => m.user.bot).size} bots`;
   }
 
   private getChannelInfo(guild: Guild): string {
-    const textChannels = guild.channels.cache.filter(
-      (ch) => ch.type === ChannelType.GuildText
-    ).size;
-    const voiceChannels = guild.channels.cache.filter(
-      (ch) => ch.type === ChannelType.GuildVoice
-    ).size;
-    const stageChannels = guild.channels.cache.filter(
-      (ch) => ch.type === ChannelType.GuildStageVoice
-    ).size;
-    const newsChannels = guild.channels.cache.filter(
-      (ch) => ch.type === ChannelType.GuildNews
-    ).size;
-    const publicThreads = guild.channels.cache.filter(
-      (ch) => ch.type === ChannelType.GuildPublicThread
-    ).size;
-    const privateThreads = guild.channels.cache.filter(
-      (ch) => ch.type === ChannelType.GuildPrivateThread
-    ).size;
-    return `
-**Text Channels:** ${textChannels} channels
-**Voice Channels:** ${voiceChannels} channels
-**Stage Channels:** ${stageChannels} channels
-**News Channels:** ${newsChannels} channels
-**Public Threads:** ${publicThreads} threads
-**Private Threads:** ${privateThreads} threads
-    `;
+    const ch = guild.channels.cache;
+    return `**Text:** ${ch.filter((c) => c.type === ChannelType.GuildText).size}\n**Voice:** ${ch.filter((c) => c.type === ChannelType.GuildVoice).size}\n**Stage:** ${ch.filter((c) => c.type === ChannelType.GuildStageVoice).size}\n**News:** ${ch.filter((c) => c.type === ChannelType.GuildNews).size}`;
   }
 
   private getRoleEmojiInfo(guild: Guild): string {
-    const roles = guild.roles.cache.size;
-    const emojis = guild.emojis.cache.size;
-    const stickers = guild.stickers.cache.size;
-    return `
-**Roles:** ${roles} roles
-**Emoji Count:** ${emojis} emoji's
-**Sticker Count:** ${stickers} stickers
-    `;
+    return `**Roles:** ${guild.roles.cache.size}\n**Emojis:** ${guild.emojis.cache.size}\n**Stickers:** ${guild.stickers.cache.size}`;
   }
 }

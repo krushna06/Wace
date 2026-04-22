@@ -1,8 +1,8 @@
-import { EmbedBuilder } from "discord.js";
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
 import { Player } from "../../structures/Player.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 
 export default class implements Command {
   public name = ["voteskip"];
@@ -25,11 +25,8 @@ export default class implements Command {
     const { channel } = handler.member!.voice;
     if (!channel)
       return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${client.i18n.get(handler.language, "error", "no_in_voice")}`)
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "error", "no_in_voice")}`, client.color)],
       });
 
     const members = channel.members.filter((m) => !m.user.bot);
@@ -37,22 +34,16 @@ export default class implements Command {
     if (members.size <= 1) {
       await player.skip();
       return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${client.i18n.get(handler.language, "command.music", "skip_msg")} (Only one user in channel)`)
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "skip_msg")} (Only one user in channel)`, client.color)],
       });
     }
 
     const currentTrack = player.current;
     if (!currentTrack) {
       return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`No song is currently playing.`)
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`No song is currently playing.`, client.color)],
       });
     }
     const voteKey = `voteskip_${currentTrack.identifier}`;
@@ -65,19 +56,13 @@ export default class implements Command {
       await player.skip();
       player.data.delete(voteKey);
       return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`⏭️ Song skipped! (${votes.size}/${requiredVotes} votes)`)
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`⏭️ Song skipped! (${votes.size}/${requiredVotes} votes)`, client.color)],
       });
     } else {
       return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`🗳️ You voted to skip! (${votes.size}/${requiredVotes} votes). ${requiredVotes - votes.size} more vote(s) needed to skip.`)
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`🗳️ You voted to skip! (${votes.size}/${requiredVotes} votes). ${requiredVotes - votes.size} more vote(s) needed to skip.`, client.color)],
       });
     }
   }

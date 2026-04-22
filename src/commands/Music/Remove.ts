@@ -1,11 +1,11 @@
-import { ApplicationCommandOptionType, Message } from "discord.js";
-import { EmbedBuilder } from "discord.js";
+import { ApplicationCommandOptionType } from "discord.js";
 import { convertTime } from "../../utilities/ConvertTime.js";
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
 import { Player } from "../../structures/Player.js";
 import { getTitle } from "../../utilities/GetTitle.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 
 export default class implements Command {
   public name = ["remove"];
@@ -36,46 +36,23 @@ export default class implements Command {
     const tracks = handler.args[0];
     if (tracks && isNaN(+tracks))
       return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${client.i18n.get(handler.language, "error", "number_invalid")}`)
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "error", "number_invalid")}`, client.color)],
       });
     if (Number(tracks) == 0)
       return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(
-              `${client.i18n.get(handler.language, "command.music", "removetrack_already")}`
-            )
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "removetrack_already")}`, client.color)],
       });
     if (Number(tracks) > player.queue.length)
       return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(
-              `${client.i18n.get(handler.language, "command.music", "removetrack_notfound")}`
-            )
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "removetrack_notfound")}`, client.color)],
       });
 
     const song = player.queue[Number(tracks) - 1];
 
     player.queue.splice(Number(tracks) - 1, 1);
-
-    const embed = new EmbedBuilder()
-      .setDescription(
-        `${client.i18n.get(handler.language, "command.music", "removetrack_desc", {
-          name: getTitle(client, song),
-          duration: convertTime(player.position),
-          request: String(song.requester),
-        })}`
-      )
-      .setColor(client.color);
 
     client.wsl.get(handler.guild!.id)?.send({
       op: "playerQueueRemove",
@@ -98,6 +75,9 @@ export default class implements Command {
       index: Number(tracks) - 1,
     });
 
-    return handler.editReply({ embeds: [embed] });
+    return handler.editReply({
+      flags: CV2_FLAG,
+      components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "removetrack_desc", { name: getTitle(client, song), duration: convertTime(player.position), request: String(song.requester) })}`, client.color)],
+    });
   }
 }

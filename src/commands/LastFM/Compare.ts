@@ -1,8 +1,9 @@
-import { EmbedBuilder, User as DiscordUser } from "discord.js";
+import { User as DiscordUser } from "discord.js";
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
 import { getUserTopArtists, getUserAllArtists } from "../../services/LastfmService.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 
 export default class implements Command {
   public name = ["compare"];
@@ -51,18 +52,10 @@ export default class implements Command {
     ]);
 
     if (!sessionA || !sessionA.session_key) {
-      const embed = new EmbedBuilder()
-        .setTitle("Not Connected to Last.fm")
-        .setDescription("You need to connect your Last.fm account first. Use /lastfm-connect.")
-        .setColor(client.color);
-      return handler.editReply({ content: " ", embeds: [embed] });
+      return handler.editReply({ flags: CV2_FLAG, components: [cv2.build({ title: "Not Connected to Last.fm", description: "You need to connect your Last.fm account first. Use /lastfm-connect.", color: client.color })] });
     }
     if (!sessionB || !sessionB.session_key) {
-      const embed = new EmbedBuilder()
-        .setTitle("User Not Connected to Last.fm")
-        .setDescription(`${targetUser.username} hasn't connected their Last.fm account.`)
-        .setColor(client.color);
-      return handler.editReply({ content: " ", embeds: [embed] });
+      return handler.editReply({ flags: CV2_FLAG, components: [cv2.build({ title: "User Not Connected to Last.fm", description: `${targetUser.username} hasn't connected their Last.fm account.`, color: client.color })] });
     }
 
     const apiKey = client.config.player.LASTFM.api_key;
@@ -104,14 +97,13 @@ export default class implements Command {
       table += row.name.padEnd(16).slice(0, 16) + String(row.playcountA).padStart(8) + '   ' + String(row.playcountB).padEnd(8) + '\n';
     }
     const percent = ((intersectionKeys.length / Math.min(mapA.size, mapB.size)) * 100).toFixed(1);
-    const embed = new EmbedBuilder()
-      .setTitle(`Top artist comparison - ${handler.user?.username} vs ${targetUser.username}`)
-      .setDescription(
-        intersectionKeys.length > 0
-          ? `${intersectionKeys.length} (${percent}%) out of top ${Math.min(mapA.size, mapB.size)} alltime match\n\n\`\`\`\n${table}\`\`\``
-          : `No common artists found in your top ${Math.min(mapA.size, mapB.size)}.`
-      )
-      .setColor(client.color);
-    return handler.editReply({ content: " ", embeds: [embed] });
+    const embed = cv2.build({
+      title: `Top artist comparison - ${handler.user?.username} vs ${targetUser.username}`,
+      description: intersectionKeys.length > 0
+        ? `${intersectionKeys.length} (${percent}%) out of top ${Math.min(mapA.size, mapB.size)} alltime match\n\n\`\`\`\n${table}\`\`\``
+        : `No common artists found in your top ${Math.min(mapA.size, mapB.size)}.`,
+      color: client.color,
+    });
+    return handler.editReply({ flags: CV2_FLAG, components: [embed] });
   }
 }

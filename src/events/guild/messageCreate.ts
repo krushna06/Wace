@@ -7,7 +7,7 @@ import {
   PermissionFlagsBits,
 } from "discord.js";
 import { Manager } from "../../manager.js";
-import { EmbedBuilder } from "discord.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 import { stripIndents } from "common-tags";
 import fs from "fs";
 import {
@@ -50,22 +50,16 @@ export default class {
       PREFIX = String(await client.db.prefix.set(`${message.guild!.id}`, client.prefix));
 
     if (message.content.match(mention)) {
-      const mention_embed = new EmbedBuilder()
-        .setAuthor({
-          name: `${client.i18n.get(language, "event.message", "wel", {
-            bot: message.guild!.members.me!.displayName,
-          })}`,
-        })
-        .setColor(client.color).setDescription(stripIndents`
-          ${client.i18n.get(language, "event.message", "intro1", {
-            bot: message.guild!.members.me!.displayName,
-          })}
-          ${client.i18n.get(language, "event.message", "prefix", {
-            prefix: `\`${PREFIX}\` or \`/\``,
-          })}
+      const mention_embed = cv2.build({
+        author: `${client.i18n.get(language, "event.message", "wel", { bot: message.guild!.members.me!.displayName })}`,
+        description: stripIndents`
+          ${client.i18n.get(language, "event.message", "intro1", { bot: message.guild!.members.me!.displayName })}
+          ${client.i18n.get(language, "event.message", "prefix", { prefix: `\`${PREFIX}\` or \`/\`` })}
           ${client.i18n.get(language, "event.message", "intro3")}
-          `);
-      await message.reply({ embeds: [mention_embed] });
+          `,
+        color: client.color,
+      });
+      await message.reply({ flags: CV2_FLAG, components: [mention_embed] });
       return;
     }
     const escapeRegex = (str: string) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -115,30 +109,17 @@ export default class {
     const managePermissions = [PermissionFlagsBits.ManageChannels];
 
     async function respondError(permissionResult: CheckPermissionResultInterface) {
-      const selfErrorString = `${client.i18n.get(language, "error", "user_no_perms", {
-        perm: permissionResult.result,
-      })}`;
-      const embed = new EmbedBuilder()
-        .setDescription(
-          permissionResult.channel == "Self"
-            ? selfErrorString
-            : `${client.i18n.get(language, "error", "no_perms_channel", {
-                perm: permissionResult.result,
-                channel: permissionResult.channel,
-              })}`
-        )
-        .setColor(client.color);
-      const dmChannel =
-        message.author.dmChannel == null
-          ? await message.author.createDM()
-          : message.author.dmChannel;
-      dmChannel
-        .send({
-          embeds: [embed],
-        })
-        .catch(async () => {
-          await message.reply({ embeds: [embed] }).catch(() => null);
-        });
+      const selfErrorString = `${client.i18n.get(language, "error", "user_no_perms", { perm: permissionResult.result })}`;
+      const container = cv2.simple(
+        permissionResult.channel == "Self"
+          ? selfErrorString
+          : `${client.i18n.get(language, "error", "no_perms_channel", { perm: permissionResult.result, channel: permissionResult.channel })}`,
+        client.color
+      );
+      const dmChannel = message.author.dmChannel == null ? await message.author.createDM() : message.author.dmChannel;
+      dmChannel.send({ flags: CV2_FLAG, components: [container] }).catch(async () => {
+        await message.reply({ flags: CV2_FLAG, components: [container] }).catch(() => null);
+      });
     }
 
     const returnData = await permissionChecker.message(message, defaultPermissions);
@@ -160,57 +141,25 @@ export default class {
 
 
     if (command.lavalink && client.lavalinkUsing.length == 0) {
-      return message.reply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${client.i18n.get(language, "error", "no_node")}`)
-            .setColor(client.color),
-        ],
-      });
+      return message.reply({ flags: CV2_FLAG, components: [cv2.simple(`${client.i18n.get(language, "error", "no_node")}`, client.color)] });
     }
 
     if (command.playerCheck) {
       const player = client.players.get(message.guild!.id);
       const twentyFourBuilder = new AutoReconnectBuilderService(client);
       const is247 = await twentyFourBuilder.get(message.guild!.id);
-      if (
-        !player ||
-        (is247 && is247.twentyfourseven && player.queue.length == 0 && !player.current)
-      )
-        return message.reply({
-          embeds: [
-            new EmbedBuilder()
-              .setDescription(`${client.i18n.get(language, "error", "no_player")}`)
-              .setColor(client.color),
-          ],
-        });
+      if (!player || (is247 && is247.twentyfourseven && player.queue.length == 0 && !player.current))
+        return message.reply({ flags: CV2_FLAG, components: [cv2.simple(`${client.i18n.get(language, "error", "no_player")}`, client.color)] });
     }
 
     if (command.sameVoiceCheck) {
       const { channel } = message.member!.voice;
       if (!channel || message.member!.voice.channel !== message.guild!.members.me!.voice.channel)
-        return message.reply({
-          embeds: [
-            new EmbedBuilder()
-              .setDescription(`${client.i18n.get(language, "error", "no_voice")}`)
-              .setColor(client.color),
-          ],
-        });
+        return message.reply({ flags: CV2_FLAG, components: [cv2.simple(`${client.i18n.get(language, "error", "no_voice")}`, client.color)] });
     }
 
-    if (
-      command.accessableby.includes(Accessableby.Manager) &&
-      !message.member!.permissions.has(PermissionFlagsBits.ManageGuild)
-    )
-      return message.reply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(
-              `${client.i18n.get(language, "error", "user_no_perms", { perm: "ManageGuild" })}`
-            )
-            .setColor(client.color),
-        ],
-      });
+    if (command.accessableby.includes(Accessableby.Manager) && !message.member!.permissions.has(PermissionFlagsBits.ManageGuild))
+      return message.reply({ flags: CV2_FLAG, components: [cv2.simple(`${client.i18n.get(language, "error", "user_no_perms", { perm: "ManageGuild" })}`, client.color)] });
 
 
     const premiumUser = await client.db.premium.get(message.author.id);
@@ -246,53 +195,32 @@ export default class {
     };
 
     if (command.accessableby.includes(Accessableby.Owner) && !userPerm.owner)
-      return message.reply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${client.i18n.get(language, "error", "owner_only")}`)
-            .setColor(client.color),
-        ],
-      });
+      return message.reply({ flags: CV2_FLAG, components: [cv2.simple(`${client.i18n.get(language, "error", "owner_only")}`, client.color)] });
 
     if (command.accessableby.includes(Accessableby.Admin) && !userPerm.admin)
-      return message.reply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(
-              `${client.i18n.get(language, "error", "user_no_perms", { perm: "wace@admin" })}`
-            )
-            .setColor(client.color),
-        ],
-      });
+      return message.reply({ flags: CV2_FLAG, components: [cv2.simple(`${client.i18n.get(language, "error", "user_no_perms", { perm: "wace@admin" })}`, client.color)] });
 
-    if (
-      !isBothUserAndGuild &&
-      command.accessableby.includes(Accessableby.Premium) &&
-      !userPerm.premium
-    ) {
-      const embed = new EmbedBuilder()
-        .setAuthor({
-          name: `${client.i18n.get(language, "error", "no_premium_author")}`,
-          iconURL: client.user!.displayAvatarURL(),
-        })
-        .setDescription(`${client.i18n.get(language, "error", "no_premium_desc")}`)
-        .setColor(client.color)
-        .setTimestamp();
-      return message.reply({ content: " ", embeds: [embed] });
+    if (!isBothUserAndGuild && command.accessableby.includes(Accessableby.Premium) && !userPerm.premium) {
+      return message.reply({
+        flags: CV2_FLAG,
+        components: [cv2.build({
+          author: `${client.i18n.get(language, "error", "no_premium_author")}`,
+          description: `${client.i18n.get(language, "error", "no_premium_desc")}`,
+          color: client.color,
+          timestamp: true,
+        })],
+      });
     }
 
     if (command.accessableby.includes(Accessableby.GuildPremium) && !userPerm.guildPre) {
-      const embed = new EmbedBuilder()
-        .setAuthor({
-          name: `${client.i18n.get(language, "error", "no_premium_author")}`,
-          iconURL: client.user!.displayAvatarURL(),
-        })
-        .setDescription(`${client.i18n.get(language, "error", "no_guild_premium_desc")}`)
-        .setColor(client.color)
-        .setTimestamp();
       return message.reply({
-        content: " ",
-        embeds: [embed],
+        flags: CV2_FLAG,
+        components: [cv2.build({
+          author: `${client.i18n.get(language, "error", "no_premium_author")}`,
+          description: `${client.i18n.get(language, "error", "no_guild_premium_desc")}`,
+          color: client.color,
+          timestamp: true,
+        })],
       });
     }
 
@@ -301,50 +229,28 @@ export default class {
       .some(([_, value]) => value === false);
 
     if (command.accessableby.includes(Accessableby.DJ) && !userPerm.dj) {
-      const embed = new EmbedBuilder()
-        .setDescription(
-          hasDJRole
-            ? `${client.i18n.get(language, "error", "dj_role_required")}`
-            : `${client.i18n.get(language, "error", "user_no_perms", { perm: "DJ Role" })}`
-        )
-        .setColor(client.color);
       return message.reply({
-        embeds: [embed],
+        flags: CV2_FLAG,
+        components: [cv2.simple(hasDJRole ? `${client.i18n.get(language, "error", "dj_role_required")}` : `${client.i18n.get(language, "error", "user_no_perms", { perm: "DJ Role" })}`, client.color)],
       });
     }
 
-    if (
-      !isBothUserAndGuild &&
-      command.accessableby.includes(Accessableby.GuildPremium) &&
-      !userPerm.guildPre
-    ) {
+    if (!isBothUserAndGuild && command.accessableby.includes(Accessableby.GuildPremium) && !userPerm.guildPre) {
       const voteChecker = await client.topgg.checkVote(message.author.id);
       if (voteChecker == TopggServiceEnum.ERROR) {
-        const embed = new EmbedBuilder()
-          .setAuthor({
-            name: client.i18n.get(language, "error", "topgg_error_author"),
-          })
-          .setDescription(client.i18n.get(language, "error", "topgg_error_desc"))
-          .setColor(client.color)
-          .setTimestamp();
-        return message.reply({ content: " ", embeds: [embed] });
+        return message.reply({
+          flags: CV2_FLAG,
+          components: [cv2.build({ author: client.i18n.get(language, "error", "topgg_error_author"), description: client.i18n.get(language, "error", "topgg_error_desc"), color: client.color, timestamp: true })],
+        });
       }
-
       if (voteChecker == TopggServiceEnum.UNVOTED) {
-        const embed = new EmbedBuilder()
-          .setAuthor({
-            name: client.i18n.get(language, "error", "topgg_vote_author"),
-          })
-          .setDescription(client.i18n.get(language, "error", "topgg_vote_desc"))
-          .setColor(client.color)
-          .setTimestamp();
         const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
-          new ButtonBuilder()
-            .setLabel(client.i18n.get(language, "error", "topgg_vote_button"))
-            .setStyle(ButtonStyle.Link)
-            .setURL(`https://top.gg/bot/${client.user?.id}/vote`)
+          new ButtonBuilder().setLabel(client.i18n.get(language, "error", "topgg_vote_button")).setStyle(ButtonStyle.Link).setURL(`https://top.gg/bot/${client.user?.id}/vote`)
         );
-        return message.reply({ content: " ", embeds: [embed], components: [row] });
+        return message.reply({
+          flags: CV2_FLAG,
+          components: [cv2.build({ author: client.i18n.get(language, "error", "topgg_vote_author"), description: client.i18n.get(language, "error", "topgg_vote_desc"), color: client.color, timestamp: true }), row],
+        });
       }
     }
 
@@ -373,11 +279,8 @@ export default class {
     } catch (error) {
       client.logger.error("CommandManager | Message", error);
       message.reply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${client.i18n.get(language, "error", "unexpected_error")}\n ${error}`)
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(language, "error", "unexpected_error")}\n ${error}`, client.color)],
       });
     }
   }

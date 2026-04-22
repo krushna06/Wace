@@ -1,6 +1,7 @@
-import { ButtonInteraction, EmbedBuilder, TextChannel, VoiceBasedChannel } from "discord.js";
+import { ButtonInteraction, TextChannel, VoiceBasedChannel } from "discord.js";
 import { Manager } from "../../../manager.js";
 import { Player } from "../../../structures/Player.js";
+import { cv2, CV2_FLAG } from "../../../utilities/ComponentsV2.js";
 
 export class ButtonPause {
   client: Manager;
@@ -30,11 +31,8 @@ export class ButtonPause {
 
     if (!this.channel) {
       this.interaction.reply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${this.client.i18n.get(this.language, "error", "no_in_voice")}`)
-            .setColor(this.client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${this.client.i18n.get(this.language, "error", "no_in_voice")}`, this.client.color)],
       });
       return;
     } else if (
@@ -42,20 +40,14 @@ export class ButtonPause {
       !this.interaction.guild!.members.me!.voice.channel.equals(this.channel)
     ) {
       this.interaction.reply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${this.client.i18n.get(this.language, "error", "no_same_voice")}`)
-            .setColor(this.client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${this.client.i18n.get(this.language, "error", "no_same_voice")}`, this.client.color)],
       });
       return;
     } else if (!this.player) {
       this.interaction.reply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${this.client.i18n.get(this.language, "error", "no_player")}`)
-            .setColor(this.client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${this.client.i18n.get(this.language, "error", "no_player")}`, this.client.color)],
       });
       return;
     } else {
@@ -69,28 +61,13 @@ export class ButtonPause {
       await this.player.setPause(!this.player.paused);
 
       this.player.paused
-        ? playMsg
-            .edit({
+        ? playMsg.edit({ components: [this.client.enSwitch] }).catch(() => null)
+        : playMsg.edit({ components: [this.client.enSwitchMod] }).catch(() => null);
 
-
-              components: [this.client.enSwitch],
-            })
-            .catch(() => null)
-        : playMsg
-            .edit({
-
-
-              components: [this.client.enSwitchMod],
-            })
-            .catch(() => null);
-
-      const embed = new EmbedBuilder()
-        .setDescription(
-          `${this.client.i18n.get(this.language, "button.music", this.player.paused ? "pause_msg" : "resume_msg")}`
-        )
-        .setColor(this.client.color);
-
-      this.interaction.reply({ embeds: [embed] });
+      this.interaction.reply({
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${this.client.i18n.get(this.language, "button.music", this.player.paused ? "pause_msg" : "resume_msg")}`, this.client.color)],
+      });
     }
   }
 }

@@ -1,7 +1,7 @@
 import { Manager } from "../../manager.js";
-import { EmbedBuilder } from "discord.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 
 export default class implements Command {
   public name = ["prefix"];
@@ -23,50 +23,30 @@ export default class implements Command {
 
     if (!handler.args[0])
       return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${client.i18n.get(handler.language, "command.utils", "prefix_arg")}`)
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "command.utils", "prefix_arg")}`, client.color)],
       });
 
     if (handler.args[0].length > 10)
       return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(
-              `${client.i18n.get(handler.language, "command.utils", "prefix_length")}`
-            )
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "command.utils", "prefix_length")}`, client.color)],
       });
 
     const newPrefix = await client.db.prefix.get(`${handler.guild!.id}`);
 
     if (!newPrefix) {
       await client.db.prefix.set(`${handler.guild!.id}`, handler.args[0]);
-
-      const embed = new EmbedBuilder()
-        .setDescription(
-          `${client.i18n.get(handler.language, "command.utils", "prefix_set", {
-            prefix: handler.args[0],
-          })}`
-        )
-        .setColor(client.color);
-
-      return handler.editReply({ embeds: [embed] });
+      return handler.editReply({
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "command.utils", "prefix_set", { prefix: handler.args[0] })}`, client.color)],
+      });
     } else if (newPrefix) {
       await client.db.prefix.set(`${handler.guild!.id}`, handler.args[0]);
-
-      const embed = new EmbedBuilder()
-        .setDescription(
-          `${client.i18n.get(handler.language, "command.utils", "prefix_change", {
-            prefix: handler.args[0],
-          })}`
-        )
-        .setColor(client.color);
-
-      return handler.editReply({ embeds: [embed] });
+      return handler.editReply({
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "command.utils", "prefix_change", { prefix: handler.args[0] })}`, client.color)],
+      });
     }
   }
 }

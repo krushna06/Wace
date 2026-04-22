@@ -1,4 +1,4 @@
-import { EmbedBuilder, ApplicationCommandOptionType, Message } from "discord.js";
+import { ApplicationCommandOptionType, Message } from "discord.js";
 import { convertTime } from "../../utilities/ConvertTime.js";
 import { Manager } from "../../manager.js";
 import { Playlist } from "../../database/schema/Playlist.js";
@@ -6,6 +6,7 @@ import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
 import { AutocompleteInteractionChoices, GlobalInteraction } from "../../@types/Interaction.js";
 import { CommandInteraction, AutocompleteInteraction } from "discord.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 let playlist: Playlist | null;
 
 export default class implements Command {
@@ -32,122 +33,58 @@ export default class implements Command {
   ];
 
   public async execute(client: Manager, handler: CommandHandler) {
-    await handler.deferReply();
+      await handler.deferReply();
 
-    const value = handler.args[0] ? handler.args[0] : null;
+      const value = handler.args[0] ? handler.args[0] : null;
+      let player = client.players.get(handler.guild!.id);
+      const reply = (desc: string) => handler.editReply({ flags: CV2_FLAG, components: [cv2.simple(desc, client.color)] });
 
-    let player = client.players.get(handler.guild!.id);
+      if (value == null) return reply(`${client.i18n.get(handler.language, "command.playlist", "invalid")}`);
 
-    if (value == null)
-      return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${client.i18n.get(handler.language, "command.playlist", "invalid")}`)
-            .setColor(client.color),
-        ],
-      });
+      if (value) playlist = await client.db.playlist.get(`${value}`);
+      if (!playlist) return reply(`${client.i18n.get(handler.language, "command.playlist", "invalid")}`);
 
-    if (value) {
-      playlist = await client.db.playlist.get(`${value}`);
-    }
-
-    if (!playlist)
-      return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${client.i18n.get(handler.language, "command.playlist", "invalid")}`)
-            .setColor(client.color),
-        ],
-      });
-
-    if (playlist.private && playlist.owner !== handler.user?.id) {
-      handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(
-              `${client.i18n.get(handler.language, "command.playlist", "import_private")}`
-            )
-            .setColor(client.color),
-        ],
-      });
-      return;
-    }
-
-    const { channel } = handler.member!.voice;
-    if (!channel)
-      return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(
-              `${client.i18n.get(handler.language, "command.playlist", "import_voice")}`
-            )
-            .setColor(client.color),
-        ],
-      });
-    const SongAdd = [];
-    let SongLoad = 0;
-
-    const totalDuration = convertTime(playlist.tracks!.reduce((acc, cur) => acc + cur.length!, 0));
-
-    if (playlist.tracks?.length == 0)
-      return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(
-              `${client.i18n.get(handler.language, "command.playlist", "import_empty")}`
-            )
-            .setColor(client.color),
-        ],
-      });
-
-    if (!player)
-      player = await client.playerManager.create({
-        guildId: handler.guild!.id,
-        voiceId: handler.member!.voice.channel!.id,
-        textId: handler.channel!.id,
-        shardId: handler.guild?.shardId ?? 0,
-        deaf: true,
-        volume: client.config.player.DEFAULT_VOLUME,
-      });
-
-    player.textId = handler.channel!.id;
-
-    for (let i = 0; i < playlist.tracks!.length; i++) {
-      const res = await player.search(playlist.tracks![i].uri, {
-        requester: handler.user,
-      });
-      if (res.type == "TRACK") {
-        SongAdd.push(res.tracks[0]);
-        SongLoad++;
-      } else if (res.type == "PLAYLIST") {
-        for (let t = 0; t < res.tracks.length; t++) {
-          SongAdd.push(res.tracks[t]);
-          SongLoad++;
-        }
-      } else if (res.type == "SEARCH") {
-        SongAdd.push(res.tracks[0]);
-        SongLoad++;
+      if (playlist.private && playlist.owner !== handler.user?.id) {
+        reply(`${client.i18n.get(handler.language, "command.playlist", "import_private")}`);
+        return;
       }
-      if (SongLoad == playlist.tracks!.length) {
-        player.queue.push(...SongAdd);
-        const embed = new EmbedBuilder()
-          .setDescription(
-            `${client.i18n.get(handler.language, "command.playlist", "import_imported", {
-              name: playlist.name,
-              tracks: String(playlist.tracks!.length),
-              duration: totalDuration,
-              user: String(handler.user),
-            })}`
-          )
-          .setColor(client.color);
 
-        handler.editReply({ content: " ", embeds: [embed] });
-        if (!player.playing) {
-          player.play();
+      const { channel } = handler.member!.voice;
+      if (!channel) return reply(`${client.i18n.get(handler.language, "command.playlist", "import_voice")}`);
+      if (playlist.tracks?.length == 0) return reply(`${client.i18n.get(handler.language, "command.playlist", "import_empty")}`);
+
+      const SongAdd = [];
+      let SongLoad = 0;
+      const totalDuration = convertTime(playlist.tracks!.reduce((acc, cur) => acc + cur.length!, 0));
+
+      if (!player)
+        player = await client.playerManager.create({
+          guildId: handler.guild!.id,
+          voiceId: handler.member!.voice.channel!.id,
+          textId: handler.channel!.id,
+          shardId: handler.guild?.shardId ?? 0,
+          deaf: true,
+          volume: client.config.player.DEFAULT_VOLUME,
+        });
+
+      player.textId = handler.channel!.id;
+
+      for (let i = 0; i < playlist.tracks!.length; i++) {
+        const res = await player.search(playlist.tracks![i].uri, { requester: handler.user });
+        if (res.type == "TRACK") { SongAdd.push(res.tracks[0]); SongLoad++; }
+        else if (res.type == "PLAYLIST") { for (let t = 0; t < res.tracks.length; t++) { SongAdd.push(res.tracks[t]); SongLoad++; } }
+        else if (res.type == "SEARCH") { SongAdd.push(res.tracks[0]); SongLoad++; }
+
+        if (SongLoad == playlist.tracks!.length) {
+          player.queue.push(...SongAdd);
+          handler.editReply({
+            flags: CV2_FLAG,
+            components: [cv2.simple(`${client.i18n.get(handler.language, "command.playlist", "import_imported", { name: playlist.name, tracks: String(playlist.tracks!.length), duration: totalDuration, user: String(handler.user) })}`, client.color)],
+          });
+          if (!player.playing) player.play();
         }
       }
     }
-  }
 
   public async autocomplete(client: Manager, interaction: GlobalInteraction, language: string) {
     let choice: AutocompleteInteractionChoices[] = [];

@@ -2,7 +2,6 @@ import {
   ApplicationCommandOptionType,
   AutocompleteInteraction,
   CommandInteraction,
-  EmbedBuilder,
 } from "discord.js";
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
@@ -12,6 +11,7 @@ import { AutocompleteInteractionChoices, GlobalInteraction } from "../../@types/
 import { Player } from "../../structures/Player.js";
 import { getTitle } from "../../utilities/GetTitle.js";
 import { getNode } from "../../utilities/GetNode.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 
 export default class implements Command {
   public name = ["insert"];
@@ -51,31 +51,18 @@ export default class implements Command {
     const song = handler.args.join(" ");
     if (position && isNaN(+position))
       return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${client.i18n.get(handler.language, "error", "number_invalid")}`)
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "error", "number_invalid")}`, client.color)],
       });
     if (Number(position) == 0)
       return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(
-              `${client.i18n.get(handler.language, "command.music", "insert_already")}`
-            )
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "insert_already")}`, client.color)],
       });
     if (Number(position) > player.queue.length)
       return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(
-              `${client.i18n.get(handler.language, "command.music", "insert_notfound")}`
-            )
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "insert_notfound")}`, client.color)],
       });
 
     const result = await player.search(song, { requester: handler.user });
@@ -83,26 +70,11 @@ export default class implements Command {
 
     if (!result.tracks.length)
       return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(
-              `${client.i18n.get(handler.language, "command.music", "insert_notfound")}`
-            )
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "insert_notfound")}`, client.color)],
       });
 
     player.queue.splice(position - 1, 0, track);
-
-    const embed = new EmbedBuilder()
-      .setDescription(
-        `${client.i18n.get(handler.language, "command.music", "insert_desc", {
-          name: getTitle(client, track),
-          duration: convertTime(player.position),
-          request: String(track.requester),
-        })}`
-      )
-      .setColor(client.color);
 
     client.wsl.get(handler.guild!.id)?.send({
       op: "playerQueueInsert",
@@ -125,7 +97,10 @@ export default class implements Command {
       index: position - 1,
     });
 
-    return handler.editReply({ embeds: [embed] });
+    return handler.editReply({
+      flags: CV2_FLAG,
+      components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "insert_desc", { name: getTitle(client, track), duration: convertTime(player.position), request: String(track.requester) })}`, client.color)],
+    });
   }
 
 
@@ -163,7 +138,6 @@ export default class implements Command {
       if (!searchRes) {
         return choice.push({ name: "Error song not matches", value: url });
       }
-
 
       let tracks: any[] = [];
       switch (searchRes.loadType) {

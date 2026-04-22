@@ -6,8 +6,10 @@ import {
   CommandInteraction,
   Guild,
   GuildMember,
+  InteractionReplyOptions,
   InteractionResponse,
   Message,
+  MessageReplyOptions,
   Role,
   TextBasedChannel,
   User,
@@ -24,6 +26,9 @@ export type CommandHandlerOptions = {
 };
 
 export type GlobalMsg = InteractionResponse<boolean> | (Message<boolean> | undefined);
+
+/** Superset of BaseMessageOptions that also allows the flags field used by Components V2. */
+export type MessageOptions = BaseMessageOptions | InteractionReplyOptions | MessageReplyOptions;
 
 export enum ParseMentionEnum {
   ERROR,
@@ -120,19 +125,19 @@ export class CommandHandler {
     }
   }
 
-  public async sendMessage(data: string | BaseMessageOptions) {
+  public async sendMessage(data: string | MessageOptions) {
     if (this.interaction) {
-      return await this.interaction.reply(data);
+      return await this.interaction.reply(data as InteractionReplyOptions);
     } else {
-      return await this.message?.reply(data);
+      return await this.message?.reply(data as MessageReplyOptions);
     }
   }
 
-  public async followUp(data: string | BaseMessageOptions) {
+  public async followUp(data: string | MessageOptions) {
     if (this.interaction) {
-      return await this.interaction.followUp(data);
+      return await this.interaction.followUp(data as InteractionReplyOptions);
     } else {
-      return await this.message?.reply(data);
+      return await this.message?.reply(data as MessageReplyOptions);
     }
   }
 
@@ -146,22 +151,22 @@ export class CommandHandler {
     }
   }
 
-  public async editReply(data: BaseMessageOptions): Promise<GlobalMsg> {
+  public async editReply(data: MessageOptions): Promise<GlobalMsg> {
     if (!this.msg) {
       this.client.logger.error(CommandHandler.name, "You have not declared deferReply()");
       return;
     }
     if (this.interaction) {
-      return this.msg.edit(data);
+      return this.msg.edit(data as BaseMessageOptions);
     } else {
-      if (data.embeds && !data.content)
+      if ((data as BaseMessageOptions).embeds && !(data as BaseMessageOptions).content)
         return this.msg.edit({
           content: "",
-          embeds: data.embeds,
-          components: data.components,
-          allowedMentions: data.allowedMentions,
+          embeds: (data as BaseMessageOptions).embeds,
+          components: (data as BaseMessageOptions).components,
+          allowedMentions: (data as BaseMessageOptions).allowedMentions,
         });
-      else return this.msg.edit(data);
+      else return this.msg.edit(data as BaseMessageOptions);
     }
   }
 

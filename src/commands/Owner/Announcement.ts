@@ -1,11 +1,12 @@
-import { EmbedBuilder, GuildBasedChannel, PermissionFlagsBits, TextChannel } from "discord.js";
+import { GuildBasedChannel, PermissionFlagsBits, TextChannel } from "discord.js";
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 
 export default class implements Command {
   public name = ["announcement"];
-  public description = "Send announcement mesage to all server";
+  public description = "Send announcement message to all servers";
   public category = "Owner";
   public accessableby = [Accessableby.Admin];
   public usage = "<your_message>";
@@ -22,7 +23,8 @@ export default class implements Command {
 
     if (!handler.args[0] || !handler.message)
       return handler.editReply({
-        embeds: [new EmbedBuilder().setColor(client.color).setDescription("`⚠️` | Empty args!")],
+        flags: CV2_FLAG,
+        components: [cv2.simple("`⚠️` | Empty args!", client.color)],
       });
 
     const avalibleChannel: GuildBasedChannel[] = [];
@@ -30,18 +32,12 @@ export default class implements Command {
     let sentSuccesfully = 0;
 
     for (const guild of allGuild) {
-      const channelFilterTextBased = guild.channels.cache.filter((channel) =>
-        channel.isTextBased()
-      );
+      const channelFilterTextBased = guild.channels.cache.filter((channel) => channel.isTextBased());
       const channelFilterPermission = channelFilterTextBased.filter((channel) =>
         channel.guild.members.me?.permissions.has(PermissionFlagsBits.SendMessages)
       );
-      const channelFilterGeneral = channelFilterPermission.filter((channel) =>
-        channel.name.includes("commands")
-      );
-      const channelFilterNonGeneral = channelFilterPermission.filter(
-        (channel) => !channel.name.includes("commands")
-      );
+      const channelFilterGeneral = channelFilterPermission.filter((channel) => channel.name.includes("commands"));
+      const channelFilterNonGeneral = channelFilterPermission.filter((channel) => !channel.name.includes("commands"));
       if (channelFilterGeneral.size !== 0) {
         avalibleChannel.push(channelFilterGeneral.first()!);
       } else {
@@ -51,35 +47,31 @@ export default class implements Command {
 
     const parsed = handler.message.content.replace(handler.prefix, "").split(" ");
     const block = this.parse(parsed.slice(1).join(" "));
+    const announcementText = block !== null ? block[2] : parsed.slice(1).join(" ")!;
 
     for (const channel of avalibleChannel) {
       sentSuccesfully = sentSuccesfully + 1;
-      const announcement = new EmbedBuilder()
-        .setAuthor({ name: "💫 | Announcement" })
-        .setDescription(block !== null ? block[2] : parsed.slice(1).join(" ")!)
-        .setColor(client.color)
-        .setFooter({
-          text: `${handler.guild!.members.me!.displayName}`,
-          iconURL: client.user!.displayAvatarURL(),
-        });
       await (channel as TextChannel)
-        .send({ embeds: [announcement] })
+        .send({
+          flags: CV2_FLAG,
+          components: [cv2.build({
+            author: "💫 | Announcement",
+            description: announcementText,
+            color: client.color,
+            footer: `${handler.guild!.members.me!.displayName}`,
+          })],
+        })
         .catch(() => (sentSuccesfully = sentSuccesfully - 1));
     }
 
-    const result = new EmbedBuilder()
-      .setDescription(
-        `\`🟢\` | **Sent successfully in ${sentSuccesfully}**\n\`🔴\` | **Sent failed in ${
-          avalibleChannel.length - sentSuccesfully
-        }**`
-      )
-      .setColor(client.color)
-      .setFooter({
-        text: `${handler.guild!.members.me!.displayName}`,
-        iconURL: client.user!.displayAvatarURL(),
-      });
-
-    await handler.editReply({ embeds: [result] });
+    await handler.editReply({
+      flags: CV2_FLAG,
+      components: [cv2.build({
+        description: `\`🟢\` | **Sent successfully in ${sentSuccesfully}**\n\`🔴\` | **Sent failed in ${avalibleChannel.length - sentSuccesfully}**`,
+        color: client.color,
+        footer: `${handler.guild!.members.me!.displayName}`,
+      })],
+    });
   }
 
   protected parse(content: string): string[] | null {

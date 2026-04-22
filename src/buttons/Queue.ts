@@ -1,7 +1,6 @@
 import {
   ButtonInteraction,
   CacheType,
-  EmbedBuilder,
   InteractionCollector,
   Message,
 } from "discord.js";
@@ -10,6 +9,7 @@ import { Manager } from "../manager.js";
 import { formatDuration } from "../utilities/FormatDuration.js";
 import { Player } from "../structures/Player.js";
 import { getTitle } from "../utilities/GetTitle.js";
+import { cv2, CV2_FLAG } from "../utilities/ComponentsV2.js";
 export default class implements PlayerButton {
   name = "queue";
   async run(
@@ -40,32 +40,19 @@ export default class implements PlayerButton {
     const pages = [];
     for (let i = 0; i < pagesNum; i++) {
       const str = songStrings.slice(i * 10, i * 10 + 10).join("");
-      const embed = new EmbedBuilder()
-        .setAuthor({
-          name: `${client.i18n.get(language, "button.music", "queue_author", {
-            guild: message.guild!.name,
-          })}`,
-        })
-        .setThumbnail(thumbnail)
-        .setColor(client.color)
-        .setDescription(
-          `${client.i18n.get(language, "button.music", "queue_description", {
-            track: getTitle(client, song!),
-            duration: formatDuration(song?.duration),
-            requester: `${song!.requester}`,
-            list_song: str == "" ? "  Nothing" : "\n" + str,
-          })}`
-        )
-        .setFooter({
-          text: `${client.i18n.get(language, "button.music", "queue_footer", {
-            page: `${i + 1}`,
-            pages: `${pagesNum}`,
-            queue_lang: `${player.queue.length}`,
-            total_duration: qduration,
-          })}`,
-        });
-      pages.push(embed);
+      const page = cv2.build({
+        author: `${client.i18n.get(language, "button.music", "queue_author", { guild: message.guild!.name })}`,
+        thumbnail,
+        color: client.color,
+        description: `${client.i18n.get(language, "button.music", "queue_description", {
+          track: getTitle(client, song!),
+          duration: formatDuration(song?.duration),
+          requester: `${song!.requester}`,
+          list_song: str == "" ? "  Nothing" : "\n" + str,
+        })}`,
+      });
+      pages.push(page);
     }
-    message.reply({ embeds: [pages[0]], ephemeral: true });
+    message.reply({ flags: CV2_FLAG, components: [pages[0]], ephemeral: true });
   }
 }

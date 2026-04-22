@@ -2,7 +2,6 @@ import {
   ApplicationCommandOptionType,
   AutocompleteInteraction,
   CommandInteraction,
-  EmbedBuilder,
 } from "discord.js";
 import { convertTime } from "../../utilities/ConvertTime.js";
 import { Manager } from "../../manager.js";
@@ -11,6 +10,7 @@ import { AutocompleteInteractionChoices, GlobalInteraction } from "../../@types/
 import { CommandHandler } from "../../structures/CommandHandler.js";
 import { Player, SearchResult, ExtendedTrack } from "../../structures/Player.js";
 import { getNode } from "../../utilities/GetNode.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 
 export default class implements Command {
   public name = ["play"];
@@ -44,32 +44,23 @@ export default class implements Command {
 
       if (!value)
         return handler.editReply({
-          embeds: [
-            new EmbedBuilder()
-              .setDescription(`${client.i18n.get(handler.language, "command.music", "play_arg")}`)
-              .setColor(client.color),
-          ],
+          flags: CV2_FLAG,
+          components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "play_arg")}`, client.color)],
         });
 
       const { channel } = handler.member!.voice;
       if (!channel)
         return handler.editReply({
-          embeds: [
-            new EmbedBuilder()
-              .setDescription(`${client.i18n.get(handler.language, "error", "no_in_voice")}`)
-              .setColor(client.color),
-          ],
+          flags: CV2_FLAG,
+          components: [cv2.simple(`${client.i18n.get(handler.language, "error", "no_in_voice")}`, client.color)],
         });
 
       const emotes = (str: string) => str.match(/<a?:.+?:\d{18}>|\p{Extended_Pictographic}/gu);
 
       if (emotes(value) !== null)
         return handler.editReply({
-          embeds: [
-            new EmbedBuilder()
-              .setDescription(`${client.i18n.get(handler.language, "command.music", "play_emoji")}`)
-              .setColor(client.color),
-          ],
+          flags: CV2_FLAG,
+          components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "play_emoji")}`, client.color)],
         });
 
       if (!player)
@@ -92,11 +83,8 @@ export default class implements Command {
 
       if (!result.tracks.length) {
         return handler.editReply({
-          embeds: [
-            new EmbedBuilder()
-              .setDescription(`${client.i18n.get(handler.language, "command.music", "play_match")}`)
-              .setColor(client.color),
-          ],
+          flags: CV2_FLAG,
+          components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "play_match")}`, client.color)],
         });
       }
       if (result.type === "PLAYLIST") {
@@ -118,40 +106,20 @@ export default class implements Command {
       });
 
       if (result.type === "TRACK") {
-        const embed = new EmbedBuilder()
-          .setDescription(
-            `${client.i18n.get(handler.language, "command.music", "play_track", {
-              title: this.getTitle(client, result.type, tracks),
-              duration: convertTime(tracks[0].info.length as number),
-              request: String(tracks[0].requester),
-            })}`
-          )
-          .setColor(client.color);
-
-        handler.editReply({ content: " ", embeds: [embed] });
+        handler.editReply({
+          flags: CV2_FLAG,
+          components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "play_track", { title: this.getTitle(client, result.type, tracks), duration: convertTime(tracks[0].info.length as number), request: String(tracks[0].requester) })}`, client.color)],
+        });
       } else if (result.type === "PLAYLIST") {
-        const embed = new EmbedBuilder()
-          .setDescription(
-            `${client.i18n.get(handler.language, "command.music", "play_playlist", {
-              title: this.getTitle(client, result.type, tracks, value),
-              duration: convertTime(TotalDuration),
-              songs: String(tracks.length),
-              request: String(tracks[0].requester),
-            })}`
-          )
-          .setColor(client.color);
-
-        handler.editReply({ content: " ", embeds: [embed] });
+        handler.editReply({
+          flags: CV2_FLAG,
+          components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "play_playlist", { title: this.getTitle(client, result.type, tracks, value), duration: convertTime(TotalDuration), songs: String(tracks.length), request: String(tracks[0].requester) })}`, client.color)],
+        });
       } else if (result.type === "SEARCH") {
-        const embed = new EmbedBuilder().setColor(client.color).setDescription(
-          `${client.i18n.get(handler.language, "command.music", "play_result", {
-            title: this.getTitle(client, result.type, tracks),
-            duration: convertTime(tracks[0].info.length as number),
-            request: String(tracks[0].requester),
-          })}`
-        );
-
-        handler.editReply({ content: " ", embeds: [embed] });
+        handler.editReply({
+          flags: CV2_FLAG,
+          components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "play_result", { title: this.getTitle(client, result.type, tracks), duration: convertTime(tracks[0].info.length as number), request: String(tracks[0].requester) })}`, client.color)],
+        });
       }
     } catch (error: any) {
       if (error?.code === 10062) {
@@ -165,11 +133,8 @@ export default class implements Command {
   checkSameVoice(client: Manager, handler: CommandHandler, language: string) {
     if (handler.member!.voice.channel !== handler.guild!.members.me!.voice.channel) {
       handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${client.i18n.get(handler.language, "error", "no_same_voice")}`)
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "error", "no_same_voice")}`, client.color)],
       });
       return false;
     }
@@ -234,7 +199,6 @@ export default class implements Command {
       if (!searchRes) {
         return choice.push({ name: "Error song not matches", value: url });
       }
-
 
       let tracks: any[] = [];
       switch (searchRes.loadType) {

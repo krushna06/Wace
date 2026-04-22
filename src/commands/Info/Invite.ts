@@ -1,7 +1,8 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } from "discord.js";
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
 import { Manager } from "../../manager.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 
 export default class implements Command {
   public name = ["invite"];
@@ -19,26 +20,6 @@ export default class implements Command {
 
   public async execute(client: Manager, handler: CommandHandler) {
     await handler.deferReply();
-    const invite = new EmbedBuilder()
-      .setTitle(
-        `${client.i18n.get(handler.language, "command.info", "inv_title", {
-          username: client.user!.username,
-        })}`
-      )
-      .setDescription(
-        `${client.i18n.get(handler.language, "command.info", "inv_desc", {
-          username: client.user!.username,
-        })}`
-      )
-      .addFields([
-        {
-          name: client.config.bot.BOT_NAME,
-          value: client.config.bot.INVITE_LINK,
-          inline: false,
-        },
-      ])
-      .setTimestamp()
-      .setColor(client.color);
 
     const row2 = new ActionRowBuilder<ButtonBuilder>().addComponents(
       new ButtonBuilder()
@@ -51,6 +32,24 @@ export default class implements Command {
         )
     );
 
-    await handler.editReply({ embeds: [invite], components: [row2] });
+    await handler.editReply({
+      flags: CV2_FLAG,
+      components: [
+        cv2.build({
+          title: `${client.i18n.get(handler.language, "command.info", "inv_title", { username: client.user!.username })}`,
+          description: `${client.i18n.get(handler.language, "command.info", "inv_desc", { username: client.user!.username })}`,
+          fields: [
+            {
+              name: client.config.bot.BOT_NAME,
+              value: client.config.bot.INVITE_LINK,
+              inline: false,
+            },
+          ],
+          timestamp: true,
+          color: client.color,
+        }),
+        row2,
+      ],
+    });
   }
 }

@@ -1,8 +1,8 @@
-import { EmbedBuilder } from "discord.js";
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
 import { getUserRecentTracks, getTrackInfo } from "../../services/LastfmService.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 
 function chunk<T>(arr: T[], size: number): T[][] {
   const res: T[][] = [];
@@ -134,37 +134,21 @@ export default class implements Command {
     }
 
     if (timedOut) {
-      const embed = new EmbedBuilder()
-        .setTitle(`Who Knows Song: ${trackName}`)
-        .setDescription("Sorry, this command took too long to complete. Please try again later or with a more popular track.")
-        .setColor(client.color);
-      return handler.editReply({ embeds: [embed] });
+      return handler.editReply({ flags: CV2_FLAG, components: [cv2.build({ title: `Who Knows Song: ${trackName}`, description: "Sorry, this command took too long to complete. Please try again later or with a more popular track.", color: client.color })] });
     }
 
     if (results.length === 0) {
-      const embed = new EmbedBuilder()
-        .setTitle(`Who Knows Song: ${trackName}`)
-        .setDescription("No one in this server has listened to this track yet!")
-        .setColor(client.color);
-      return handler.editReply({ embeds: [embed] });
+      return handler.editReply({ flags: CV2_FLAG, components: [cv2.build({ title: `Who Knows Song: ${trackName}`, description: "No one in this server has listened to this track yet!", color: client.color })] });
     }
 
     results.sort((a, b) => b.playcount - a.playcount);
     const top10 = results.slice(0, 10);
 
-    const embed = new EmbedBuilder()
-      .setTitle(`Who Knows Song: ${trackName}`)
-      .setDescription(
-        top10
-          .map((r, i) => `**${i + 1}.** <@${r.userId}> — **${r.playcount}** plays`)
-          .join("\n")
-      )
-      .setColor(client.color);
-
-    if (top10[0]?.avatar) {
-      embed.setThumbnail(top10[0].avatar);
-    }
-
-    await handler.editReply({ embeds: [embed] });
+    return handler.editReply({ flags: CV2_FLAG, components: [cv2.build({
+      title: `Who Knows Song: ${trackName}`,
+      description: top10.map((r, i) => `**${i + 1}.** <@${r.userId}> — **${r.playcount}** plays`).join("\n"),
+      thumbnail: top10[0]?.avatar || undefined,
+      color: client.color,
+    })] });
   }
 }

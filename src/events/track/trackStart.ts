@@ -1,6 +1,5 @@
 import { Manager } from "../../manager.js";
 import { ComponentType, TextChannel } from "discord.js";
-import { EmbedBuilder } from "discord.js";
 import { formatDuration } from "../../utilities/FormatDuration.js";
 import { filterSelect, playerRowOne, playerRowTwo } from "../../utilities/PlayerControlButton.js";
 import { AutoReconnectBuilderService } from "../../services/AutoReconnectBuilderService.js";
@@ -9,6 +8,7 @@ import { Player, ExtendedTrack } from "../../structures/Player.js";
 import { FilterName } from "../../structures/Filters.js";
 import { getTitle } from "../../utilities/GetTitle.js";
 import { incrementUserSongPlay, incrementGuildSongPlay, incrementGuildSongStats, setGuildLastPlayed, setUserLastPlayed, logUserPlayHistory } from "../../database/handler.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 
 export default class {
   async execute(client: Manager, player: Player, track: ExtendedTrack) {
@@ -139,46 +139,23 @@ export default class {
       dashboardGuildUrl = `${dashboardUrl}/guild/${player.guildId}`;
     }
     const embedFields = [
-      {
-        name: `${client.i18n.get(language, "event.player", "author_title")}`,
-        value: `${song!.author}`,
-        inline: true,
-      },
-      {
-        name: `${client.i18n.get(language, "event.player", "duration_title")}`,
-        value: `${formatDuration(song!.duration)}`,
-        inline: true,
-      },
-      {
-        name: `${client.i18n.get(language, "event.player", "request_title")}`,
-        value: `${song!.requester}`,
-        inline: true,
-      },
-      {
-        name: `${client.i18n.get(language, "event.player", "download_title")}`,
-        value: `**[${song!.title} - 000tube.com](https://www.000tube.com/watch?v=${song?.identifier})**`,
-        inline: false,
-      },
+      { name: `${client.i18n.get(language, "event.player", "author_title")}`, value: `${song!.author}`, inline: true },
+      { name: `${client.i18n.get(language, "event.player", "duration_title")}`, value: `${formatDuration(song!.duration)}`, inline: true },
+      { name: `${client.i18n.get(language, "event.player", "request_title")}`, value: `${song!.requester}`, inline: true },
+      { name: `${client.i18n.get(language, "event.player", "download_title")}`, value: `**[${song!.title} - 000tube.com](https://www.000tube.com/watch?v=${song?.identifier})**` },
     ];
     if (dashboardGuildUrl) {
-      embedFields.push({
-        name: `Dashboard`,
-        value: `[Music Controller](${dashboardGuildUrl})`,
-        inline: false,
-      });
+      embedFields.push({ name: "Dashboard", value: `[Music Controller](${dashboardGuildUrl})` });
     }
-    const embeded = new EmbedBuilder()
-      .setAuthor({
-        name: `${client.i18n.get(language, "event.player", "track_title")}`,
-        iconURL: `${client.i18n.get(language, "event.player", "track_icon")}`,
-      })
-      .setDescription(`**${getTitle(client, track)}**`)
-      .addFields(embedFields)
-      .setColor(client.color)
-      .setThumbnail(
-        track.info.artworkUrl ?? `https://img.youtube.com/vi/${track.identifier}/hqdefault.jpg`
-      )
-      .setTimestamp();
+
+    const embeded = cv2.build({
+      color: client.color,
+      author: `${client.i18n.get(language, "event.player", "track_title")}`,
+      title: getTitle(client, track),
+      thumbnail: track.info.artworkUrl ?? `https://img.youtube.com/vi/${track.identifier}/hqdefault.jpg`,
+      fields: embedFields,
+      timestamp: true,
+    });
 
     const playing_channel = (await client.channels
       .fetch(player.textId)
@@ -190,25 +167,24 @@ export default class {
     if (existingNplaying && existingNplaying.msg) {
       try {
         nplaying = await existingNplaying.msg.edit({
-          embeds: [embeded],
-          components: [filterSelect(client), playerRowOne(client), playerRowTwo(client)],
+          flags: CV2_FLAG,
+          components: [embeded, filterSelect(client), playerRowOne(client), playerRowTwo(client)],
         });
-        
         if (existingNplaying.coll) existingNplaying.coll.stop();
         if (existingNplaying.filterColl) existingNplaying.filterColl.stop();
       } catch (error) {
         nplaying = playing_channel
           ? await playing_channel.send({
-              embeds: [embeded],
-              components: [filterSelect(client), playerRowOne(client), playerRowTwo(client)],
+              flags: CV2_FLAG,
+              components: [embeded, filterSelect(client), playerRowOne(client), playerRowTwo(client)],
             })
           : undefined;
       }
     } else {
       nplaying = playing_channel
         ? await playing_channel.send({
-            embeds: [embeded],
-            components: [filterSelect(client), playerRowOne(client), playerRowTwo(client)],
+            flags: CV2_FLAG,
+            components: [embeded, filterSelect(client), playerRowOne(client), playerRowTwo(client)],
           })
         : undefined;
     }
@@ -261,38 +237,26 @@ export default class {
       const filterMode = message.values[0] as FilterName;
 
       if (player.data.get("filter-mode") == filterMode) {
-        const embed = new EmbedBuilder()
-          .setDescription(
-            `${client.i18n.get(language, "button.music", "filter_already", { name: filterMode })}`
-          )
-          .setColor(client.color);
         const msg = await message
           .reply({
-            embeds: [embed],
+            flags: CV2_FLAG,
+            components: [cv2.simple(`${client.i18n.get(language, "button.music", "filter_already", { name: filterMode })}`, client.color)],
           })
           .catch(() => {});
         if (msg)
-          setTimeout(
-            () => msg.delete().catch(() => {}),
-            client.config.utilities.DELETE_MSG_TIMEOUT
-          );
+          setTimeout(() => msg.delete().catch(() => {}), client.config.utilities.DELETE_MSG_TIMEOUT);
         return;
       }
 
       if (filterMode == "clear" && !player.data.get("filter-mode")) {
-        const embed = new EmbedBuilder()
-          .setDescription(`${client.i18n.get(language, "button.music", "reset_already")}`)
-          .setColor(client.color);
         const msg = await message
           .reply({
-            embeds: [embed],
+            flags: CV2_FLAG,
+            components: [cv2.simple(`${client.i18n.get(language, "button.music", "reset_already")}`, client.color)],
           })
           .catch(() => {});
         if (msg)
-          setTimeout(
-            () => msg.delete().catch(() => {}),
-            client.config.utilities.DELETE_MSG_TIMEOUT
-          );
+          setTimeout(() => msg.delete().catch(() => {}), client.config.utilities.DELETE_MSG_TIMEOUT);
         return;
       }
 
@@ -301,17 +265,12 @@ export default class {
         : player.data.set("filter-mode", filterMode);
       filterMode == "clear" ? await player.filters.clear() : await player.filters.set(filterMode);
 
-      const embed = new EmbedBuilder()
-        .setDescription(
-          filterMode == "clear"
-            ? `${client.i18n.get(language, "button.music", "reset_on")}`
-            : `${client.i18n.get(language, "button.music", "filter_on", { name: filterMode })}`
-        )
-        .setColor(client.color);
-
       const msg = await message
         .reply({
-          embeds: [embed],
+          flags: CV2_FLAG,
+          components: [cv2.simple(filterMode == "clear"
+            ? `${client.i18n.get(language, "button.music", "reset_on")}`
+            : `${client.i18n.get(language, "button.music", "filter_on", { name: filterMode })}`, client.color)],
         })
         .catch(() => {});
       if (msg)

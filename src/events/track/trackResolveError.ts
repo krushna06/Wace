@@ -1,8 +1,9 @@
 import { Manager } from "../../manager.js";
-import { TextChannel, EmbedBuilder } from "discord.js";
+import { TextChannel } from "discord.js";
 import { AutoReconnectBuilderService } from "../../services/AutoReconnectBuilderService.js";
 import { ClearMessageService } from "../../services/ClearMessageService.js";
 import { Player, ExtendedTrack } from "../../structures/Player.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 
 export default class {
   async execute(client: Manager, player: Player, track: ExtendedTrack, message: string) {
@@ -31,13 +32,12 @@ export default class {
 
     const language = guildModel;
 
-    const embed = new EmbedBuilder()
-      .setColor(client.color)
-      .setDescription(`${client.i18n.get(language, "event.player", "error_desc")}`);
-
     if (channel) {
       const setup = await client.db.setup.get(player.guildId);
-      const msg = await channel.send({ embeds: [embed] });
+      const msg = await channel.send({
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(language, "event.player", "error_desc")}`, client.color)],
+      });
       setTimeout(
         async () =>
           !setup || setup == null || setup.channel !== channel.id

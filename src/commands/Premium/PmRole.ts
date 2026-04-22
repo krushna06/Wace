@@ -1,7 +1,8 @@
-import { ApplicationCommandOptionType, EmbedBuilder, Role } from "discord.js";
+import { ApplicationCommandOptionType, Role } from "discord.js";
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler, ParseMentionEnum } from "../../structures/CommandHandler.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 
 export default class implements Command {
   public name = ["setup-pm"];
@@ -29,65 +30,36 @@ export default class implements Command {
 
     const roleData = handler.args[0];
     const getRole = await handler.parseMentions(roleData);
+    const reply = (desc: string) => handler.editReply({ flags: CV2_FLAG, components: [cv2.simple(desc, client.color)] });
 
-    if (!getRole || getRole.type !== ParseMentionEnum.ROLE) {
-      const embed = new EmbedBuilder()
-        .setDescription(`${client.i18n.get(handler.language, "error", "no_role")}`)
-        .setColor(client.color);
-      return handler.editReply({ embeds: [embed] });
-    }
+    if (!getRole || getRole.type !== ParseMentionEnum.ROLE)
+      return reply(`${client.i18n.get(handler.language, "error", "no_role")}`);
 
     const role = getRole.data as Role;
-
-
-    if (!role.editable) {
-      const embed = new EmbedBuilder()
-        .setDescription(`${client.i18n.get(handler.language, "error", "role_not_editable")}`)
-        .setColor(client.color);
-      return handler.editReply({ embeds: [embed] });
-    }
+    if (!role.editable)
+      return reply(`${client.i18n.get(handler.language, "error", "role_not_editable")}`);
 
     try {
       const setup = await client.db.setup.get(handler.guild!.id);
-
       if (setup) {
-
         setup.premiumRole = role.id;
         await client.db.setup.set(handler.guild!.id, setup);
       } else {
-
-        await client.db.setup.set(handler.guild!.id, {
-          guild: handler.guild!.id,
-          enable: false,
-          channel: "",
-          playmsg: "",
-          voice: "",
-          category: "",
-          premiumRole: role.id,
-        });
+        await client.db.setup.set(handler.guild!.id, { guild: handler.guild!.id, enable: false, channel: "", playmsg: "", voice: "", category: "", premiumRole: role.id });
       }
 
-      const embed = new EmbedBuilder()
-        .setAuthor({
-          name: `${client.i18n.get(handler.language, "command.premium", "setup_pm_author")}`,
-          iconURL: client.user!.displayAvatarURL(),
-        })
-        .setDescription(
-          `${client.i18n.get(handler.language, "command.premium", "setup_pm_success", {
-            role: role.name,
-            guild: handler.guild!.name,
-          })}`
-        )
-        .setColor(client.color)
-        .setTimestamp();
-
-      return handler.editReply({ embeds: [embed] });
+      return handler.editReply({
+        flags: CV2_FLAG,
+        components: [cv2.build({
+          author: `${client.i18n.get(handler.language, "command.premium", "setup_pm_author")}`,
+          description: `${client.i18n.get(handler.language, "command.premium", "setup_pm_success", { role: role.name, guild: handler.guild!.name })}`,
+          color: client.color,
+          timestamp: true,
+        })],
+      });
     } catch (error) {
       client.logger.error("PmRole", `Error setting premium role: ${error}`);
-      const embed = new EmbedBuilder()
-        .setDescription(`${client.i18n.get(handler.language, "error", "unexpected_error")}`)
-        .setColor(client.color);
-      return handler.editReply({ embeds: [embed] });
+      return reply(`${client.i18n.get(handler.language, "error", "unexpected_error")}`);
     }
   }
 }

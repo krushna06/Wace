@@ -1,8 +1,9 @@
-import { ApplicationCommandOptionType, EmbedBuilder, Message } from "discord.js";
+import { ApplicationCommandOptionType } from "discord.js";
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
 import { Player } from "../../structures/Player.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 
 export default class implements Command {
   public name = ["volume"];
@@ -31,32 +32,21 @@ export default class implements Command {
     const value = handler.args[0];
     if (value && isNaN(+value))
       return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${client.i18n.get(handler.language, "error", "number_invalid")}`)
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "error", "number_invalid")}`, client.color)],
       });
 
     const player = client.players.get(handler.guild!.id) as Player;
 
     if (!value)
       return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${client.i18n.get(handler.language, "error", "number_invalid")}`)
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "error", "number_invalid")}`, client.color)],
       });
     if (Number(value) <= 0 || Number(value) > 100)
       return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(
-              `${client.i18n.get(handler.language, "command.music", "volume_invalid")}`
-            )
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "volume_invalid")}`, client.color)],
       });
 
     await player.setVolume(Number(value));
@@ -67,14 +57,9 @@ export default class implements Command {
       volume: player.volume,
     });
 
-    const changevol = new EmbedBuilder()
-      .setDescription(
-        `${client.i18n.get(handler.language, "command.music", "volume_msg", {
-          volume: value,
-        })}`
-      )
-      .setColor(client.color);
-
-    handler.editReply({ content: " ", embeds: [changevol] });
+    handler.editReply({
+      flags: CV2_FLAG,
+      components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "volume_msg", { volume: value })}`, client.color)],
+    });
   }
 }

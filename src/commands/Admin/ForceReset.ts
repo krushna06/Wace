@@ -1,9 +1,11 @@
-import { EmbedBuilder, PermissionsBitField } from "discord.js";
+import { PermissionsBitField } from "discord.js";
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
 import { Player } from "../../structures/Player.js";
 import { AutoReconnectBuilderService } from "../../services/AutoReconnectBuilderService.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
+
 export default class implements Command {
   public name = ["forcereset"];
   public description = "Force reset the music player and settings (Admin only)";
@@ -33,9 +35,9 @@ export default class implements Command {
         client.logger.error("ForceReset", `Error destroying player: ${error}`);
       }
     }
-    const embed = new EmbedBuilder()
-      .setDescription("Successfully force reset the music player and settings.")
-      .setColor(client.color);
-    await handler.editReply({ content: " ", embeds: [embed] });
+    await handler.editReply({
+      flags: CV2_FLAG,
+      components: [cv2.simple("Successfully force reset the music player and settings.", client.color)],
+    });
   }
 }

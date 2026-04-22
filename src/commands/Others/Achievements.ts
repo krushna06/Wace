@@ -1,7 +1,7 @@
 import { Command, Accessableby } from "../../structures/Command.js";
 import { Manager } from "../../manager.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
-import { EmbedBuilder } from "discord.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 
 export default class AchievementsCommand extends Command {
   constructor() {
@@ -22,11 +22,8 @@ export default class AchievementsCommand extends Command {
 
     if (!achievements) {
       return handler.sendMessage({
-        embeds: [
-          new EmbedBuilder()
-            .setColor(client.color)
-            .setDescription("You haven't unlocked any achievements yet!"),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple("You haven't unlocked any achievements yet!", client.color)],
       });
     }
 
@@ -48,28 +45,21 @@ export default class AchievementsCommand extends Command {
       .slice(0, 5)
       .join("\n\n");
 
-    const embed = new EmbedBuilder()
-      .setColor(client.color)
-      .setTitle(`Achievements - ${user.username}`)
-      .setThumbnail(user.displayAvatarURL())
-      .addFields(
-        {
-          name: "Progress",
-          value: `**${unlockedCount}/${totalCount}** achievements unlocked\n**${achievements.totalPoints}** points earned`,
-          inline: false,
-        },
-        {
-          name: "Unlocked",
-          value: unlockedList || "None yet",
-          inline: false,
-        },
-        {
-          name: "Locked (Next 5)",
-          value: lockedList || "All unlocked!",
-          inline: false,
-        }
-      );
-
-    return handler.sendMessage({ embeds: [embed] });
+    return handler.sendMessage({
+      flags: CV2_FLAG,
+      components: [cv2.build({
+        title: `Achievements - ${user.username}`,
+        thumbnail: user.displayAvatarURL(),
+        color: client.color,
+        fields: [
+          {
+            name: "Progress",
+            value: `**${unlockedCount}/${totalCount}** achievements unlocked\n**${achievements.totalPoints}** points earned`,
+          },
+          { name: "Unlocked", value: unlockedList || "None yet" },
+          { name: "Locked (Next 5)", value: lockedList || "All unlocked!" },
+        ],
+      })],
+    });
   }
 }

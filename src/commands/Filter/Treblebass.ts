@@ -1,7 +1,7 @@
 import { Manager } from "../../manager.js";
-import { EmbedBuilder } from "discord.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 
 export default class implements Command {
   public name = ["filter2", "treblebass"];
@@ -24,27 +24,16 @@ export default class implements Command {
 
     if (player?.data.get("filter-mode") == this.name[0])
       return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(
-              `${client.i18n.get(handler.language, "command.filter", "filter_already", {
-                name: this.name[0],
-              })}`
-            )
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "command.filter", "filter_already", { name: this.name[0] })}`, client.color)],
       });
 
     player?.data.set("filter-mode", this.name[0]);
     player?.filters.set("treblebass");
 
-    const tbed = new EmbedBuilder()
-      .setDescription(
-        `${client.i18n.get(handler.language, "command.filter", "filter_on", {
-          name: this.name[0],
-        })}`
-      )
-      .setColor(client.color);
-    await handler.editReply({ content: " ", embeds: [tbed] });
+    await handler.editReply({
+      flags: CV2_FLAG,
+      components: [cv2.simple(`${client.i18n.get(handler.language, "command.filter", "filter_on", { name: this.name[0] })}`, client.color)],
+    });
   }
 }

@@ -1,7 +1,9 @@
-import { EmbedBuilder, ApplicationCommandOptionType } from "discord.js";
+import { ApplicationCommandOptionType } from "discord.js";
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
+
 export default class implements Command {
   public name = ["filter", "rate"];
   public description = "Sets the rate of the song.";
@@ -27,40 +29,25 @@ export default class implements Command {
     const value = handler.args[0];
     if (value && isNaN(+value))
       return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${client.i18n.get(handler.language, "error", "number_invalid")}`)
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "error", "number_invalid")}`, client.color)],
       });
     const player = client.players.get(handler.guild!.id);
     if (Number(value) < 0)
       return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(
-              `${client.i18n.get(handler.language, "command.filter", "filter_greater")}`
-            )
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "command.filter", "filter_greater")}`, client.color)],
       });
     if (Number(value) > 10)
       return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${client.i18n.get(handler.language, "command.filter", "filter_less")}`)
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "command.filter", "filter_less")}`, client.color)],
       });
     player?.filters.setTimescale({ rate: Number(value) });
     player?.data.set("filter-mode", this.name[0]);
-    const embed = new EmbedBuilder()
-      .setDescription(
-        `${client.i18n.get(handler.language, "command.filter", "rate_on", {
-          amount: value,
-        })}`
-      )
-      .setColor(client.color);
-    await handler.editReply({ content: " ", embeds: [embed] });
+    await handler.editReply({
+      flags: CV2_FLAG,
+      components: [cv2.simple(`${client.i18n.get(handler.language, "command.filter", "rate_on", { amount: value })}`, client.color)],
+    });
   }
 }

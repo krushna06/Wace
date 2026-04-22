@@ -1,5 +1,6 @@
 import { Manager } from "../../manager.js";
-import { EmbedBuilder, TextChannel } from "discord.js";
+import { TextChannel } from "discord.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 import { ClearMessageService } from "../../services/ClearMessageService.js";
 import { AutoReconnectBuilderService } from "../../services/AutoReconnectBuilderService.js";
 import { Player } from "../../structures/Player.js";
@@ -62,13 +63,12 @@ export default class {
 
     const isSudoDestroy = player.data.get("sudo-destroy");
 
-    const embed = new EmbedBuilder()
-      .setColor(client.color)
-      .setDescription(`${client.i18n.get(language, "event.player", "queue_end_desc")}`);
-
     if (!isSudoDestroy) {
       const setup = await client.db.setup.get(player.guildId);
-      const msg = await channel.send({ embeds: [embed] });
+      const msg = await channel.send({
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(language, "event.player", "queue_end_desc")}`, client.color)],
+      });
       setTimeout(
         async () =>
           !setup || setup == null || setup.channel !== channel.id

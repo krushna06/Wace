@@ -1,5 +1,4 @@
 import {
-  EmbedBuilder,
   ApplicationCommandOptionType,
   Message,
   CommandInteraction,
@@ -15,6 +14,7 @@ import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
 import { AutocompleteInteractionChoices, GlobalInteraction } from "../../@types/Interaction.js";
 import { getPlaylistAutocomplete } from "../../utilities/PlaylistAutocomplete.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 
 let count = 0;
 let answer: string[] = [];
@@ -66,34 +66,13 @@ export default class implements Command {
   ) {
     const value = args[0] ? args[0] : null;
     if (value == null)
-      return message.reply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${client.i18n.get(language, "command.playlist", "edit_arg")}`)
-            .setColor(client.color),
-        ],
-      });
+      return message.reply({ flags: CV2_FLAG, components: [cv2.simple(`${client.i18n.get(language, "command.playlist", "edit_arg")}`, client.color)] });
 
     const playlist = await client.db.playlist.get(value);
-
     if (!playlist)
-      return message.reply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${client.i18n.get(language, "command.playlist", "edit_notfound")}`)
-            .setColor(client.color),
-        ],
-      });
+      return message.reply({ flags: CV2_FLAG, components: [cv2.simple(`${client.i18n.get(language, "command.playlist", "edit_notfound")}`, client.color)] });
     if (playlist.owner !== message.author.id)
-      return message.reply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(
-              `${client.i18n.get(language, "command.playlist", "edit_playlist_owner")}`
-            )
-            .setColor(client.color),
-        ],
-      });
+      return message.reply({ flags: CV2_FLAG, components: [cv2.simple(`${client.i18n.get(language, "command.playlist", "edit_playlist_owner")}`, client.color)] });
 
     const questions = this.questionString(client, language);
 
@@ -121,108 +100,35 @@ export default class implements Command {
 
         if (newId) {
           if (!this.vaildId(newId)) {
-            message.reply({
-              embeds: [
-                new EmbedBuilder()
-                  .setDescription(
-                    `${client.i18n.get(language, "command.playlist", "edit_invalid_id")}`
-                  )
-                  .setColor(client.color),
-              ],
-            });
-
-            count = 0;
-            answer.length = 0;
-            return;
+            message.reply({ flags: CV2_FLAG, components: [cv2.simple(`${client.i18n.get(language, "command.playlist", "edit_invalid_id")}`, client.color)] });
+            count = 0; answer.length = 0; return;
           }
 
           const isAlreadyId = await client.db.playlist.get(newId);
-
           if (isAlreadyId)
-            return message.reply({
-              embeds: [
-                new EmbedBuilder()
-                  .setDescription(
-                    `${client.i18n.get(language, "command.playlist", "ineraction_edit_invalid_id")}`
-                  )
-                  .setColor(client.color),
-              ],
-            });
+            return message.reply({ flags: CV2_FLAG, components: [cv2.simple(`${client.i18n.get(language, "command.playlist", "ineraction_edit_invalid_id")}`, client.color)] });
 
           if (this.validMode(String(newMode)) == null) {
-            message.reply({
-              embeds: [
-                new EmbedBuilder()
-                  .setDescription(
-                    `${client.i18n.get(language, "command.playlist", "edit_invalid_mode")}`
-                  )
-                  .setColor(client.color),
-              ],
-            });
-
-            count = 0;
-            answer.length = 0;
-            return;
+            message.reply({ flags: CV2_FLAG, components: [cv2.simple(`${client.i18n.get(language, "command.playlist", "edit_invalid_mode")}`, client.color)] });
+            count = 0; answer.length = 0; return;
           }
 
-          await client.db.playlist.set(newId, {
-            id: newId,
-            name: newName,
-            description: newDes,
-            owner: playlist.owner,
-            tracks: playlist.tracks,
-            private: newMode,
-            created: playlist.created,
-          });
-
-          await message.reply({
-            embeds: [
-              new EmbedBuilder()
-                .setDescription(
-                  `${client.i18n.get(language, "command.playlist", "edit_success", {
-                    playlistId: newId,
-                  })}`
-                )
-                .setColor(client.color),
-            ],
-          });
+          await client.db.playlist.set(newId, { id: newId, name: newName, description: newDes, owner: playlist.owner, tracks: playlist.tracks, private: newMode, created: playlist.created });
+          await message.reply({ flags: CV2_FLAG, components: [cv2.simple(`${client.i18n.get(language, "command.playlist", "edit_success", { playlistId: newId })}`, client.color)] });
           if (playlist.id !== newId) await client.db.playlist.delete(playlist.id);
-          count = 0;
-          answer.length = 0;
-          return;
+          count = 0; answer.length = 0; return;
         }
 
         if (this.validMode(String(newMode)) == null) {
-          message.reply({
-            embeds: [
-              new EmbedBuilder()
-                .setDescription(
-                  `${client.i18n.get(language, "command.playlist", "edit_invalid_mode")}`
-                )
-                .setColor(client.color),
-            ],
-          });
-
-          count = 0;
-          answer.length = 0;
-          return;
+          message.reply({ flags: CV2_FLAG, components: [cv2.simple(`${client.i18n.get(language, "command.playlist", "edit_invalid_mode")}`, client.color)] });
+          count = 0; answer.length = 0; return;
         }
 
         await client.db.playlist.set(`${value}.name`, newName);
         await client.db.playlist.set(`${value}.description`, newDes);
         await client.db.playlist.set(`${value}.private`, newMode);
-
-        const embed = new EmbedBuilder()
-          .setDescription(
-            `${client.i18n.get(language, "command.playlist", "edit_success", {
-              playlistId: playlist.id,
-            })}`
-          )
-          .setColor(client.color);
-        message.reply({ embeds: [embed] });
-
-        count = 0;
-        answer.length = 0;
+        message.reply({ flags: CV2_FLAG, components: [cv2.simple(`${client.i18n.get(language, "command.playlist", "edit_success", { playlistId: playlist.id })}`, client.color)] });
+        count = 0; answer.length = 0;
       }
     }
   }
@@ -330,26 +236,10 @@ export default class implements Command {
     const playlist = await client.db.playlist.get(value!);
 
     if (!playlist)
-      return interaction.reply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(
-              `${client.i18n.get(language, "command.playlist", "ineraction_edit_notfound")}`
-            )
-            .setColor(client.color),
-        ],
-      });
+      return interaction.reply({ flags: CV2_FLAG, components: [cv2.simple(`${client.i18n.get(language, "command.playlist", "ineraction_edit_notfound")}`, client.color)] });
 
     if (playlist.owner !== interaction.user.id)
-      return interaction.reply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(
-              `${client.i18n.get(language, "command.playlist", "ineraction_edit_playlist_owner")}`
-            )
-            .setColor(client.color),
-        ],
-      });
+      return interaction.reply({ flags: CV2_FLAG, components: [cv2.simple(`${client.i18n.get(language, "command.playlist", "ineraction_edit_playlist_owner")}`, client.color)] });
 
     await interaction.showModal(modal);
 
@@ -364,29 +254,12 @@ export default class implements Command {
       });
 
     if (!collector)
-      return interaction.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(
-              `${client.i18n.get(language, "command.playlist", "ineraction_edit_playlist_error")}`
-            )
-            .setColor(client.color),
-        ],
-      });
-
+      return interaction.editReply({ flags: CV2_FLAG, components: [cv2.simple(`${client.i18n.get(language, "command.playlist", "ineraction_edit_playlist_error")}`, client.color)] });
 
     await collector.deferReply();
 
     if (!playlist)
-      return collector.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(
-              `${client.i18n.get(language, "command.playlist", "ineraction_edit_notfound")}`
-            )
-            .setColor(client.color),
-        ],
-      });
+      return collector.editReply({ flags: CV2_FLAG, components: [cv2.simple(`${client.i18n.get(language, "command.playlist", "ineraction_edit_notfound")}`, client.color)] });
     const idCol = collector.fields.getTextInputValue("pl_id");
     const nameCol = collector.fields.getTextInputValue("pl_name");
     const desCol = collector.fields.getTextInputValue("pl_des");
@@ -400,90 +273,29 @@ export default class implements Command {
 
     if (newId) {
       if (!this.vaildId(newId))
-        return collector.editReply({
-          embeds: [
-            new EmbedBuilder()
-              .setDescription(
-                `${client.i18n.get(language, "command.playlist", "ineraction_edit_invalid_id")}`
-              )
-              .setColor(client.color),
-          ],
-        });
+        return collector.editReply({ flags: CV2_FLAG, components: [cv2.simple(`${client.i18n.get(language, "command.playlist", "ineraction_edit_invalid_id")}`, client.color)] });
 
       const isAlreadyId = await client.db.playlist.get(newId);
-
       if (isAlreadyId)
-        return collector.editReply({
-          embeds: [
-            new EmbedBuilder()
-              .setDescription(
-                `${client.i18n.get(language, "command.playlist", "ineraction_edit_invalid_id")}`
-              )
-              .setColor(client.color),
-          ],
-        });
+        return collector.editReply({ flags: CV2_FLAG, components: [cv2.simple(`${client.i18n.get(language, "command.playlist", "ineraction_edit_invalid_id")}`, client.color)] });
 
       if (this.validMode(String(newMode)) == null)
-        return collector.editReply({
-          embeds: [
-            new EmbedBuilder()
-              .setDescription(
-                `${client.i18n.get(language, "command.playlist", "edit_invalid_mode")}`
-              )
-              .setColor(client.color),
-          ],
-        });
+        return collector.editReply({ flags: CV2_FLAG, components: [cv2.simple(`${client.i18n.get(language, "command.playlist", "edit_invalid_mode")}`, client.color)] });
 
-      await client.db.playlist.set(newId, {
-        id: newId,
-        name: newName,
-        description: newDes,
-        owner: playlist.owner,
-        tracks: playlist.tracks,
-        private: newMode,
-        created: playlist.created,
-      });
-
-      await collector.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(
-              `${client.i18n.get(language, "command.playlist", "ineraction_edit_success", {
-                playlistId: newId,
-              })}`
-            )
-            .setColor(client.color),
-        ],
-      });
-
+      await client.db.playlist.set(newId, { id: newId, name: newName, description: newDes, owner: playlist.owner, tracks: playlist.tracks, private: newMode, created: playlist.created });
+      await collector.editReply({ flags: CV2_FLAG, components: [cv2.simple(`${client.i18n.get(language, "command.playlist", "ineraction_edit_success", { playlistId: newId })}`, client.color)] });
       if (playlist.id !== newId) await client.db.playlist.delete(playlist.id);
       return;
     }
 
     if (this.validMode(String(newMode)) == null)
-      return collector.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${client.i18n.get(language, "command.playlist", "edit_invalid_mode")}`)
-            .setColor(client.color),
-        ],
-      });
+      return collector.editReply({ flags: CV2_FLAG, components: [cv2.simple(`${client.i18n.get(language, "command.playlist", "edit_invalid_mode")}`, client.color)] });
 
     await client.db.playlist.set(`${value}.name`, newName);
     await client.db.playlist.set(`${value}.description`, newDes);
     await client.db.playlist.set(`${value}.private`, newMode);
 
-    await collector.editReply({
-      embeds: [
-        new EmbedBuilder()
-          .setDescription(
-            `${client.i18n.get(language, "command.playlist", "ineraction_edit_success", {
-              playlistId: playlist.id,
-            })}`
-          )
-          .setColor(client.color),
-      ],
-    });
+    await collector.editReply({ flags: CV2_FLAG, components: [cv2.simple(`${client.i18n.get(language, "command.playlist", "ineraction_edit_success", { playlistId: playlist.id })}`, client.color)] });
   }
 
   public async autocomplete(client: Manager, interaction: GlobalInteraction, language: string) {

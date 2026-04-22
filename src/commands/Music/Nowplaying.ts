@@ -1,10 +1,11 @@
 import { Manager } from "../../manager.js";
-import { EmbedBuilder, TextChannel } from "discord.js";
+import { TextChannel } from "discord.js";
 import { formatDuration } from "../../utilities/FormatDuration.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
 import { Player } from "../../structures/Player.js";
 import { getTitle } from "../../utilities/GetTitle.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 
 export default class implements Command {
   public name = ["nowplaying"];
@@ -82,18 +83,16 @@ export default class implements Command {
       },
     ];
 
-    const embeded = new EmbedBuilder()
-      .setAuthor({
-        name: `${client.i18n.get(handler.language, "command.music", "np_title")}`,
-        iconURL: `${client.i18n.get(handler.language, "command.music", "np_icon")}`,
-      })
-      .setColor(client.color)
-      .setDescription(`**${getTitle(client, song!)}**`)
-      .setThumbnail(Thumbnail)
-      .addFields(fieldDataGlobal)
-      .setTimestamp();
+    const buildNpContainer = (fields: typeof fieldDataGlobal) => cv2.build({
+      author: `${client.i18n.get(handler.language, "command.music", "np_title")}`,
+      description: `**${getTitle(client, song!)}**`,
+      thumbnail: Thumbnail,
+      fields,
+      color: client.color,
+      timestamp: true,
+    });
 
-    const NEmbed = await handler.editReply({ content: " ", embeds: [embeded] });
+    const NEmbed = await handler.editReply({ flags: CV2_FLAG, components: [buildNpContainer(fieldDataGlobal)] });
 
     const currentNP = client.nowPlaying.get(`${handler.guild?.id}`);
     if (currentNP) {
@@ -117,7 +116,7 @@ export default class implements Command {
         const CurrentDuration = formatDuration(player.position);
         const Part = Math.floor((player.position / song!.duration!) * 30);
 
-        const editedField = fieldDataGlobal;
+        const editedField = [...fieldDataGlobal];
 
         editedField.splice(7, 1);
         editedField.push({
@@ -129,17 +128,6 @@ export default class implements Command {
           inline: false,
         });
 
-        const embeded = new EmbedBuilder()
-          .setAuthor({
-            name: `${client.i18n.get(handler.language, "command.music", "np_title")}`,
-            iconURL: `${client.i18n.get(handler.language, "command.music", "np_icon")}`,
-          })
-          .setColor(client.color)
-          .setDescription(`**${getTitle(client, song!)}**`)
-          .setThumbnail(Thumbnail)
-          .addFields(editedField)
-          .setTimestamp();
-
         try {
           const channel = (await client.channels
             .fetch(`${handler.channel?.id}`)
@@ -150,14 +138,14 @@ export default class implements Command {
             .catch(() => undefined);
           if (!message) return;
           if (currentNPInterval && currentNPInterval.msg)
-            currentNPInterval.msg.edit({ content: " ", embeds: [embeded] }).catch(() => null);
+            currentNPInterval.msg.edit({ flags: CV2_FLAG, components: [buildNpContainer(editedField)] }).catch(() => null);
         } catch (err) {
           return;
         }
       }, 5000);
     } else if (!realtime) {
       if (!player.playing) return;
-      if (NEmbed) NEmbed.edit({ content: " ", embeds: [embeded] }).catch(() => null);
+      if (NEmbed) NEmbed.edit({ flags: CV2_FLAG, components: [buildNpContainer(fieldDataGlobal)] }).catch(() => null);
     }
   }
 }

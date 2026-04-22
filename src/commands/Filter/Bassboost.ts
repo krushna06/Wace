@@ -1,7 +1,9 @@
 import { Manager } from "../../manager.js";
-import { EmbedBuilder, ApplicationCommandOptionType, Message } from "discord.js";
+import { ApplicationCommandOptionType } from "discord.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
+
 export default class implements Command {
   public name = ["filter", "bass", "bassboost"];
   public description = "Turning on bassboost filter";
@@ -26,35 +28,21 @@ export default class implements Command {
     const value = handler.args[0];
     if (value && isNaN(+value))
       return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(
-              `${client.i18n.get(handler.language, "command.filter", "filter_number")}`
-            )
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "command.filter", "filter_number")}`, client.color)],
       });
     const player = client.players.get(handler.guild!.id);
     if (!value) {
       player?.filters.set("bass");
-      const embed = new EmbedBuilder()
-        .setDescription(
-          `${client.i18n.get(handler.language, "command.filter", "filter_on", {
-            name: "Bassboost",
-          })}`
-        )
-        .setColor(client.color);
-      return handler.editReply({ content: " ", embeds: [embed] });
+      return handler.editReply({
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "command.filter", "filter_on", { name: "Bassboost" })}`, client.color)],
+      });
     }
     if (Number(value) > 10 || Number(value) < -10)
       return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(
-              `${client.i18n.get(handler.language, "command.filter", "bassboost_limit")}`
-            )
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "command.filter", "bassboost_limit")}`, client.color)],
       });
     player?.filters.setEqualizer([
       { band: 0, gain: Number(value) / 10 },
@@ -73,13 +61,9 @@ export default class implements Command {
       { band: 13, gain: 0 },
     ]);
     player?.data.set("filter-mode", this.name[0]);
-    const embed = new EmbedBuilder()
-      .setDescription(
-        `${client.i18n.get(handler.language, "command.filter", "bassboost_set", {
-          amount: value,
-        })}`
-      )
-      .setColor(client.color);
-    return handler.editReply({ content: " ", embeds: [embed] });
+    return handler.editReply({
+      flags: CV2_FLAG,
+      components: [cv2.simple(`${client.i18n.get(handler.language, "command.filter", "bassboost_set", { amount: value })}`, client.color)],
+    });
   }
 }

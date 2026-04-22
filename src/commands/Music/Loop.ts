@@ -1,9 +1,10 @@
-import { ApplicationCommandOptionType, EmbedBuilder } from "discord.js";
+import { ApplicationCommandOptionType } from "discord.js";
 import { Manager } from "../../manager.js";
 import { AutoReconnectBuilderService } from "../../services/AutoReconnectBuilderService.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
 import { Player } from "../../structures/Player.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 
 export default class implements Command {
   public name = ["loop"];
@@ -24,18 +25,9 @@ export default class implements Command {
       type: ApplicationCommandOptionType.String,
       required: true,
       choices: [
-        {
-          name: "Song",
-          value: "track",
-        },
-        {
-          name: "Queue",
-          value: "queue",
-        },
-        {
-          name: "None",
-          value: "none",
-        },
+        { name: "Song", value: "track" },
+        { name: "Queue", value: "queue" },
+        { name: "None", value: "none" },
       ],
     },
   ];
@@ -51,28 +43,14 @@ export default class implements Command {
 
     if (!mode_array.includes(mode))
       return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(
-              `${client.i18n.get(handler.language, "command.music", "loop_invalid", {
-                mode: this.changeBold(mode_array).join(", "),
-              })}`
-            )
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "loop_invalid", { mode: this.changeBold(mode_array).join(", ") })}`, client.color)],
       });
 
     if ((mode == "track" && player.loop == "track") || mode == player.loop)
       return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(
-              `${client.i18n.get(handler.language, "command.music", "loop_already", {
-                mode: mode,
-              })}`
-            )
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "loop_already", { mode: mode })}`, client.color)],
       });
 
     if (mode == "track") {
@@ -80,28 +58,19 @@ export default class implements Command {
       if (client.config.utilities.AUTO_RESUME)
         this.setLoop247(client, player, "track");
 
-      const looped = new EmbedBuilder()
-        .setDescription(`${client.i18n.get(handler.language, "command.music", "loop_current")}`)
-        .setColor(client.color);
-      handler.editReply({ content: " ", embeds: [looped] });
+      handler.editReply({ flags: CV2_FLAG, components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "loop_current")}`, client.color)] });
     } else if (mode == "queue") {
       player.setLoop("queue");
       if (client.config.utilities.AUTO_RESUME)
         this.setLoop247(client, player, "queue");
 
-      const looped_queue = new EmbedBuilder()
-        .setDescription(`${client.i18n.get(handler.language, "command.music", "loop_all")}`)
-        .setColor(client.color);
-      handler.editReply({ content: " ", embeds: [looped_queue] });
+      handler.editReply({ flags: CV2_FLAG, components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "loop_all")}`, client.color)] });
     } else if (mode === "none") {
       player.setLoop("none");
       if (client.config.utilities.AUTO_RESUME)
         this.setLoop247(client, player, "none");
 
-      const looped = new EmbedBuilder()
-        .setDescription(`${client.i18n.get(handler.language, "command.music", "unloop_all")}`)
-        .setColor(client.color);
-      handler.editReply({ content: " ", embeds: [looped] });
+      handler.editReply({ flags: CV2_FLAG, components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "unloop_all")}`, client.color)] });
     }
 
     client.wsl.get(handler.guild!.id)?.send({

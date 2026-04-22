@@ -1,7 +1,7 @@
 import { Command, Accessableby } from "../../structures/Command.js";
 import { Manager } from "../../manager.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
-import { EmbedBuilder } from "discord.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 
 export default class GameStatsCommand extends Command {
   constructor() {
@@ -22,11 +22,8 @@ export default class GameStatsCommand extends Command {
 
     if (!stats) {
       return handler.sendMessage({
-        embeds: [
-          new EmbedBuilder()
-            .setColor(client.color)
-            .setDescription("You haven't played any games yet!"),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple("You haven't played any games yet!", client.color)],
       });
     }
 
@@ -43,27 +40,29 @@ export default class GameStatsCommand extends Command {
         ? ((stats.musicTrivia.correct / stats.musicTrivia.played) * 100).toFixed(1)
         : "0";
 
-    const embed = new EmbedBuilder()
-      .setColor(client.color)
-      .setTitle(`Game Statistics - ${user.username}`)
-      .addFields(
-        {
-          name: "Guess The Song",
-          value: `Played: **${stats.guessTheSong.played}**\nCorrect: **${stats.guessTheSong.correct}**\nAccuracy: **${gtsAccuracy}%**\nBest Streak: **${stats.guessTheSong.bestStreak}**`,
-          inline: true,
-        },
-        {
-          name: "Artist Name Game",
-          value: `Played: **${stats.artistNameGame.played}**\nCorrect: **${stats.artistNameGame.correct}**\nAccuracy: **${angAccuracy}%**\nBest Streak: **${stats.artistNameGame.bestStreak}**`,
-          inline: true,
-        },
-        {
-          name: "Music Trivia",
-          value: `Played: **${stats.musicTrivia.played}**\nCorrect: **${stats.musicTrivia.correct}**\nAccuracy: **${triviaAccuracy}%**\nBest Streak: **${stats.musicTrivia.bestStreak}**`,
-          inline: true,
-        }
-      );
-
-    return handler.sendMessage({ embeds: [embed] });
+    return handler.sendMessage({
+      flags: CV2_FLAG,
+      components: [cv2.build({
+        title: `Game Statistics - ${user.username}`,
+        color: client.color,
+        fields: [
+          {
+            name: "Guess The Song",
+            value: `Played: **${stats.guessTheSong.played}**\nCorrect: **${stats.guessTheSong.correct}**\nAccuracy: **${gtsAccuracy}%**\nBest Streak: **${stats.guessTheSong.bestStreak}**`,
+            inline: true,
+          },
+          {
+            name: "Artist Name Game",
+            value: `Played: **${stats.artistNameGame.played}**\nCorrect: **${stats.artistNameGame.correct}**\nAccuracy: **${angAccuracy}%**\nBest Streak: **${stats.artistNameGame.bestStreak}**`,
+            inline: true,
+          },
+          {
+            name: "Music Trivia",
+            value: `Played: **${stats.musicTrivia.played}**\nCorrect: **${stats.musicTrivia.correct}**\nAccuracy: **${triviaAccuracy}%**\nBest Streak: **${stats.musicTrivia.bestStreak}**`,
+            inline: true,
+          },
+        ],
+      })],
+    });
   }
 }

@@ -1,6 +1,5 @@
 import {
   PermissionsBitField,
-  EmbedBuilder,
   VoiceState,
   GuildMember,
   Role,
@@ -9,6 +8,7 @@ import {
 import { Manager } from "../../manager.js";
 import { AutoReconnectBuilderService } from "../../services/AutoReconnectBuilderService.js";
 import { Player } from "../../structures/Player.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 
 export default class {
   async execute(client: Manager, oldState: VoiceState, newState: VoiceState) {
@@ -104,11 +104,8 @@ export default class {
       if (currentPause !== false && player.current !== null) {
         const msg = leaveEmbed
           ? await leaveEmbed.send({
-              embeds: [
-                new EmbedBuilder()
-                  .setDescription(`${client.i18n.get(language, "event.player", "leave_resume")}`)
-                  .setColor(client.color),
-              ],
+              flags: CV2_FLAG,
+              components: [cv2.simple(`${client.i18n.get(language, "event.player", "leave_resume")}`, client.color)],
             })
           : null;
         setTimeout(
@@ -133,11 +130,8 @@ export default class {
 
       if (currentPause !== true && player.current !== null) {
         const msg = await leaveEmbed.send({
-          embeds: [
-            new EmbedBuilder()
-              .setDescription(`${client.i18n.get(language, "event.player", "leave_pause")}`)
-              .setColor(client.color),
-          ],
+          flags: CV2_FLAG,
+          components: [cv2.simple(`${client.i18n.get(language, "event.player", "leave_pause")}`, client.color)],
         });
         setTimeout(async () => {
           const isChannelAvalible = await client.channels
@@ -159,19 +153,14 @@ export default class {
           const newPlayer = client.players.get(newState.guild.id);
           player.data.set("sudo-destroy", true);
           if (newPlayer) player.stop(is247 && is247.twentyfourseven ? false : true);
-          const TimeoutEmbed = new EmbedBuilder()
-            .setDescription(
-              `${client.i18n.get(language, "event.player", "player_end", {
-                leave: vcRoom,
-              })}`
-            )
-            .setColor(client.color);
           try {
             if (leaveEmbed) {
-              const msg =
-                newPlayer && leaveEmbed
-                  ? await leaveEmbed.send({ embeds: [TimeoutEmbed] })
-                  : undefined;
+              const msg = newPlayer && leaveEmbed
+                ? await leaveEmbed.send({
+                    flags: CV2_FLAG,
+                    components: [cv2.simple(`${client.i18n.get(language, "event.player", "player_end", { leave: vcRoom })}`, client.color)],
+                  })
+                : undefined;
               setTimeout(
                 async () =>
                   msg && (!setup || setup == null || setup.channel !== player.textId)

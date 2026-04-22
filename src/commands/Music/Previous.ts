@@ -1,8 +1,8 @@
 import { Manager } from "../../manager.js";
-import { EmbedBuilder, Message } from "discord.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
 import { Player } from "../../structures/Player.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 
 export default class implements Command {
   public name = ["previous"];
@@ -30,23 +30,14 @@ export default class implements Command {
       previousIndex < -1
     )
       return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(
-              `${client.i18n.get(handler.language, "command.music", "previous_notfound")}`
-            )
-            .setColor(client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "previous_notfound")}`, client.color)],
       });
 
     await player.previous();
 
     player.data.set("endMode", "previous");
 
-    const embed = new EmbedBuilder()
-      .setDescription(`${client.i18n.get(handler.language, "command.music", "previous_msg")}`)
-      .setColor(client.color);
-
-    handler.editReply({ content: " ", embeds: [embed] });
+    handler.editReply({ flags: CV2_FLAG, components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "previous_msg")}`, client.color)] });
   }
 }

@@ -1,10 +1,11 @@
-import { ApplicationCommandOptionType, EmbedBuilder, CommandInteraction, AutocompleteInteraction } from "discord.js";
+import { ApplicationCommandOptionType, CommandInteraction, AutocompleteInteraction } from "discord.js";
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
 import { ExtendedTrack } from "../../structures/Player.js";
 import { AutocompleteInteractionChoices, GlobalInteraction } from "../../@types/Interaction.js";
 import { getPlaylistAutocomplete } from "../../utilities/PlaylistAutocomplete.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 
 const TrackAdd: ExtendedTrack[] = [];
 const TrackExist: string[] = [];
@@ -33,107 +34,62 @@ export default class implements Command {
   ];
 
   public async execute(client: Manager, handler: CommandHandler) {
-    await handler.deferReply();
+      await handler.deferReply();
 
-    const value = handler.args[0] ? handler.args[0] : null;
+      const value = handler.args[0] ? handler.args[0] : null;
+      const reply = (desc: string) => handler.editReply({ flags: CV2_FLAG, components: [cv2.simple(desc, client.color)] });
 
-    if (value == null)
-      return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${client.i18n.get(handler.language, "command.playlist", "invalid")}`)
-            .setColor(client.color),
-        ],
-      });
+      if (value == null) return reply(`${client.i18n.get(handler.language, "command.playlist", "invalid")}`);
 
-    const playlist = await client.db.playlist.get(`${value}`);
+      const playlist = await client.db.playlist.get(`${value}`);
+      if (!playlist) return reply(`${client.i18n.get(handler.language, "command.playlist", "savequeue_notfound")}`);
+      if (playlist.owner !== handler.user?.id) return reply(`${client.i18n.get(handler.language, "command.playlist", "savequeue_owner")}`);
 
-    if (!playlist)
-      return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(
-              `${client.i18n.get(handler.language, "command.playlist", "savequeue_notfound")}`
-            )
-            .setColor(client.color),
-        ],
-      });
-    if (playlist.owner !== handler.user?.id)
-      return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(
-              `${client.i18n.get(handler.language, "command.playlist", "savequeue_owner")}`
-            )
-            .setColor(client.color),
-        ],
-      });
+      const player = client.players.get(handler.guild!.id);
+      const queue = player?.queue || [];
+      const current = player?.current;
 
-    const player = client.players.get(handler.guild!.id);
+      if (queue.length == 0 && !current) return reply(`${client.i18n.get(handler.language, "noplayer", "savequeue_no_tracks")}`);
 
-    const queue = player?.queue || [];
-    const current = player?.current;
+      TrackAdd.push(current as ExtendedTrack);
+      TrackAdd.push(...queue);
 
-    if (queue.length == 0 && !current)
-      return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(
-              `${client.i18n.get(handler.language, "noplayer", "savequeue_no_tracks")}`
-            )
-            .setColor(client.color),
-        ],
-      });
+      if (!playlist) Result = TrackAdd;
 
-    TrackAdd.push(current as ExtendedTrack);
-    TrackAdd.push(...queue);
-
-    if (!playlist) Result = TrackAdd;
-
-    if (playlist.tracks) {
-      for (let i = 0; i < playlist.tracks.length; i++) {
-        const element = playlist.tracks[i].uri;
-        TrackExist.push(element);
+      if (playlist.tracks) {
+        for (let i = 0; i < playlist.tracks.length; i++) {
+          TrackExist.push(playlist.tracks[i].uri);
+        }
+        Result = TrackAdd.filter((track) => !TrackExist.includes(String(track.info.uri)));
       }
-      Result = TrackAdd.filter((track) => !TrackExist.includes(String(track.info.uri)));
-    }
 
-    if (Result!.length == 0) {
-      const embed = new EmbedBuilder()
-        .setDescription(
-          `${client.i18n.get(handler.language, "command.playlist", "savequeue_no_new_saved", {
-            name: value,
-          })}`
-        )
-        .setColor(client.color);
-      return handler.editReply({ embeds: [embed] });
-    }
+      if (Result!.length == 0) {
+        TrackAdd.length = 0;
+        TrackExist.length = 0;
+        Result = null;
+        return reply(`${client.i18n.get(handler.language, "command.playlist", "savequeue_no_new_saved", { name: value })}`);
+      }
 
-    const embed = new EmbedBuilder()
-      .setDescription(
-        `${client.i18n.get(handler.language, "command.playlist", "savequeue_saved", {
-          name: value,
-          tracks: String(queue.length + 1),
-        })}`
-      )
-      .setColor(client.color);
-    await handler.editReply({ embeds: [embed] });
-
-    Result!.forEach(async (track) => {
-      await client.db.playlist.push(`${value}.tracks`, {
-        title: track.info.title,
-        uri: track.info.uri,
-        length: track.duration || track.info?.length,
-        thumbnail: track.info.artworkUrl,
-        author: track.info.author,
-        requester: track.requester,
+      await handler.editReply({
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${client.i18n.get(handler.language, "command.playlist", "savequeue_saved", { name: value, tracks: String(queue.length + 1) })}`, client.color)],
       });
-    });
 
-    TrackAdd.length = 0;
-    TrackExist.length = 0;
-    Result = null;
-  }
+      Result!.forEach(async (track) => {
+        await client.db.playlist.push(`${value}.tracks`, {
+          title: track.info.title,
+          uri: track.info.uri,
+          length: track.duration || track.info?.length,
+          thumbnail: track.info.artworkUrl,
+          author: track.info.author,
+          requester: track.requester,
+        });
+      });
+
+      TrackAdd.length = 0;
+      TrackExist.length = 0;
+      Result = null;
+    }
 
   public async autocomplete(client: Manager, interaction: GlobalInteraction, language: string) {
     // @ts-ignore

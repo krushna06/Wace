@@ -1,8 +1,8 @@
-import { EmbedBuilder, Message } from "discord.js";
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
 import { Player } from "../../structures/Player.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 
 export default class implements Command {
   public name = ["skip"];
@@ -28,19 +28,11 @@ export default class implements Command {
       const is247 = await client.db.autoreconnect.get(`${handler.guild!.id}`);
       player.stop(is247 && is247.twentyfourseven ? false : true);
 
-      const stopped = new EmbedBuilder()
-        .setDescription(`${client.i18n.get(handler.language, "button.music", "stop_msg")}`)
-        .setColor(client.color);
-
-      return handler.editReply({ content: " ", embeds: [stopped] });
+      return handler.editReply({ flags: CV2_FLAG, components: [cv2.simple(`${client.i18n.get(handler.language, "button.music", "stop_msg")}`, client.color)] });
     } else {
       await player.skip();
 
-      const skipped = new EmbedBuilder()
-        .setDescription(`${client.i18n.get(handler.language, "command.music", "skip_msg")}`)
-        .setColor(client.color);
-
-      handler.editReply({ content: " ", embeds: [skipped] });
+      handler.editReply({ flags: CV2_FLAG, components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "skip_msg")}`, client.color)] });
     }
   }
 }

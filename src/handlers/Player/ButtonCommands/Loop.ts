@@ -1,7 +1,8 @@
-import { ButtonInteraction, EmbedBuilder } from "discord.js";
+import { ButtonInteraction } from "discord.js";
 import { Manager } from "../../../manager.js";
 import { AutoReconnectBuilderService } from "../../../services/AutoReconnectBuilderService.js";
 import { Player } from "../../../structures/Player.js";
+import { cv2, CV2_FLAG } from "../../../utilities/ComponentsV2.js";
 
 export class ButtonLoop {
   client: Manager;
@@ -33,12 +34,9 @@ export class ButtonLoop {
         if (this.client.config.utilities.AUTO_RESUME)
           this.setLoop247("track");
 
-        const looptrack = new EmbedBuilder()
-          .setDescription(`${this.client.i18n.get(this.language, "button.music", "loop_current")}`)
-          .setColor(this.client.color);
         await this.interaction.reply({
-          content: " ",
-          embeds: [looptrack],
+          flags: CV2_FLAG,
+          components: [cv2.simple(`${this.client.i18n.get(this.language, "button.music", "loop_current")}`, this.client.color)],
         });
 
         this.client.wsl.get(this.interaction.guild!.id)?.send({
@@ -54,12 +52,9 @@ export class ButtonLoop {
         if (this.client.config.utilities.AUTO_RESUME)
           this.setLoop247("queue");
 
-        const loopall = new EmbedBuilder()
-          .setDescription(`${this.client.i18n.get(this.language, "button.music", "loop_all")}`)
-          .setColor(this.client.color);
         await this.interaction.reply({
-          content: " ",
-          embeds: [loopall],
+          flags: CV2_FLAG,
+          components: [cv2.simple(`${this.client.i18n.get(this.language, "button.music", "loop_all")}`, this.client.color)],
         });
 
         this.client.wsl.get(this.interaction.guild!.id)?.send({
@@ -75,12 +70,9 @@ export class ButtonLoop {
         if (this.client.config.utilities.AUTO_RESUME)
           this.setLoop247("none");
 
-        const unloopall = new EmbedBuilder()
-          .setDescription(`${this.client.i18n.get(this.language, "button.music", "unloop_all")}`)
-          .setColor(this.client.color);
         await this.interaction.reply({
-          content: " ",
-          embeds: [unloopall],
+          flags: CV2_FLAG,
+          components: [cv2.simple(`${this.client.i18n.get(this.language, "button.music", "unloop_all")}`, this.client.color)],
         });
 
         this.client.wsl.get(this.interaction.guild!.id)?.send({

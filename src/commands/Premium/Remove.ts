@@ -1,7 +1,8 @@
-import { ApplicationCommandOptionType, EmbedBuilder } from "discord.js";
+import { ApplicationCommandOptionType } from "discord.js";
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 
 export default class implements Command {
   public name = ["pm", "remove"];
@@ -28,48 +29,19 @@ export default class implements Command {
     await handler.deferReply();
 
     const id = handler.args[0];
+    const reply = (desc: string) => handler.editReply({ flags: CV2_FLAG, components: [cv2.simple(desc, client.color)] });
 
     if (!id)
-      return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(
-              `${client.i18n.get(handler.language, "command.premium", "remove_no_params")}`
-            )
-            .setColor(client.color),
-        ],
-      });
+      return reply(`${client.i18n.get(handler.language, "command.premium", "remove_no_params")}`);
 
     const db = await client.db.premium.get(`${id}`);
-
     if (!db)
-      return handler.editReply({
-        content: `${client.i18n.get(handler.language, "command.premium", "remove_404", {
-          userid: id as string,
-        })}`,
-      });
+      return handler.editReply({ content: `${client.i18n.get(handler.language, "command.premium", "remove_404", { userid: id })}` });
 
     if (db.isPremium) {
       await client.db.premium.delete(`${id}`);
-
-      const embed = new EmbedBuilder()
-        .setDescription(
-          `${client.i18n.get(handler.language, "command.premium", "remove_desc", {
-            user: db.redeemedBy?.username as string,
-          })}`
-        )
-        .setColor(client.color);
-      handler.editReply({ embeds: [embed] });
-    } else {
-      const embed = new EmbedBuilder()
-        .setDescription(
-          `${client.i18n.get(handler.language, "command.premium", "remove_already", {
-            user: db.redeemedBy?.username as string,
-          })}`
-        )
-        .setColor(client.color);
-
-      handler.editReply({ embeds: [embed] });
+      return reply(`${client.i18n.get(handler.language, "command.premium", "remove_desc", { user: db.redeemedBy?.username as string })}`);
     }
+    return reply(`${client.i18n.get(handler.language, "command.premium", "remove_already", { user: db.redeemedBy?.username as string })}`);
   }
 }

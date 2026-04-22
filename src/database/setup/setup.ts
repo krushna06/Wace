@@ -1,6 +1,7 @@
 import { Manager } from "../../manager.js";
 import { Setup } from "../schema/Setup.js";
-import { EmbedBuilder, TextChannel } from "discord.js";
+import { TextChannel } from "discord.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 
 export class SongRequesterCleanSetup {
   client: Manager;
@@ -42,20 +43,17 @@ export class SongRequesterCleanSetup {
 
     const queueMsg = `${this.client.i18n.get(language, "event.setup", "setup_queuemsg")}`;
 
-    const playEmbed = new EmbedBuilder()
-      .setColor(this.client.color)
-      .setAuthor({
-        name: `${this.client.i18n.get(language, "event.setup", "setup_playembed_author")}`,
-      })
-      .setImage(
-        `https://cdn.discordapp.com/avatars/${this.client.user!.id}/${this.client.user!.avatar}.jpeg?size=300`
-      );
+    const playEmbed = cv2.build({
+      color: this.client.color,
+      author: `${this.client.i18n.get(language, "event.setup", "setup_playembed_author")}`,
+      thumbnail: `https://cdn.discordapp.com/avatars/${this.client.user!.id}/${this.client.user!.avatar}.jpeg?size=300`,
+    });
 
     return await playMsg
       .edit({
+        flags: CV2_FLAG,
         content: `${queueMsg}`,
-        embeds: [playEmbed],
-        components: [this.client.diSwitch],
+        components: [playEmbed, this.client.diSwitch],
       })
       .catch((e) => {});
   }

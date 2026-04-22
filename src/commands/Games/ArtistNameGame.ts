@@ -1,7 +1,7 @@
 import { Command, Accessableby } from "../../structures/Command.js";
 import { Manager } from "../../manager.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
-import { EmbedBuilder } from "discord.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 
 export default class ArtistNameGame extends Command {
   constructor() {
@@ -23,23 +23,22 @@ export default class ArtistNameGame extends Command {
     const player = client.players.get(guild.id);
     if (!player || !player.current) {
       return handler.sendMessage({
-        embeds: [
-          new EmbedBuilder()
-            .setColor(client.color)
-            .setDescription("No song is currently playing"),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple("No song is currently playing", client.color)],
       });
     }
 
     const track = player.current;
 
-    const embed = new EmbedBuilder()
-      .setColor(client.color)
-      .setTitle("Guess The Artist")
-      .setDescription("A song snippet is playing...\nGuess the artist name!")
-      .setFooter({ text: "You have 30 seconds to guess" });
-
-    await handler.sendMessage({ embeds: [embed] });
+    await handler.sendMessage({
+      flags: CV2_FLAG,
+      components: [cv2.build({
+        title: "Guess The Artist",
+        description: "A song snippet is playing...\nGuess the artist name!",
+        footer: "You have 30 seconds to guess",
+        color: client.color,
+      })],
+    });
 
     if (channel.isDMBased()) return;
 
@@ -56,14 +55,12 @@ export default class ArtistNameGame extends Command {
 
       if (correct) {
         await handler.sendMessage({
-          embeds: [
-            new EmbedBuilder()
-              .setColor("Green")
-              .setTitle("Correct!")
-              .setDescription(
-                `The artist is **${track.author}**\n\n${user.username} got it right!`
-              ),
-          ],
+          flags: CV2_FLAG,
+          components: [cv2.build({
+            title: "Correct!",
+            description: `The artist is **${track.author}**\n\n${user.username} got it right!`,
+            color: "Green",
+          })],
         });
 
         const key = `${user.id}-${guild.id}`;
@@ -78,12 +75,12 @@ export default class ArtistNameGame extends Command {
         }
       } else {
         await handler.sendMessage({
-          embeds: [
-            new EmbedBuilder()
-              .setColor("Red")
-              .setTitle("Wrong!")
-              .setDescription(`The artist is **${track.author}**`),
-          ],
+          flags: CV2_FLAG,
+          components: [cv2.build({
+            title: "Wrong!",
+            description: `The artist is **${track.author}**`,
+            color: "Red",
+          })],
         });
 
         const key = `${user.id}-${guild.id}`;

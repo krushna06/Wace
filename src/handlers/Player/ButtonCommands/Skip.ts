@@ -1,6 +1,7 @@
-import { ButtonInteraction, EmbedBuilder, VoiceBasedChannel } from "discord.js";
+import { ButtonInteraction, VoiceBasedChannel } from "discord.js";
 import { Manager } from "../../../manager.js";
 import { Player } from "../../../structures/Player.js";
+import { cv2, CV2_FLAG } from "../../../utilities/ComponentsV2.js";
 
 export class ButtonSkip {
   client: Manager;
@@ -26,11 +27,8 @@ export class ButtonSkip {
   async execute() {
     if (!this.channel) {
       this.interaction.reply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${this.client.i18n.get(this.language, "error", "no_in_voice")}`)
-            .setColor(this.client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${this.client.i18n.get(this.language, "error", "no_in_voice")}`, this.client.color)],
       });
       return;
     } else if (
@@ -38,39 +36,29 @@ export class ButtonSkip {
       !this.interaction.guild!.members.me!.voice.channel.equals(this.channel)
     ) {
       this.interaction.reply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${this.client.i18n.get(this.language, "error", "no_same_voice")}`)
-            .setColor(this.client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${this.client.i18n.get(this.language, "error", "no_same_voice")}`, this.client.color)],
       });
       return;
     } else if (!this.player) {
       this.interaction.reply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${this.client.i18n.get(this.language, "error", "no_player")}`)
-            .setColor(this.client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${this.client.i18n.get(this.language, "error", "no_player")}`, this.client.color)],
       });
       return;
-    } else {
     }
 
     if (this.player.queue.length == 0 && this.player.data.get("autoplay") !== true) {
-      const embed = new EmbedBuilder()
-        .setDescription(`${this.client.i18n.get(this.language, "button.music", "skip_notfound")}`)
-        .setColor(this.client.color);
-
-      this.interaction.reply({ embeds: [embed] });
+      this.interaction.reply({
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${this.client.i18n.get(this.language, "button.music", "skip_notfound")}`, this.client.color)],
+      });
     } else {
       await this.player.skip();
-
-      const embed = new EmbedBuilder()
-        .setDescription(`${this.client.i18n.get(this.language, "button.music", "skip_msg")}`)
-        .setColor(this.client.color);
-
-      this.interaction.reply({ embeds: [embed] });
+      this.interaction.reply({
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${this.client.i18n.get(this.language, "button.music", "skip_msg")}`, this.client.color)],
+      });
     }
   }
 }

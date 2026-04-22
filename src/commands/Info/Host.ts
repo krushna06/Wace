@@ -1,9 +1,7 @@
 import {
-  EmbedBuilder,
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
-  ComponentType,
 } from "discord.js";
 import os from "os";
 import ms from "pretty-ms";
@@ -12,6 +10,7 @@ import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
 import { Manager } from "../../manager.js";
 import { version } from "discord.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 
 export default class implements Command {
   public name = ["host"];
@@ -74,11 +73,6 @@ export default class implements Command {
       .setStyle(ButtonStyle.Secondary)
       .setCustomId("next");
 
-    const initialEmbed = new EmbedBuilder()
-      .setTitle("Host Information")
-      .setDescription(hostInfo)
-      .setColor(client.color);
-
     const actionRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
       prevButton,
       homeButton,
@@ -86,8 +80,11 @@ export default class implements Command {
     );
 
     const initialMessage = await handler.editReply({
-      embeds: [initialEmbed],
-      components: [actionRow],
+      flags: CV2_FLAG,
+      components: [
+        cv2.build({ title: "Host Information", description: hostInfo, color: client.color }),
+        actionRow,
+      ],
     });
 
     let currentPage = "hostInfo";
@@ -101,39 +98,50 @@ export default class implements Command {
 
       if (i.customId === "home") {
         currentPage = "hostInfo";
-        const newEmbed = new EmbedBuilder()
-          .setTitle("Host Information")
-          .setDescription(hostInfo)
-          .setColor(client.color);
-
-        await i.editReply({ embeds: [newEmbed], components: [actionRow] });
+        await i.editReply({
+          flags: CV2_FLAG,
+          components: [
+            cv2.build({ title: "Host Information", description: hostInfo, color: client.color }),
+            actionRow,
+          ],
+        });
       } else if (i.customId === "prev" || i.customId === "next") {
         if (currentPage === "hostInfo") {
           currentPage = "botInfo";
-          const newEmbed = new EmbedBuilder()
-            .setTitle("Bot Information")
-            .setDescription(botInfo)
-            .setColor(client.color);
-
-          await i.editReply({ embeds: [newEmbed], components: [actionRow] });
+          await i.editReply({
+            flags: CV2_FLAG,
+            components: [
+              cv2.build({ title: "Bot Information", description: botInfo, color: client.color }),
+              actionRow,
+            ],
+          });
         } else if (currentPage === "botInfo") {
           currentPage = "hostInfo";
-          const newEmbed = new EmbedBuilder()
-            .setTitle("Host Information")
-            .setDescription(hostInfo)
-            .setColor(client.color);
-
-          await i.editReply({ embeds: [newEmbed], components: [actionRow] });
+          await i.editReply({
+            flags: CV2_FLAG,
+            components: [
+              cv2.build({ title: "Host Information", description: hostInfo, color: client.color }),
+              actionRow,
+            ],
+          });
         }
       }
     });
 
+    const disabledRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
+      prevButton.setDisabled(true),
+      homeButton.setDisabled(true),
+      nextButton.setDisabled(true)
+    );
+
     collector.on("end", async () => {
       try {
-        await initialMessage.edit({ components: [] });
+        const lastPage = currentPage === "hostInfo"
+          ? cv2.build({ title: "Host Information", description: hostInfo, color: client.color })
+          : cv2.build({ title: "Bot Information", description: botInfo, color: client.color });
+        await initialMessage.edit({ flags: CV2_FLAG, components: [lastPage, disabledRow] });
       } catch (error) {
         if (error.code !== 10008) {
-
           console.error("Failed to edit the message:", error);
         }
       }

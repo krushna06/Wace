@@ -2,7 +2,9 @@ import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
 import { Manager } from "../../manager.js";
 import { stripIndents } from "common-tags";
-import { EmbedBuilder, version } from "discord.js";
+import { version } from "discord.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
+
 export default class implements Command {
   public name = ["info"];
   public description = "Shows the information of the Bot";
@@ -33,14 +35,14 @@ export default class implements Command {
     User Count      | ${client.guilds.cache.reduce((a, b) => a + b.memberCount, 0)}
     Active Voices   | ${voiceConnections}
     \`\`\``;
-    const embed = new EmbedBuilder()
-      .setAuthor({
-        name: client.user!.username,
-        iconURL: String(client.user!.displayAvatarURL({ size: 2048 })),
-      })
-      .setColor(client.color)
-      .addFields({ name: "Bot Info", value: botInfo })
-      .setTimestamp();
-    await handler.editReply({ embeds: [embed] });
+    await handler.editReply({
+      flags: CV2_FLAG,
+      components: [cv2.build({
+        author: client.user!.username,
+        fields: [{ name: "Bot Info", value: botInfo }],
+        timestamp: true,
+        color: client.color,
+      })],
+    });
   }
 }

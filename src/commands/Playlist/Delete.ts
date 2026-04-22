@@ -1,5 +1,4 @@
 import {
-  EmbedBuilder,
   ApplicationCommandOptionType,
   ActionRowBuilder,
   ButtonBuilder,
@@ -13,6 +12,7 @@ import { CommandHandler } from "../../structures/CommandHandler.js";
 import { AutocompleteInteractionChoices, GlobalInteraction } from "../../@types/Interaction.js";
 import { getPlaylistAutocomplete } from "../../utilities/PlaylistAutocomplete.js";
 import EventEmitter from "node:events";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 
 export default class implements Command {
   public name = ["pl", "delete"];
@@ -38,98 +38,56 @@ export default class implements Command {
   ];
 
   public async execute(client: Manager, handler: CommandHandler) {
-    await handler.deferReply();
+      await handler.deferReply();
 
-    const value = handler.args[0] ? handler.args[0] : null;
-    if (value == null)
-      return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(`${client.i18n.get(handler.language, "command.playlist", "invalid")}`)
-            .setColor(client.color),
+      const value = handler.args[0] ? handler.args[0] : null;
+      const reply = (desc: string) => handler.editReply({ flags: CV2_FLAG, components: [cv2.simple(desc, client.color)] });
+
+      if (value == null) return reply(`${client.i18n.get(handler.language, "command.playlist", "invalid")}`);
+
+      const playlist = await client.db.playlist.get(value);
+      if (!playlist) return reply(`${client.i18n.get(handler.language, "command.playlist", "delete_notfound")}`);
+      if (playlist.owner !== handler.user?.id) return reply(`${client.i18n.get(handler.language, "command.playlist", "delete_owner")}`);
+
+      const action = new ActionRowBuilder<ButtonBuilder>().addComponents([
+        new ButtonBuilder().setStyle(ButtonStyle.Danger).setCustomId("yes").setLabel("Yes"),
+        new ButtonBuilder().setStyle(ButtonStyle.Secondary).setCustomId("no").setLabel("No"),
+      ]);
+
+      const msg = await handler.editReply({
+        flags: CV2_FLAG,
+        components: [
+          cv2.simple(`${client.i18n.get(handler.language, "command.playlist", "delete_confirm", { playlist_id: value })}`, client.color),
+          action,
         ],
       });
 
-    const playlist = await client.db.playlist.get(value);
-
-    if (!playlist)
-      return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(
-              `${client.i18n.get(handler.language, "command.playlist", "delete_notfound")}`
-            )
-            .setColor(client.color),
-        ],
-      });
-    if (playlist.owner !== handler.user?.id)
-      return handler.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(
-              `${client.i18n.get(handler.language, "command.playlist", "delete_owner")}`
-            )
-            .setColor(client.color),
-        ],
+      const collector = msg?.createMessageComponentCollector({
+        filter: (m) => m.user.id == handler.user?.id,
+        time: 20000,
       });
 
-    const action = new ActionRowBuilder<ButtonBuilder>().addComponents([
-      new ButtonBuilder().setStyle(ButtonStyle.Danger).setCustomId("yes").setLabel("Yes"),
-      new ButtonBuilder().setStyle(ButtonStyle.Secondary).setCustomId("no").setLabel("No"),
-    ]);
+      collector?.on("collect", async (interaction) => {
+        const id = interaction.customId;
+        if (id == "yes") {
+          await client.db.playlist.delete(value);
+          interaction.reply({ flags: CV2_FLAG, components: [cv2.simple(`${client.i18n.get(handler.language, "command.playlist", "delete_deleted", { name: value })}`, client.color)] });
+          collector.stop();
+          msg?.delete().catch(() => null);
+        } else if (id == "no") {
+          interaction.reply({ flags: CV2_FLAG, components: [cv2.simple(`${client.i18n.get(handler.language, "command.playlist", "delete_no")}`, client.color)] });
+          collector.stop();
+          msg?.delete().catch(() => null);
+        }
+      });
 
-    const msg = await handler.editReply({
-      embeds: [
-        new EmbedBuilder().setDescription(
-          `${client.i18n.get(handler.language, "command.playlist", "delete_confirm", {
-            playlist_id: value,
-          })}`
-        ),
-      ],
-      components: [action],
-    });
-
-    const collector = msg?.createMessageComponentCollector({
-      filter: (m) => m.user.id == handler.user?.id,
-      time: 20000,
-    });
-
-    collector?.on("collect", async (interaction) => {
-      const id = interaction.customId;
-      if (id == "yes") {
-        await client.db.playlist.delete(value);
-        const embed = new EmbedBuilder()
-          .setDescription(
-            `${client.i18n.get(handler.language, "command.playlist", "delete_deleted", {
-              name: value,
-            })}`
-          )
-          .setColor(client.color);
-        interaction.reply({ embeds: [embed] });
-        collector.stop();
-        msg?.delete().catch(() => null);
-      } else if (id == "no") {
-        const embed = new EmbedBuilder()
-          .setDescription(`${client.i18n.get(handler.language, "command.playlist", "delete_no")}`)
-          .setColor(client.color);
-        interaction.reply({ embeds: [embed] });
-        collector.stop();
-        msg?.delete().catch(() => null);
-      }
-    });
-
-    collector?.on("end", async () => {
-      const checkMsg = await handler.channel?.messages
-        .fetch(String(msg?.id))
-        .catch(() => undefined);
-      const embed = new EmbedBuilder()
-        .setDescription(`${client.i18n.get(handler.language, "command.playlist", "delete_no")}`)
-        .setColor(client.color);
-      checkMsg ? checkMsg.edit({ embeds: [embed], components: [] }).catch(() => null) : true;
-      // @ts-ignore
-      collector?.removeAllListeners();
-    });
-  }
+      collector?.on("end", async () => {
+        const checkMsg = await handler.channel?.messages.fetch(String(msg?.id)).catch(() => undefined);
+        checkMsg ? checkMsg.edit({ flags: CV2_FLAG, components: [cv2.simple(`${client.i18n.get(handler.language, "command.playlist", "delete_no")}`, client.color)] }).catch(() => null) : true;
+        // @ts-ignore
+        collector?.removeAllListeners();
+      });
+    }
 
   public async autocomplete(client: Manager, interaction: GlobalInteraction, language: string) {
     // @ts-ignore

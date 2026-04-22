@@ -1,7 +1,8 @@
 import { Command, Accessableby } from "../../structures/Command.js";
 import { Manager } from "../../manager.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
-import { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 
 export default class GuessTheSong extends Command {
   constructor() {
@@ -23,40 +24,33 @@ export default class GuessTheSong extends Command {
     const player = client.players.get(guild.id);
     if (!player || !player.current) {
       return handler.sendMessage({
-        embeds: [
-          new EmbedBuilder()
-            .setColor(client.color)
-            .setDescription("No song is currently playing"),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple("No song is currently playing", client.color)],
       });
     }
 
     const track = player.current;
 
-    const embed = new EmbedBuilder()
-      .setColor(client.color)
-      .setTitle("Guess The Song")
-      .setDescription("A song snippet is playing...\nGuess the song title!")
-      .setFooter({ text: "You have 30 seconds to guess" });
-
     const buttons = new ActionRowBuilder<ButtonBuilder>().addComponents(
-      new ButtonBuilder()
-        .setCustomId("gts_skip")
-        .setLabel("Skip")
-        .setStyle(ButtonStyle.Secondary),
-      new ButtonBuilder()
-        .setCustomId("gts_hint")
-        .setLabel("Hint")
-        .setStyle(ButtonStyle.Primary)
+      new ButtonBuilder().setCustomId("gts_skip").setLabel("Skip").setStyle(ButtonStyle.Secondary),
+      new ButtonBuilder().setCustomId("gts_hint").setLabel("Hint").setStyle(ButtonStyle.Primary)
     );
 
-    const msg = await handler.sendMessage({
-      embeds: [embed],
-      components: [buttons],
+    await handler.sendMessage({
+      flags: CV2_FLAG,
+      components: [
+        cv2.build({
+          title: "Guess The Song",
+          description: "A song snippet is playing...\nGuess the song title!",
+          footer: "You have 30 seconds to guess",
+          color: client.color,
+        }),
+        buttons,
+      ],
     });
 
     if (channel.isDMBased()) return;
-    
+
     const filter = (m: any) => m.author.id === user.id;
     const collector = channel.createMessageCollector({
       filter,
@@ -72,14 +66,12 @@ export default class GuessTheSong extends Command {
 
       if (correct) {
         await handler.sendMessage({
-          embeds: [
-            new EmbedBuilder()
-              .setColor("Green")
-              .setTitle("Correct!")
-              .setDescription(
-                `**${track.title}** by **${track.author}**\n\n${user.username} got it right!`
-              ),
-          ],
+          flags: CV2_FLAG,
+          components: [cv2.build({
+            title: "Correct!",
+            description: `**${track.title}** by **${track.author}**\n\n${user.username} got it right!`,
+            color: "Green",
+          })],
         });
 
         const key = `${user.id}-${guild.id}`;
@@ -94,14 +86,12 @@ export default class GuessTheSong extends Command {
         }
       } else {
         await handler.sendMessage({
-          embeds: [
-            new EmbedBuilder()
-              .setColor("Red")
-              .setTitle("Wrong!")
-              .setDescription(
-                `The song was **${track.title}** by **${track.author}**`
-              ),
-          ],
+          flags: CV2_FLAG,
+          components: [cv2.build({
+            title: "Wrong!",
+            description: `The song was **${track.title}** by **${track.author}**`,
+            color: "Red",
+          })],
         });
 
         const key = `${user.id}-${guild.id}`;

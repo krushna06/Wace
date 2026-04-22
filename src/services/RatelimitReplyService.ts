@@ -1,6 +1,7 @@
-import { ButtonInteraction, EmbedBuilder, Message } from "discord.js";
+import { ButtonInteraction, Message } from "discord.js";
 import { NoAutoInteraction } from "../@types/Interaction.js";
 import { Manager } from "../manager.js";
+import { cv2, CV2_FLAG } from "../utilities/ComponentsV2.js";
 
 export interface RatelimitReplyServiceOptions {
   message?: Message;
@@ -31,66 +32,33 @@ export class RatelimitReplyService {
     if (this.interaction) {
       const setup = await this.client.db.setup.get(this.interaction.guildId!);
       const msg = await this.interaction.reply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(
-              `${this.client.i18n.get(this.language, "error", "ratelimit", {
-                time: String(this.time),
-              })}`
-            )
-            .setColor(this.client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${this.client.i18n.get(this.language, "error", "ratelimit", { time: String(this.time) })}`, this.client.color)],
       });
       if (!setup || setup == null || setup.channel !== this.interaction.channelId)
-        setTimeout(
-          () => msg.delete().catch(() => null),
-          this.client.config.utilities.DELETE_MSG_TIMEOUT
-        );
-
+        setTimeout(() => msg.delete().catch(() => null), this.client.config.utilities.DELETE_MSG_TIMEOUT);
       return;
     }
 
     if (this.button) {
       const setup = await this.client.db.setup.get(this.button.guildId!);
       const msg = await this.button.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(
-              `${this.client.i18n.get(this.language, "error", "ratelimit", {
-                time: String(this.time),
-              })}`
-            )
-            .setColor(this.client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${this.client.i18n.get(this.language, "error", "ratelimit", { time: String(this.time) })}`, this.client.color)],
       });
       if (!setup || setup == null || setup.channel !== this.button.channelId)
-        setTimeout(
-          () => msg.delete().catch(() => null),
-          this.client.config.utilities.DELETE_MSG_TIMEOUT
-        );
-
+        setTimeout(() => msg.delete().catch(() => null), this.client.config.utilities.DELETE_MSG_TIMEOUT);
       return;
     }
 
     if (this.message) {
       const setup = await this.client.db.setup.get(this.message.guildId!);
       const msg = await this.message.reply({
-        embeds: [
-          new EmbedBuilder()
-            .setDescription(
-              `${this.client.i18n.get(this.language, "error", "ratelimit", {
-                time: String(this.time),
-              })}`
-            )
-            .setColor(this.client.color),
-        ],
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${this.client.i18n.get(this.language, "error", "ratelimit", { time: String(this.time) })}`, this.client.color)],
       });
       if (!setup || setup == null || setup.channel !== this.message.channelId)
-        setTimeout(
-          () => msg.delete().catch(() => null),
-          this.client.config.utilities.DELETE_MSG_TIMEOUT
-        );
-
+        setTimeout(() => msg.delete().catch(() => null), this.client.config.utilities.DELETE_MSG_TIMEOUT);
       return;
     }
   }

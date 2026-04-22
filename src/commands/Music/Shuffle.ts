@@ -1,4 +1,4 @@
-import { EmbedBuilder, User } from "discord.js";
+import { User } from "discord.js";
 import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
@@ -6,6 +6,7 @@ import { formatDuration } from "../../utilities/FormatDuration.js";
 import { PageQueue } from "../../structures/PageQueue.js";
 import { Player } from "../../structures/Player.js";
 import { getTitle } from "../../utilities/GetTitle.js";
+import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 
 export default class implements Command {
   public name = ["shuffle"];
@@ -50,30 +51,19 @@ export default class implements Command {
     for (let i = 0; i < pagesNum; i++) {
       const str = songStrings.slice(i * 10, i * 10 + 10).join("");
 
-      const embed = new EmbedBuilder()
-        .setAuthor({
-          name: `${client.i18n.get(handler.language, "command.music", "shuffle_msg")}`,
-        })
-        .setThumbnail(thumbnail)
-        .setColor(client.color)
-        .setDescription(
-          `${client.i18n.get(handler.language, "command.music", "queue_description", {
-            title: getTitle(client, song!),
-            request: String(song!.requester),
-            duration: formatDuration(song!.duration),
-            rest: str == "" ? "  Nothing" : "\n" + str,
-          })}`
-        )
-        .setFooter({
-          text: `${client.i18n.get(handler.language, "command.music", "queue_footer", {
-            page: String(i + 1),
-            pages: String(pagesNum),
-            queue_lang: String(player.queue.length),
-            duration: qduration,
-          })}`,
-        });
+      const page = cv2.build({
+        author: `${client.i18n.get(handler.language, "command.music", "shuffle_msg")}`,
+        thumbnail,
+        color: client.color,
+        description: `${client.i18n.get(handler.language, "command.music", "queue_description", {
+          title: getTitle(client, song!),
+          request: String(song!.requester),
+          duration: formatDuration(song!.duration),
+          rest: str == "" ? "  Nothing" : "\n" + str,
+        })}`,
+      });
 
-      pages.push(embed);
+      pages.push(page);
     }
 
     client.wsl.get(handler.guild!.id)?.send({
@@ -101,16 +91,10 @@ export default class implements Command {
 
     if (pages.length == pagesNum && player.queue.length > 10) {
       if (handler.message) {
-        await new PageQueue(client, pages, 60000, player.queue.length, handler.language).prefixPage(
-          handler.message,
-          qduration
-        );
+        await new PageQueue(client, pages, 60000, player.queue.length, handler.language).prefixPage(handler.message, qduration);
       } else if (handler.interaction) {
-        await new PageQueue(client, pages, 60000, player.queue.length, handler.language).slashPage(
-          handler.interaction,
-          qduration
-        );
+        await new PageQueue(client, pages, 60000, player.queue.length, handler.language).slashPage(handler.interaction, qduration);
       } else return;
-    } else return handler.editReply({ embeds: [pages[0]] });
+    } else return handler.editReply({ flags: CV2_FLAG, components: [pages[0]] });
   }
 }
