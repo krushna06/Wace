@@ -77,7 +77,7 @@ export class ConfigDataService {
         if (!given[key]) given[key] = def[key];
       }
       if (given[key] === null || given[key] === undefined) given[key] = def[key];
-      if (typeof given[key] === "object" && given[key] !== null) {
+      if (typeof given[key] === "object" && given[key] !== null && !Array.isArray(given[key])) {
         this.mergeDefault(def[key], given[key]);
       }
       if (typeof given[key] !== typeof def[key]) if (!given[key]) given[key] = def[key];

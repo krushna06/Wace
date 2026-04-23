@@ -11,7 +11,8 @@ export default class {
     const version = client.metadata?.version || "unknown";
     const rawNames = client.config.bot.PRESENCE.activity_name;
     const activityNames = (Array.isArray(rawNames) ? rawNames : [rawNames])
-      .map((n) => n.replace("${version}", version));
+      .map((n) => String(n).replace("${version}", version))
+      .filter((n) => n.trim().length > 0);
 
     const setActivity = (name: string) => {
       client.user!.setPresence({
