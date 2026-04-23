@@ -75,6 +75,7 @@ export class Player {
     if (this.shoukaku) {
       this.shoukaku.removeAllListeners();
       this.shoukaku = null;
+      await this.client.shoukaku.leaveVoiceChannel(this.guildId).catch(() => null);
     }
 
     this.shoukaku = await this.client.shoukaku.joinVoiceChannel({
@@ -254,6 +255,8 @@ export class Player {
 
   async play(track?: ExtendedTrack): Promise<void> {
     if (!this.shoukaku) {
+      // Shoukaku may still have a stale internal entry even if our reference is null
+      await this.client.shoukaku.leaveVoiceChannel(this.guildId).catch(() => null);
       await this.connect();
     }
 
