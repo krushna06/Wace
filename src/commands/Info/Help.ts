@@ -49,19 +49,17 @@ export default class implements Command {
       .setPlaceholder(client.i18n.get(handler.language, "help", "choose_category"))
       .addOptions(menuOptions);
 
-    const showSourceCodeButton = true;
-    const showInviteButton = true;
-    const showSupportButton = true;
-    const showDonateButton = true;
-    const showDashboardButton = true;
+    const hasLink = (val?: string) => typeof val === "string" && val.trim() !== "";
+
+    const showSourceCodeButton = hasLink(client.config.bot.SOURCE_CODE_LINK);
+    const showInviteButton = hasLink(client.config.bot.INVITE_LINK);
+    const showSupportButton = hasLink(client.config.bot.SUPPORT_LINK);
+    const showDonateButton = false;
+    const showDashboardButton = hasLink(client.config.utilities.DASHBOARD_URL);
 
     const buttons: ButtonBuilder[] = [];
 
-    if (
-      showSourceCodeButton &&
-      client.config.bot.SOURCE_CODE_LINK &&
-      client.config.bot.SOURCE_CODE_LINK.trim() !== ""
-    ) {
+    if (showSourceCodeButton) {
       buttons.push(
         new ButtonBuilder()
           .setLabel(client.i18n.get(handler.language, "help", "source_code_label"))
@@ -75,15 +73,11 @@ export default class implements Command {
         new ButtonBuilder()
           .setLabel(client.i18n.get(handler.language, "help", "invite_label"))
           .setStyle(ButtonStyle.Link)
-          .setURL(`https://discord.com/oauth2/authorize?client_id=${client.user?.id}`)
+          .setURL(client.config.bot.INVITE_LINK)
       );
     }
 
-    if (
-      showSupportButton &&
-      client.config.bot.SUPPORT_LINK &&
-      client.config.bot.SUPPORT_LINK.trim() !== ""
-    ) {
+    if (showSupportButton) {
       buttons.push(
         new ButtonBuilder()
           .setLabel(client.i18n.get(handler.language, "help", "support_label"))
@@ -92,8 +86,8 @@ export default class implements Command {
       );
     }
 
-    const dashboardUrl = client.config.utilities.DASHBOARD_URL;
-    if (showDashboardButton && dashboardUrl && dashboardUrl.trim() !== "") {
+    if (showDashboardButton) {
+      const dashboardUrl = client.config.utilities.DASHBOARD_URL!;
       buttons.push(
         new ButtonBuilder()
           .setLabel("Music Controller")
