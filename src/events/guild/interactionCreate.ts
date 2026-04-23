@@ -47,6 +47,22 @@ export default class {
       );
 
     let guildModel = await client.db.language.get(`${interaction.guild.id}`);
+
+    const [blacklistedUser, blacklistedGuild] = await Promise.all([
+      client.db.blacklist.get(interaction.user.id),
+      client.db.blacklist.get(interaction.guild.id),
+    ]);
+
+    if (blacklistedUser || blacklistedGuild) {
+      return interaction.reply({
+        content: blacklistedUser
+          ? `🚫 You have been blacklisted from using this bot. Reason: ${blacklistedUser.reason ?? "No reason provided"}`
+          : `🚫 This server has been blacklisted from using this bot. Reason: ${blacklistedGuild!.reason ?? "No reason provided"}`,
+        ephemeral: true,
+      });
+    }
+
+
     if (!guildModel) {
       guildModel = await client.db.language.set(
         `${interaction.guild.id}`,

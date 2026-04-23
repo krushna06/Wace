@@ -18,6 +18,7 @@ import { UserRecommendations } from "./schema/UserRecommendations.js";
 import { GameStats } from "./schema/GameStats.js";
 import { LastFMNews } from "./schema/LastFMNews.js";
 import { Achievement } from "./schema/Achievement.js";
+import { Blacklist } from "./schema/Blacklist.js";
 export interface LastfmSession {
   discord_id: string;
   session_key: string;
@@ -45,4 +46,5 @@ export interface DatabaseTable {
   gameStats: QuickDatabasePlus<GameStats>;
   lastfmNews: QuickDatabasePlus<LastFMNews>;
   achievement: QuickDatabasePlus<Achievement>;
+  blacklist: QuickDatabasePlus<Blacklist>;
 }

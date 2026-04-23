@@ -14,6 +14,7 @@ import { UserRecommendations } from "./schema/UserRecommendations.js";
 import { GameStats } from "./schema/GameStats.js";
 import { LastFMNews } from "./schema/LastFMNews.js";
 import { Achievement } from "./schema/Achievement.js";
+import { Blacklist } from "./schema/Blacklist.js";
 export class TableSetup {
   client: Manager;
   driver: IDriver;
@@ -56,6 +57,7 @@ export class TableSetup {
       gameStats: await baseDB.table<GameStats>("gameStats"),
       lastfmNews: await baseDB.table<LastFMNews>("lastfmNews"),
       achievement: await baseDB.table<Achievement>("achievement"),
+      blacklist: await baseDB.table<Blacklist>("blacklist"),
     };
     this.client.isDatabaseConnected = true;
     new Handler(this.client);
