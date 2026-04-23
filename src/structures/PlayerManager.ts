@@ -63,6 +63,13 @@ export class PlayerManager {
     this.client.shoukaku.on("disconnect", (name, count) => {
       this.client.logger.warn("Shoukaku", `Node ${name} disconnected. Retry count: ${count}`);
 
+      this.client.players.forEach((player) => {
+        if (player.shoukaku?.node?.name === name) {
+          player.shoukaku.removeAllListeners();
+          player.shoukaku = null;
+        }
+      });
+
       const node = this.client.shoukaku.nodes.get(name);
       if (node) {
         this.client.emit("nodeDisconnect", node, 1006, Buffer.from(`Disconnected after ${count} retries`));

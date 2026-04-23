@@ -72,6 +72,11 @@ export class Player {
     
     if (!node) throw new Error("No available nodes after retries");
 
+    if (this.shoukaku) {
+      this.shoukaku.removeAllListeners();
+      this.shoukaku = null;
+    }
+
     this.shoukaku = await this.client.shoukaku.joinVoiceChannel({
       guildId: this.guildId,
       channelId: this.voiceId,
@@ -249,6 +254,12 @@ export class Player {
 
   async play(track?: ExtendedTrack): Promise<void> {
     if (!this.shoukaku) {
+      await this.connect();
+    }
+
+    const node = this.shoukaku?.node;
+    if (node && node.state !== 2 /* NodeState.Connected */) {
+      this.client.logger.warn("Player.play", `Node is not connected (state: ${node.state}), reconnecting...`);
       await this.connect();
     }
 

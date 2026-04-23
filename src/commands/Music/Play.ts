@@ -126,6 +126,18 @@ export default class implements Command {
         client.logger.warn("Play", "Interaction expired (took too long to respond)");
         return;
       }
+      if (error?.status === 404 && error?.error === "Not Found") {
+        client.logger.warn("Play", "Stale Lavalink session detected, destroying player for guild " + handler.guild!.id);
+        const stalePlayer = client.players.get(handler.guild!.id);
+        if (stalePlayer) {
+          stalePlayer.shoukaku?.removeAllListeners();
+          client.players.delete(handler.guild!.id);
+        }
+        return handler.editReply({
+          flags: CV2_FLAG,
+          components: [cv2.simple(`${client.i18n.get(handler.language, "error", "no_node")}`, client.color)],
+        });
+      }
       client.logger.error("Play", error);
     }
   }
