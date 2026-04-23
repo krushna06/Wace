@@ -1,12 +1,15 @@
 import {
-  EmbedBuilder,
   ButtonBuilder,
   ButtonStyle,
   ActionRowBuilder,
   StringSelectMenuBuilder,
-  ModalBuilder,
-  TextInputBuilder,
-  TextInputStyle,
+  SeparatorBuilder,
+  SeparatorSpacingSize,
+  TextDisplayBuilder,
+  ContainerBuilder,
+  SectionBuilder,
+  ThumbnailBuilder,
+  resolveColor,
 } from "discord.js";
 import { readdirSync } from "fs";
 import { join, dirname } from "path";
@@ -14,9 +17,65 @@ import { fileURLToPath } from "url";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
 import { Manager } from "../../manager.js";
-import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
+import { CV2_FLAG } from "../../utilities/ComponentsV2.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
+
+
+
+function buildHelpContainer(client: Manager, handler: CommandHandler, categories: string[]): ContainerBuilder {
+  const container = new ContainerBuilder();
+
+  try {
+    const color = resolveColor(client.color as any);
+    container.setAccentColor(color);
+  } catch {}
+
+  const avatarURL = client.user?.displayAvatarURL({ size: 64 }) ?? "";
+  const headerText = [
+    `## ${client.config.bot.BOT_NAME} — Help`,
+    `-# Use the menu below to browse commands by category.`,
+  ].join("\n");
+
+  const headerSection = new SectionBuilder()
+    .addTextDisplayComponents(new TextDisplayBuilder().setContent(headerText))
+    .setThumbnailAccessory(new ThumbnailBuilder().setURL(avatarURL));
+  container.addSectionComponents(headerSection);
+
+  container.addSeparatorComponents(
+    new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small)
+  );
+
+  container.addTextDisplayComponents(
+    new TextDisplayBuilder().setContent(
+      `-# Join a voice channel and \`/play\` a song.\n-# YouTube, Playlist, and Spotify links are all supported.`
+    )
+  );
+
+  container.addSeparatorComponents(
+    new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small)
+  );
+
+  const categoryLines = categories
+    .map((cat) => `**${cat}**`)
+    .join("\n");
+
+  container.addTextDisplayComponents(
+    new TextDisplayBuilder().setContent(categoryLines)
+  );
+
+  container.addSeparatorComponents(
+    new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small)
+  );
+
+  container.addTextDisplayComponents(
+    new TextDisplayBuilder().setContent(
+      `-# Tip: Use \`/play <song>\` to start listening right away.`
+    )
+  );
+
+  return container;
+}
 
 export default class implements Command {
   public name = ["help"];
@@ -37,179 +96,127 @@ export default class implements Command {
 
     const categories = readdirSync(join(__dirname, "..", "..", "commands"));
 
-    const menuOptions = categories.map((category) => ({
-      label: category.toUpperCase(),
-      value: category,
-    }));
-
-    const categoriesList = '```\n' + categories.join('\n') + '\n```';
-
     const selectMenu = new StringSelectMenuBuilder()
-      .setCustomId("select-category")
-      .setPlaceholder(client.i18n.get(handler.language, "help", "choose_category"))
-      .addOptions(menuOptions);
+      .setCustomId("help-select-category")
+      .setPlaceholder("Choose a category…")
+      .addOptions(
+        categories.map((cat) => ({
+          label: cat,
+          value: cat,
+          emoji: "📁",
+        }))
+      );
 
     const hasLink = (val?: string) => typeof val === "string" && val.trim() !== "";
 
-    const showSourceCodeButton = hasLink(client.config.bot.SOURCE_CODE_LINK);
-    const showInviteButton = hasLink(client.config.bot.INVITE_LINK);
-    const showSupportButton = hasLink(client.config.bot.SUPPORT_LINK);
-    const showDonateButton = false;
-    const showDashboardButton = hasLink(client.config.utilities.DASHBOARD_URL);
-
     const buttons: ButtonBuilder[] = [];
 
-    if (showSourceCodeButton) {
+    if (hasLink(client.config.bot.SOURCE_CODE_LINK)) {
       buttons.push(
         new ButtonBuilder()
-          .setLabel(client.i18n.get(handler.language, "help", "source_code_label"))
+          .setLabel("Source Code")
           .setURL(client.config.bot.SOURCE_CODE_LINK)
           .setStyle(ButtonStyle.Link)
       );
     }
 
-    if (showInviteButton) {
+    if (hasLink(client.config.bot.INVITE_LINK)) {
       buttons.push(
         new ButtonBuilder()
-          .setLabel(client.i18n.get(handler.language, "help", "invite_label"))
+          .setLabel("Invite")
           .setStyle(ButtonStyle.Link)
           .setURL(client.config.bot.INVITE_LINK)
       );
     }
 
-    if (showSupportButton) {
+    if (hasLink(client.config.bot.SUPPORT_LINK)) {
       buttons.push(
         new ButtonBuilder()
-          .setLabel(client.i18n.get(handler.language, "help", "support_label"))
+          .setLabel("Support")
           .setStyle(ButtonStyle.Link)
           .setURL(client.config.bot.SUPPORT_LINK)
       );
     }
 
-    if (showDashboardButton) {
+    if (hasLink(client.config.utilities.DASHBOARD_URL)) {
       const dashboardUrl = client.config.utilities.DASHBOARD_URL!;
       buttons.push(
         new ButtonBuilder()
-          .setLabel("Music Controller")
+          .setLabel("Dashboard")
           .setStyle(ButtonStyle.Link)
           .setURL(dashboardUrl.replace(/\/$/, "") + `/guild/${handler.guild?.id ?? ""}`)
       );
     }
 
-    if (showDonateButton) {
-      buttons.push(
-        new ButtonBuilder()
-          .setStyle(ButtonStyle.Secondary)
-          .setLabel(client.i18n.get(handler.language, "help", "donate_label"))
-          .setCustomId("donate")
-      );
-    }
+    const menuRow = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(selectMenu);
+    const helpContainer = buildHelpContainer(client, handler, categories);
 
-    const row = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(selectMenu);
-
-    const components: Array<ActionRowBuilder<StringSelectMenuBuilder> | ActionRowBuilder<ButtonBuilder>> = [row];
+    const components: any[] = [helpContainer, menuRow];
     if (buttons.length > 0) {
-      const buttonRow = new ActionRowBuilder<ButtonBuilder>().addComponents(buttons);
-      components.push(buttonRow);
+      components.push(new ActionRowBuilder<ButtonBuilder>().addComponents(buttons));
     }
 
-    await handler.editReply({
-      flags: CV2_FLAG,
-      components: [
-        cv2.build({
-          description: client.i18n.get(handler.language, "help", "help_menu"),
-          fields: [
-            {
-              name: client.i18n.get(handler.language, "help", "categories"),
-              value: categoriesList,
-              inline: true,
-            },
-            {
-              name: client.i18n.get(handler.language, "help", "information_title"),
-              value: client.i18n.get(handler.language, "help", "information_content"),
-              inline: true,
-            },
-            {
-              name: client.i18n.get(handler.language, "help", "get_started_title"),
-              value: client.i18n.get(handler.language, "help", "get_started_content"),
-            },
-          ],
-          color: client.color,
-        }),
-        ...components,
-      ],
-    });
+    await handler.editReply({ flags: CV2_FLAG, components });
 
-    const filter = (i) => i.customId === "select-category" && i.user.id === handler.user.id;
+    const filter = (i: any) =>
+      i.customId === "help-select-category" && i.user.id === handler.user!.id;
+
     // @ts-ignore
-    const collector = handler.channel.createMessageComponentCollector({ filter, time: 60000 });
+    const collector = handler.channel!.createMessageComponentCollector({ filter, time: 60000 });
 
-    collector.on("collect", async (i) => {
-      if (!i.isSelectMenu()) return;
-      const selectedCategory = i.values[0];
-      const commands = client.commands.filter((c) => c.category === selectedCategory);
-      const description = commands.map((command) => `\`${command.name.join("-")}\``).join(", ");
+    collector.on("collect", async (i: any) => {
+      const selectedCategory: string = i.values[0];
+      const cmds = client.commands.filter((c) => c.category === selectedCategory);
+
+      const container = new ContainerBuilder();
+      try {
+        container.setAccentColor(resolveColor(client.color as any));
+      } catch {}
+
+      container.addTextDisplayComponents(
+        new TextDisplayBuilder().setContent(
+          `## ${selectedCategory} Commands`
+        )
+      );
+
+      container.addSeparatorComponents(
+        new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small)
+      );
+
+      if (cmds.size === 0) {
+        container.addTextDisplayComponents(
+          new TextDisplayBuilder().setContent("*No commands found in this category.*")
+        );
+      } else {
+        const cmdList = cmds
+          .map((cmd) => `\`/${cmd.name.join(" ")}\``)
+          .join("  ");
+        container.addTextDisplayComponents(
+          new TextDisplayBuilder().setContent(cmdList)
+        );
+      }
+
+      container.addSeparatorComponents(
+        new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small)
+      );
+
+      container.addTextDisplayComponents(
+        new TextDisplayBuilder().setContent(
+          `-# Showing ${cmds.size} command${cmds.size !== 1 ? "s" : ""} in **${selectedCategory}**`
+        )
+      );
+
       await i.update({
         flags: CV2_FLAG,
-        components: [
-          cv2.build({
-            title: `Commands in ${selectedCategory.toUpperCase()}`,
-            description: description && description.length > 0 ? description : undefined,
-            color: client.color,
-          }),
-          ...components,
-        ],
+        components: [container, menuRow, ...(buttons.length > 0 ? [new ActionRowBuilder<ButtonBuilder>().addComponents(buttons)] : [])],
       });
     });
 
-    collector.on("end", (collected) => {
-      if (!collected.size) {
+    collector.on("end", (_collected: any, reason: string) => {
+      if (reason === "time") {
         handler.editReply({
-          content: client.i18n.get(handler.language, "help", "didnt_select"),
-          components: [],
-        });
-      }
-    });
-
-    handler.client.on("interactionCreate", async (interaction) => {
-      if (!interaction.isButton()) return;
-
-      if (interaction.customId === "donate") {
-        const modal = new ModalBuilder()
-          .setCustomId("donateModal")
-          .setTitle(client.i18n.get(handler.language, "help", "donate_amount_title"));
-
-        const donationInput = new TextInputBuilder()
-          .setCustomId("donationAmount")
-          .setLabel(client.i18n.get(handler.language, "help", "donate_amount_description"))
-          .setStyle(TextInputStyle.Short);
-
-        modal.addComponents(new ActionRowBuilder<TextInputBuilder>().addComponents(donationInput));
-
-        await interaction.showModal(modal);
-      }
-    });
-
-    handler.client.on("interactionCreate", async (interaction) => {
-      if (!interaction.isModalSubmit()) return;
-
-      if (interaction.customId === "donateModal") {
-        const donationAmount = interaction.fields.getTextInputValue("donationAmount");
-
-        const amount = parseFloat(donationAmount);
-        if (isNaN(amount)) {
-          await interaction.reply({
-            content: client.i18n.get(handler.language, "help", "invalid_amount"),
-            ephemeral: true,
-          });
-          return;
-        }
-
-        const paypalLink = `https://www.paypal.com/paypalme/krushna06/${amount}`;
-
-        await interaction.reply({
-          content: `[Click here to donate ${amount}](${paypalLink})`,
-          ephemeral: true,
+          flags: CV2_FLAG,
+          components: [buildHelpContainer(client, handler, categories)],
         });
       }
     });
