@@ -163,6 +163,27 @@ utilities:
     enable: false
     dm_owner: false
 
+  # Weekly database backup (every Sunday at midnight)
+  # backup_dir: folder to store backups (relative or absolute path)
+  # keep_backups: how many weekly backups to retain before pruning older ones
+  DATABASE_BACKUP:
+    enable: true
+    backup_dir: "./backups"
+    keep_backups: 4
+
+  # Guild management: auto-leave rules
+  GUILD_MANAGEMENT:
+    # Leave guilds with fewer members than the threshold
+    LEAVE_SMALL_GUILDS:
+      enable: false
+      min_members: 15
+    # Leave guilds where the bot hasn't been used within the threshold period
+    # Duration format: Xd (days), Xm (months), Xyr (years), Xw (weeks), Xh (hours)
+    # Examples: 30d, 1m, 1yr, 2w
+    LEAVE_INACTIVE_GUILDS:
+      enable: false
+      inactive_threshold: "30d"
+
   # WS/REST server for using web player
   WEB_SERVER:
     enable: true

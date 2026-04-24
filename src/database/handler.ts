@@ -2,11 +2,15 @@ import { Manager } from "../manager.js";
 import { AutoReconnectLavalinkService } from "./setup/lavalink.js";
 import { PremiumScheduleSetup } from "./setup/premium.js";
 import { SongRequesterCleanSetup } from "./setup/setup.js";
+import { GuildManagementSetup } from "./setup/GuildManagement.js";
+import { DatabaseBackupSetup } from "./setup/DatabaseBackup.js";
 export class Handler {
   constructor(client: Manager) {
     new SongRequesterCleanSetup(client);
     new AutoReconnectLavalinkService(client);
     new PremiumScheduleSetup(client);
+    new GuildManagementSetup(client);
+    new DatabaseBackupSetup(client);
   }
 }
 export async function incrementUserSongPlay(db, userId, guildId) {

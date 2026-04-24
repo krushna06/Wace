@@ -34,6 +34,7 @@ export interface Utilities {
   AUTO_RESUME: boolean;
   DELETE_MSG_TIMEOUT: number;
   DATABASE: Database;
+  DATABASE_BACKUP?: DatabaseBackup;
   TOPGG_TOKEN: string;
   MESSAGE_CONTENT: MessageContent;
   AUTOFIX_LAVALINK: AutofixLavalink;
@@ -43,6 +44,22 @@ export interface Utilities {
   LOG_CHANNEL: string;
   DASHBOARD_URL?: string;
   GUILD_JOIN_MESSAGE: GuildJoinMessage;
+  GUILD_MANAGEMENT?: GuildManagement;
+}
+export interface DatabaseBackup {
+  enable: boolean;
+  backup_dir?: string;
+  keep_backups?: number;
+}
+export interface GuildManagement {
+  LEAVE_SMALL_GUILDS?: {
+    enable: boolean;
+    min_members: number;
+  };
+  LEAVE_INACTIVE_GUILDS?: {
+    enable: boolean;
+    inactive_threshold: string;
+  };
 }
 export interface AutofixLavalink {
   enable: boolean;
