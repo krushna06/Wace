@@ -166,8 +166,8 @@ export default class {
     const premiumGuild = await client.db.preGuild.get(String(message.guild?.id));
     const isPremium = (premiumUser && premiumUser.isPremium) ?? false;
     const isPremiumGuild = (premiumGuild && premiumGuild.isPremium) ?? false;
-    const isOwner = message.author.id == client.owner;
-    const isAdmin = client.config.bot.ADMIN.includes(message.author.id);
+    const isOwner = message.author.id === client.owner;
+    const isAdmin = client.config.bot.ADMIN?.includes(message.author.id) ?? false;
     const isBothUserAndGuild =
       command.accessableby.includes(Accessableby.GuildPremium) &&
       command.accessableby.includes(Accessableby.Premium);

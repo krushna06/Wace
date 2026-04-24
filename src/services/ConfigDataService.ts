@@ -11,6 +11,13 @@ export class ConfigDataService {
 
     const raw = yaml_files;
     this.checkConfig(raw);
+
+    if (raw.bot) {
+      if (raw.bot.OWNER_ID) raw.bot.OWNER_ID = String(raw.bot.OWNER_ID);
+      if (Array.isArray(raw.bot.ADMIN)) raw.bot.ADMIN = raw.bot.ADMIN.map(String);
+      if (Array.isArray(raw.bot.TOKEN)) raw.bot.TOKEN = raw.bot.TOKEN.map(String);
+    }
+
     const res = this.mergeDefault(this.defaultConfig, raw);
 
     if (old_data.utilities && old_data.utilities.DATABASE && old_data.utilities.DATABASE.config) {
@@ -170,6 +177,21 @@ export class ConfigDataService {
         GUILD_JOIN_MESSAGE: {
           enable: false,
           dm_owner: false,
+        },
+        DATABASE_BACKUP: {
+          enable: false,
+          backup_dir: "./backups",
+          keep_backups: 4,
+        },
+        GUILD_MANAGEMENT: {
+          LEAVE_SMALL_GUILDS: {
+            enable: false,
+            min_members: 15,
+          },
+          LEAVE_INACTIVE_GUILDS: {
+            enable: false,
+            inactive_threshold: "30d",
+          },
         },
       },
       emojis: {

@@ -227,8 +227,8 @@ export default class {
     const premiumGuild = await client.db.preGuild.get(interaction.guild.id);
     const isPremium = premiumUser && premiumUser.isPremium;
     const isPremiumGuild = premiumGuild && premiumGuild.isPremium;
-    const isOwner = interaction.user.id == client.owner;
-    const isAdmin = client.config.bot.ADMIN.includes(interaction.user.id);
+    const isOwner = interaction.user.id === client.owner;
+    const isAdmin = client.config.bot.ADMIN?.includes(interaction.user.id) ?? false;
 
     let hasDJRole = false;
     let hasPremiumRole = false;

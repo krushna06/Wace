@@ -24,6 +24,10 @@ import { createPlaylist, deletePlaylist, editPlaylist } from "./route/playlist.j
 import { getUserStats, getGuildStats, getTopSongs, getTopUsers, getLastPlayed, getTopSongsUser, getLastPlayedUser } from "./route/getStats.js";
 import { getLyricsRoute } from "./route/getLyrics.js";
 import { getUserHistory } from "./route/getUserHistory.js";
+import { getAdminMe } from "./route/admin/adminAuth.js";
+import { getBlacklist, postBlacklist, deleteBlacklist } from "./route/admin/blacklist.js";
+import { getPremiumKeys, postGeneratePremiumKeys, deletePremiumKey } from "./route/admin/premiumKeys.js";
+import { getPremiumUsers, deletePremiumUser, patchPremiumUser } from "./route/admin/premiumUsers.js";
 
 export class WebServer {
   app: Fastify.FastifyInstance;
@@ -36,7 +40,7 @@ export class WebServer {
     this.app.register(Cors, {
       origin: "*",
       methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-      allowedHeaders: ["Content-Type", "Authorization", "x-owner"],
+      allowedHeaders: ["Content-Type", "Authorization", "x-owner", "x-user-id"],
       credentials: true,
     });
 
@@ -117,6 +121,17 @@ export class WebServer {
         fastify.get("/stats/last-played-user/:userId", getLastPlayedUser(client));
         fastify.get("/lyrics/:guildId", getLyricsRoute(client));
         fastify.get("/user-history/:userId", getUserHistory(client));
+
+        fastify.get("/admin/me", getAdminMe(client));
+        fastify.get("/admin/blacklist", getBlacklist(client));
+        fastify.post("/admin/blacklist", postBlacklist(client));
+        fastify.delete("/admin/blacklist/:id", deleteBlacklist(client));
+        fastify.get("/admin/premium/keys", getPremiumKeys(client));
+        fastify.post("/admin/premium/keys", postGeneratePremiumKeys(client));
+        fastify.delete("/admin/premium/keys/:code", deletePremiumKey(client));
+        fastify.get("/admin/premium/users", getPremiumUsers(client));
+        fastify.delete("/admin/premium/users/:userId", deletePremiumUser(client));
+        fastify.patch("/admin/premium/users/:userId", patchPremiumUser(client));
 
         done();
       },
