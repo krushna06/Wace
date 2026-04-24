@@ -230,6 +230,17 @@ export default class {
     const isOwner = interaction.user.id === client.owner;
     const isAdmin = client.config.bot.ADMIN?.includes(interaction.user.id) ?? false;
 
+    const commandOverride = await client.db.commandOverrides.get(command.name.join("-"));
+    if (commandOverride !== null && commandOverride !== undefined) {
+      if (commandOverride.isPremium && !command.accessableby.includes(Accessableby.Premium)) {
+        command.accessableby = [...command.accessableby, Accessableby.Premium];
+      } else if (!commandOverride.isPremium) {
+        command.accessableby = command.accessableby.filter(
+          (a) => a !== Accessableby.Premium && a !== Accessableby.GuildPremium
+        );
+      }
+    }
+
     let hasDJRole = false;
     let hasPremiumRole = false;
     const setup = await client.db.setup.get(interaction.guild.id);

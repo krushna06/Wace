@@ -168,6 +168,18 @@ export default class {
     const isPremiumGuild = (premiumGuild && premiumGuild.isPremium) ?? false;
     const isOwner = message.author.id === client.owner;
     const isAdmin = client.config.bot.ADMIN?.includes(message.author.id) ?? false;
+
+    const commandOverride = await client.db.commandOverrides.get(command.name.join("-"));
+    if (commandOverride !== null && commandOverride !== undefined) {
+      if (commandOverride.isPremium && !command.accessableby.includes(Accessableby.Premium)) {
+        command.accessableby = [...command.accessableby, Accessableby.Premium];
+      } else if (!commandOverride.isPremium) {
+        command.accessableby = command.accessableby.filter(
+          (a) => a !== Accessableby.Premium && a !== Accessableby.GuildPremium
+        );
+      }
+    }
+
     const isBothUserAndGuild =
       command.accessableby.includes(Accessableby.GuildPremium) &&
       command.accessableby.includes(Accessableby.Premium);

@@ -19,6 +19,7 @@ import { GameStats } from "./schema/GameStats.js";
 import { LastFMNews } from "./schema/LastFMNews.js";
 import { Achievement } from "./schema/Achievement.js";
 import { Blacklist } from "./schema/Blacklist.js";
+import { CommandOverride } from "./schema/CommandOverride.js";
 export interface LastfmSession {
   discord_id: string;
   session_key: string;
@@ -47,4 +48,5 @@ export interface DatabaseTable {
   lastfmNews: QuickDatabasePlus<LastFMNews>;
   achievement: QuickDatabasePlus<Achievement>;
   blacklist: QuickDatabasePlus<Blacklist>;
+  commandOverrides: QuickDatabasePlus<CommandOverride>;
 }

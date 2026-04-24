@@ -28,6 +28,7 @@ import { getAdminMe } from "./route/admin/adminAuth.js";
 import { getBlacklist, postBlacklist, deleteBlacklist } from "./route/admin/blacklist.js";
 import { getPremiumKeys, postGeneratePremiumKeys, deletePremiumKey } from "./route/admin/premiumKeys.js";
 import { getPremiumUsers, deletePremiumUser, patchPremiumUser } from "./route/admin/premiumUsers.js";
+import { getAdminCommands, patchAdminCommand, deleteAdminCommandOverride } from "./route/admin/commandOverrides.js";
 
 export class WebServer {
   app: Fastify.FastifyInstance;
@@ -132,6 +133,9 @@ export class WebServer {
         fastify.get("/admin/premium/users", getPremiumUsers(client));
         fastify.delete("/admin/premium/users/:userId", deletePremiumUser(client));
         fastify.patch("/admin/premium/users/:userId", patchPremiumUser(client));
+        fastify.get("/admin/commands", getAdminCommands(client));
+        fastify.patch("/admin/commands/:commandKey", patchAdminCommand(client));
+        fastify.delete("/admin/commands/:commandKey/override", deleteAdminCommandOverride(client));
 
         done();
       },
