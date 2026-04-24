@@ -75,8 +75,9 @@ export class Player {
     if (this.shoukaku) {
       this.shoukaku.removeAllListeners();
       this.shoukaku = null;
-      await this.client.shoukaku.leaveVoiceChannel(this.guildId).catch(() => null);
     }
+
+    await this.client.shoukaku.leaveVoiceChannel(this.guildId).catch(() => null);
 
     this.shoukaku = await this.client.shoukaku.joinVoiceChannel({
       guildId: this.guildId,
@@ -255,14 +256,7 @@ export class Player {
 
   async play(track?: ExtendedTrack): Promise<void> {
     if (!this.shoukaku) {
-      // Shoukaku may still have a stale internal entry even if our reference is null
       await this.client.shoukaku.leaveVoiceChannel(this.guildId).catch(() => null);
-      await this.connect();
-    }
-
-    const node = this.shoukaku?.node;
-    if (node && node.state !== 2 /* NodeState.Connected */) {
-      this.client.logger.warn("Player.play", `Node is not connected (state: ${node.state}), reconnecting...`);
       await this.connect();
     }
 
