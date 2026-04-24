@@ -28,6 +28,7 @@ import { getAdminMe } from "./route/admin/adminAuth.js";
 import { getBlacklist, postBlacklist, deleteBlacklist } from "./route/admin/blacklist.js";
 import { getPremiumKeys, postGeneratePremiumKeys, deletePremiumKey } from "./route/admin/premiumKeys.js";
 import { getPremiumUsers, deletePremiumUser, patchPremiumUser } from "./route/admin/premiumUsers.js";
+import { getBotStats } from "./route/getBotStats.js";
 import { getAdminCommands, patchAdminCommand, deleteAdminCommandOverride } from "./route/admin/commandOverrides.js";
 
 export class WebServer {
@@ -48,8 +49,8 @@ export class WebServer {
     this.app.get("/api/lastfm/callback", getLastfmCallbackRoute(this.client));
 
     this.app.register(
-      (fastify, _, done) => {
-        fastify.register(WebsocketPlugin);
+      async (fastify) => {
+        await fastify.register(WebsocketPlugin);
         fastify.register((fastify, _, done) => {
           new WebsocketRoute(client).main(fastify);
           done();
@@ -136,8 +137,7 @@ export class WebServer {
         fastify.get("/admin/commands", getAdminCommands(client));
         fastify.patch("/admin/commands/:commandKey", patchAdminCommand(client));
         fastify.delete("/admin/commands/:commandKey/override", deleteAdminCommandOverride(client));
-
-        done();
+        fastify.get("/stats/bot", getBotStats(client));
       },
       { prefix: "v1" }
     );
