@@ -143,6 +143,11 @@ export class ConfigDataService {
       utilities: {
         AUTO_RESUME: false,
         TOPGG_TOKEN: "",
+        TOPGG: {
+          token: "",
+          webhook_secret: "",
+          vote_reward_hours: 12,
+        },
         DELETE_MSG_TIMEOUT: 2000,
         DATABASE: {
           driver: "json",

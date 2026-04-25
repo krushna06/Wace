@@ -31,7 +31,8 @@ export default class {
       }, 5000);
     }
 
-    if (client.config.utilities.TOPGG_TOKEN && client.config.utilities.TOPGG_TOKEN.length !== 0) {
+    const topggToken = client.config.utilities.TOPGG?.token || client.config.utilities.TOPGG_TOKEN;
+    if (topggToken && topggToken.length !== 0) {
       const topgg = new TopggService(client);
       const res = await topgg.settingUp(String(client.user?.id));
       if (res) {

@@ -97,8 +97,18 @@ utilities:
   GUILD_LOG_CHANNEL: ""
   # Log all unhandled, error, warnings on discord
   LOG_CHANNEL: ""
-  # The timeout for deleting msg
-  DELETE_MSG_TIMEOUT: 3000
+  # Top.gg integration
+  # token: your top.gg API token (for server count posting + vote checking)
+  # webhook_secret: the authorization string you set in top.gg webhook settings
+  # vote_reward_hours: how many hours of premium to grant per vote (doubled on weekends)
+  # Webhook URL to set in top.gg: http://YOUR_SERVER_IP:3001/api/topgg/webhook
+  TOPGG:
+    token: ""
+    webhook_secret: ""
+    vote_reward_hours: 12
+
+  # Legacy token field (kept for backwards compat, prefer TOPGG.token above)
+  TOPGG_TOKEN: ""
   # Auto resume when bot restarted suddenly
   AUTO_RESUME: false
   # Set your dashboard controller URL here, leave blank to disable link

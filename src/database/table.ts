@@ -16,6 +16,7 @@ import { LastFMNews } from "./schema/LastFMNews.js";
 import { Achievement } from "./schema/Achievement.js";
 import { Blacklist } from "./schema/Blacklist.js";
 import { CommandOverride } from "./schema/CommandOverride.js";
+import { VoteStats } from "./schema/VoteStats.js";
 export class TableSetup {
   client: Manager;
   driver: IDriver;
@@ -60,6 +61,7 @@ export class TableSetup {
       achievement: await baseDB.table<Achievement>("achievement"),
       blacklist: await baseDB.table<Blacklist>("blacklist"),
       commandOverrides: await baseDB.table<CommandOverride>("commandOverrides"),
+      voteStats: await baseDB.table<VoteStats>("voteStats"),
     };
     this.client.isDatabaseConnected = true;
     new Handler(this.client);

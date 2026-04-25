@@ -30,6 +30,7 @@ import { getPremiumKeys, postGeneratePremiumKeys, deletePremiumKey } from "./rou
 import { getPremiumUsers, deletePremiumUser, patchPremiumUser } from "./route/admin/premiumUsers.js";
 import { getBotStats } from "./route/getBotStats.js";
 import { getAdminCommands, patchAdminCommand, deleteAdminCommandOverride } from "./route/admin/commandOverrides.js";
+import { postTopggWebhook } from "./route/topggWebhook.js";
 
 export class WebServer {
   app: Fastify.FastifyInstance;
@@ -47,6 +48,7 @@ export class WebServer {
     });
 
     this.app.get("/api/lastfm/callback", getLastfmCallbackRoute(this.client));
+    this.app.post("/api/topgg/webhook", postTopggWebhook(this.client));
 
     this.app.register(
       async (fastify) => {

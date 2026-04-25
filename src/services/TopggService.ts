@@ -51,9 +51,10 @@ export class TopggService {
   }
 
   private async fetch(path: string) {
+    const token = this.client.config.utilities.TOPGG?.token || this.client.config.utilities.TOPGG_TOKEN;
     return await fetch(this.url + path, {
       headers: {
-        Authorization: this.client.config.utilities.TOPGG_TOKEN,
+        Authorization: token,
       },
     });
   }
@@ -70,13 +71,14 @@ export class TopggService {
 
   public async updateServerCount(count: number) {
     if (!this.botId || !this.isTokenAvalible) throw new Error("TopGG service not setting up!");
+    const token = this.client.config.utilities.TOPGG?.token || this.client.config.utilities.TOPGG_TOKEN;
     await request(this.url + `/bots/${this.botId}/stats`, {
       method: "POST",
       body: JSON.stringify({
         server_count: count,
       }),
       headers: {
-        Authorization: this.client.config.utilities.TOPGG_TOKEN,
+        Authorization: token,
         "Content-Type": "application/json",
       },
     });

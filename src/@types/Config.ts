@@ -36,6 +36,7 @@ export interface Utilities {
   DATABASE: Database;
   DATABASE_BACKUP?: DatabaseBackup;
   TOPGG_TOKEN: string;
+  TOPGG?: Topgg;
   MESSAGE_CONTENT: MessageContent;
   AUTOFIX_LAVALINK: AutofixLavalink;
   WEB_SERVER: WebServer;
@@ -45,6 +46,11 @@ export interface Utilities {
   DASHBOARD_URL?: string;
   GUILD_JOIN_MESSAGE: GuildJoinMessage;
   GUILD_MANAGEMENT?: GuildManagement;
+}
+export interface Topgg {
+  token: string;
+  webhook_secret: string;
+  vote_reward_hours: number;
 }
 export interface DatabaseBackup {
   enable: boolean;
