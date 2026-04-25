@@ -81,13 +81,15 @@ export class ConfigDataService {
     for (const key of defaultKeys) {
       if (Array.isArray(given[key]) && given[key].length == 0) given[key] = def[key];
       if (def[key] === null || (typeof def[key] === "string" && def[key].length === 0)) {
-        if (!given[key]) given[key] = def[key];
+        if (given[key] === null || given[key] === undefined) given[key] = def[key];
       }
       if (given[key] === null || given[key] === undefined) given[key] = def[key];
       if (typeof given[key] === "object" && given[key] !== null && !Array.isArray(given[key])) {
         this.mergeDefault(def[key], given[key]);
       }
-      if (typeof given[key] !== typeof def[key]) if (!given[key]) given[key] = def[key];
+      if (typeof given[key] !== typeof def[key] && (given[key] === null || given[key] === undefined)) {
+        given[key] = def[key];
+      }
     }
     return given as Required<T>;
   }
