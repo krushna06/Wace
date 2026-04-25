@@ -21,7 +21,10 @@ export async function getUserPlaylists(
   }
 
   const allPlaylists = await client.db.playlist.all();
-  const userPlaylists = allPlaylists.filter(playlist => playlist.value.owner === userId);
+  const requesterId = (req.headers["x-user-id"] as string | undefined) ?? "";
+  const userPlaylists = allPlaylists.filter(
+    (playlist) => playlist.value.owner === userId && (!playlist.value.private || requesterId === userId)
+  );
 
   res.send({
     data: userPlaylists.map(playlist => ({

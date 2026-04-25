@@ -9,7 +9,6 @@ import {
 import { Manager } from "../../manager.js";
 import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 import { stripIndents } from "common-tags";
-import fs from "fs";
 import {
   CheckPermissionResultInterface,
   CheckPermissionServices,
@@ -236,10 +235,6 @@ export default class {
       });
     }
 
-    const isNotPassAll = Object.entries(userPerm)
-      .filter(([key]) => key !== 'dj')
-      .some(([_, value]) => value === false);
-
     if (command.accessableby.includes(Accessableby.DJ) && !userPerm.dj) {
       return message.reply({
         flags: CV2_FLAG,
@@ -292,7 +287,7 @@ export default class {
       client.logger.error("CommandManager | Message", error);
       message.reply({
         flags: CV2_FLAG,
-        components: [cv2.simple(`${client.i18n.get(language, "error", "unexpected_error")}\n ${error}`, client.color)],
+        components: [cv2.simple(`${client.i18n.get(language, "error", "unexpected_error")}`, client.color)],
       });
     }
   }
