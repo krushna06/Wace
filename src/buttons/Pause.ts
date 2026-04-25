@@ -1,14 +1,11 @@
 import { ButtonInteraction, CacheType, InteractionCollector, Message } from "discord.js";
 import { PlayerButton } from "../@types/Button.js";
 import { Manager } from "../manager.js";
-import {
-  filterSelect,
-  playerRowOne,
-  playerRowOneEdited,
-  playerRowTwo,
-} from "../utilities/PlayerControlButton.js";
 import { ReplyInteractionService } from "../services/ReplyInteractionService.js";
 import { Player } from "../structures/Player.js";
+import { buildNowPlayingContainer } from "../utilities/BuildNowPlayingContainer.js";
+import { CV2_FLAG } from "../utilities/ComponentsV2.js";
+
 export default class implements PlayerButton {
   name = "pause";
   async run(
@@ -23,17 +20,9 @@ export default class implements PlayerButton {
       collector.stop();
     }
     await player.setPause(!player.paused);
-    player.paused
-      ? nplaying
-          .edit({
-            components: [playerRowOneEdited(client), playerRowTwo(client), filterSelect(client)],
-          })
-          .catch(() => null)
-      : nplaying
-          .edit({
-            components: [playerRowOne(client), playerRowTwo(client), filterSelect(client)],
-          })
-          .catch(() => null);
+    nplaying
+      .edit({ flags: CV2_FLAG, components: [buildNowPlayingContainer(client, player, language)] })
+      .catch(() => null);
     new ReplyInteractionService(
       client,
       message,
