@@ -1,4 +1,4 @@
-help_menu: "## **[Menu d'Aide {botName}](https://wace.live)**"
+help_menu: "## **[Menu d'Aide {botName}]**"
 categories: "**Catégories Disponibles : [7]**"
 categories_list: "```automatique\n Filtre\n Info\n Musique\n Playlist\n Premium\n Spotify\n Utilitaires```"
 information_title: "📰 Informations :"

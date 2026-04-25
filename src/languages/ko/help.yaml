@@ -1,4 +1,4 @@
-help_menu: "## **[[{botName}] 도움말 메뉴](https://wace.live)**"
+help_menu: "## **[[{botName}] 도움말 메뉴]**"
 categories: "**사용 가능한 카테고리: [7]**"
 categories_list: "```자동 모드\n 필터\n 정보\n 음악\n 재생 목록\n 프리미엄\n 스포티파이\n 유틸리티```"
 information_title: "📰 정보:"
