@@ -111,16 +111,7 @@ export default class implements Command {
 
     const buttons: ButtonBuilder[] = [];
 
-    if (hasLink(client.config.bot.SOURCE_CODE_LINK)) {
-      buttons.push(
-        new ButtonBuilder()
-          .setLabel("Source Code")
-          .setURL(client.config.bot.SOURCE_CODE_LINK)
-          .setStyle(ButtonStyle.Link)
-      );
-    }
-
-    if (hasLink(client.config.bot.INVITE_LINK)) {
+if (hasLink(client.config.bot.INVITE_LINK)) {
       buttons.push(
         new ButtonBuilder()
           .setLabel("Invite")
