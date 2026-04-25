@@ -25,6 +25,8 @@ export class PostgresConnectDriver {
 
     const mysqlDriver = new PostgresDriver(this.dbConfig.config);
 
-    new TableSetup(this.client, mysqlDriver, "Postgres");
+    await mysqlDriver.connect()
+      .then(() => new TableSetup(this.client, mysqlDriver, "Postgres"))
+      .catch((err) => this.client.logger.error("PostgresConnectDriver", `Failed to connect: ${err}`));
   }
 }

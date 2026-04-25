@@ -22,6 +22,8 @@ export class MongoConnectDriver {
 
     const mongoDriver = new MongoDriver(this.dbConfig.config.uri);
 
-    new TableSetup(this.client, mongoDriver, "MongoDB");
+    mongoDriver.connect()
+      .then(() => new TableSetup(this.client, mongoDriver, "MongoDB"))
+      .catch((err) => this.client.logger.error("MongoConnectDriver", `Failed to connect: ${err}`));
   }
 }

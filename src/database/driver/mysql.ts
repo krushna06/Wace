@@ -25,6 +25,8 @@ export class MySQLConnectDriver {
 
     const mysqlDriver = new MySQLDriver(this.dbConfig.config);
 
-    new TableSetup(this.client, mysqlDriver, "MySQL");
+    mysqlDriver.connect()
+      .then(() => new TableSetup(this.client, mysqlDriver, "MySQL"))
+      .catch((err) => this.client.logger.error("MySQLConnectDriver", `Failed to connect: ${err}`));
   }
 }
