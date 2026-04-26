@@ -29,6 +29,7 @@ import { getBlacklist, postBlacklist, deleteBlacklist } from "./route/admin/blac
 import { getPremiumKeys, postGeneratePremiumKeys, deletePremiumKey } from "./route/admin/premiumKeys.js";
 import { getPremiumUsers, deletePremiumUser, patchPremiumUser } from "./route/admin/premiumUsers.js";
 import { getBotStats } from "./route/getBotStats.js";
+import { getGuilds } from "./route/getGuilds.js";
 import { getAdminCommands, patchAdminCommand, deleteAdminCommandOverride } from "./route/admin/commandOverrides.js";
 import { postTopggWebhook } from "./route/topggWebhook.js";
 
@@ -140,6 +141,7 @@ export class WebServer {
         fastify.patch("/admin/commands/:commandKey", patchAdminCommand(client));
         fastify.delete("/admin/commands/:commandKey/override", deleteAdminCommandOverride(client));
         fastify.get("/stats/bot", getBotStats(client));
+        fastify.get("/guilds", getGuilds(client));
       },
       { prefix: "v1" }
     );
