@@ -144,7 +144,7 @@ export default class {
       { name: `${client.i18n.get(language, "event.player", "request_title")}`, value: `${song!.requester}`, inline: true },
     ];
     if (dashboardGuildUrl) {
-      embedFields.push({ name: "Dashboard", value: `[Music Controller](${dashboardGuildUrl})` });
+      embedFields.push({ name: "Dashboard", value: `[Music Controller](${dashboardGuildUrl})`, inline: false });
     }
 
     const downloadUrl = `https://www.000tube.com/watch?v=${song?.identifier}`;
