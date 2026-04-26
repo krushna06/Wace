@@ -47,6 +47,6 @@ export function buildNowPlayingContainer(client: Manager, player: Player, langua
     thumbnail: song?.info?.artworkUrl ?? `https://img.youtube.com/vi/${song?.identifier}/hqdefault.jpg`,
     fields: embedFields,
     timestamp: true,
-    components: [filterSelect(client), rowOne, playerRowTwo(client)],
+    components: [filterSelect(client, false), rowOne, playerRowTwo(client)],
   });
 }

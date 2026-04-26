@@ -3,6 +3,7 @@ import { Manager } from "../../manager.js";
 import { Accessableby, Command } from "../../structures/Command.js";
 import { CommandHandler } from "../../structures/CommandHandler.js";
 import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
+import { filterSelect } from "../../utilities/PlayerControlButton.js";
 
 export default class implements Command {
   public name = ["setup"];
@@ -65,13 +66,14 @@ export default class implements Command {
 
       const channel_msg = await textChannel.send({
         flags: CV2_FLAG,
-        content: `${queueMsg}`,
         components: [
           cv2.build({
             color: client.color,
             author: `${client.i18n.get(handler.language, "event.setup", "setup_playembed_author")}`,
+            description: `${queueMsg}`,
             thumbnail: `https://cdn.discordapp.com/avatars/${client.user!.id}/${client.user!.avatar}.jpeg?size=300`,
           }),
+          filterSelect(client, true),
           client.diSwitch,
         ],
       });

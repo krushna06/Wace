@@ -85,12 +85,13 @@ const playerRowOneEdited = (client: Manager) =>
       .setStyle(ButtonStyle.Secondary),
   ]);
 
-const filterSelect = (client: Manager) =>
+const filterSelect = (client: Manager, disabled: boolean = false) =>
   new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
     new StringSelectMenuBuilder()
       .setCustomId("filter")
       .setPlaceholder("Choose a filter for better audio experience")
       .addOptions(client.selectMenuOptions)
+      .setDisabled(disabled)
   );
 
 const downloadButton = (url: string) =>

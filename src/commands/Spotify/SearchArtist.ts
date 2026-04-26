@@ -9,6 +9,7 @@ import {
   CommandInteractionOptionResolver,
   ComponentType,
   MessageActionRowComponentBuilder,
+  MessageFlags,
 } from "discord.js";
 import {
   getAccessToken,
@@ -99,8 +100,8 @@ export default class implements Command {
           if (i.customId.startsWith("popular_songs_")) {
             const artistId = i.customId.split("_")[2];
             const songs = await getPopularSongs(artistId, accessToken);
-            if (songs.length === 0) { await i.reply({ content: "No popular songs found for this artist.", ephemeral: true }); return; }
-            await i.reply({ flags: CV2_FLAG, components: [cv2.build({ title: `Popular Songs by ${artists[currentIndex].name}`, description: songs.map((song, index) => `${index + 1}. ${song.name}`).join("\n"), color: client.color, timestamp: true })], ephemeral: true });
+            if (songs.length === 0) { await i.reply({ flags: CV2_FLAG | MessageFlags.Ephemeral, components: [cv2.simple("No popular songs found for this artist.", client.color)] }); return; }
+            await i.reply({ flags: CV2_FLAG | MessageFlags.Ephemeral, components: [cv2.build({ title: `Popular Songs by ${artists[currentIndex].name}`, description: songs.map((song, index) => `${index + 1}. ${song.name}`).join("\n"), color: client.color, timestamp: true })] });
           } else if (i.customId === "prev_artist" || i.customId === "next_artist") {
             if (i.customId === "prev_artist" && currentIndex > 0) currentIndex--;
             else if (i.customId === "next_artist" && currentIndex < artists.length - 1) currentIndex++;

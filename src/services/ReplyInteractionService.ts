@@ -19,7 +19,6 @@ export class ReplyInteractionService {
       .reply({
         flags: CV2_FLAG,
         components: [cv2.simple(this.content, this.client.color)],
-        ephemeral: false,
       })
       .catch(() => null);
 

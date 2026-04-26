@@ -2,6 +2,7 @@ import { Manager } from "../../manager.js";
 import { Setup } from "../schema/Setup.js";
 import { TextChannel } from "discord.js";
 import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
+import { filterSelect } from "../../utilities/PlayerControlButton.js";
 
 export class SongRequesterCleanSetup {
   client: Manager;
@@ -46,14 +47,14 @@ export class SongRequesterCleanSetup {
     const playEmbed = cv2.build({
       color: this.client.color,
       author: `${this.client.i18n.get(language, "event.setup", "setup_playembed_author")}`,
+      description: `${queueMsg}`,
       thumbnail: `https://cdn.discordapp.com/avatars/${this.client.user!.id}/${this.client.user!.avatar}.jpeg?size=300`,
     });
 
     return await playMsg
       .edit({
         flags: CV2_FLAG,
-        content: `${queueMsg}`,
-        components: [playEmbed, this.client.diSwitch],
+        components: [playEmbed, filterSelect(this.client, true), this.client.diSwitch],
       })
       .catch((e) => {});
   }

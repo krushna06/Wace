@@ -92,7 +92,7 @@ export class PlayerUpdateLoader {
         .edit({
           flags: CV2_FLAG,
           content: player.current && player.queue.length == 0 ? " " : queueString,
-          components: [embed, client.enSwitchMod, filterSelect(client)],
+          components: [embed, client.enSwitchMod, filterSelect(client, false)],
         })
         .catch(() => {});
     };
@@ -122,14 +122,14 @@ export class PlayerUpdateLoader {
       const playEmbed = cv2.build({
         color: client.color,
         author: `${client.i18n.get(language, "event.setup", "setup_playembed_author")}`,
+        description: `${queueMsg}`,
         thumbnail: `https://cdn.discordapp.com/avatars/${client.user!.id}/${client.user!.avatar}.jpeg?size=300`,
       });
 
       return await playMsg
         .edit({
           flags: CV2_FLAG,
-          content: `${queueMsg}`,
-          components: [playEmbed, client.diSwitch],
+          components: [playEmbed, filterSelect(client, true), client.diSwitch],
         })
         .catch(() => {});
     };

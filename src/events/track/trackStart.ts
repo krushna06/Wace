@@ -155,7 +155,7 @@ export default class {
       thumbnail: track.info.artworkUrl ?? `https://img.youtube.com/vi/${track.identifier}/hqdefault.jpg`,
       fields: embedFields,
       timestamp: true,
-      components: [filterSelect(client), playerRowOne(client), playerRowTwo(client), downloadButton(downloadUrl)],
+      components: [filterSelect(client, false), playerRowOne(client), playerRowTwo(client), downloadButton(downloadUrl)],
     });
 
     const playing_channel = (await client.channels
