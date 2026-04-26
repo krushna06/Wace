@@ -21,9 +21,14 @@ import { CV2_FLAG } from "../../utilities/ComponentsV2.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-
-
-function buildHelpContainer(client: Manager, handler: CommandHandler, categories: string[]): ContainerBuilder {
+function buildHelpContainer(
+  client: Manager,
+  handler: CommandHandler,
+  categories: string[],
+  selectMenu: StringSelectMenuBuilder,
+  buttons: ButtonBuilder[],
+  showNavButtons: boolean = false
+): ContainerBuilder {
   const container = new ContainerBuilder();
 
   try {
@@ -46,16 +51,6 @@ function buildHelpContainer(client: Manager, handler: CommandHandler, categories
     new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small)
   );
 
-  container.addTextDisplayComponents(
-    new TextDisplayBuilder().setContent(
-      `-# Join a voice channel and \`/play\` a song.\n-# YouTube, Playlist, and Spotify links are all supported.`
-    )
-  );
-
-  container.addSeparatorComponents(
-    new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small)
-  );
-
   const categoryLines = categories
     .map((cat) => `**${cat}**`)
     .join("\n");
@@ -68,11 +63,34 @@ function buildHelpContainer(client: Manager, handler: CommandHandler, categories
     new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small)
   );
 
-  container.addTextDisplayComponents(
-    new TextDisplayBuilder().setContent(
-      `-# Tip: Use \`/play <song>\` to start listening right away.`
-    )
+  container.addActionRowComponents(
+    new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(selectMenu)
   );
+
+  if (showNavButtons) {
+    const allButtons: ButtonBuilder[] = [
+      new ButtonBuilder()
+        .setCustomId("help-prev")
+        .setLabel("<")
+        .setStyle(ButtonStyle.Secondary),
+      new ButtonBuilder()
+        .setCustomId("help-next")
+        .setLabel(">")
+        .setStyle(ButtonStyle.Secondary),
+      new ButtonBuilder()
+        .setCustomId("help-disable")
+        .setLabel("✕")
+        .setStyle(ButtonStyle.Secondary),
+      ...buttons,
+    ];
+    container.addActionRowComponents(
+      new ActionRowBuilder<ButtonBuilder>().addComponents(allButtons)
+    );
+  } else if (buttons.length > 0) {
+    container.addActionRowComponents(
+      new ActionRowBuilder<ButtonBuilder>().addComponents(buttons)
+    );
+  }
 
   return container;
 }
@@ -111,21 +129,12 @@ export default class implements Command {
 
     const buttons: ButtonBuilder[] = [];
 
-if (hasLink(client.config.bot.INVITE_LINK)) {
+    if (hasLink(client.config.bot.INVITE_LINK)) {
       buttons.push(
         new ButtonBuilder()
           .setLabel("Invite")
           .setStyle(ButtonStyle.Link)
           .setURL(client.config.bot.INVITE_LINK)
-      );
-    }
-
-    if (hasLink(client.config.bot.SUPPORT_LINK)) {
-      buttons.push(
-        new ButtonBuilder()
-          .setLabel("Support")
-          .setStyle(ButtonStyle.Link)
-          .setURL(client.config.bot.SUPPORT_LINK)
       );
     }
 
@@ -139,75 +148,277 @@ if (hasLink(client.config.bot.INVITE_LINK)) {
       );
     }
 
-    const menuRow = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(selectMenu);
-    const helpContainer = buildHelpContainer(client, handler, categories);
+    const helpContainer = buildHelpContainer(client, handler, categories, selectMenu, buttons, true);
 
-    const components: any[] = [helpContainer, menuRow];
-    if (buttons.length > 0) {
-      components.push(new ActionRowBuilder<ButtonBuilder>().addComponents(buttons));
-    }
-
-    await handler.editReply({ flags: CV2_FLAG, components });
+    await handler.editReply({ flags: CV2_FLAG, components: [helpContainer] });
 
     const filter = (i: any) =>
-      i.customId === "help-select-category" && i.user.id === handler.user!.id;
+      (i.customId === "help-select-category" || 
+       i.customId === "help-prev" || 
+       i.customId === "help-next" ||
+       i.customId === "help-disable") && 
+      i.user.id === handler.user!.id;
 
     // @ts-ignore
     const collector = handler.channel!.createMessageComponentCollector({ filter, time: 60000 });
 
+    let currentCategory: string | null = null;
+    let categoryHistory: string[] = [];
+
     collector.on("collect", async (i: any) => {
-      const selectedCategory: string = i.values[0];
-      const cmds = client.commands.filter((c) => c.category === selectedCategory);
+      if (i.customId === "help-select-category") {
+        currentCategory = i.values[0];
+        categoryHistory.push(currentCategory);
+        
+        const cmds = client.commands.filter((c) => c.category === currentCategory);
 
-      const container = new ContainerBuilder();
-      try {
-        container.setAccentColor(resolveColor(client.color as any));
-      } catch {}
+        const container = new ContainerBuilder();
+        try {
+          container.setAccentColor(resolveColor(client.color as any));
+        } catch {}
 
-      container.addTextDisplayComponents(
-        new TextDisplayBuilder().setContent(
-          `## ${selectedCategory} Commands`
-        )
-      );
-
-      container.addSeparatorComponents(
-        new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small)
-      );
-
-      if (cmds.size === 0) {
         container.addTextDisplayComponents(
-          new TextDisplayBuilder().setContent("*No commands found in this category.*")
+          new TextDisplayBuilder().setContent(
+            `## ${currentCategory} Commands`
+          )
         );
-      } else {
-        const cmdList = cmds
-          .map((cmd) => `\`/${cmd.name.join(" ")}\``)
-          .join("  ");
+
+        container.addSeparatorComponents(
+          new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small)
+        );
+
+        if (cmds.size === 0) {
+          container.addTextDisplayComponents(
+            new TextDisplayBuilder().setContent("*No commands found in this category.*")
+          );
+        } else {
+          const cmdList = cmds
+            .map((cmd) => `\`/${cmd.name.join(" ")}\``)
+            .join("  ");
+          container.addTextDisplayComponents(
+            new TextDisplayBuilder().setContent(cmdList)
+          );
+        }
+
+        container.addSeparatorComponents(
+          new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small)
+        );
+
         container.addTextDisplayComponents(
-          new TextDisplayBuilder().setContent(cmdList)
+          new TextDisplayBuilder().setContent(
+            `-# Showing ${cmds.size} command${cmds.size !== 1 ? "s" : ""} in **${currentCategory}**`
+          )
         );
+
+        container.addActionRowComponents(
+          new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(selectMenu)
+        );
+
+        const allButtons: ButtonBuilder[] = [
+          new ButtonBuilder()
+            .setCustomId("help-prev")
+            .setLabel("<")
+            .setStyle(ButtonStyle.Secondary),
+          new ButtonBuilder()
+            .setCustomId("help-next")
+            .setLabel(">")
+            .setStyle(ButtonStyle.Secondary),
+          new ButtonBuilder()
+            .setCustomId("help-disable")
+            .setLabel("✕")
+            .setStyle(ButtonStyle.Secondary),
+          ...buttons,
+        ];
+
+        container.addActionRowComponents(
+          new ActionRowBuilder<ButtonBuilder>().addComponents(allButtons)
+        );
+
+        await i.update({
+          flags: CV2_FLAG,
+          components: [container],
+        });
+      } else if (i.customId === "help-disable") {
+        await i.message.delete().catch(() => null);
+        collector.stop();
+      } else if (i.customId === "help-prev") {
+        if (categoryHistory.length > 0) {
+          categoryHistory.pop();
+        }
+
+        if (categoryHistory.length === 0) {
+          const container = buildHelpContainer(client, handler, categories, selectMenu, buttons, true);
+          currentCategory = null;
+
+          await i.update({
+            flags: CV2_FLAG,
+            components: [container],
+          });
+        } else {
+          // Go to previous category in history
+          currentCategory = categoryHistory[categoryHistory.length - 1];
+          const cmds = client.commands.filter((c) => c.category === currentCategory);
+
+          const container = new ContainerBuilder();
+          try {
+            container.setAccentColor(resolveColor(client.color as any));
+          } catch {}
+
+          container.addTextDisplayComponents(
+            new TextDisplayBuilder().setContent(
+              `## ${currentCategory} Commands`
+            )
+          );
+
+          container.addSeparatorComponents(
+            new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small)
+          );
+
+          if (cmds.size === 0) {
+            container.addTextDisplayComponents(
+              new TextDisplayBuilder().setContent("*No commands found in this category.*")
+            );
+          } else {
+            const cmdList = cmds
+              .map((cmd) => `\`/${cmd.name.join(" ")}\``)
+              .join("  ");
+            container.addTextDisplayComponents(
+              new TextDisplayBuilder().setContent(cmdList)
+            );
+          }
+
+          container.addSeparatorComponents(
+            new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small)
+          );
+
+          container.addTextDisplayComponents(
+            new TextDisplayBuilder().setContent(
+              `-# Showing ${cmds.size} command${cmds.size !== 1 ? "s" : ""} in **${currentCategory}**`
+            )
+          );
+
+          container.addActionRowComponents(
+            new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(selectMenu)
+          );
+
+          const allButtons: ButtonBuilder[] = [
+            new ButtonBuilder()
+              .setCustomId("help-prev")
+              .setLabel("<")
+              .setStyle(ButtonStyle.Secondary),
+            new ButtonBuilder()
+              .setCustomId("help-next")
+              .setLabel(">")
+              .setStyle(ButtonStyle.Secondary),
+            new ButtonBuilder()
+              .setCustomId("help-disable")
+              .setLabel("✕")
+              .setStyle(ButtonStyle.Secondary),
+            ...buttons,
+          ];
+
+          container.addActionRowComponents(
+            new ActionRowBuilder<ButtonBuilder>().addComponents(allButtons)
+          );
+
+          await i.update({
+            flags: CV2_FLAG,
+            components: [container],
+          });
+        }
+      } else if (i.customId === "help-next") {
+        const currentIndex = categories.indexOf(currentCategory || "");
+        const nextIndex = (currentIndex + 1) % categories.length;
+        const nextCategory = categories[nextIndex];
+        
+        currentCategory = nextCategory;
+        categoryHistory.push(nextCategory);
+        
+        const cmds = client.commands.filter((c) => c.category === nextCategory);
+
+        const container = new ContainerBuilder();
+        try {
+          container.setAccentColor(resolveColor(client.color as any));
+        } catch {}
+
+        container.addTextDisplayComponents(
+          new TextDisplayBuilder().setContent(
+            `## ${nextCategory} Commands`
+          )
+        );
+
+        container.addSeparatorComponents(
+          new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small)
+        );
+
+        if (cmds.size === 0) {
+          container.addTextDisplayComponents(
+            new TextDisplayBuilder().setContent("*No commands found in this category.*")
+          );
+        } else {
+          const cmdList = cmds
+            .map((cmd) => `\`/${cmd.name.join(" ")}\``)
+            .join("  ");
+          container.addTextDisplayComponents(
+            new TextDisplayBuilder().setContent(cmdList)
+          );
+        }
+
+        container.addSeparatorComponents(
+          new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small)
+        );
+
+        container.addTextDisplayComponents(
+          new TextDisplayBuilder().setContent(
+            `-# Showing ${cmds.size} command${cmds.size !== 1 ? "s" : ""} in **${nextCategory}**`
+          )
+        );
+
+        container.addActionRowComponents(
+          new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(selectMenu)
+        );
+
+        const allButtons: ButtonBuilder[] = [
+          new ButtonBuilder()
+            .setCustomId("help-prev")
+            .setLabel("<")
+            .setStyle(ButtonStyle.Secondary),
+          new ButtonBuilder()
+            .setCustomId("help-next")
+            .setLabel(">")
+            .setStyle(ButtonStyle.Secondary),
+          new ButtonBuilder()
+            .setCustomId("help-disable")
+            .setLabel("✕")
+            .setStyle(ButtonStyle.Secondary),
+          ...buttons,
+        ];
+
+        container.addActionRowComponents(
+          new ActionRowBuilder<ButtonBuilder>().addComponents(allButtons)
+        );
+
+        await i.update({
+          flags: CV2_FLAG,
+          components: [container],
+        });
       }
-
-      container.addSeparatorComponents(
-        new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small)
-      );
-
-      container.addTextDisplayComponents(
-        new TextDisplayBuilder().setContent(
-          `-# Showing ${cmds.size} command${cmds.size !== 1 ? "s" : ""} in **${selectedCategory}**`
-        )
-      );
-
-      await i.update({
-        flags: CV2_FLAG,
-        components: [container, menuRow, ...(buttons.length > 0 ? [new ActionRowBuilder<ButtonBuilder>().addComponents(buttons)] : [])],
-      });
     });
 
     collector.on("end", (_collected: any, reason: string) => {
       if (reason === "time") {
+        const container = new ContainerBuilder();
+        try {
+          container.setAccentColor(resolveColor(client.color as any));
+        } catch {}
+
+        container.addTextDisplayComponents(
+          new TextDisplayBuilder().setContent("Help menu has expired.")
+        );
+
         handler.editReply({
           flags: CV2_FLAG,
-          components: [buildHelpContainer(client, handler, categories)],
+          components: [container],
         });
       }
     });
