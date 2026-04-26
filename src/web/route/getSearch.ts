@@ -16,23 +16,6 @@ export async function getSearch(
   const query = (req.query as Record<string, string>)["identifier"];
   const requester = (req.query as Record<string, string>)["requester"];
   const source = (req.query as Record<string, string>)["source"];
-
-  if (query && query.startsWith("http")) {
-    try {
-      const url = new URL(query);
-      const hostname = url.hostname;
-      const blocked = /^(localhost|127\.|10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.|::1|0\.0\.0\.0)/i.test(hostname);
-      if (blocked) {
-        res.code(400);
-        res.send({ error: "URL not allowed" });
-        return;
-      }
-    } catch {
-      res.code(400);
-      res.send({ error: "Invalid URL" });
-      return;
-    }
-  }
   let validSource = "ytsearch";
   if (source) {
     const validSources = ["ytsearch", "ytmsearch", "scsearch", "spsearch", "amsearch", "dzsearch"];

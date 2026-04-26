@@ -50,13 +50,6 @@ export const patchPremiumUser = (client: Manager) => {
     const existing = await client.db.premium.get(userId);
     if (!existing) return reply.code(404).send({ error: "User not found" });
 
-    const newExpiresAt = req.body?.expiresAt;
-    if (newExpiresAt !== undefined && newExpiresAt !== "lifetime") {
-      if (typeof newExpiresAt !== "number" || newExpiresAt < Date.now() || newExpiresAt > Date.now() + 1000 * 60 * 60 * 24 * 365 * 10) {
-        return reply.code(400).send({ error: "expiresAt must be a valid future timestamp within 10 years, or 'lifetime'" });
-      }
-    }
-
     const updated = {
       ...existing,
       ...(req.body?.plan && { plan: req.body.plan }),

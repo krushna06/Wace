@@ -25,15 +25,6 @@ export const postTopggWebhook = (client: Manager) => {
     const isWeekend = body.isWeekend ?? false;
     const isTest = body.type === "test";
 
-    if (!isTest) {
-      const existing = await client.db.voteStats.get(userId);
-      const cooldownMs = 12 * 60 * 60 * 1000;
-      if (existing && Date.now() - existing.lastVotedAt < cooldownMs) {
-        client.logger.warn("TopggWebhook", `Duplicate vote ignored for user ${userId}`);
-        return reply.code(200).send({ ok: true });
-      }
-    }
-
     client.logger.info("TopggWebhook", `Vote received from user ${userId}${isTest ? " (test)" : ""}${isWeekend ? " [weekend x2]" : ""}`);
 
     const baseHours = topggConfig.vote_reward_hours ?? 12;

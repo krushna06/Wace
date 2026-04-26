@@ -9,9 +9,6 @@ export const createPlaylist = (client: Manager) => {
       if (!name || !owner) {
         return reply.code(400).send({ error: "Missing required fields: name, owner" });
       }
-      if (!/^\d{17,20}$/.test(owner)) {
-        return reply.code(400).send({ error: "Invalid owner ID" });
-      }
       if (name.length > 16) {
         return reply.code(400).send({ error: "Playlist name cannot be longer than 16 characters" });
       }
