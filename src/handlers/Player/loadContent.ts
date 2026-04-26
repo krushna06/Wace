@@ -65,15 +65,6 @@ export class PlayerContentLoader {
         return;
       }
 
-      if (player.data.get("filter-mode") == filterMode) {
-        await interaction.reply({
-          flags: CV2_FLAG,
-          components: [cv2.simple(`${client.i18n.get(language, "button.music", "filter_already", { name: filterMode })}`, client.color)],
-          ephemeral: true,
-        });
-        return;
-      }
-
       if (filterMode == "clear" && !player.data.get("filter-mode")) {
         await interaction.reply({
           flags: CV2_FLAG,
@@ -83,17 +74,17 @@ export class PlayerContentLoader {
         return;
       }
 
+      await interaction.deferReply({ ephemeral: true });
+
       filterMode == "clear"
         ? player.data.delete("filter-mode")
         : player.data.set("filter-mode", filterMode);
       filterMode == "clear" ? await player.filters.clear() : await player.filters.set(filterMode);
 
-      await interaction.reply({
-        flags: CV2_FLAG,
-        components: [cv2.simple(filterMode == "clear"
+      await interaction.editReply({
+        content: filterMode == "clear"
           ? `${client.i18n.get(language, "button.music", "reset_on")}`
-          : `${client.i18n.get(language, "button.music", "filter_on", { name: filterMode })}`, client.color)],
-        ephemeral: true,
+          : `${client.i18n.get(language, "button.music", "filter_on", { name: filterMode })}`,
       });
       return;
     }

@@ -33,7 +33,7 @@ export default class implements Command {
       });
     const player = client.players.get(handler.guild!.id);
     if (!value) {
-      player?.filters.set("bass");
+      await player?.filters.set("bass");
       return handler.editReply({
         flags: CV2_FLAG,
         components: [cv2.simple(`${client.i18n.get(handler.language, "command.filter", "filter_on", { name: "Bassboost" })}`, client.color)],
@@ -44,23 +44,8 @@ export default class implements Command {
         flags: CV2_FLAG,
         components: [cv2.simple(`${client.i18n.get(handler.language, "command.filter", "bassboost_limit")}`, client.color)],
       });
-    player?.filters.setEqualizer([
-      { band: 0, gain: Number(value) / 10 },
-      { band: 1, gain: Number(value) / 10 },
-      { band: 2, gain: Number(value) / 10 },
-      { band: 3, gain: Number(value) / 10 },
-      { band: 4, gain: Number(value) / 10 },
-      { band: 5, gain: Number(value) / 10 },
-      { band: 6, gain: Number(value) / 10 },
-      { band: 7, gain: 0 },
-      { band: 8, gain: 0 },
-      { band: 9, gain: 0 },
-      { band: 10, gain: 0 },
-      { band: 11, gain: 0 },
-      { band: 12, gain: 0 },
-      { band: 13, gain: 0 },
-    ]);
-    player?.data.set("filter-mode", this.name[0]);
+    await player?.filters.set("bass");
+    player?.data.set("filter-mode", this.name[1]);
     return handler.editReply({
       flags: CV2_FLAG,
       components: [cv2.simple(`${client.i18n.get(handler.language, "command.filter", "bassboost_set", { amount: value })}`, client.color)],

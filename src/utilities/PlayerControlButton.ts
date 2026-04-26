@@ -93,4 +93,12 @@ const filterSelect = (client: Manager) =>
       .addOptions(client.selectMenuOptions)
   );
 
-export { playerRowOne, playerRowOneEdited, playerRowTwo, filterSelect };
+const downloadButton = (url: string) =>
+  new ActionRowBuilder<ButtonBuilder>().addComponents(
+    new ButtonBuilder()
+      .setLabel("Download")
+      .setStyle(ButtonStyle.Link)
+      .setURL(url)
+  );
+
+export { playerRowOne, playerRowOneEdited, playerRowTwo, filterSelect, downloadButton };

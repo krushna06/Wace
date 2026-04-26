@@ -1,7 +1,7 @@
 import { Manager } from "../../manager.js";
 import { ComponentType, TextChannel } from "discord.js";
 import { formatDuration } from "../../utilities/FormatDuration.js";
-import { filterSelect, playerRowOne, playerRowTwo } from "../../utilities/PlayerControlButton.js";
+import { filterSelect, playerRowOne, playerRowTwo, downloadButton } from "../../utilities/PlayerControlButton.js";
 import { AutoReconnectBuilderService } from "../../services/AutoReconnectBuilderService.js";
 import { SongNotiEnum } from "../../database/schema/SongNoti.js";
 import { Player, ExtendedTrack } from "../../structures/Player.js";
@@ -142,12 +142,12 @@ export default class {
       { name: `${client.i18n.get(language, "event.player", "author_title")}`, value: `${song!.author}`, inline: true },
       { name: `${client.i18n.get(language, "event.player", "duration_title")}`, value: `${formatDuration(song!.duration)}`, inline: true },
       { name: `${client.i18n.get(language, "event.player", "request_title")}`, value: `${song!.requester}`, inline: true },
-      { name: `${client.i18n.get(language, "event.player", "download_title")}`, value: `**[${song!.title} - 000tube.com](https://www.000tube.com/watch?v=${song?.identifier})**` },
     ];
     if (dashboardGuildUrl) {
       embedFields.push({ name: "Dashboard", value: `[Music Controller](${dashboardGuildUrl})` });
     }
 
+    const downloadUrl = `https://www.000tube.com/watch?v=${song?.identifier}`;
     const embeded = cv2.build({
       color: client.color,
       author: `${client.i18n.get(language, "event.player", "track_title")}`,
@@ -155,7 +155,7 @@ export default class {
       thumbnail: track.info.artworkUrl ?? `https://img.youtube.com/vi/${track.identifier}/hqdefault.jpg`,
       fields: embedFields,
       timestamp: true,
-      components: [filterSelect(client), playerRowOne(client), playerRowTwo(client)],
+      components: [filterSelect(client), playerRowOne(client), playerRowTwo(client), downloadButton(downloadUrl)],
     });
 
     const playing_channel = (await client.channels

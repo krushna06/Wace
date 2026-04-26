@@ -19,31 +19,11 @@ export default class implements Command {
   public async execute(client: Manager, handler: CommandHandler) {
     await handler.deferReply();
     const player = client.players.get(handler.guild!.id);
-    if (player?.data.get("filter-mode") == this.name[0])
-      return handler.editReply({
-        flags: CV2_FLAG,
-        components: [cv2.simple(`${client.i18n.get(handler.language, "command.filter", "filter_already", { name: this.name[0] })}`, client.color)],
-      });
-    player?.data.set("filter-mode", this.name[0]);
-    player?.filters.setEqualizer([
-      { band: 0, gain: 0.2 },
-      { band: 1, gain: 0.3 },
-      { band: 2, gain: 0 },
-      { band: 3, gain: 0.8 },
-      { band: 4, gain: 0 },
-      { band: 5, gain: 0.5 },
-      { band: 6, gain: 0 },
-      { band: 7, gain: -0.5 },
-      { band: 8, gain: 0 },
-      { band: 9, gain: 0 },
-      { band: 10, gain: 0 },
-      { band: 11, gain: 0 },
-      { band: 12, gain: 0 },
-      { band: 13, gain: 0 },
-    ]);
+    player?.data.set("filter-mode", this.name[1]);
+    await player?.filters.set("superbass");
     await handler.editReply({
       flags: CV2_FLAG,
-      components: [cv2.simple(`${client.i18n.get(handler.language, "command.filter", "filter_on", { name: this.name[0] })}`, client.color)],
+      components: [cv2.simple(`${client.i18n.get(handler.language, "command.filter", "filter_on", { name: this.name[1] })}`, client.color)],
     });
   }
 }

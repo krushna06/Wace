@@ -49,7 +49,10 @@ export default class implements Command {
           color: client.color,
         })],
       });
-    } else if (value == "off" || value == "reset") return player?.filters.clear();
+    } else if (value == "off" || value == "reset") {
+      await player?.filters.clear();
+      return;
+    }
     const bands = value.split(/[ ]+/);
     let bandsStr = "";
     for (let i = 0; i < bands.length; i++) {
@@ -70,12 +73,12 @@ export default class implements Command {
           components: [cv2.simple(`${client.i18n.get(handler.language, "command.filter", "eq_greater")}`, client.color)],
         });
     }
+    await player?.filters.set("equalizer");
+    player?.data.set("filter-mode", this.name[1]);
     for (let i = 0; i < bands.length; i++) {
       if (i > 13) break;
-      player?.filters.setEqualizer([{ band: i, gain: Number(bands[i]) / 10 }]);
       bandsStr += `${bands[i]} `;
     }
-    player?.data.set("filter-mode", this.name[0]);
     return handler.editReply({
       flags: CV2_FLAG,
       components: [cv2.simple(`${client.i18n.get(handler.language, "command.filter", "eq_on", { bands: bandsStr })}`, client.color)],

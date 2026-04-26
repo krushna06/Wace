@@ -19,16 +19,11 @@ export default class implements Command {
   public async execute(client: Manager, handler: CommandHandler) {
     await handler.deferReply();
     const player = client.players.get(handler.guild!.id);
-    if (player?.data.get("filter-mode") == this.name[0])
-      return handler.editReply({
-        flags: CV2_FLAG,
-        components: [cv2.simple(`${client.i18n.get(handler.language, "command.filter", "filter_already", { name: this.name[0] })}`, client.color)],
-      });
-    player?.data.set("filter-mode", this.name[0]);
-    player?.filters.set("chimpunk");
+    player?.data.set("filter-mode", this.name[1]);
+    await player?.filters.set("chimpunk");
     await handler.editReply({
       flags: CV2_FLAG,
-      components: [cv2.simple(`${client.i18n.get(handler.language, "command.filter", "filter_on", { name: this.name[0] })}`, client.color)],
+      components: [cv2.simple(`${client.i18n.get(handler.language, "command.filter", "filter_on", { name: this.name[1] })}`, client.color)],
     });
   }
 }

@@ -43,8 +43,8 @@ export default class implements Command {
         flags: CV2_FLAG,
         components: [cv2.simple(`${client.i18n.get(handler.language, "command.filter", "filter_less")}`, client.color)],
       });
-    await player?.filters.setTimescale({ pitch: Number(value) });
-    player?.data.set("filter-mode", this.name[0]);
+    await player?.filters.set("pitch");
+    player?.data.set("filter-mode", this.name[1]);
     await handler.editReply({
       flags: CV2_FLAG,
       components: [cv2.simple(`${client.i18n.get(handler.language, "command.filter", "pitch_on", { amount: value })}`, client.color)],
