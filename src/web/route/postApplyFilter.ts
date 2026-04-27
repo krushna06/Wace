@@ -30,7 +30,7 @@ export const postApplyFilter = (client: Manager) => {
 
       const filterCommand = client.commands.find(cmd =>
         cmd.category === "Filter" &&
-        cmd.name.some(name => name === filter || name === `filter2` || name === `filter`)
+        cmd.name.some(name => name.toLowerCase() === filter.toLowerCase())
       );
 
       if (!filterCommand) {
@@ -40,7 +40,24 @@ export const postApplyFilter = (client: Manager) => {
         });
       }
 
-      const actualFilterName = filterCommand.name.find(name => name !== "filter" && name !== "filter2") || filter;
+      const actualFilterName = filterCommand.name[0].toLowerCase();
+
+      if (actualFilterName === "filter" && (filter.toLowerCase() === "clear" || filter.toLowerCase() === "reset")) {
+        player.data.delete("filter-mode");
+        await player.filters.clear();
+        await player.setVolume(100);
+
+        reply.send({
+          success: true,
+          data: {
+            guildId,
+            filter: null,
+            commandName: filter,
+            message: "All filters have been reset"
+          }
+        });
+        return;
+      }
 
       if (!FilterPresets[actualFilterName as FilterName]) {
         return reply.code(400).send({
@@ -49,7 +66,7 @@ export const postApplyFilter = (client: Manager) => {
         });
       }
 
-      if (player.data.get("filter-mode") === actualFilterName && actualFilterName !== "clear") {
+      if (player.data.get("filter-mode") === actualFilterName && actualFilterName !== "filter") {
         return reply.code(400).send({
           success: false,
           error: `Filter '${actualFilterName}' is already applied`
@@ -82,25 +99,17 @@ export const postApplyFilter = (client: Manager) => {
         ]);
         player.data.set("filter-mode", actualFilterName);
       } else {
-        if (actualFilterName === "clear") {
-          player.data.delete("filter-mode");
-          await player.filters.clear();
-          await player.setVolume(100);
-        } else {
-          player.data.set("filter-mode", actualFilterName);
-          await player.filters.set(actualFilterName as FilterName);
-        }
+        player.data.set("filter-mode", actualFilterName);
+        await player.filters.set(actualFilterName as FilterName);
       }
 
       reply.send({
         success: true,
         data: {
           guildId,
-          filter: actualFilterName === "clear" ? null : actualFilterName,
+          filter: actualFilterName,
           commandName: filter,
-          message: actualFilterName === "clear"
-            ? "All filters have been reset"
-            : `Filter '${actualFilterName}' has been applied successfully`
+          message: `Filter '${actualFilterName}' has been applied successfully`
         }
       });
     } catch (error) {
