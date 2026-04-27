@@ -21,6 +21,7 @@ import { deleteQueue } from "./route/deleteQueue.js";
 import { deleteQueueTrack } from "./route/deleteQueueTrack.js";
 import { getGuildChecker } from "./route/getGuildChecker.js";
 import { getUserRoles } from "./route/getUserRoles.js";
+import { getSupportServerRoles } from "./route/getSupportServerRoles.js";
 import { createPlaylist, deletePlaylist, editPlaylist } from "./route/playlist.js";
 import { getUserStats, getGuildStats, getTopSongs, getTopUsers, getLastPlayed, getTopSongsUser, getLastPlayedUser } from "./route/getStats.js";
 import { getLyricsRoute } from "./route/getLyrics.js";
@@ -108,6 +109,7 @@ export class WebServer {
         fastify.get("/premium/guild/:guildId", (req, res) => getGuildPremium(client, req, res));
         fastify.get("/guild-checker/:guildId/:userId", getGuildChecker(client));
         fastify.get("/user-roles/:guildId/:userId", getUserRoles(client));
+        fastify.get("/support-server-roles/:userId", getSupportServerRoles(client));
 
         fastify.get("/filters", (req, res) => getFilters(client)(req, res));
         fastify.get("/filters/:guildId", (req, res) => getCurrentFilter(client)(req as any, res));
