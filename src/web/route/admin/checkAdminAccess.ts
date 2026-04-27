@@ -2,7 +2,7 @@ import { FastifyRequest, FastifyReply } from "fastify";
 import { Manager } from "../../../manager.js";
 
 export const getCheckAdminAccess = (client: Manager) => {
-  return async (req: FastifyRequest, reply: FastifyReply) => {
+  return async (req: FastifyRequest<{ Params: { userId: string } }>, reply: FastifyReply) => {
     const userId = req.params.userId as string | undefined;
     if (!userId) {
       return reply.code(400).send({ error: "Missing userId parameter" });
