@@ -100,7 +100,7 @@ export default class ArtistNameGame extends Command {
           description: correct
             ? `The artist is **${track.author}**\n\n${user.username} got it right!`
             : `The artist is **${track.author}**`,
-          color: correct ? "Green" : "Red",
+          color: client.color,
         })],
       });
 

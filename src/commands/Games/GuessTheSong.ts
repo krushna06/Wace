@@ -158,7 +158,7 @@ export default class GuessTheSong extends Command {
           description: correct
             ? `**${track.title}** by **${track.author}**\n\n${user.username} got it right!`
             : `The song was **${track.title}** by **${track.author}**`,
-          color: correct ? "Green" : "Red",
+          color: client.color,
         })],
       });
 
