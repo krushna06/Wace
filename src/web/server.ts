@@ -44,7 +44,7 @@ export class WebServer {
     this.app.register(Cors, {
       origin: "*",
       methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-      allowedHeaders: ["Content-Type", "Authorization", "x-owner", "x-user-id"],
+      allowedHeaders: ["Content-Type", "Authorization", "x-owner", "x-user-id", "x-user-roles"],
       credentials: true,
     });
 

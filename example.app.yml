@@ -10,7 +10,9 @@ bot:
   # Config data of each bot will be the same
   TOKEN: ["BOT_TOKEN"]
   EMBED_COLOR: "#393a41"
+  # Examples: "USER_ID" or ["USER_ID1", "USER_ID2"] or ["USER_ID", "ROLE_ID"]
   OWNER_ID: "YOUR_USER_ID"
+  # Example: ["USER_ID1", "USER_ID2", "ROLE_ID1"]
   ADMIN: ["YOUR_TRUSTED_ADMIN"]
   # You can set it to en, fr, de, hi, ko, ru, es and tu. More will come soon.
   LANGUAGE: "en"

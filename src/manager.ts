@@ -114,7 +114,8 @@ export class Manager extends Client {
     const __dirname = dirname(fileURLToPath(import.meta.url));
     this.logger = new LoggerService(this, clientIndex);
     this.metadata = new ManifestService().data.metadata.bot;
-    this.owner = this.config.bot.OWNER_ID;
+    const ownerConfig = this.config.bot.OWNER_ID;
+    this.owner = Array.isArray(ownerConfig) && ownerConfig.length > 0 ? ownerConfig[0] : String(ownerConfig);
     this.color = (this.config.bot.EMBED_COLOR || "#2b2d31") as ColorResolvable;
     this.i18n = new Localization({
       defaultLocale: this.config.bot.LANGUAGE || "en",
@@ -197,5 +198,70 @@ export class Manager extends Client {
     new DeployService(this);
     new initHandler(this);
     new DatabaseService(this);
+  }
+
+  /**
+   * Check if a user is an owner (by user ID or role ID)
+   * @param userId The user ID to check
+   * @param memberRoles The member's role IDs (optional, for role-based ownership)
+   * @returns boolean
+   */
+  isOwner(userId: string, memberRoles?: string[]): boolean {
+    const ownerConfig = this.config.bot.OWNER_ID;
+    
+    // Handle string (single ID) or array
+    const ownerIds = Array.isArray(ownerConfig) ? ownerConfig : [ownerConfig];
+    
+    // Check if user ID matches any owner ID
+    if (ownerIds.includes(userId)) {
+      return true;
+    }
+    
+    // Check if user has any owner role
+    if (memberRoles) {
+      for (const ownerId of ownerIds) {
+        if (memberRoles.includes(ownerId)) {
+          return true;
+        }
+      }
+    }
+    
+    return false;
+  }
+
+  /**
+   * Check if a user is an admin (by user ID or role ID)
+   * @param userId The user ID to check
+   * @param memberRoles The member's role IDs (optional, for role-based admin)
+   * @returns boolean
+   */
+  isAdmin(userId: string, memberRoles?: string[]): boolean {
+    const adminConfig = this.config.bot.ADMIN || [];
+    
+    // Check if user ID matches any admin ID
+    if (adminConfig.includes(userId)) {
+      return true;
+    }
+    
+    // Check if user has any admin role
+    if (memberRoles) {
+      for (const adminId of adminConfig) {
+        if (memberRoles.includes(adminId)) {
+          return true;
+        }
+      }
+    }
+    
+    return false;
+  }
+
+  /**
+   * Check if a user is owner or admin
+   * @param userId The user ID to check
+   * @param memberRoles The member's role IDs (optional)
+   * @returns boolean
+   */
+  isOwnerOrAdmin(userId: string, memberRoles?: string[]): boolean {
+    return this.isOwner(userId, memberRoles) || this.isAdmin(userId, memberRoles);
   }
 }

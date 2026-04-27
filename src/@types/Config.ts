@@ -15,7 +15,7 @@ export interface Config {
 export interface Bot {
   TOKEN: string[];
   EMBED_COLOR: string;
-  OWNER_ID: string;
+  OWNER_ID: string | string[];
   ADMIN: string[];
   LANGUAGE: string;
   DEBUG_MODE: boolean;

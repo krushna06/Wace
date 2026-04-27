@@ -13,7 +13,13 @@ export class ConfigDataService {
     this.checkConfig(raw);
 
     if (raw.bot) {
-      if (raw.bot.OWNER_ID) raw.bot.OWNER_ID = String(raw.bot.OWNER_ID);
+      if (raw.bot.OWNER_ID) {
+        if (Array.isArray(raw.bot.OWNER_ID)) {
+          raw.bot.OWNER_ID = raw.bot.OWNER_ID.map(String);
+        } else {
+          raw.bot.OWNER_ID = String(raw.bot.OWNER_ID);
+        }
+      }
       if (Array.isArray(raw.bot.ADMIN)) raw.bot.ADMIN = raw.bot.ADMIN.map(String);
       if (Array.isArray(raw.bot.TOKEN)) raw.bot.TOKEN = raw.bot.TOKEN.map(String);
     }
@@ -58,7 +64,12 @@ export class ConfigDataService {
       throw new Error(
         "Config file not contains lavalink config field, please check app.example.yml for example"
       );
-    if (!res.bot.OWNER_ID)
+    const ownerId = res.bot.OWNER_ID;
+    const isEmpty = Array.isArray(ownerId) 
+      ? ownerId.length === 0
+      : !ownerId || ownerId.trim() === "";
+    
+    if (isEmpty)
       throw new Error(
         "Config file not contains OWNER_ID, please check app.example.yml for example"
       );

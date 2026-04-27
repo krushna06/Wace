@@ -47,8 +47,18 @@ export default class implements Command {
     const getData = await handler.parseMentions(data);
     if (data && getData && getData.type == ParseMentionEnum.USER) user = getData.data as User;
 
-    if (user?.id == client.owner) return this.profileEmbed(client, handler, "wace@owner", "lifetime");
-    if (client.config.bot.ADMIN.includes(user?.id ?? "null")) return this.profileEmbed(client, handler, "wace@admin", "lifetime");
+    const member = handler.member;
+    let memberRoles: string[] = [];
+    if (member) {
+      if ('roles' in member && member.roles && typeof member.roles === 'object' && 'cache' in member.roles) {
+        memberRoles = member.roles.cache.map(role => role.id);
+      } else if (Array.isArray(member.roles)) {
+        memberRoles = member.roles;
+      }
+    }
+    
+    if (client.isOwner(user?.id ?? "", memberRoles)) return this.profileEmbed(client, handler, "wace@owner", "lifetime");
+    if (client.isAdmin(user?.id ?? "", memberRoles)) return this.profileEmbed(client, handler, "wace@admin", "lifetime");
 
     const PremiumPlan = (await client.db.premium.get(`${handler.user?.id}`)) as Premium;
 

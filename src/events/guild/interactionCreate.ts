@@ -227,8 +227,19 @@ export default class {
     const premiumGuild = await client.db.preGuild.get(interaction.guild.id);
     const isPremium = premiumUser && premiumUser.isPremium;
     const isPremiumGuild = premiumGuild && premiumGuild.isPremium;
-    const isOwner = interaction.user.id === client.owner;
-    const isAdmin = client.config.bot.ADMIN?.includes(interaction.user.id) ?? false;
+    
+    const member = interaction.member;
+    let memberRoles: string[] = [];
+    if (member) {
+      if ('roles' in member && member.roles && typeof member.roles === 'object' && 'cache' in member.roles) {
+        memberRoles = member.roles.cache.map(role => role.id);
+      } else if (Array.isArray(member.roles)) {
+        memberRoles = member.roles;
+      }
+    }
+    
+    const isOwner = client.isOwner(interaction.user.id, memberRoles);
+    const isAdmin = client.isAdmin(interaction.user.id, memberRoles);
 
     const commandOverride = await client.db.commandOverrides.get(command.name.join("-"));
     if (commandOverride !== null && commandOverride !== undefined) {
