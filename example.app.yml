@@ -14,6 +14,8 @@ bot:
   OWNER_ID: "YOUR_USER_ID"
   # Example: ["USER_ID1", "USER_ID2", "ROLE_ID1"]
   ADMIN: ["YOUR_TRUSTED_ADMIN"]
+  # Support server guild ID - used for checking admin/staff roles in the dashboard
+  SUPPORT_SERVER_ID: "YOUR_SUPPORT_SERVER_ID"
   # You can set it to en, fr, de, hi, ko, ru, es and tu. More will come soon.
   LANGUAGE: "en"
   DEBUG_MODE: false

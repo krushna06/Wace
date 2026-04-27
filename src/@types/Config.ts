@@ -17,6 +17,7 @@ export interface Bot {
   EMBED_COLOR: string;
   OWNER_ID: string | string[];
   ADMIN: string[];
+  SUPPORT_SERVER_ID: string;
   LANGUAGE: string;
   DEBUG_MODE: boolean;
   BOT_NAME: string;

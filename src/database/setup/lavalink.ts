@@ -68,56 +68,67 @@ export class AutoReconnectLavalinkService {
   }
 
   async connectChannel(data: { id: string; value: AutoReconnect }) {
-    const channel = await this.client.channels.fetch(data.value.text).catch(() => undefined);
-    const guild = await this.client.guilds.fetch(data.value.guild).catch(() => undefined);
-    const voice = (await this.client.channels
-      .fetch(data.value.voice)
-      .catch(() => undefined)) as VoiceChannel;
-    if (!channel || !voice) {
-      this.client.logger.info(
-        AutoReconnectLavalinkService.name,
-        `The last voice/text channel that bot joined in guild [${data.value.guild}] is not found, skipping...`
-      );
-      return this.client.db.autoreconnect.delete(data.value.guild);
-    }
+    try {
+      const channel = await this.client.channels.fetch(data.value.text).catch(() => undefined);
+      const guild = await this.client.guilds.fetch(data.value.guild).catch(() => undefined);
+      const voice = (await this.client.channels
+        .fetch(data.value.voice)
+        .catch(() => undefined)) as VoiceChannel;
+      if (!channel || !voice) {
+        this.client.logger.info(
+          AutoReconnectLavalinkService.name,
+          `The last voice/text channel that bot joined in guild [${data.value.guild}] is not found, skipping...`
+        );
+        return this.client.db.autoreconnect.delete(data.value.guild);
+      }
 
-    if (!data.value.twentyfourseven && voice.members.filter((m) => !m.user.bot).size == 0) {
-      this.client.logger.info(
-        AutoReconnectLavalinkService.name,
-        `Guild [${data.value.guild}] have 0 members in last voice that bot joined, skipping...`
-      );
-      return this.client.db.autoreconnect.delete(data.value.guild);
-    }
+      if (!data.value.twentyfourseven && voice.members.filter((m) => !m.user.bot).size == 0) {
+        this.client.logger.info(
+          AutoReconnectLavalinkService.name,
+          `Guild [${data.value.guild}] have 0 members in last voice that bot joined, skipping...`
+        );
+        return this.client.db.autoreconnect.delete(data.value.guild);
+      }
 
-    const player = await this.client.playerManager.create({
-      guildId: data.value.guild,
-      voiceId: data.value.voice,
-      textId: data.value.text,
-      shardId: guild ? guild.shardId : 0,
-      deaf: true,
-      volume: this.client.config.player.DEFAULT_VOLUME,
-    });
-
-    if (!this.client.config.utilities.AUTO_RESUME)
-      return this.client.logger.info(
-        AutoReconnectLavalinkService.name,
-        `Auto resume disabled, now skipping all.`
-      );
-
-    if (data.value.current && data.value.current.length !== 0) {
-      const search = await player.search(data.value.current, {
-        requester: this.client.user,
+      const player = await this.client.playerManager.create({
+        guildId: data.value.guild,
+        voiceId: data.value.voice,
+        textId: data.value.text,
+        shardId: guild ? guild.shardId : 0,
+        deaf: true,
+        volume: this.client.config.player.DEFAULT_VOLUME,
       });
-      if (!search.tracks.length) return;
 
-      if (data.value.queue.length !== 0) await this.queueDataPush(data.value.queue, player);
+      if (!this.client.config.utilities.AUTO_RESUME)
+        return this.client.logger.info(
+          AutoReconnectLavalinkService.name,
+          `Auto resume disabled, now skipping all.`
+        );
 
-      if (data.value.previous.length !== 0)
-        await this.previousDataPush(data.value.previous, player);
+      if (data.value.current && data.value.current.length !== 0) {
+        const search = await player.search(data.value.current, {
+          requester: this.client.user,
+        });
+        if (!search.tracks.length) return;
 
-      if (data.value.config.loop !== "none")
-        player.setLoop(data.value.config.loop as "none" | "track" | "queue");
-      await player.play(search.tracks[0]);
+        if (data.value.queue.length !== 0) await this.queueDataPush(data.value.queue, player);
+
+        if (data.value.previous.length !== 0)
+          await this.previousDataPush(data.value.previous, player);
+
+        if (data.value.config.loop !== "none")
+          player.setLoop(data.value.config.loop as "none" | "track" | "queue");
+        
+        // Add a small delay to ensure connection is fully established
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        await player.play(search.tracks[0]);
+      }
+    } catch (error) {
+      this.client.logger.error(
+        AutoReconnectLavalinkService.name,
+        `Failed to reconnect to voice channel in guild ${data.id}: ${error instanceof Error ? error.message : String(error)}`
+      );
+      // Don't delete the autoreconnect data, let it retry on next startup
     }
   }
 

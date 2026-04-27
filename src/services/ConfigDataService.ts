@@ -118,6 +118,7 @@ export class ConfigDataService {
         LANGUAGE: "en",
         DEBUG_MODE: false,
         ADMIN: [],
+        SUPPORT_SERVER_ID: "",
         BOT_NAME: "Wace",
         INVITE_LINK: "https://discord.gg/ReA5JyJCR6",
         SOURCE_CODE_LINK: "https://discord.gg/m5Y3rRPuFT",

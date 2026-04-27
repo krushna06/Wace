@@ -20,11 +20,13 @@ import { getGuildLanguage, patchGuildLanguage } from "./route/patchGuildLanguage
 import { deleteQueue } from "./route/deleteQueue.js";
 import { deleteQueueTrack } from "./route/deleteQueueTrack.js";
 import { getGuildChecker } from "./route/getGuildChecker.js";
+import { getUserRoles } from "./route/getUserRoles.js";
 import { createPlaylist, deletePlaylist, editPlaylist } from "./route/playlist.js";
 import { getUserStats, getGuildStats, getTopSongs, getTopUsers, getLastPlayed, getTopSongsUser, getLastPlayedUser } from "./route/getStats.js";
 import { getLyricsRoute } from "./route/getLyrics.js";
 import { getUserHistory } from "./route/getUserHistory.js";
 import { getAdminMe } from "./route/admin/adminAuth.js";
+import { getCheckAdminAccess } from "./route/admin/checkAdminAccess.js";
 import { getBlacklist, postBlacklist, deleteBlacklist } from "./route/admin/blacklist.js";
 import { getPremiumKeys, postGeneratePremiumKeys, deletePremiumKey } from "./route/admin/premiumKeys.js";
 import { getPremiumUsers, deletePremiumUser, patchPremiumUser } from "./route/admin/premiumUsers.js";
@@ -105,6 +107,7 @@ export class WebServer {
         fastify.get("/premium/user/:userId", (req, res) => getUserPremium(client, req, res));
         fastify.get("/premium/guild/:guildId", (req, res) => getGuildPremium(client, req, res));
         fastify.get("/guild-checker/:guildId/:userId", getGuildChecker(client));
+        fastify.get("/user-roles/:guildId/:userId", getUserRoles(client));
 
         fastify.get("/filters", (req, res) => getFilters(client)(req, res));
         fastify.get("/filters/:guildId", (req, res) => getCurrentFilter(client)(req as any, res));
@@ -128,6 +131,7 @@ export class WebServer {
         fastify.get("/user-history/:userId", getUserHistory(client));
 
         fastify.get("/admin/me", getAdminMe(client));
+        fastify.get("/admin/check-access/:userId", getCheckAdminAccess(client));
         fastify.get("/admin/blacklist", getBlacklist(client));
         fastify.post("/admin/blacklist", postBlacklist(client));
         fastify.delete("/admin/blacklist/:id", deleteBlacklist(client));

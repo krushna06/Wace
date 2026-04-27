@@ -79,6 +79,24 @@ export class Player {
 
     await this.client.shoukaku.leaveVoiceChannel(this.guildId).catch(() => null);
 
+    let voiceStateReady = false;
+    let voiceStateRetries = 0;
+    const maxVoiceStateRetries = 10;
+    
+    while (!voiceStateReady && voiceStateRetries < maxVoiceStateRetries) {
+      const guild = await this.client.guilds.fetch(this.guildId).catch(() => null);
+      if (guild && guild.members.me?.voice?.sessionId) {
+        voiceStateReady = true;
+        break;
+      }
+      voiceStateRetries++;
+      await new Promise(resolve => setTimeout(resolve, 500));
+    }
+
+    if (!voiceStateReady) {
+      this.client.logger.warn("Player.connect", `Voice state not ready for guild ${this.guildId} after ${maxVoiceStateRetries} retries`);
+    }
+
     this.shoukaku = await this.client.shoukaku.joinVoiceChannel({
       guildId: this.guildId,
       channelId: this.voiceId,
@@ -261,29 +279,42 @@ export class Player {
     }
 
     if (track) {
-
       if (this.current) {
         this.previousQueue.push(this.current);
       }
       this.previousTrack = this.current;
       this.current = track;
     } else if (this.queue.length > 0) {
-
       if (this.current) {
         this.previousQueue.push(this.current);
       }
       this.previousTrack = this.current;
       this.current = this.queue.shift()!;
     } else if (this.current) {
-
+      // Continue playing current track
     } else {
       return;
     }
 
     if (!this.current) return;
 
+    if (!this.shoukaku) {
+      this.client.logger.warn("Player.play", `Connection not established for guild ${this.guildId}, reconnecting...`);
+      await this.connect();
+    }
+
+    if (!this.shoukaku) {
+      this.client.logger.error("Player.play", `Failed to establish connection for guild ${this.guildId}`);
+      return;
+    }
+
     this.position = 0;
-    await this.shoukaku!.playTrack({ track: { encoded: this.current.encoded } });
+    try {
+      await this.shoukaku.playTrack({ track: { encoded: this.current.encoded } });
+    } catch (error) {
+      this.client.logger.error("Player.play", `Failed to play track: ${error instanceof Error ? error.message : String(error)}`);
+      throw error;
+    }
   }
 
   async stop(disconnect: boolean = true): Promise<void> {
