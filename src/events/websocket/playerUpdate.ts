@@ -6,7 +6,18 @@ export default class {
     client.wsl.get(player.guildId)?.send({
       op: "playerUpdate",
       guild: player.guildId,
-      position: player.position,
+      data: {
+        position: player.position,
+        state: {
+          current: player.current,
+          queue: player.queue,
+          position: player.position,
+          pause: player.paused,
+          volume: player.volume,
+          loop: player.loop,
+          shuffle: player.shuffle,
+        }
+      }
     });
   }
 }

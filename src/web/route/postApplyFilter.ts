@@ -40,9 +40,9 @@ export const postApplyFilter = (client: Manager) => {
         });
       }
 
-      const actualFilterName = filterCommand.name[0].toLowerCase();
+      let actualFilterName = filterCommand.name[1]?.toLowerCase() || filter.toLowerCase();
 
-      if (actualFilterName === "filter" && (filter.toLowerCase() === "clear" || filter.toLowerCase() === "reset")) {
+      if (actualFilterName === "clear" || actualFilterName === "reset") {
         player.data.delete("filter-mode");
         await player.filters.clear();
         await player.setVolume(100);
@@ -59,14 +59,21 @@ export const postApplyFilter = (client: Manager) => {
         return;
       }
 
-      if (!FilterPresets[actualFilterName as FilterName]) {
+      const filterNameMap: { [key: string]: FilterName } = {
+        "3d": "8d",
+        "3D": "8d",
+      };
+      
+      const presetName = (filterNameMap[actualFilterName] || actualFilterName) as FilterName;
+
+      if (!FilterPresets[presetName]) {
         return reply.code(400).send({
           success: false,
           error: `Filter '${actualFilterName}' not found in FilterPresets. Use GET /v1/filters to see available filters.`
         });
       }
 
-      if (player.data.get("filter-mode") === actualFilterName && actualFilterName !== "filter") {
+      if (player.data.get("filter-mode") === actualFilterName) {
         return reply.code(400).send({
           success: false,
           error: `Filter '${actualFilterName}' is already applied`
@@ -100,7 +107,7 @@ export const postApplyFilter = (client: Manager) => {
         player.data.set("filter-mode", actualFilterName);
       } else {
         player.data.set("filter-mode", actualFilterName);
-        await player.filters.set(actualFilterName as FilterName);
+        await player.filters.set(presetName);
       }
 
       reply.send({

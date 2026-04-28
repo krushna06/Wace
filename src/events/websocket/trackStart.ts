@@ -26,7 +26,18 @@ export default class {
     client.wsl.get(player.guildId)?.send({
       op: "trackStart",
       guild: player.guildId,
-      data: currentData,
+      data: {
+        track: currentData,
+        state: {
+          current: player.current,
+          queue: player.queue,
+          position: player.position,
+          pause: player.paused,
+          volume: player.volume,
+          loop: player.loop,
+          shuffle: player.shuffle,
+        }
+      }
     });
   }
 }
