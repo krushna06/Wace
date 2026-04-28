@@ -45,10 +45,14 @@ export class WebServer {
     });
 
     this.app.register(Cors, {
-      origin: "*",
+      origin: true,
       methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
       allowedHeaders: ["Content-Type", "Authorization", "x-owner", "x-user-id", "x-user-roles"],
       credentials: true,
+    });
+
+    this.app.get("/health", (request, reply) => {
+      reply.send({ status: "ok", timestamp: new Date().toISOString() });
     });
 
     this.app.get("/api/lastfm/callback", getLastfmCallbackRoute(this.client));
@@ -64,31 +68,38 @@ export class WebServer {
 
         fastify.addHook("preValidation", function hook(req, reply, done) {
           if (req.routeOptions.url !== "/v1/websocket") {
-            client.logger.info("WebServer", `Route URL: ${req.routeOptions.url}`);
+            client.logger.info("WebServer", `Route URL: ${req.routeOptions.url} | Origin: ${req.headers.origin}`);
           }
 
-          if (req.routeOptions.url === "/v1/websocket") {
+          const publicRoutes = ["/v1/websocket", "/catgirls", "/health", "/api/lastfm/callback", "/api/topgg/webhook"];
+          if (publicRoutes.includes(req.routeOptions.url)) {
             return done();
           }
 
-          if (!req.headers["authorization"]) {
-            reply.code(400);
-            reply.send(JSON.stringify({ error: "Missing Authorization" }));
-            return done();
-          }
-          if (req.headers["authorization"] !== client.config.utilities.WEB_SERVER.auth) {
+          const authHeader = req.headers["authorization"];
+          if (!authHeader) {
             reply.code(401);
-            reply.send(JSON.stringify({ error: "Authorization failed" }));
+            reply.send(JSON.stringify({ error: "Missing Authorization header" }));
             return done();
           }
+
+          const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : authHeader;
+          
+          if (token !== client.config.utilities.WEB_SERVER.auth) {
+            reply.code(403);
+            reply.send(JSON.stringify({ error: "Invalid Authorization token" }));
+            return done();
+          }
+
           if (
             client.config.utilities.WEB_SERVER.whitelist.length !== 0 &&
             !client.config.utilities.WEB_SERVER.whitelist.includes(req.hostname)
           ) {
-            reply.code(401);
-            reply.send(JSON.stringify({ error: "You're not in whitelist" }));
+            reply.code(403);
+            reply.send(JSON.stringify({ error: "Hostname not in whitelist" }));
             return done();
           }
+
           done();
         });
 
@@ -169,19 +180,21 @@ export class WebServer {
     });
 
     const port = this.client.config.utilities.WEB_SERVER.port;
+    const host = this.client.config.utilities.WEB_SERVER.host || "0.0.0.0";
 
     this.app
-      .listen({ port, host: this.client.config.utilities.WEB_SERVER.host })
-      .then(() => this.client.logger.info(WebServer.name, `Server running at port ${port}`))
+      .listen({ port, host })
+      .then(() => this.client.logger.info(WebServer.name, `Server running at http://${host}:${port}`))
       .catch((err) => {
+        this.client.logger.error(WebServer.name, `Failed to start server: ${err.message}`);
         if (this.client.config.bot.TOKEN.length > 1) {
-          this.client.config.utilities.WEB_SERVER.port =
-            this.client.config.utilities.WEB_SERVER.port + 1;
-          const port = this.client.config.utilities.WEB_SERVER.port;
+          const newPort = port + 1;
+          this.client.logger.info(WebServer.name, `Retrying on port ${newPort}...`);
           return this.app
-            .listen({ port: port + 1 })
-            .then(() => this.client.logger.info(WebServer.name, `Server running at port ${port}`));
-        } else this.client.logger.error(WebServer.name, err);
+            .listen({ port: newPort, host })
+            .then(() => this.client.logger.info(WebServer.name, `Server running at http://${host}:${newPort}`))
+            .catch((retryErr) => this.client.logger.error(WebServer.name, `Retry failed: ${retryErr.message}`));
+        }
       });
   }
 }
