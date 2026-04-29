@@ -27,9 +27,13 @@ export default class {
       if (source.toLowerCase() !== "youtube") {
         const findQuery = "directSearch=ytsearch:" + [author, title].filter((x) => !!x).join(" - ");
         const preRes = await player.search(findQuery, { requester: requester });
-        if (preRes.tracks.length !== 0) true;
-        preRes.tracks[0].identifier ? (identifier = preRes.tracks[0].identifier) : true;
+        if (preRes.tracks.length !== 0 && preRes.tracks[0]?.identifier) {
+          identifier = preRes.tracks[0].identifier;
+        }
       }
+      
+      if (!identifier) return;
+      
       const search = `https://www.youtube.com/watch?v=${identifier}&list=RD${identifier}`;
       let res = await player.search(search, { requester: requester });
       const finalRes = res.tracks.filter((track) => {
