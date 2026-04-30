@@ -121,16 +121,13 @@ export default class {
 
     const language = guildModel;
 
-    if (song) {
+    if (!song) return;
 
-      for (const [key] of player.data.entries()) {
-        if (key.startsWith("voteskip_")) {
-          player.data.delete(key);
-        }
+    for (const [key] of player.data.entries()) {
+      if (key.startsWith("voteskip_")) {
+        player.data.delete(key);
       }
     }
-
-    if (SongNoti == SongNotiEnum.Disable) return;
 
     let dashboardUrl = client.config.utilities.DASHBOARD_URL;
     let dashboardGuildUrl = "";
@@ -139,9 +136,9 @@ export default class {
       dashboardGuildUrl = `${dashboardUrl}/guild/${player.guildId}`;
     }
     const embedFields = [
-      { name: `${client.i18n.get(language, "event.player", "author_title")}`, value: `${song!.author}`, inline: true },
-      { name: `${client.i18n.get(language, "event.player", "duration_title")}`, value: `${formatDuration(song!.duration)}`, inline: true },
-      { name: `${client.i18n.get(language, "event.player", "request_title")}`, value: `${song!.requester}`, inline: true },
+      { name: `${client.i18n.get(language, "event.player", "author_title")}`, value: `${song.author}`, inline: true },
+      { name: `${client.i18n.get(language, "event.player", "duration_title")}`, value: `${formatDuration(song.duration)}`, inline: true },
+      { name: `${client.i18n.get(language, "event.player", "request_title")}`, value: `${song.requester}`, inline: true },
     ];
     if (dashboardGuildUrl) {
       embedFields.push({ name: "Dashboard", value: `[Music Controller](${dashboardGuildUrl})`, inline: false });
@@ -198,7 +195,7 @@ export default class {
           message.reply({
             content: `${client.i18n.get(language, "event.player", "join_voice")}`,
             ephemeral: true,
-          });
+          }).catch(() => {});
           return false;
         }
       },
@@ -216,7 +213,7 @@ export default class {
           message.reply({
             content: `${client.i18n.get(language, "event.player", "join_voice")}`,
             ephemeral: true,
-          });
+          }).catch(() => {});
           return false;
         }
       },

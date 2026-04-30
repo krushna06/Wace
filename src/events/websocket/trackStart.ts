@@ -5,14 +5,17 @@ import { Player } from "../../structures/Player.js";
 export default class {
   async execute(client: Manager, player: Player) {
     const song = player.current;
-    const requesterQueue = song!.requester as User;
+    
+    if (!song) return;
+    
+    const requesterQueue = song.requester as User;
 
     const currentData = {
-      title: song!.title,
-      uri: song!.uri,
-      length: song!.duration,
-      thumbnail: song!.artworkUrl,
-      author: song!.author,
+      title: song.title,
+      uri: song.uri,
+      length: song.duration,
+      thumbnail: song.artworkUrl,
+      author: song.author,
       requester: requesterQueue
         ? {
             id: requesterQueue.id,
