@@ -205,12 +205,9 @@ export class PlayerContentLoader {
 
     if (!result.tracks.length) {
       msg
-        ?.edit({
-          content: `${client.i18n.get(language, "event.setup", "setup_content")}\n${`${client.i18n.get(
-            language,
-            "event.setup",
-            "setup_content_empty"
-          )}`}`,
+        ?.reply({
+          flags: CV2_FLAG,
+          components: [cv2.simple(`${client.i18n.get(language, "command.music", "play_match")}`, client.color)],
         })
         .catch(() => null);
       return;

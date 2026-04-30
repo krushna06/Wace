@@ -108,7 +108,7 @@ export default class implements Command {
     try {
       const channel = await client.channels.fetch(client.config.utilities.PREMIUM_LOG_CHANNEL).catch(() => undefined);
       if (!channel || !channel.isTextBased()) return;
-      channel.messages.channel.send({
+      await channel.send({
         flags: CV2_FLAG,
         components: [cv2.build({
           author: `${client.i18n.get(language, "event.premium", premium ? "title" : "guild_title")}`,
