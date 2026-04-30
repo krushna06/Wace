@@ -62,6 +62,15 @@ export class PlayerUpdateLoader {
       }
 
       const fields = [];
+      
+      if (player.queue.length > 0) {
+        fields.push({
+          name: `${client.i18n.get(language, "event.setup", "setup_content")}`,
+          value: Str == "" ? " " : Str,
+          inline: false,
+        });
+      }
+      
       if (dashboardGuildUrl) {
         fields.push({ name: "Dashboard", value: `[Music Controller](${dashboardGuildUrl})` });
       }
@@ -84,14 +93,10 @@ export class PlayerUpdateLoader {
         })}`,
       });
 
-      const queueString = `${client.i18n.get(language, "event.setup", "setup_content")}\n${
-        Str == "" ? " " : "\n" + Str
-      }`;
-
       return await playMsg
         .edit({
           flags: CV2_FLAG,
-          content: player.current && player.queue.length == 0 ? " " : queueString,
+          content: " ",
           components: [embed, client.enSwitchMod, filterSelect(client, false)],
         })
         .catch(() => {});

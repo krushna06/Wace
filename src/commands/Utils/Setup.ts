@@ -59,7 +59,6 @@ export default class implements Command {
       const textChannel = await handler.guild!.channels.create({
         name: "song-request",
         type: ChannelType.GuildText,
-        topic: `${client.i18n.get(handler.language, "command.utils", "setup_topic")}`,
         parent: parent.id,
       });
       const queueMsg = `${client.i18n.get(handler.language, "event.setup", "setup_queuemsg")}`;

@@ -60,9 +60,7 @@ export class ButtonPause {
 
       await this.player.setPause(!this.player.paused);
 
-      this.player.paused
-        ? playMsg.edit({ components: [this.client.enSwitch] }).catch(() => null)
-        : playMsg.edit({ components: [this.client.enSwitchMod] }).catch(() => null);
+      await this.client.UpdateQueueMsg(this.player);
 
       this.interaction.reply({
         flags: CV2_FLAG,
