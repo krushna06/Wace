@@ -131,8 +131,24 @@ export class Player {
       this.handleTrackEnd();
     });
 
-    this.shoukaku.on("closed", (data) => {
+    this.shoukaku.on("closed", async (data) => {
+      this.client.logger.warn("Player", `Player session closed for guild ${this.guildId}`);
       this.client.emit("playerClosed", this, data);
+      
+      try {
+        // Recreate the player connection
+        await this.connect();
+        
+        // Resume playback if there's a current track
+        if (this.current) {
+          await this.play(this.current);
+        }
+        
+        this.client.logger.info("Player", `Successfully recreated player for guild ${this.guildId}`);
+      } catch (error) {
+        this.client.logger.error("Player", `Failed to recreate player for guild ${this.guildId}: ${error}`);
+        this.client.emit("playerError", this, error);
+      }
     });
 
     this.shoukaku.on("exception", (data) => {
