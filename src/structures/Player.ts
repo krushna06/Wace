@@ -324,6 +324,11 @@ export class Player {
       return;
     }
 
+    if (this.paused) {
+      await this.shoukaku.setPaused(false).catch(() => {});
+      this.paused = false;
+    }
+
     this.position = 0;
     try {
       await this.shoukaku.playTrack({ track: { encoded: this.current.encoded } });

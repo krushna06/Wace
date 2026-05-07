@@ -57,8 +57,17 @@ export default class {
     const channel = (await client.channels
       .fetch(player.textId)
       .catch(() => undefined)) as TextChannel;
-    if (data !== null && data && data.twentyfourseven && channel)
-      return new ClearMessageService(client, channel, player);
+    
+    if (data !== null && data && data.twentyfourseven) {
+      if (channel) {
+        new ClearMessageService(client, channel, player);
+      }
+      if (player.shoukaku && player.playing) {
+        await player.shoukaku.setPaused(true).catch(() => {});
+        player.playing = false;
+      }
+      return;
+    }
 
     const skipTriggered = player.data.get("skipTriggered");
     if (skipTriggered) {

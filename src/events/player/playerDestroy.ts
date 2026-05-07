@@ -31,19 +31,23 @@ export default class {
     const isLavalinkDisconnected = player.data.get("lavalink-disconnected");
 
     if (data !== null && data && data.twentyfourseven && !isLavalinkDisconnected) {
-      await new AutoReconnectBuilderService(client, player).build247(
-        player.guildId,
-        true,
-        data.voice
-      );
-      client.playerManager.create({
-        guildId: data.guild!,
-        voiceId: data.voice!,
-        textId: data.text!,
-        shardId: guild?.shardId ?? 0,
-        deaf: true,
-        volume: client.config.player.DEFAULT_VOLUME,
-      });
+      const isSudoDestroy = player.data.get("sudo-destroy");
+      if (!isSudoDestroy) {
+        await new AutoReconnectBuilderService(client, player).build247(
+          player.guildId,
+          true,
+          data.voice
+        );
+        await new Promise(resolve => setTimeout(resolve, 500));
+        client.playerManager.create({
+          guildId: data.guild!,
+          voiceId: data.voice!,
+          textId: data.text!,
+          shardId: guild?.shardId ?? 0,
+          deaf: true,
+          volume: client.config.player.DEFAULT_VOLUME,
+        });
+      }
     } else if (data !== null && data && data.twentyfourseven && isLavalinkDisconnected) {
       client.logger.info(
         "PlayerDestroy",

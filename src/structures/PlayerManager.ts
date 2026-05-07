@@ -89,6 +89,12 @@ export class PlayerManager {
     if (player) {
       player.voiceId = options.voiceId;
       player.textId = options.textId;
+      
+      if (!player.shoukaku) {
+        this.client.logger.info("PlayerManager", `Reconnecting player for guild ${options.guildId}`);
+        await player.connect();
+      }
+      
       return player;
     }
 
