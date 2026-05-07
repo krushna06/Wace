@@ -22,7 +22,14 @@ export default class implements Command {
     await handler.deferReply();
     const player = client.players.get(handler.guild!.id) as Player;
     const { channel } = handler.member!.voice;
-    player.data.set("sudo-destroy", true);
+    
+    const AutoReconnectBuilderService = (await import("../../services/AutoReconnectBuilderService.js")).AutoReconnectBuilderService;
+    const data = await new AutoReconnectBuilderService(client, player).get(handler.guild!.id);
+    
+    if (!data?.twentyfourseven) {
+      player.data.set("sudo-destroy", true);
+    }
+    
     await player.destroy();
     await handler.editReply({
       flags: CV2_FLAG,
