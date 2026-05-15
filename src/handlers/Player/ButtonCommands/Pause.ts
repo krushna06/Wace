@@ -25,10 +25,6 @@ export class ButtonPause {
   }
 
   async execute() {
-    let data = await this.client.db.setup.get(`${this.player.guildId}`);
-    if (!data) return;
-    if (data.enable === false) return;
-
     if (!this.channel) {
       this.interaction.reply({
         flags: CV2_FLAG,
@@ -50,22 +46,26 @@ export class ButtonPause {
         components: [cv2.simple(`${this.client.i18n.get(this.language, "error", "no_player")}`, this.client.color)],
       });
       return;
-    } else {
-      const getChannel = await this.client.channels.fetch(data.channel).catch(() => undefined);
-      if (!getChannel) return;
-      let playMsg = await (getChannel as TextChannel)!.messages
-        .fetch(data.playmsg)
-        .catch(() => undefined);
-      if (!playMsg) return;
-
-      await this.player.setPause(!this.player.paused);
-
-      await this.client.UpdateQueueMsg(this.player);
-
-      this.interaction.reply({
-        flags: CV2_FLAG,
-        components: [cv2.simple(`${this.client.i18n.get(this.language, "button.music", this.player.paused ? "pause_msg" : "resume_msg")}`, this.client.color)],
-      });
     }
+
+    await this.interaction.deferReply({ ephemeral: true });
+
+    let data = await this.client.db.setup.get(`${this.player.guildId}`);
+    if (!data) return;
+    if (data.enable === false) return;
+
+    const getChannel = await this.client.channels.fetch(data.channel).catch(() => undefined);
+    if (!getChannel) return;
+    let playMsg = await (getChannel as TextChannel)!.messages
+      .fetch(data.playmsg)
+      .catch(() => undefined);
+    if (!playMsg) return;
+
+    await this.player.setPause(!this.player.paused);
+    await this.client.UpdateQueueMsg(this.player);
+
+    await this.interaction.editReply({
+      components: [cv2.simple(`${this.client.i18n.get(this.language, "button.music", this.player.paused ? "pause_msg" : "resume_msg")}`, this.client.color)],
+    });
   }
 }
