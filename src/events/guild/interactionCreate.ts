@@ -345,7 +345,6 @@ export default class {
         .setColor(client.color);
       return interaction.editReply({
         embeds: [embed],
-        ephemeral: true
       });
     }
 
