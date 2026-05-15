@@ -33,6 +33,7 @@ export class RatelimitReplyService {
       const setup = await this.client.db.setup.get(this.interaction.guildId!);
       const msg = await this.interaction.reply({
         flags: CV2_FLAG,
+        content: "",
         components: [cv2.simple(`${this.client.i18n.get(this.language, "error", "ratelimit", { time: String(this.time) })}`, this.client.color)],
       });
       if (!setup || setup == null || setup.channel !== this.interaction.channelId)

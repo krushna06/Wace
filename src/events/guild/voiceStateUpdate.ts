@@ -105,6 +105,7 @@ export default class {
         const msg = leaveEmbed
           ? await leaveEmbed.send({
               flags: CV2_FLAG,
+              content: "",
               components: [cv2.simple(`${client.i18n.get(language, "event.player", "leave_resume")}`, client.color)],
             })
           : null;
@@ -128,9 +129,10 @@ export default class {
       const currentPause = player.paused;
       player.paused == true ? true : player.setPause(true);
 
-      if (currentPause !== true && player.current !== null) {
+      if (currentPause !== true && player.current !== null && leaveEmbed) {
         const msg = await leaveEmbed.send({
           flags: CV2_FLAG,
+          content: "",
           components: [cv2.simple(`${client.i18n.get(language, "event.player", "leave_pause")}`, client.color)],
         });
         setTimeout(async () => {
@@ -158,6 +160,7 @@ export default class {
               const msg = newPlayer && leaveEmbed
                 ? await leaveEmbed.send({
                     flags: CV2_FLAG,
+                    content: "",
                     components: [cv2.simple(`${client.i18n.get(language, "event.player", "player_end", { leave: vcRoom })}`, client.color)],
                   })
                 : undefined;

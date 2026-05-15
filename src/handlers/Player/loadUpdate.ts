@@ -96,7 +96,7 @@ export class PlayerUpdateLoader {
       return await playMsg
         .edit({
           flags: CV2_FLAG,
-          content: " ",
+          content: "",
           components: [embed, client.enSwitchMod, filterSelect(client, false)],
         })
         .catch(() => {});
@@ -134,6 +134,7 @@ export class PlayerUpdateLoader {
       return await playMsg
         .edit({
           flags: CV2_FLAG,
+          content: "",
           components: [playEmbed, filterSelect(client, true), client.diSwitch],
         })
         .catch(() => {});

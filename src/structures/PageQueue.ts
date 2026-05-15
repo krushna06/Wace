@@ -71,6 +71,7 @@ export class PageQueue {
     let page = 0;
     const curPage = await interaction.editReply({
       flags: CV2_FLAG,
+      content: "",
       components: [this.withFooter(this.pages[page], this.footerText(page, queueDuration)), row],
       allowedMentions: { repliedUser: false },
     });
@@ -85,12 +86,12 @@ export class PageQueue {
       try { if (!i.deferred) await i.deferUpdate(); } catch { return; }
       if (i.customId === "back") page = page > 0 ? --page : this.pages.length - 1;
       else if (i.customId === "next") page = page + 1 < this.pages.length ? ++page : 0;
-      curPage.edit({ flags: CV2_FLAG, components: [this.withFooter(this.pages[page], this.footerText(page, queueDuration)), row] }).catch(() => null);
+      curPage.edit({ flags: CV2_FLAG, content: "", components: [this.withFooter(this.pages[page], this.footerText(page, queueDuration)), row] }).catch(() => null);
     });
 
     collector.on("end", () => {
       const disabled = new ActionRowBuilder<ButtonBuilder>().addComponents(row1.setDisabled(true), row2.setDisabled(true));
-      curPage.edit({ flags: CV2_FLAG, components: [this.withFooter(this.pages[page], this.footerText(page, queueDuration)), disabled] }).catch(() => null);
+      curPage.edit({ flags: CV2_FLAG, content: "", components: [this.withFooter(this.pages[page], this.footerText(page, queueDuration)), disabled] }).catch(() => null);
       // @ts-ignore
       collector.removeAllListeners();
     });
@@ -109,6 +110,7 @@ export class PageQueue {
     let page = 0;
     const curPage = await interaction.editReply({
       flags: CV2_FLAG,
+      content: "",
       components: [this.withFooter(this.pages[page], this.playlistFooterText(page)), row],
       allowedMentions: { repliedUser: false },
     });
@@ -123,12 +125,12 @@ export class PageQueue {
       try { if (!i.deferred) await i.deferUpdate(); } catch { return; }
       if (i.customId === "back") page = page > 0 ? --page : this.pages.length - 1;
       else if (i.customId === "next") page = page + 1 < this.pages.length ? ++page : 0;
-      curPage.edit({ flags: CV2_FLAG, components: [this.withFooter(this.pages[page], this.playlistFooterText(page)), row] }).catch(() => null);
+      curPage.edit({ flags: CV2_FLAG, content: "", components: [this.withFooter(this.pages[page], this.playlistFooterText(page)), row] }).catch(() => null);
     });
 
     collector.on("end", () => {
       const disabled = new ActionRowBuilder<ButtonBuilder>().addComponents(row1.setDisabled(true), row2.setDisabled(true));
-      curPage.edit({ flags: CV2_FLAG, components: [this.withFooter(this.pages[page], this.playlistFooterText(page)), disabled] }).catch(() => null);
+      curPage.edit({ flags: CV2_FLAG, content: "", components: [this.withFooter(this.pages[page], this.playlistFooterText(page)), disabled] }).catch(() => null);
       // @ts-ignore
       collector.removeAllListeners();
     });
@@ -147,6 +149,7 @@ export class PageQueue {
     let page = 0;
     const curPage = await message.reply({
       flags: CV2_FLAG,
+      content: "",
       components: [this.withFooter(this.pages[page], this.footerText(page, queueDuration)), row],
       allowedMentions: { repliedUser: false },
     });
@@ -161,12 +164,12 @@ export class PageQueue {
       try { if (!i.deferred) await i.deferUpdate(); } catch { return; }
       if (i.customId === "back") page = page > 0 ? --page : this.pages.length - 1;
       else if (i.customId === "next") page = page + 1 < this.pages.length ? ++page : 0;
-      curPage.edit({ flags: CV2_FLAG, components: [this.withFooter(this.pages[page], this.footerText(page, queueDuration)), row] }).catch(() => null);
+      curPage.edit({ flags: CV2_FLAG, content: "", components: [this.withFooter(this.pages[page], this.footerText(page, queueDuration)), row] }).catch(() => null);
     });
 
     collector.on("end", () => {
       const disabled = new ActionRowBuilder<ButtonBuilder>().addComponents(row1.setDisabled(true), row2.setDisabled(true));
-      curPage.edit({ flags: CV2_FLAG, components: [this.withFooter(this.pages[page], this.footerText(page, queueDuration)), disabled] }).catch(() => null);
+      curPage.edit({ flags: CV2_FLAG, content: "", components: [this.withFooter(this.pages[page], this.footerText(page, queueDuration)), disabled] }).catch(() => null);
       // @ts-ignore
       collector.removeAllListeners();
     });
@@ -185,6 +188,7 @@ export class PageQueue {
     let page = 0;
     const curPage = await message.reply({
       flags: CV2_FLAG,
+      content: "",
       components: [this.withFooter(this.pages[page], this.playlistFooterText(page)), row],
       allowedMentions: { repliedUser: false },
     });
@@ -199,12 +203,12 @@ export class PageQueue {
       try { if (!i.deferred) await i.deferUpdate(); } catch { return; }
       if (i.customId === "back") page = page > 0 ? --page : this.pages.length - 1;
       else if (i.customId === "next") page = page + 1 < this.pages.length ? ++page : 0;
-      curPage.edit({ flags: CV2_FLAG, components: [this.withFooter(this.pages[page], this.playlistFooterText(page)), row] }).catch(() => null);
+      curPage.edit({ flags: CV2_FLAG, content: "", components: [this.withFooter(this.pages[page], this.playlistFooterText(page)), row] }).catch(() => null);
     });
 
     collector.on("end", () => {
       const disabled = new ActionRowBuilder<ButtonBuilder>().addComponents(row1.setDisabled(true), row2.setDisabled(true));
-      curPage.edit({ flags: CV2_FLAG, components: [this.withFooter(this.pages[page], this.playlistFooterText(page)), disabled] }).catch(() => null);
+      curPage.edit({ flags: CV2_FLAG, content: "", components: [this.withFooter(this.pages[page], this.playlistFooterText(page)), disabled] }).catch(() => null);
       // @ts-ignore
       collector.removeAllListeners();
     });
@@ -223,6 +227,7 @@ export class PageQueue {
     let page = 0;
     const curPage = await interaction.reply({
       flags: CV2_FLAG,
+      content: "",
       components: [this.withFooter(this.pages[page], this.footerText(page, queueDuration)), row],
       allowedMentions: { repliedUser: false },
       ephemeral: true,
@@ -238,12 +243,12 @@ export class PageQueue {
       try { if (!i.deferred) await i.deferUpdate(); } catch { return; }
       if (i.customId === "back") page = page > 0 ? --page : this.pages.length - 1;
       else if (i.customId === "next") page = page + 1 < this.pages.length ? ++page : 0;
-      i.editReply({ flags: CV2_FLAG, components: [this.withFooter(this.pages[page], this.footerText(page, queueDuration)), row] });
+      i.editReply({ flags: CV2_FLAG, content: "", components: [this.withFooter(this.pages[page], this.footerText(page, queueDuration)), row] });
     });
 
     collector.on("end", () => {
       const disabled = new ActionRowBuilder<ButtonBuilder>().addComponents(row1.setDisabled(true), row2.setDisabled(true));
-      interaction.editReply({ flags: CV2_FLAG, components: [this.withFooter(this.pages[page], this.footerText(page, queueDuration)), disabled] });
+      interaction.editReply({ flags: CV2_FLAG, content: "", components: [this.withFooter(this.pages[page], this.footerText(page, queueDuration)), disabled] });
       // @ts-ignore
       collector.removeAllListeners();
     });

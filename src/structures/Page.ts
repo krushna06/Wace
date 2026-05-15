@@ -44,6 +44,7 @@ export class Page {
 
     const curPage = await interaction.editReply({
       flags: CV2_FLAG,
+      content: "",
       components: [this.withFooter(this.pages[page], footer()), row],
       allowedMentions: { repliedUser: false },
     });
@@ -58,12 +59,12 @@ export class Page {
       if (!i.deferred) await i.deferUpdate();
       if (i.customId === "back") page = page > 0 ? --page : this.pages.length - 1;
       else if (i.customId === "next") page = page + 1 < this.pages.length ? ++page : 0;
-      curPage.edit({ flags: CV2_FLAG, components: [this.withFooter(this.pages[page], footer()), row] }).catch(() => null);
+      curPage.edit({ flags: CV2_FLAG, content: "", components: [this.withFooter(this.pages[page], footer()), row] }).catch(() => null);
     });
 
     collector.on("end", () => {
       const disabled = new ActionRowBuilder<ButtonBuilder>().addComponents(row1.setDisabled(true), row2.setDisabled(true));
-      curPage.edit({ flags: CV2_FLAG, components: [this.withFooter(this.pages[page], footer()), disabled] }).catch(() => null);
+      curPage.edit({ flags: CV2_FLAG, content: "", components: [this.withFooter(this.pages[page], footer()), disabled] }).catch(() => null);
       // @ts-ignore
       collector.removeAllListeners();
     });
@@ -84,6 +85,7 @@ export class Page {
 
     const curPage = await message.reply({
       flags: CV2_FLAG,
+      content: "",
       components: [this.withFooter(this.pages[page], footer()), row],
       allowedMentions: { repliedUser: false },
     });
@@ -98,12 +100,12 @@ export class Page {
       if (!i.deferred) await i.deferUpdate();
       if (i.customId === "back") page = page > 0 ? --page : this.pages.length - 1;
       else if (i.customId === "next") page = page + 1 < this.pages.length ? ++page : 0;
-      curPage.edit({ flags: CV2_FLAG, components: [this.withFooter(this.pages[page], footer()), row] }).catch(() => null);
+      curPage.edit({ flags: CV2_FLAG, content: "", components: [this.withFooter(this.pages[page], footer()), row] }).catch(() => null);
     });
 
     collector.on("end", () => {
       const disabled = new ActionRowBuilder<ButtonBuilder>().addComponents(row1.setDisabled(true), row2.setDisabled(true));
-      curPage.edit({ flags: CV2_FLAG, components: [this.withFooter(this.pages[page], footer()), disabled] }).catch(() => null);
+      curPage.edit({ flags: CV2_FLAG, content: "", components: [this.withFooter(this.pages[page], footer()), disabled] }).catch(() => null);
       // @ts-ignore
       collector.removeAllListeners();
     });
