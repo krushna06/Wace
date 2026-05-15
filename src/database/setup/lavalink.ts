@@ -124,10 +124,7 @@ export class AutoReconnectLavalinkService {
         await player.play(search.tracks[0]);
       }
     } catch (error) {
-      this.client.logger.error(
-        AutoReconnectLavalinkService.name,
-        `Failed to reconnect to voice channel in guild ${data.id}: ${error instanceof Error ? error.message : String(error)}`
-      );
+      // Silently handle reconnection failures - will retry on next startup
       // Don't delete the autoreconnect data, let it retry on next startup
     }
   }

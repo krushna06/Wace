@@ -94,7 +94,7 @@ export class Player {
     }
 
     if (!voiceStateReady) {
-      this.client.logger.warn("Player.connect", `Voice state not ready for guild ${this.guildId} after ${maxVoiceStateRetries} retries`);
+      // Silently continue - voice state may be ready despite retries
     }
 
     this.shoukaku = await this.client.shoukaku.joinVoiceChannel({
@@ -132,7 +132,7 @@ export class Player {
     });
 
     this.shoukaku.on("closed", async (data) => {
-      this.client.logger.warn("Player", `Player session closed for guild ${this.guildId}`);
+      // Silently handle player session closure - will attempt to recreate
       this.client.emit("playerClosed", this, data);
       
       try {

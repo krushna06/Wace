@@ -10,7 +10,7 @@ import { cv2, CV2_FLAG } from "../../utilities/ComponentsV2.js";
 let playlist: Playlist | null;
 
 export default class implements Command {
-  public name = ["pl", "import"];
+  public name = ["pl", "play"];
   public description = "Import a playlist to queue.";
   public category = "Playlist";
   public accessableby = [Accessableby.Member];
