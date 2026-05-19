@@ -54,10 +54,9 @@ export class ButtonSkip {
         components: [cv2.simple(`${this.client.i18n.get(this.language, "button.music", "skip_notfound")}`, this.client.color)],
       });
     } else {
-      await this.interaction.deferReply({ ephemeral: true });
       await this.player.skip();
-
-      await this.interaction.editReply({
+      this.interaction.reply({
+        flags: CV2_FLAG,
         components: [cv2.simple(`${this.client.i18n.get(this.language, "button.music", "skip_msg")}`, this.client.color)],
       });
     }

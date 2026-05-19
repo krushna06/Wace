@@ -46,8 +46,6 @@ export default class {
         "The database is not yet connected so this event will temporarily not execute. Please try again later!"
       );
 
-    await interaction.deferReply().catch(() => null);
-
     let guildModel = await client.db.language.get(`${interaction.guild.id}`);
 
     const [blacklistedUser, blacklistedGuild] = await Promise.all([
@@ -56,10 +54,11 @@ export default class {
     ]);
 
     if (blacklistedUser || blacklistedGuild) {
-      return interaction.editReply({
+      return interaction.reply({
         content: blacklistedUser
           ? `🚫 You have been blacklisted from using this bot. Reason: ${blacklistedUser.reason ?? "No reason provided"}`
           : `🚫 This server has been blacklisted from using this bot. Reason: ${blacklistedGuild!.reason ?? "No reason provided"}`,
+        ephemeral: true,
       });
     }
 
@@ -143,7 +142,7 @@ export default class {
               })}`
         )
         .setColor(client.color);
-      await interaction.editReply({
+      await interaction.reply({
         embeds: [embed],
       });
     }
@@ -170,7 +169,7 @@ export default class {
     );
 
     if (command.accessableby.includes(Accessableby.Manager) && isNotManager)
-      return interaction.editReply({
+      return interaction.reply({
         embeds: [
           new EmbedBuilder()
             .setDescription(
@@ -188,7 +187,7 @@ export default class {
         !player ||
         (is247 && is247.twentyfourseven && player.queue.length == 0 && !player.current)
       )
-        return interaction.editReply({
+        return interaction.reply({
           embeds: [
             new EmbedBuilder()
               .setDescription(`${client.i18n.get(language, "error", "no_player")}`)
@@ -204,7 +203,7 @@ export default class {
         (interaction.member as GuildMember)!.voice.channel !==
           interaction.guild!.members.me!.voice.channel
       )
-        return (interaction as NoAutoInteraction).editReply({
+        return (interaction as NoAutoInteraction).reply({
           embeds: [
             new EmbedBuilder()
               .setDescription(`${client.i18n.get(language, "error", "no_voice")}`)
@@ -214,7 +213,7 @@ export default class {
     }
 
     if (command.lavalink && client.lavalinkUsing.length == 0) {
-      return interaction.editReply({
+      return interaction.reply({
         embeds: [
           new EmbedBuilder()
             .setDescription(`${client.i18n.get(language, "error", "no_node")}`)
@@ -282,7 +281,7 @@ export default class {
     };
 
     if (command.accessableby.includes(Accessableby.Owner) && !userPerm.owner)
-      return interaction.editReply({
+      return interaction.reply({
         embeds: [
           new EmbedBuilder()
             .setDescription(`${client.i18n.get(language, "error", "owner_only")}`)
@@ -291,7 +290,7 @@ export default class {
       });
 
     if (command.accessableby.includes(Accessableby.Admin) && !userPerm.admin)
-      return interaction.editReply({
+      return interaction.reply({
         embeds: [
           new EmbedBuilder()
             .setDescription(
@@ -310,7 +309,7 @@ export default class {
         .setDescription(`${client.i18n.get(language, "error", "no_premium_desc")}`)
         .setColor(client.color)
         .setTimestamp();
-      return interaction.editReply({
+      return interaction.reply({
         content: " ",
         embeds: [embed],
       });
@@ -325,7 +324,7 @@ export default class {
         .setDescription(`${client.i18n.get(language, "error", "no_guild_premium_desc")}`)
         .setColor(client.color)
         .setTimestamp();
-      return interaction.editReply({
+      return interaction.reply({
         content: " ",
         embeds: [embed],
       });
@@ -343,8 +342,9 @@ export default class {
             : `${client.i18n.get(language, "error", "user_no_perms", { perm: "DJ Role" })}`
         )
         .setColor(client.color);
-      return interaction.editReply({
+      return interaction.reply({
         embeds: [embed],
+        ephemeral: true
       });
     }
 
@@ -358,7 +358,7 @@ export default class {
           .setDescription(client.i18n.get(language, "error", "topgg_error_desc"))
           .setColor(client.color)
           .setTimestamp();
-        return interaction.editReply({ content: " ", embeds: [embed] });
+        return interaction.reply({ content: " ", embeds: [embed] });
       }
 
       if (voteChecker == TopggServiceEnum.UNVOTED) {
@@ -375,7 +375,7 @@ export default class {
             .setStyle(ButtonStyle.Link)
             .setURL(`https://top.gg/bot/${client.user?.id}/vote`)
         );
-        return interaction.editReply({ content: " ", embeds: [embed], components: [row] });
+        return interaction.reply({ content: " ", embeds: [embed], components: [row] });
       }
     }
 
@@ -436,7 +436,7 @@ export default class {
       await incrementGuildCommand(client.db, interaction.guild.id);
     } catch (error) {
       client.logger.error("CommandManager | Interaction", error);
-      interaction.editReply({
+      interaction.reply({
         embeds: [
           new EmbedBuilder()
             .setDescription(`${client.i18n.get(language, "error", "unexpected_error")}\n ${error}`)

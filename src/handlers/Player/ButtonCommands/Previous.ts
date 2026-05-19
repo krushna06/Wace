@@ -46,14 +46,13 @@ export class ButtonPrevious {
         components: [cv2.simple(`${this.client.i18n.get(this.language, "button.music", "previous_notfound")}`, this.client.color)],
       });
       return;
+    } else {
+      await this.player.previous();
+      this.player.data.set("endMode", "previous");
+      this.interaction.reply({
+        flags: CV2_FLAG,
+        components: [cv2.simple(`${this.client.i18n.get(this.language, "button.music", "previous_msg")}`, this.client.color)],
+      });
     }
-
-    await this.interaction.deferReply({ ephemeral: true });
-    await this.player.previous();
-    this.player.data.set("endMode", "previous");
-
-    await this.interaction.editReply({
-      components: [cv2.simple(`${this.client.i18n.get(this.language, "button.music", "previous_msg")}`, this.client.color)],
-    });
   }
 }
