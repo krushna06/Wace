@@ -69,7 +69,9 @@ export class AutoReconnectBuilderService {
     const res = [];
     if (this.player?.queue) {
       for (let data of this.player.queue) {
-        res.push(data.uri);
+        if (data && data.uri) {
+          res.push(data.uri);
+        }
       }
     }
     return res;
@@ -79,7 +81,9 @@ export class AutoReconnectBuilderService {
     const res = [];
     if (this.player?.previousQueue) {
       for (let data of this.player.previousQueue) {
-        res.push(data.uri);
+        if (data && data.uri) {
+          res.push(data.uri);
+        }
       }
     }
     return res;

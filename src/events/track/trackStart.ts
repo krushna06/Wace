@@ -89,7 +89,9 @@ export default class {
         function queueUri() {
           const res = [];
           for (let data of player.queue) {
-            res.push(data.uri);
+            if (data && data.uri) {
+              res.push(data.uri);
+            }
           }
           return res.length !== 0 ? res : [];
         }
@@ -98,7 +100,9 @@ export default class {
           const res = [];
           if (player.previousQueue) {
             for (let data of player.previousQueue) {
-              res.push(data.uri);
+              if (data && data.uri) {
+                res.push(data.uri);
+              }
             }
           }
           return res.length !== 0 ? res : [];
