@@ -23,11 +23,38 @@ export default class {
 
     const is247 = await client.db.autoreconnect.get(`${newState.guild.id}`);
 
-    if (newState.channelId == null && newState.member?.user.id === client.user?.id) {
-      player.data.set("sudo-destroy", true);
-
-      if (player.shoukaku) {
-        player.destroy();
+    // Handle bot being moved to a different voice channel
+    if (newState.member?.user.id === client.user?.id) {
+      if (newState.channelId == null) {
+        // Bot was disconnected
+        player.data.set("sudo-destroy", true);
+        if (player.shoukaku) {
+          player.destroy();
+        }
+      } else if (oldState.channelId && newState.channelId && oldState.channelId !== newState.channelId) {
+        // Bot was moved to a different channel
+        client.logger.info("VoiceStateUpdate", `Bot moved from ${oldState.channelId} to ${newState.channelId} in guild ${newState.guild.id}`);
+        
+        // Update player's voice channel ID
+        player.voiceId = newState.channelId;
+        
+        // Reconnect the player to the new channel
+        try {
+          if (player.shoukaku) {
+            // Disconnect from old channel and reconnect to new one
+            await player.connect();
+            
+            // Resume playback if there's a current track
+            if (player.current && !player.paused) {
+              await player.play(player.current);
+            }
+            
+            client.logger.info("VoiceStateUpdate", `Successfully reconnected player to new channel for guild ${newState.guild.id}`);
+          }
+        } catch (error) {
+          client.logger.error("VoiceStateUpdate", `Failed to reconnect player after channel move: ${error}`);
+        }
+        return;
       }
     }
 

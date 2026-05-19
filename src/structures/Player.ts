@@ -81,7 +81,7 @@ export class Player {
 
     let voiceStateReady = false;
     let voiceStateRetries = 0;
-    const maxVoiceStateRetries = 10;
+    const maxVoiceStateRetries = 15;
     
     while (!voiceStateReady && voiceStateRetries < maxVoiceStateRetries) {
       const guild = await this.client.guilds.fetch(this.guildId).catch(() => null);
@@ -94,15 +94,24 @@ export class Player {
     }
 
     if (!voiceStateReady) {
-      // Silently continue - voice state may be ready despite retries
+      // Force a voice state update by fetching the guild again
+      const guild = await this.client.guilds.fetch(this.guildId).catch(() => null);
+      if (!guild || !guild.members.me?.voice?.sessionId) {
+        this.client.logger.warn("Player.connect", `Voice session not ready after retries for guild ${this.guildId}, attempting connection anyway`);
+      }
     }
 
-    this.shoukaku = await this.client.shoukaku.joinVoiceChannel({
-      guildId: this.guildId,
-      channelId: this.voiceId,
-      shardId: this.shardId,
-      deaf: true,
-    });
+    try {
+      this.shoukaku = await this.client.shoukaku.joinVoiceChannel({
+        guildId: this.guildId,
+        channelId: this.voiceId,
+        shardId: this.shardId,
+        deaf: true,
+      });
+    } catch (error) {
+      this.client.logger.error("Player.connect", `Failed to join voice channel: ${error}`);
+      throw error;
+    }
 
     this.setupListeners();
   }
