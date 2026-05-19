@@ -77,17 +77,17 @@ export class AutoReconnectLavalinkService {
       if (!channel || !voice) {
         this.client.logger.info(
           AutoReconnectLavalinkService.name,
-          `The last voice/text channel that bot joined in guild [${data.value.guild}] is not found, skipping...`
+          `The last voice/text channel that bot joined in guild [${data.id}] is not found, skipping...`
         );
-        return this.client.db.autoreconnect.delete(data.value.guild);
+        return this.client.db.autoreconnect.delete(data.id);
       }
 
       if (!data.value.twentyfourseven && voice.members.filter((m) => !m.user.bot).size == 0) {
         this.client.logger.info(
           AutoReconnectLavalinkService.name,
-          `Guild [${data.value.guild}] have 0 members in last voice that bot joined, skipping...`
+          `Guild [${data.id}] have 0 members in last voice that bot joined, skipping...`
         );
-        return this.client.db.autoreconnect.delete(data.value.guild);
+        return this.client.db.autoreconnect.delete(data.id);
       }
 
       const player = await this.client.playerManager.create({
