@@ -137,6 +137,10 @@ export class PlayerContentLoader {
 
     if (message.id !== database.playmsg) {
       const preInterval = setInterval(async () => {
+        if (!message.channel || !message.channel.isTextBased()) {
+          clearInterval(preInterval);
+          return;
+        }
         const fetchedMessage = await message.channel.messages
           .fetch({ limit: 50 })
           .catch(() => undefined);
@@ -168,6 +172,8 @@ export class PlayerContentLoader {
         flags: CV2_FLAG,
         components: [cv2.simple(`${client.i18n.get(language, "error", "no_in_voice")}`, client.color)],
       });
+
+    if (!message.channel || !message.channel.isTextBased()) return;
 
     let msg = await message.channel.messages.fetch(database!.playmsg).catch(() => undefined);
 
