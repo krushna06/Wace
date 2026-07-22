@@ -101,16 +101,61 @@ export class Player {
       }
     }
 
-    try {
-      this.shoukaku = await this.client.shoukaku.joinVoiceChannel({
-        guildId: this.guildId,
-        channelId: this.voiceId,
-        shardId: this.shardId,
-        deaf: true,
-      });
-    } catch (error) {
-      this.client.logger.error("Player.connect", `Failed to join voice channel: ${error}`);
-      throw error;
+    // Retry logic for handling "Session not found" errors
+    let connectionRetries = 0;
+    const maxConnectionRetries = 3;
+    let lastError: any = null;
+
+    while (connectionRetries < maxConnectionRetries) {
+      try {
+        this.shoukaku = await this.client.shoukaku.joinVoiceChannel({
+          guildId: this.guildId,
+          channelId: this.voiceId,
+          shardId: this.shardId,
+          deaf: true,
+        });
+        // Connection successful, exit retry loop
+        break;
+      } catch (error: any) {
+        lastError = error;
+        connectionRetries++;
+
+        // Check if this is a "Session not found" error
+        if (error?.status === 404 && error?.error === "Not Found" && error?.path?.includes("/sessions/")) {
+          this.client.logger.warn(
+            "Player.connect",
+            `Session not found (404), attempting recovery... (${connectionRetries}/${maxConnectionRetries})`
+          );
+
+          // If not the last retry, wait and try again
+          if (connectionRetries < maxConnectionRetries) {
+            await new Promise(resolve => setTimeout(resolve, 1000 * connectionRetries));
+            
+            // Force fetch guild to get fresh voice state
+            const guild = await this.client.guilds.fetch(this.guildId).catch(() => null);
+            if (!guild) {
+              this.client.logger.error("Player.connect", `Failed to fetch guild ${this.guildId} during recovery`);
+              continue;
+            }
+
+            this.client.logger.debug("Player.connect", `Retrying connection for guild ${this.guildId}...`);
+            continue;
+          }
+        } else {
+          // Not a session error, throw immediately
+          this.client.logger.error("Player.connect", `Failed to join voice channel: ${error}`);
+          throw error;
+        }
+      }
+    }
+
+    // If all retries failed, throw the last error
+    if (connectionRetries >= maxConnectionRetries && !this.shoukaku) {
+      this.client.logger.error(
+        "Player.connect",
+        `Failed to establish connection after ${maxConnectionRetries} attempts: ${lastError}`
+      );
+      throw lastError;
     }
 
     this.setupListeners();

@@ -29,16 +29,24 @@ export default class implements Command {
 
     let player = client.players.get(handler.guild!.id);
 
-    if (!player)
-      player = await client.playerManager.create({
-        guildId: handler.guild!.id,
-        voiceId: handler.member!.voice.channel!.id,
-        textId: handler.channel!.id,
-        shardId: handler.guild?.shardId ?? 0,
-        deaf: true,
-        volume: client.config.player.DEFAULT_VOLUME,
-      });
-    else if (player && !this.checkSameVoice(client, handler, handler.language)) {
+    if (!player) {
+      try {
+        player = await client.playerManager.create({
+          guildId: handler.guild!.id,
+          voiceId: handler.member!.voice.channel!.id,
+          textId: handler.channel!.id,
+          shardId: handler.guild?.shardId ?? 0,
+          deaf: true,
+          volume: client.config.player.DEFAULT_VOLUME,
+        });
+      } catch (error) {
+        client.logger.error("Join.execute", `Failed to create player: ${error}`);
+        return handler.editReply({
+          flags: CV2_FLAG,
+          components: [cv2.simple(`Failed to join voice channel. Please try again.`, client.color)],
+        });
+      }
+    } else if (player && !this.checkSameVoice(client, handler, handler.language)) {
       return;
     }
 

@@ -92,7 +92,10 @@ export class PlayerManager {
       
       if (!player.shoukaku) {
         this.client.logger.info("PlayerManager", `Reconnecting player for guild ${options.guildId}`);
-        await player.connect();
+        await player.connect().catch((error) => {
+          this.client.logger.error("PlayerManager", `Failed to reconnect player: ${error}`);
+          throw error;
+        });
       }
       
       return player;
@@ -101,9 +104,13 @@ export class PlayerManager {
     player = new Player(this.client, options);
     this.client.players.set(options.guildId, player);
 
-
-    await player.connect();
-
+    try {
+      await player.connect();
+    } catch (error) {
+      this.client.logger.error("PlayerManager", `Failed to create player for guild ${options.guildId}: ${error}`);
+      this.client.players.delete(options.guildId);
+      throw error;
+    }
 
     this.client.emit("playerCreate", player);
 
