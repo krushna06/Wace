@@ -126,6 +126,18 @@ export default class implements Command {
         client.logger.warn("Play", "Interaction expired (took too long to respond)");
         return;
       }
+      if (error?.code === 'UND_ERR_CONNECT_TIMEOUT' || error?.code === 'ETIMEDOUT' || error?.message?.includes('timeout')) {
+        client.logger.error("Play", "Network timeout occurred. Please check your internet connection and try again.");
+        try {
+          return handler.editReply({
+            flags: CV2_FLAG,
+            components: [cv2.simple("Network timeout occurred. Please check your internet connection and try again.", client.color)],
+          });
+        } catch (editError) {
+          client.logger.error("Play", `Failed to send timeout error message: ${editError instanceof Error ? editError.message : String(editError)}`);
+        }
+        return;
+      }
       if (error?.status === 404 && error?.error === "Not Found") {
         client.logger.warn("Play", "Stale Lavalink session detected, destroying player for guild " + handler.guild!.id);
         const stalePlayer = client.players.get(handler.guild!.id);

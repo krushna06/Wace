@@ -108,6 +108,9 @@ export class Manager extends Client {
             GatewayIntentBits.GuildVoiceStates,
             GatewayIntentBits.GuildMessages,
           ],
+      rest: {
+        timeout: 30000,
+      },
     });
 
 
@@ -167,6 +170,7 @@ export class Manager extends Client {
     this.recommendationEngine = new RecommendationEngine(this);
     this.musicNewsService = new MusicNewsService(this);
 
+    this.setMaxListeners(15);
 
     const filterOptions = Object.keys(FilterPresets);
     for (const key of filterOptions) {

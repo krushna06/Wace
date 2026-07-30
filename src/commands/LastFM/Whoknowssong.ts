@@ -144,11 +144,19 @@ export default class implements Command {
     results.sort((a, b) => b.playcount - a.playcount);
     const top10 = results.slice(0, 10);
 
-    return handler.editReply({ flags: CV2_FLAG, components: [cv2.build({
-      title: `Who Knows Song: ${trackName}`,
-      description: top10.map((r, i) => `**${i + 1}.** <@${r.userId}> — **${r.playcount}** plays`).join("\n"),
-      thumbnail: top10[0]?.avatar || undefined,
-      color: client.color,
-    })] });
+    try {
+      return handler.editReply({ flags: CV2_FLAG, components: [cv2.build({
+        title: `Who Knows Song: ${trackName}`,
+        description: top10.map((r, i) => `**${i + 1}.** <@${r.userId}> — **${r.playcount}** plays`).join("\n"),
+        thumbnail: top10[0]?.avatar || undefined,
+        color: client.color,
+      })] });
+    } catch (error: any) {
+      if (error?.code === 10062) {
+        client.logger.warn("Whoknowssong", "Interaction expired (took too long to respond)");
+        return;
+      }
+      client.logger.error("Whoknowssong", error);
+    }
   }
 }

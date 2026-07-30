@@ -54,32 +54,51 @@ export async function incrementGuildCommand(db, guildId) {
 export async function incrementGuildSongStats(db, guildId, song, userId) {
   const key = `${guildId}:${userId}:${song.identifier || song.uri}`;
   let stats = await db.songStats.get(key);
+  
+  const songInfo = song.info || song;
+  const sanitizedSong = {
+    identifier: song.identifier || songInfo.identifier,
+    uri: song.uri || songInfo.uri,
+    title: song.title || songInfo.title,
+    author: song.author || songInfo.author,
+    artworkUrl: song.artworkUrl || songInfo.artworkUrl
+  };
+  
   if (!stats) {
     stats = {
       guildId,
       userId,
-      songId: song.identifier || song.uri,
-      title: song.title,
-      author: song.author,
-      uri: song.uri,
+      songId: sanitizedSong.identifier || sanitizedSong.uri,
+      title: sanitizedSong.title,
+      author: sanitizedSong.author,
+      uri: sanitizedSong.uri,
       playCount: 1,
-      artworkUrl: song.artworkUrl || undefined,
+      artworkUrl: sanitizedSong.artworkUrl || undefined,
     };
   } else {
     stats.playCount = (stats.playCount || 0) + 1;
-    if (!stats.artworkUrl && song.artworkUrl) {
-      stats.artworkUrl = song.artworkUrl;
+    if (!stats.artworkUrl && sanitizedSong.artworkUrl) {
+      stats.artworkUrl = sanitizedSong.artworkUrl;
     }
   }
   await db.songStats.set(key, stats);
 }
 export async function setGuildLastPlayed(db, guildId, song) {
+  // Extract only the properties we need to avoid circular references
+  const songInfo = song.info || song;
+  const sanitizedSong = {
+    identifier: song.identifier || songInfo.identifier,
+    uri: song.uri || songInfo.uri,
+    title: song.title || songInfo.title,
+    author: song.author || songInfo.author,
+  };
+  
   const data = {
     guildId,
-    songId: song.identifier || song.uri,
-    title: song.title,
-    author: song.author,
-    uri: song.uri,
+    songId: sanitizedSong.identifier || sanitizedSong.uri,
+    title: sanitizedSong.title,
+    author: sanitizedSong.author,
+    uri: sanitizedSong.uri,
     playedAt: Date.now(),
   };
   await db.guildLastPlayed.set(guildId, data);
@@ -112,26 +131,43 @@ export async function getTopSongsForUser(db, userId, limit = 5) {
     .map((entry) => entry.value);
 }
 export async function setUserLastPlayed(db, userId, song) {
+  const songInfo = song.info || song;
+  const sanitizedSong = {
+    identifier: song.identifier || songInfo.identifier,
+    uri: song.uri || songInfo.uri,
+    title: song.title || songInfo.title,
+    author: song.author || songInfo.author,
+  };
+  
   const data = {
     userId,
-    songId: song.identifier || song.uri,
-    title: song.title,
-    author: song.author,
-    uri: song.uri,
+    songId: sanitizedSong.identifier || sanitizedSong.uri,
+    title: sanitizedSong.title,
+    author: sanitizedSong.author,
+    uri: sanitizedSong.uri,
     playedAt: Date.now(),
   };
   await db.userLastPlayed.set(userId, data);
 }
 export async function logUserPlayHistory(db, userId, guildId, song) {
+  const songInfo = song.info || song;
+  const sanitizedSong = {
+    identifier: song.identifier || songInfo.identifier,
+    uri: song.uri || songInfo.uri,
+    title: song.title || songInfo.title,
+    author: song.author || songInfo.author,
+    artworkUrl: song.artworkUrl || songInfo.artworkUrl,
+  };
+  
   const entry = {
     userId,
     guildId,
-    songId: song.identifier || song.uri,
-    title: song.title,
-    author: song.author,
-    uri: song.uri,
+    songId: sanitizedSong.identifier || sanitizedSong.uri,
+    title: sanitizedSong.title,
+    author: sanitizedSong.author,
+    uri: sanitizedSong.uri,
     playedAt: Date.now(),
-    artworkUrl: song.artworkUrl || undefined,
+    artworkUrl: sanitizedSong.artworkUrl || undefined,
   };
   await db.userPlayHistory.set(`${userId}:${guildId}:${Date.now()}`, entry);
 }

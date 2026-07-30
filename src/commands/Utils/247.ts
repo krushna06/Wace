@@ -42,63 +42,71 @@ export default class implements Command {
 
     const data = await reconnectBuilder.execute(handler.guild?.id!);
 
-    if (value == "disable") {
-      if (!data.twentyfourseven) {
+    try {
+      if (value == "disable") {
+        if (!data.twentyfourseven) {
+          return handler.editReply({
+            flags: CV2_FLAG,
+            components: [cv2.simple(`${client.i18n.get(handler.language, "command.utils", "247_already", { mode: handler.modeLang.disable })}`, client.color)],
+          });
+        }
+
+        data.current || data.current.length !== 0
+          ? await client.db.autoreconnect.set(`${handler.guild!.id}.twentyfourseven`, false)
+          : await client.db.autoreconnect.delete(`${handler.guild!.id}`);
+
+        player ? player.data.set("sudo-destroy", true) : true;
+        player && player.voiceId && handler.member!.voice.channel == null ? player.destroy() : true;
+
+        handler.editReply({
+          flags: CV2_FLAG,
+          components: [cv2.simple(`${client.i18n.get(handler.language, "command.utils", "247_off")}`, client.color)],
+        });
+      } else if (value == "enable") {
+        const { channel } = handler.member!.voice;
+        if (!channel || handler.member!.voice.channel == null)
+          return handler.editReply({
+            flags: CV2_FLAG,
+            components: [cv2.simple(`${client.i18n.get(handler.language, "error", "no_in_voice")}`, client.color)],
+          });
+
+        if (data.twentyfourseven) {
+          return handler.editReply({
+            flags: CV2_FLAG,
+            components: [cv2.simple(`${client.i18n.get(handler.language, "command.utils", "247_already", { mode: handler.modeLang.enable })}`, client.color)],
+          });
+        }
+
+        if (!player)
+          player = await client.playerManager.create({
+            guildId: handler.guild!.id,
+            voiceId: handler.member!.voice.channel!.id,
+            textId: String(handler.channel?.id),
+            shardId: handler.guild?.shardId ?? 0,
+            deaf: true,
+            volume: client.config.player.DEFAULT_VOLUME,
+          });
+
+        data.voice
+          ? await client.db.autoreconnect.set(`${handler.guild!.id}.twentyfourseven`, true)
+          : new AutoReconnectBuilderService(client, player).playerBuild(player?.guildId, true);
+
         return handler.editReply({
           flags: CV2_FLAG,
-          components: [cv2.simple(`${client.i18n.get(handler.language, "command.utils", "247_already", { mode: handler.modeLang.disable })}`, client.color)],
+          components: [cv2.simple(`${client.i18n.get(handler.language, "command.utils", "247_on")}`, client.color)],
+        });
+      } else {
+        return handler.editReply({
+          flags: CV2_FLAG,
+          components: [cv2.simple(`${client.i18n.get(handler.language, "error", "arg_error", { text: "**enable** or **disable**!" })}`, client.color)],
         });
       }
-
-      data.current || data.current.length !== 0
-        ? await client.db.autoreconnect.set(`${handler.guild!.id}.twentyfourseven`, false)
-        : await client.db.autoreconnect.delete(`${handler.guild!.id}`);
-
-      player ? player.data.set("sudo-destroy", true) : true;
-      player && player.voiceId && handler.member!.voice.channel == null ? player.destroy() : true;
-
-      handler.editReply({
-        flags: CV2_FLAG,
-        components: [cv2.simple(`${client.i18n.get(handler.language, "command.utils", "247_off")}`, client.color)],
-      });
-    } else if (value == "enable") {
-      const { channel } = handler.member!.voice;
-      if (!channel || handler.member!.voice.channel == null)
-        return handler.editReply({
-          flags: CV2_FLAG,
-          components: [cv2.simple(`${client.i18n.get(handler.language, "error", "no_in_voice")}`, client.color)],
-        });
-
-      if (data.twentyfourseven) {
-        return handler.editReply({
-          flags: CV2_FLAG,
-          components: [cv2.simple(`${client.i18n.get(handler.language, "command.utils", "247_already", { mode: handler.modeLang.enable })}`, client.color)],
-        });
+    } catch (error: any) {
+      if (error?.code === 10062) {
+        client.logger.warn("247", "Interaction expired (took too long to respond)");
+        return;
       }
-
-      if (!player)
-        player = await client.playerManager.create({
-          guildId: handler.guild!.id,
-          voiceId: handler.member!.voice.channel!.id,
-          textId: String(handler.channel?.id),
-          shardId: handler.guild?.shardId ?? 0,
-          deaf: true,
-          volume: client.config.player.DEFAULT_VOLUME,
-        });
-
-      data.voice
-        ? await client.db.autoreconnect.set(`${handler.guild!.id}.twentyfourseven`, true)
-        : new AutoReconnectBuilderService(client, player).playerBuild(player?.guildId, true);
-
-      return handler.editReply({
-        flags: CV2_FLAG,
-        components: [cv2.simple(`${client.i18n.get(handler.language, "command.utils", "247_on")}`, client.color)],
-      });
-    } else {
-      return handler.editReply({
-        flags: CV2_FLAG,
-        components: [cv2.simple(`${client.i18n.get(handler.language, "error", "arg_error", { text: "**enable** or **disable**!" })}`, client.color)],
-      });
+      client.logger.error("247", error);
     }
   }
 }

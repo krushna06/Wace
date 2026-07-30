@@ -25,6 +25,14 @@ export default class implements Command {
 
     await player.pause();
 
-    handler.editReply({ flags: CV2_FLAG, components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "pause_msg")}`, client.color)] });
+    try {
+      handler.editReply({ flags: CV2_FLAG, components: [cv2.simple(`${client.i18n.get(handler.language, "command.music", "pause_msg")}`, client.color)] });
+    } catch (error: any) {
+      if (error?.code === 10062) {
+        client.logger.warn("Pause", "Interaction expired (took too long to respond)");
+        return;
+      }
+      client.logger.error("Pause", error);
+    }
   }
 }

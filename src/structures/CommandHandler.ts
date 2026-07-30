@@ -144,8 +144,20 @@ export class CommandHandler {
 
   public async deferReply() {
     if (this.interaction) {
-      const data = await this.interaction.deferReply();
-      return (this.msg = data);
+      try {
+        const data = await this.interaction.deferReply();
+        return (this.msg = data);
+      } catch (error: any) {
+        if (error?.code === 10062) {
+          this.client.logger.warn("CommandHandler", "Interaction expired (took too long to respond)");
+          throw error;
+        }
+        if (error?.code === 'UND_ERR_CONNECT_TIMEOUT' || error?.code === 'ETIMEDOUT' || error?.message?.includes('timeout')) {
+          this.client.logger.error("CommandHandler", "Network timeout occurred during deferReply");
+          throw error;
+        }
+        throw error;
+      }
     } else {
       const data = await this.message?.reply(`**${this.client.user?.username}** is thinking...`);
       return (this.msg = data);
@@ -158,7 +170,19 @@ export class CommandHandler {
       return;
     }
     if (this.interaction) {
-      return this.msg.edit(data as BaseMessageOptions);
+      try {
+        return this.msg.edit(data as BaseMessageOptions);
+      } catch (error: any) {
+        if (error?.code === 10062) {
+          this.client.logger.warn("CommandHandler", "Interaction expired (took too long to respond)");
+          throw error;
+        }
+        if (error?.code === 'UND_ERR_CONNECT_TIMEOUT' || error?.code === 'ETIMEDOUT' || error?.message?.includes('timeout')) {
+          this.client.logger.error("CommandHandler", "Network timeout occurred during editReply");
+          throw error;
+        }
+        throw error;
+      }
     } else {
       if ((data as BaseMessageOptions).embeds && !(data as BaseMessageOptions).content)
         return this.msg.edit({
